@@ -1,0 +1,297 @@
+body {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 9pt;
+    color: black;
+    background: white;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+li {
+    margin: 0;
+    padding: 0;
+}
+
+/*
+label {
+    display: block;
+    color: windowtext;
+    background-color: window;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+    label:hover {
+        background-color: highlight;
+        color: highlighttext;
+    }
+*/
+
+a:visited {
+    text-decoration: none;
+    color: #04f;
+}
+
+a:link {
+    text-decoration: none;
+    color: #04f;
+}
+
+a:hover {
+    color: #a32;
+}
+
+h1 {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #1044f0;
+    margin-left: 5px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+h2 {
+    font-size: 9pt;
+    font-weight: bold;
+    color: #1044f0;
+    margin-left: 6px;
+    margin-top: 6px;
+    margin-bottom: 0;
+}
+
+p {
+    margin-left: 6px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    margin-right: 2px;
+}
+
+td {
+    font-size: 9pt;
+}
+
+th {
+    font-size: 9pt;
+}
+
+    th:hover {
+        cursor: pointer;
+        background: #AAA;
+    }
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 69px;
+    background: linear-gradient(to bottom, #095fa8 0%,#214380 100%,#cdd7d6); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.progressbar {
+    position: fixed;
+    top: 67px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #214380;
+}
+
+.in {
+    MARGIN-Left: 40px;
+}
+
+.log {
+    background: #abcae1;
+}
+
+.log1 {
+    background: #abcae1;
+}
+
+.log tbody tr:nth-child(odd) {
+    background: #e8eefe;
+}
+
+.fullcell {
+    position: fixed;
+    top:69px;
+    right: 0;
+    bottom: 0;
+    left: 0px;
+    overflow: hidden;
+}
+
+.maincell {
+    position: fixed;
+    top: 69px;
+    right: 0;
+    bottom: 0;
+    left: 156px;
+    overflow: hidden;
+    padding-left: 2px;
+    vertical-align: top;
+}
+
+.navbar {
+    position: fixed;
+    top: 69px;
+    left: 0;
+    bottom: 0;
+    width: 156px;
+    background: #e8eefe;
+    border-right: 2px solid #a800a8;
+    vertical-align: top;
+}
+
+h1 {
+    color: black;
+}
+
+.nav1 {
+    padding: 1px 0px 1px 8px;
+    margin: 0px;
+    font-weight: bold;
+    color: black;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.nav2 {
+    margin-left: 32px;
+    margin-top: 0;
+    color: black;
+    cursor: pointer;
+}
+
+.r {
+    font-size: 11pt;
+}
+
+.r0 {
+    background: white;
+}
+
+.r1 {
+    border-bottom: 1px solid #a810a8;
+    text-align: left;
+}
+
+.r2 {
+    text-align: left;
+}
+
+.r3 {
+    border-bottom: 1px solid #a810a8;
+    text-align: left;
+}
+
+    .r3:hover {
+        background-color: #6b9dc7;
+        cursor: pointer;
+    }
+
+.spread {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+
+.timer {
+    border: 1px solid #abcae1;
+    background-color: #abcae1;
+}
+
+.tm {
+    font-size: 7pt;
+}
+
+.top1 {
+    font-size: 14pt;
+    font-weight: bold;
+    color: white;
+    margin-top: 11px;
+}
+
+.top2 {
+    color: white;
+}
+
+.warn {
+    font-weight: bold;
+    color: #c00000;
+}
+
+.icon1 {
+    width: 14px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-image: url("images-isdu/info.gif");
+}
+
+.icon2 {
+    width: 14px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-image: url("images-isdu/caution.gif");
+}
+
+.icon3 {
+    width: 14px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-image: url("images-isdu/warning.gif");
+}
+
+.itemBar {
+    padding: 7px;
+    min-height: 20px;
+    margin-top: 4px;
+    margin-right: 8px;
+    width: auto;
+    border-radius: 8px;
+    background-color: #6BA0CA;
+    cursor: pointer;
+}
+
+.computeritemcir {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    background: gray;
+    margin-right:4px;
+}
+
+.computeritem {
+    cursor: pointer;
+    width: auto;
+    border-radius: 5px;
+    background-color: #abcae1;
+    height: 28px;
+    margin: 4px;
+    padding: 2px;
+}
+
+    .computeritem:hover {
+        background-color: #6b9dc7;
+    }
+
+.us {
+    -webkit-touch-callout: initial;
+    -webkit-user-select: auto;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}

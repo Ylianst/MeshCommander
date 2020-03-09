@@ -1,0 +1,18 @@
+{
+    "name": "MeshCommander",
+    "version": "0.4.4",
+    "description": "Intel(R) Active Management Technology console tool",
+    "main": "index-nw.html",
+    "author": "Intel Corporation",
+    "keywords": [ "Intel", "Intel AMT", "Active Management Technology", "Remote Management", "Hardware Management", "Manageability Commander" ],
+    "single-instance":  false,
+    "window": {
+        "icon": "favicon.png",
+        "toolbar": false,
+        "frame": true,
+        "width": 970,
+        "min_width": 970,
+        "height": 760,
+        "min_height": 640
+    }
+}
