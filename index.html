@@ -665,6 +665,7 @@
             <div id="tlsNotification1" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="images/lock.gif" /> TLS Secured</div>
             <div id="tlsNotification2" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="images/lock.gif" /> TLS Secured (Pinned)</div>
             <div id="tlsNotification3" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="images/lock.gif" /> TLS (Untrusted)</div>
+            <div id="tlsNotification4" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none;color:red" onclick="switchToTls(1)"><img src="images/unlock.gif" /> Switch to TLS</div>
             <!-- ###END###{Mode-NodeWebkit} -->
             <!-- ###BEGIN###{ComputerSelector} -->
             <div style='padding:8px'>
@@ -2927,6 +2928,7 @@
             QV('tlsNotification1', false);
             QV('tlsNotification2', false);
             QV('tlsNotification3', false);
+            QV('tlsNotification4', false);
             // ###END###{Mode-NodeWebkit}
 
             // Setup Digest Realm checking
@@ -4827,6 +4829,140 @@
             chooser.addEventListener('change', function () { require('fs').writeFile(this.value, showTlsCertTempCert.raw, 'binary', function () { }); }, false);
             chooser.click();
         }
+
+        function switchToTls() {
+            if (xxTlsCurrentCert == null) {
+                setDialogMode(11, "Switch to TLS", 3, switchToTls1, "The connection is currently not secured. Click OK to setup Intel AMT with TLS and switch to a secure connection.");
+            } else {
+                setDialogMode(11, "Switch to TLS", 3, switchToTls1, "The connection is currently not secured and Intel AMT is already setup with TLS. Click OK to switch to a secure connection.");
+            }
+        }
+
+        function switchToTls1() {
+            // Check if Intel AMT is already setup with TLS.
+            if (xxTlsCurrentCert == null) {
+                // TLS is not setup, start by asking Intel AMT to generate a key pair
+                messagebox("TLS Setup", "Generating certificate key...");
+                amtstack.AMT_PublicKeyManagementService_GenerateKeyPair(0, 2048, switchToTls2);
+            } else {
+                // Setup the certificate pinning and reconnect
+                var cert = null;
+                try { cert = forge.pki.certificateFromAsn1(forge.asn1.fromDer(xxCertificates[xxTlsCurrentCert].X509Certificate)); } catch (ex) { messagebox("TLS Certificate", "Failed to read TLS certificate: " + ex); return; }
+                currentcomputer['tlscert'] = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).toHex();
+                currentcomputer['tlscerthash'] = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex();
+                currentcomputer['tls'] = 1;
+                updateComputerDetails();
+                saveComputers();
+
+                // Disconnect and reconnect immidiatly
+                disconnect();
+                computerConnect(undefined, currentcomputer['h'], 0, true);
+            }
+        }
+
+        function switchToTls2(stack, serviceName, response, status) {
+            if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
+            if (response.Body['ReturnValue'] != 0) { messagebox("Issue Certificate", "Failed to generate key pair, " + response.Body['ReturnValueStr']); return; }
+
+            // Get the new key pair
+            messagebox("TLS Setup", "Fetching certificate key...");
+            amtstack.Enum('AMT_PublicPrivateKeyPair', switchToTls3, response.Body['KeyPair']['ReferenceParameters']['SelectorSet']['Selector']['Value']);
+        }
+
+        function switchToTls3(stack, serviceName, response, status, tag) {
+            if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
+            var DERKey = null;
+            for (var i in response) { if (response[i]['InstanceID'] == tag) DERKey = response[i]['DERKey']; }
+
+            // Sign the key pair using the CA certifiate
+            messagebox("TLS Setup", "Creating TLS certificate...");
+            var cert = amtcert_signWithCaKey(DERKey, null, { 'CN': currentcomputer['name'], 'O': "None", 'ST': "None", 'C': "None" }, { 'CN': "Untrusted Root Certificate" }, { name: 'extKeyUsage', serverAuth: true });
+            if (cert == null) { messagebox("Issue Certificate", "Unable to sign certificate."); return; }
+
+            // Save cert and cert hash in computer list
+            messagebox("TLS Setup", "Uploading TLS certificate...");
+            currentcomputer['tlscert'] = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).toHex();
+            currentcomputer['tlscerthash'] = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex();
+            updateComputerDetails();
+            saveComputers();
+
+            // Place the resulting signed certificate back into AMT
+            var pem = forge.pki.certificateToPem(cert).replace(/(\r\n|\n|\r)/gm, '');
+            amtstack.AMT_PublicKeyManagementService_AddCertificate(pem.substring(27, pem.length - 25), switchToTls4);
+        }
+
+        function switchToTls4(stack, serviceName, response, status) {
+            if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
+
+            messagebox("TLS Setup", "Setting TLS certificate...");
+            var certInstanceId = response.Body['CreatedCertificate']['ReferenceParameters']['SelectorSet']['Selector']['Value'];
+
+            // Set the TLS certificate
+            setTlsSecurityPendingCalls = 3;
+            if (xxTLSCredentialContext.length > 0) {
+                // Modify the current context
+                var newTLSCredentialContext = Clone(xxTLSCredentialContext[0]);
+                newTLSCredentialContext['ElementInContext']['ReferenceParameters']['SelectorSet']['Selector']['Value'] = certInstanceId;
+                amtstack.Put('AMT_TLSCredentialContext', newTLSCredentialContext, switchToTls5, 0, 1);
+            } else {
+                // Add a new security context
+                amtstack.Create('AMT_TLSCredentialContext', {
+                    'ElementInContext': '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + certInstanceId + '</w:Selector></w:SelectorSet></a:ReferenceParameters>',
+                    'ElementProvidingContext': '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_TLSProtocolEndpointCollection') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="ElementName">TLSProtocolEndpointInstances Collection</w:Selector></w:SelectorSet></a:ReferenceParameters>'
+                }, switchToTls5);
+            }
+
+            // Figure out what index is local & remote
+            var localNdx = ((xxTlsSettings[0]['InstanceID'] == 'Intel(r) AMT LMS TLS Settings')) ? 0 : 1, remoteNdx = (1 - localNdx);
+
+            // Remote TLS settings
+            var xxTlsSettings2 = Clone(xxTlsSettings);
+            xxTlsSettings2[remoteNdx]['Enabled'] = true;
+            xxTlsSettings2[remoteNdx]['MutualAuthentication'] = false;
+            xxTlsSettings2[remoteNdx]['AcceptNonSecureConnections'] = true;
+            delete xxTlsSettings2[remoteNdx]['TrustedCN'];
+
+            // Local TLS settings
+            xxTlsSettings2[localNdx]['Enabled'] = true;
+            delete xxTlsSettings2[localNdx]['TrustedCN'];
+
+            // Update TLS settings
+            amtstack.Put('AMT_TLSSettingData', xxTlsSettings2[0], switchToTls5, 0, 1, xxTlsSettings2[0]);
+            amtstack.Put('AMT_TLSSettingData', xxTlsSettings2[1], switchToTls5, 0, 1, xxTlsSettings2[1]);
+        }
+
+        function switchToTls5(stack, name, response, status) {
+            if (stack) {
+                if (status != 200) { messagebox('', "Failed to set TLS certificate, status = " + status); return; }
+                if (response.Body['ReturnValueStr'] && !methodcheck(response)) return;
+            }
+
+            // Check if all the calls are done & perform a commit
+            if ((--setTlsSecurityPendingCalls) == 0) {
+                messagebox("TLS Setup", "Performing commit...");
+                amtstack.AMT_SetupAndConfigurationService_CommitChanges(null, switchToTls6);
+            }
+        }
+
+        function switchToTls6(stack, name, response, status) {
+            if (status != 200) { messagebox('', "Failed to set TLS security, status = " + status); return; }
+            if (response.Body['ReturnValue'] != 0) { messagebox('', "Failed to set TLS security, error: " + response.Body['ReturnValueStr']); return; }
+
+            // Switch current computer to TLS
+            messagebox("TLS Setup", "TLS setup completed.");
+            currentcomputer['tls'] = 1;
+            updateComputerDetails();
+            saveComputers();
+
+            setTimeout(function () {
+                setDialogMode();
+
+                // Disconnect and reconnect immidiatly
+                disconnect();
+                computerConnect(undefined, currentcomputer['h'], 0, true);
+            }, 2000);
+        }
+
         // ###END###{Mode-NodeWebkit}
 
         //
@@ -5778,6 +5914,10 @@
                 var certInstanceId = xxTLSCredentialContext[0]['ElementInContext']['ReferenceParameters']['SelectorSet']['Selector']['Value'];
                 for (var i in xxCertificates) { if (xxCertificates[i]['InstanceID'] == certInstanceId) { xxTlsCurrentCert = i; } }
             }
+
+            // ###BEGIN###{Mode-NodeWebkit}
+            if (currentcomputer['tls'] == 0) { QV('tlsNotification4', true); }
+            // ###END###{Mode-NodeWebkit}
 
             // Setup the certificates
             for (var i in xxCertificates) {
