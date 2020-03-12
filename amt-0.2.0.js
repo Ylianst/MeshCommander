@@ -545,7 +545,7 @@ function AmtStackCreateService(wsmanStack) {
 
         if (eventSensorType == 193) {
             if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x30) && (eventDataField[2] == 0x00) && (eventDataField[3] == 0x00)) { return "User request for remote connection."; }
-            if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x20) && (eventDataField[2] == 0x03) && (eventDataField[3] == 0x01)) { return "EAC error: attempt to get posture while NAC in Intel® AMT is disabled."; } // eventDataField = 0xAA20030100000000
+            if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x20) && (eventDataField[2] == 0x03) && (eventDataField[3] == 0x01)) { return "EAC error: attempt to get posture while NAC in Intelï¿½ AMT is disabled."; } // eventDataField = 0xAA20030100000000
             if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x20) && (eventDataField[2] == 0x04) && (eventDataField[3] == 0x00)) { return "HWA Error: general error"; } // Used to be "Certificate revoked." but don't know the source of this.
         }
 

@@ -1532,16 +1532,39 @@
                     </select>
                     <div>Boot Source</div>
                 </div>
-                <div style=height:26px>
-                    <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
-                        <option value=0>None</option>
-                        <option value=1>Index 1</option>
-                        <option value=2>Index 2</option>
-                        <option value=3>Index 3</option>
-                        <option value=3>Index 4</option>
+                <div style=height:26px id=idd_d24BootMediaIndex>
+                    <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange=bootMediaIndexChanged()>
                     </select>
                     <div>Boot Media Index</div>
                 </div>
+                <div style=height:26px id=idd_d24OCRHTTPSParams>
+                    <div style=height:26px><label style='display:inline-block'>HTTPS URL [<a href="javascript:checkAdvHttps()" id="d24OCRHTTPSAdv">+</a>]</label><input type="text" id="d24OCRHTTPSUrl" style="float:right;width:200px" onChange="javacript:checkHttpsUrl()" maxlength=300><br></div>
+                    <div id='idd_d24OCRHTTPSParams_ex' style='display:none'>
+                        <div style=height:26px><label style='display:inline-block'>Certificate SHA256</label><input type="text" id="d24OCRHTTPSCert256" style="float:right;width:200px"maxlength=300><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA256 Hash</label><input type="text" id="d24OCRHTTPSBootImageSHA256" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA512 Hash</label><input type="text" id="d24OCRHTTPSBootImageSHA512" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Certificate Server Name</label><input type="text" id="d24OCRHTTPSCertServerName" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Server Verification Method</label>
+                            <select id="d24OCRHTTPSCertVerifyMethod" style="float:right;width:200px">
+                                <option value=1>Full Name</option>
+                                <option value=2>Domain Suffix</option>
+                                <option value=3>Other</option>
+                            </select><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Sync Root CA with AMT</label><input type="checkbox" id="d24OCRHTTPSCertSync" checked='checked' style="float:right;"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Request Timeout</label><input type="text" id="d24OCRHTTPSReqTimeout" value='0' style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Digest Username</label><input type="text" id="d24OCRHTTPSDigestUsername" maxlength=16 style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Digest Password</label><input type="password" id="d24OCRHTTPSDigestPassword" maxlength=16 style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Optional Data (hex)</label><input type="text" id="d24OCRHTTPSOptionalData" maxlength=100 style="float:right;width:200px"><br></div>
+                    </div>
+                </div>
+                <div style=height:26px id=idd_d24OCRPBAParams>
+                    <div style=height:26px><label style='display:inline-block'>Device Path [<a href="javascript:checkAdvPba()"id="d24OCRPBAAdv">+</a>]</label><input type="text" id="d24OCRPBADevPath" style="float:right;width:200px" maxlength=300><br></div>
+                    <div id='idd_d24OCRPBAParams_ex' style='display:none'>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA256 Hash</label><input type="text" id="d24OCRPBABootImageSHA256" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA512 Hash</label><input type="text" id="d24OCRPBABootImageSHA512" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Optional Data (hex)</label><input type="text" id="d24OCRPBAOptionalData" maxlength=100 style="float:right;width:200px"><br></div>
+                    </div>
+                </div>                
                 <div style=height:26px id=idd_d24IDERBootDevice>
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
                         <option value=0>Boot to floppy</option>
@@ -1556,7 +1579,7 @@
                         <option id="idx_d24Verbocity2" value=2>Verbose</option>
                         <option id="idx_d24Verbocity3" value=3>Blank Screen</option>
                     </select>
-                    <div>Verbocity</div>
+                    <div>Verbosity</div>
                 </div>
                 <div style=height:26px id=idd_d24RSEPass>
                     <div style="float:right;width:200px"><input type=password id=d24rsepass maxlength=32 style=float:right;width:100%></div>
@@ -1617,7 +1640,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.1';
+        var version = '0.8.3-alpha4';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -9687,9 +9710,13 @@
         //
 
         amtPowerBootCapabilities = null;
+        amtOCRBootSources = null;
+        amtOCRPBAInstances = null;
+        amtOCRPBABootString = null;
+        var ocrminver = 15; //change it to lower value for mock up
         function showPowerActionDlg() {
             if (xxdialogMode) return;
-            statusbox("Power Actions", "Checking capabilities...");
+            statusbox("Power Actions", "Checking boot capabilities...");
             amtstack.Get('AMT_BootCapabilities', powerActionResponse00, 0, 1);
         }
 
@@ -9757,11 +9784,38 @@
                 // ###END###{Mode-NodeWebkit}
                 rsepass = 1;
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
+            } else if (action == 999) {        
+                statusbox("Power Actions", "Checking boot sources...");            
+                amtstack.BatchEnum('',['CIM_BootSourceSetting'], powerActionDlgCheck00, true);
             } else {
                 powerActionDlg();
             }
         }
 
+        function powerActionDlgCheck00(stack, name, response, status) {          
+            if (status == 200 && response.CIM_BootSourceSetting != null) {
+                var srcs = response.CIM_BootSourceSetting.responses;
+                amtOCRBootSources = []
+                amtOCRPBAInstances = {}
+                amtOCRPBABootString = {}
+                for (var i = 0; i < srcs.length; i++) {
+                    amtOCRBootSources.push(srcs[i].InstanceID);
+                    var instanceid = srcs[i].InstanceID;
+                    if (instanceid != null && instanceid.toString().startsWith('Intel(r) AMT: Force OCR UEFI Boot')) {
+                        try {
+                            var arr = instanceid.trim().split(' ');
+                            idx = parseInt(arr[arr.length-1]);
+                            amtOCRPBAInstances[idx] = srcs[i].BIOSBootString;
+                            amtOCRPBABootString[idx] = srcs[i].BootString;
+                        } catch (e) { }
+                    }
+                }
+                
+                //console.log(JSON.stringify(amtOCRBootSources));
+                powerActionDlg();
+            }
+        }
+        
         function powerActionDlg() {
             //if (amtversion == 0) return;
             //if (amtversion > 6) { amtstack.Get('IPS_OptInService', powerActionResponse0); } else { amtstack.Get('AMT_BootSettingData', powerActionResponse1); }
@@ -9847,15 +9901,220 @@
             QE('idd_d24IDERBootDevice', !ospower);
             QE('idx_d24Verbocity', !ospower);
             QE('idd_d24RSEPass', !ospower);
+            // Add One Click Recovery option if firmare is >= 15
+            var opts = Q('idx_d24ForceBootDevice');            
+            if (amtversion >=ocrminver) {              
+              if (opts.options.length <=5) {
+                opt = document.createElement('option'); opt.value=5; opt.innerHTML='Force UEFI Boot Option';
+                if (amtPowerBootCapabilities['ForceUEFIPBABoot']) opts.appendChild(opt);
+                opt = document.createElement('option'); opt.value=6; opt.innerHTML='Force UEFI HTTPS Boot';
+                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot']) opts.appendChild(opt);
+              }              
+            } else {
+              for (var i=0; i<opts.options.length;i++) {                
+                if (opts.options[i].value>=5) {                  
+                  opts.options.remove(i)
+                }
+              }
+            
+            }
 
             // If the boot source is not "None" (0), disable all boot settings.
-            var bootSettingOpts = ['d24BiosPause', 'd24BiosSecureBoot', 'd24BiosSetup', 'd24ForceProgressEvents', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
-            if (idx_d24ForceBootDevice.value > 0) {
+            var bootSettingOpts = ['d24BiosPause',  'd24BiosSetup', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
+            // only reset the following options if version is less than OCR minimum version
+            if (amtversion<ocrminver) {
+              bootSettingOpts.push('d24BiosSecureBoot');
+              bootSettingOpts.push('d24ForceProgressEvents');              
+            }
+            
+            if (Q('idx_d24ForceBootDevice').value > 0) {
                 for (var i in bootSettingOpts) {
                     Q(bootSettingOpts[i]).checked = false;
+                }                
+            }
+            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], Q('idx_d24ForceBootDevice').value == 0); }
+            // rebuild idx_d24BootMediaIndex if HDD or CD/DVD boot
+            var d_fbd = Q('idx_d24ForceBootDevice');
+            var d_bmi = Q('idx_d24BootMediaIndex');
+            QV('idd_d24BootMediaIndex',true);
+            QV('idd_d24OCRPBAParams',false);
+            QV('idd_d24OCRHTTPSParams',false);
+            if (d_fbd.value == 1 || d_fbd.value ==3 ) {
+                d_bmi.innerHTML="<option value=0>Default</option><option value=0>Primary</option><option value=2>Secondary</option>";
+            } else if (d_fbd.value == 5) {
+                d_bmi.innerHTML="";
+                // force secure boot if Force UEFI Local PBA Boot is set and AMTSecureBootControl is not set
+                if (amtPowerBootCapabilities["AMTSecureBootControl"]!=null && amtPowerBootCapabilities["AMTSecureBootControl"]==false) {
+                    Q('d24BiosSecureBoot').checked = true
+                }
+                for (var o in amtOCRPBAInstances) {
+                    d_bmi.innerHTML+="<option value="+o+">"+amtOCRPBAInstances[o]+"</option>";
+                }
+                QV('idd_d24OCRPBAParams',true);
+                Q('d24OCRPBADevPath').value = amtOCRPBABootString[d_bmi.value];
+            } else if (d_fbd.value == 6) {
+                QV('idd_d24BootMediaIndex',false);
+                QV('idd_d24OCRHTTPSParams',true);
+            } else {
+                QV('idd_d24BootMediaIndex',false);
+                d_bmi.innerHTML="";//clear up                
+            }
+        }
+
+        function bootMediaIndexChanged() {
+            var d_fbd = Q('idx_d24ForceBootDevice');
+            var d_bmi = Q('idx_d24BootMediaIndex');
+            if (d_fbd.value==5) {// PBA
+                Q('d24OCRPBADevPath').value = amtOCRPBABootString[d_bmi.value];
+            }
+            var tmp = getTLVS();
+            console.log("Hexdump of the TLVs is "+ rstr2hex(tmp.join('')));
+            console.log("Base64 of the TLVs is "+ btoa(tmp.join('')));
+        }
+
+        function checkHttpsUrl() {
+            // ###BEGIN###{Mode-NodeWebkit}
+            var httpsurl = null;
+            try {
+                if (Q('d24OCRHTTPSUrl').value.trim()=='') return;
+                httpsurl=require('url').parse(Q('d24OCRHTTPSUrl').value);
+            } catch (e) {
+                console.log("Error parsing url");  
+            }
+
+            if (httpsurl==null || (httpsurl.protocol != "https:")) {
+                console.log("HTTPS Url is needed");
+                Q('d24OCRHTTPSUrl').value = "";                
+                return;
+            } else {
+                if (httpsurl.port == null) httpsurl.port=443;
+            }
+            try {
+                var socket = require('tls').connect(httpsurl.port, httpsurl.host, { rejectUnauthorized: false }, function () {
+                    Q('d24OCRHTTPSCert256').value = socket.getPeerCertificate(true).fingerprint256.split(':').join('').toLowerCase();
+                    socket.end();
+                    //Debug: auto calculate TLVs                    
+                    try {
+                        tlv = getTLVS();
+                    } catch (e1) {
+                        console.log(e1)
+                    }
+                });
+            } catch (e) {
+                console.log("Unable to get peer certificate hash:"+e);
+            }
+            // ###END###{Mode-NodeWebkit}
+        }
+
+        function checkAdvHttps() {
+            var txt = Q('d24OCRHTTPSAdv').innerHTML;
+            if (txt=='+') {
+                QV('idd_d24OCRHTTPSParams_ex', true);
+                Q('d24OCRHTTPSAdv').innerHTML ='-';
+                QS('idd_d24OCRHTTPSParams').height ='290px';
+            } else {
+                QV('idd_d24OCRHTTPSParams_ex', false);
+                Q('d24OCRHTTPSAdv').innerHTML ='+';
+                QS('idd_d24OCRHTTPSParams').height ='26px';
+            }
+        }
+
+        function checkAdvPba() {
+            var txt = Q('d24OCRPBAAdv').innerHTML;
+            if (txt=='+') {
+                QV('idd_d24OCRPBAParams_ex', true);
+                Q('d24OCRPBAAdv').innerHTML='-';
+                QS('idd_d24OCRPBAParams').height='100px';
+            } else {
+                QV('idd_d24OCRPBAParams_ex', false);
+                Q('d24OCRPBAAdv').innerHTML='+';
+                QS('idd_d24OCRPBAParams').height='26px';
+            }
+        }
+        
+        function makeTLV(ptype,dtype,len,data) {            
+            var tlv = '';
+            tlv+=ShortToStrX(0x8086);
+            tlv+=ShortToStrX(ptype & 0xFFFF);
+            tlv+=IntToStrX( len & 0xFFFFFFFF);
+            if (dtype=='bool') {
+                tlv+=String.fromCharCode(data & 0xFF);                
+            } else if (dtype=='short') {
+                tlv+=ShortToStrX(data);                
+            } else if (dtype=='int') {
+                tlv+=IntToStrX(data);                
+            } else if (dtype=='hex') { 
+                tlv+=hex2rstr(data);                               
+            } else if (dtype=='text') {
+                tlv+=data;                
+            }
+            //console.log("Paramtype: "+ptype+", Data type: "+dtype+", length: "+len+", Data: "+data+", TLV: "+tlv.toString('hex'));
+            return tlv;
+        }
+
+        function getTLVS() {
+            var tlvs = [];
+            var d_fbd = Q('idx_d24ForceBootDevice'); 
+            if (d_fbd.value == 5) {
+                // EFI Device Path, type=2
+                tlvs.push(makeTLV(0x0002,'text',Q('d24OCRPBADevPath').value.trim().length,Q('d24OCRPBADevPath').value.trim()));
+                // EFI Device Path Len, type 3
+                tlvs.push(makeTLV(0x0003,'short',4, Q('d24OCRPBADevPath').value.trim().length));
+                // Boot Image Hash SHA-256, type=4
+                if (Q('d24OCRPBABootImageSHA256').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0004,'hex',Q('d24OCRPBABootImageSHA256').value.length/2,Q('d24OCRPBABootImageSHA256').value));
+                }
+                // Boot Image Hash SHA-512, type=6
+                if (Q('d24OCRPBABootImageSHA512').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0006,'hex',Q('d24OCRPBABootImageSHA512').value.length/2,Q('d24OCRPBABootImageSHA512').value));
+                }
+                // EFI optional data, type 20
+                if (Q('d24OCRPBAOptionalData').value.trim() !='') {
+                    tlvs.push(makeTLV(0x0014,'hex',Q('d24OCRPBAOptionalData').value.length/2,Q('d24OCRPBAOptionalData').value));
+                }
+            } else if (d_fbd.value == 6) {
+                // HTTPS URL, type=1
+                tlvs.push(makeTLV(0x0001,'text',Q('d24OCRHTTPSUrl').value.trim().length,Q('d24OCRHTTPSUrl').value.trim()));
+                // EFI Device Path Len, type 3
+                tlvs.push(makeTLV(0x0003,'short',4, Q('d24OCRHTTPSUrl').value.trim().length));
+                // HTTPS Cert SHA-256, type 23
+                tlvs.push(makeTLV(0x0017,'hex', Q('d24OCRHTTPSCert256').value.length/2,Q('d24OCRHTTPSCert256').value));
+                // Boot Image Hash SHA-256, type=4
+                if (Q('d24OCRHTTPSBootImageSHA256').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0004,'hex', Q('d24OCRHTTPSBootImageSHA256').value.length/2,Q('d24OCRHTTPSBootImageSHA256').value));
+                }
+                // Boot Image Hash SHA-512, type=6
+                if (Q('d24OCRHTTPSBootImageSHA512').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0006,'hex', Q('d24OCRHTTPSBootImageSHA512').value.length/2,Q('d24OCRHTTPSBootImageSHA512').value));
+                }
+                // HTTPS Cert Server Name and verification method, type=21 & type=22
+                if (Q('d24OCRHTTPSCertServerName').value.trim() != '') {
+                    // HTTPS Cert name
+                    tlvs.push(makeTLV(0x0015,'text',Q('d24OCRHTTPSCertServerName').value.trim().length,Q('d24OCRHTTPSCertServerName').value.trim()));
+                    // Server name verification method
+                    tlvs.push(makeTLV(0x0016,'short',2,Q('d24OCRHTTPSCertVerifyMethod').value));
+                }
+                // HTTPS Cert sync with AMT
+                tlvs.push(makeTLV(0x0014,'bool',1,(Q('d24OCRHTTPSCertSync').checked?1:0)));
+                
+                // Server timeout
+                var tmout = 0;
+                try {
+                    tmout = parseInt(Q('d24OCRHTTPSReqTimeout').value);
+                } catch (e) {}
+                tlvs.push(makeTLV(0x001E,'short',2,tmout));  
+                if (Q('d24OCRHTTPSDigestUsername').value.trim() != '') {
+                    //HTTP Digest Username, type=40
+                    tlvs.push(makeTLV(0x0028,'text',Q('d24OCRHTTPSDigestUsername').value.trim().length,Q('d24OCRHTTPSDigestUsername').value.trim()));
+                    //HTTP Digest Username, type=41
+                    tlvs.push(makeTLV(0x0029,'text',Q('d24OCRHTTPSDigestPassword').value.trim().length,Q('d24OCRHTTPSDigestPassword').value.trim()));
+                }
+                // EFI optional data, type 20
+                if (Q('d24OCRHTTPSOptionalData').value.trim() !='') {
+                    tlvs.push(makeTLV(0x0014,'hex', Q('d24OCRHTTPSOptionalData').value.length/2,Q('d24OCRHTTPSOptionalData').value));
                 }
             }
-            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], idx_d24ForceBootDevice.value == 0); }
+            return tlvs;
         }
 
         function showAdvPowerDlgOk() {
@@ -9887,7 +10146,8 @@
                 AvdPowerDlg.UseSOL = Q('d24SerialOverLan').checked;
                 AvdPowerDlg.UseSafeMode = Q('d24SafeMode').checked;
                 AvdPowerDlg.UserPasswordBypass = Q('d24UserPasswordBypass').checked;
-                AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;
+                AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;                
+
                 if ((AvdPowerDlg.SecureErase === true) && (Q('d24rsepass').value.length > 0)) { AvdPowerDlg.RSEPassword = Q('d24rsepass').value; }
 
                 // Attempt user consent
@@ -10035,12 +10295,20 @@
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
                 rsepass = null;
+                
                 // ###BEGIN###{PowerControl-Advanced}
             }
             // ###END###{PowerControl-Advanced}
             //if (((action == 104) || (action == 105)) && !r['SecureErase']) { /*console.log("This Intel&reg; AMT does not support Secure Erase");*/ cleanup(); return; }
-            console.log("Boot Action: " + action);
-            console.log("Setting Boot Settings: " + ObjectToString2(r));
+            //console.log("Boot Action: " + action);
+            //console.log("Setting Boot Settings: " + ObjectToString2(r));
+            
+            // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
+            if (amtversion>=ocrminver && (Q('idx_d24ForceBootDevice').value == 5 || Q('idx_d24ForceBootDevice').value == 6)) {//Force UEFI HTTPS Boot                
+                r['UefiBootParametersArray']=btoa(getTLVS().join(''));
+                r['UefiBootNumberOfParams']=getTLVS().length;
+                r['BootMediaIndex']=0;//do not use boot media index for OCR
+            }
             statusbox("Power Action", "Setting boot settings...");
             amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, r, 1);
         }
@@ -10060,21 +10328,29 @@
             var action = d5actionSelect.value, bootSource = null;
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) {
-                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot'][idx_d24ForceBootDevice.value - 1]; }
+                if (Q('idx_d24ForceBootDevice').value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force UEFI Boot Option', 'Force UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
             } else {
             // ###END###{PowerControl-Advanced}
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
                 // ###BEGIN###{PowerControl-Advanced}
             }
+            // handle OCR resource address mapped by InstanceID 
+            if (bootSource == 'Force WinRE Boot') bootSource = 'Force OCR UEFI Boot Option 1';// assume the first PBA is WinRE, will fix later
+            if (bootSource == 'Force UEFI Boot Option') bootSource = 'Force OCR UEFI Boot Option '+Q('idx_d24BootMediaIndex').value;// use boot device index
+            if (bootSource == 'Force UEFI HTTPS Boot') bootSource = 'Force OCR UEFI HTTPS Boot';// HTTPS boot 
+            
+            // Resetting Force boot data in case it was changed so that it won't be used on the next power action
+            Q("idx_d24ForceBootDevice").value = 0;
+
             // ###END###{PowerControl-Advanced}
-            console.log('ChangeBootOrder: ' + bootSource);
+            //console.log('ChangeBootOrder: ' + bootSource);
             amtstack.CIM_BootConfigSetting_ChangeBootOrder((bootSource == null)?bootSource:'<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">Intel(r) AMT: ' + bootSource + '</Selector></SelectorSet></ReferenceParameters>', powerActionResponse3);
         }
 
         var targetPowerAction = 0;
         function powerActionResponse3(stack, name, response, status) {
-            console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
+            //console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
             if (errcheck(status, stack)) return;
             //console.log("Performing Power State Change...");
             statusbox("Power Action", "Performing power action...");

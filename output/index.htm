@@ -809,6 +809,7 @@ th {
                         <div id="tlsNotification1" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="data:image/gif;base64,R0lGODlhCAAKALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//////yH5BAEAAA0ALAAAAAAIAAoAAAQXsDVEKpKNXIpJ/5KXVaRXkuOZlit6VhEAOw=="> TLS Secured</div>
             <div id="tlsNotification2" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="data:image/gif;base64,R0lGODlhCAAKALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//////yH5BAEAAA0ALAAAAAAIAAoAAAQXsDVEKpKNXIpJ/5KXVaRXkuOZlit6VhEAOw=="> TLS Secured (Pinned)</div>
             <div id="tlsNotification3" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="data:image/gif;base64,R0lGODlhCAAKALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//////yH5BAEAAA0ALAAAAAAIAAoAAAQXsDVEKpKNXIpJ/5KXVaRXkuOZlit6VhEAOw=="> TLS (Untrusted)</div>
+            <div id="tlsNotification4" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none;color:red" onclick="switchToTls(1)"><img src="data:image/gif;base64,R0lGODlhCgAKALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//////yH5BAEAAA0ALAAAAAAKAAoAAAQZEKWJmrWpyotv4s3XgdhkiuE5eSraui2rRgA7"> Switch to TLS</div>
                                     <div style='padding:8px'>
                 <input type="button" id="disconnectButton" value="Disconnect" onkeypress="return false" onkeydown="return false" onclick="disconnect()" style="width:138px">
             </div>
@@ -1391,10 +1392,10 @@ th {
                 <div id="id_d21ipaddrsync">
                     <label><input type="checkbox" name="d21" id="d21ipsync" onclick="updateIPSetupDlg()">Operating system IP address sync</label><br>
                 </div>
-                <input type="radio" name="d21" id="d21o0" onclick="updateIPSetupDlg()"><span id="d21l0"></span><br>
-                <input type="radio" name="d21" id="d21o1" onclick="updateIPSetupDlg()"><span id="d21l1"></span><br>
+                <label><input type="radio" name="d21" id="d21o0" onclick="updateIPSetupDlg()"><span id="d21l0"></span></label><br>
+                <label><input type="radio" name="d21" id="d21o1" onclick="updateIPSetupDlg()"><span id="d21l1"></span></label><br>
                 <div id="id_d21manualdiv">
-                    <input type="radio" name="d21" id='d21o2' onclick="updateIPSetupDlg()"><span id="d21l2"></span><br><br>
+                    <label><input type="radio" name="d21" id='d21o2' onclick="updateIPSetupDlg()"><span id="d21l2"></span></label><br><br>
                     <div style="margin-left:20px">
                         <div style="height:26px"><input id="idx_d21address" onkeyup="updateIPSetupDlg()" style="float:right;width:230px"><div>IP address</div></div>
                         <div style="height:26px" id="id_d21subnetdiv"><input id="idx_d21subnet" onkeyup="updateIPSetupDlg()" style="float:right;width:230px"><div>Subnet mark</div></div>
@@ -1461,16 +1462,39 @@ th {
                     </select>
                     <div>Boot Source</div>
                 </div>
-                <div style="height:26px">
-                    <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange="showAdvPowerDlgChange()">
-                        <option value="0">None
-                        <option value="1">Index 1
-                        <option value="2">Index 2
-                        <option value="3">Index 3
-                        <option value="3">Index 4
+                <div style="height:26px" id="idd_d24BootMediaIndex">
+                    <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange="bootMediaIndexChanged()">
                     </select>
                     <div>Boot Media Index</div>
                 </div>
+                <div style="height:26px" id="idd_d24OCRHTTPSParams">
+                    <div style="height:26px"><label style='display:inline-block'>HTTPS URL [<a href="javascript:checkAdvHttps()" id="d24OCRHTTPSAdv">+</a>]</label><input type="text" id="d24OCRHTTPSUrl" style="float:right;width:200px" onchange="javacript:checkHttpsUrl()" maxlength="300"><br></div>
+                    <div id='idd_d24OCRHTTPSParams_ex' style='display:none'>
+                        <div style="height:26px"><label style='display:inline-block'>Certificate SHA256</label><input type="text" id="d24OCRHTTPSCert256" style="float:right;width:200px" maxlength="300"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Image SHA256 Hash</label><input type="text" id="d24OCRHTTPSBootImageSHA256" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Image SHA512 Hash</label><input type="text" id="d24OCRHTTPSBootImageSHA512" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Certificate Server Name</label><input type="text" id="d24OCRHTTPSCertServerName" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Server Verification Method</label>
+                            <select id="d24OCRHTTPSCertVerifyMethod" style="float:right;width:200px">
+                                <option value="1">Full Name
+                                <option value="2">Domain Suffix
+                                <option value="3">Other
+                            </select><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Sync Root CA with AMT</label><input type="checkbox" id="d24OCRHTTPSCertSync" checked='checked' style="float:right;"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Request Timeout</label><input type="text" id="d24OCRHTTPSReqTimeout" value='0' style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Digest Username</label><input type="text" id="d24OCRHTTPSDigestUsername" maxlength="16" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Digest Password</label><input type="password" id="d24OCRHTTPSDigestPassword" maxlength="16" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Optional Data (hex)</label><input type="text" id="d24OCRHTTPSOptionalData" maxlength="100" style="float:right;width:200px"><br></div>
+                    </div>
+                </div>
+                <div style="height:26px" id="idd_d24OCRPBAParams">
+                    <div style="height:26px"><label style='display:inline-block'>Device Path [<a href="javascript:checkAdvPba()" id="d24OCRPBAAdv">+</a>]</label><input type="text" id="d24OCRPBADevPath" style="float:right;width:200px" maxlength="300"><br></div>
+                    <div id='idd_d24OCRPBAParams_ex' style='display:none'>
+                        <div style="height:26px"><label style='display:inline-block'>Image SHA256 Hash</label><input type="text" id="d24OCRPBABootImageSHA256" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Image SHA512 Hash</label><input type="text" id="d24OCRPBABootImageSHA512" style="float:right;width:200px"><br></div>
+                        <div style="height:26px"><label style='display:inline-block'>Optional Data (hex)</label><input type="text" id="d24OCRPBAOptionalData" maxlength="100" style="float:right;width:200px"><br></div>
+                    </div>
+                </div>                
                 <div style="height:26px" id="idd_d24IDERBootDevice">
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange="showAdvPowerDlgChange()">
                         <option value="0">Boot to floppy
@@ -1485,7 +1509,7 @@ th {
                         <option id="idx_d24Verbocity2" value="2">Verbose
                         <option id="idx_d24Verbocity3" value="3">Blank Screen
                     </select>
-                    <div>Verbocity</div>
+                    <div>Verbosity</div>
                 </div>
                 <div style="height:26px" id="idd_d24RSEPass">
                     <div style="float:right;width:200px"><input type="password" id="d24rsepass" maxlength="32" style="float:right;width:100%"></div>
@@ -4664,7 +4688,7 @@ function AmtStackCreateService(wsmanStack) {
                 try {
                     e = window.atob(responses.Body['EventRecords'][i]);
                 } catch (e) {
-                    console.log(e + " " + responses.Body['EventRecords'][i])
+                    console.log(e + ' ' + responses.Body['EventRecords'][i])
                 }
                 x = { 'AuditAppID': ReadShort(e, 0), 'EventID': ReadShort(e, 2), 'InitiatorType': e.charCodeAt(4) };
                 x['AuditApp'] = _AmtAuditStringTable[x['AuditAppID']];
@@ -41204,7 +41228,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
 
 
-        var version = '0.8.0';
+        var version = '0.8.3-alpha4';
         var urlvars = {};
         var amtstack;
         var wsstack = null;
@@ -41996,6 +42020,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             QV('tlsNotification1', false);
             QV('tlsNotification2', false);
             QV('tlsNotification3', false);
+            QV('tlsNotification4', false);
 
             // Setup Digest Realm checking
 
@@ -43609,6 +43634,140 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             chooser.click();
         }
 
+        function switchToTls() {
+            if (xxTlsCurrentCert == null) {
+                setDialogMode(11, "Switch to TLS", 3, switchToTls1, "The connection is currently not secured. Click OK to setup Intel AMT with TLS and switch to a secure connection.");
+            } else {
+                setDialogMode(11, "Switch to TLS", 3, switchToTls1, "The connection is currently not secured and Intel AMT is already setup with TLS. Click OK to switch to a secure connection.");
+            }
+        }
+
+        function switchToTls1() {
+            // Check if Intel AMT is already setup with TLS.
+            if (xxTlsCurrentCert == null) {
+                // TLS is not setup, start by asking Intel AMT to generate a key pair
+                messagebox("TLS Setup", "Generating certificate key...");
+                amtstack.AMT_PublicKeyManagementService_GenerateKeyPair(0, 2048, switchToTls2);
+            } else {
+                // Setup the certificate pinning and reconnect
+                var cert = null;
+                try { cert = forge.pki.certificateFromAsn1(forge.asn1.fromDer(xxCertificates[xxTlsCurrentCert].X509Certificate)); } catch (ex) { messagebox("TLS Certificate", "Failed to read TLS certificate: " + ex); return; }
+                currentcomputer['tlscert'] = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).toHex();
+                currentcomputer['tlscerthash'] = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex();
+                currentcomputer['tls'] = 1;
+                updateComputerDetails();
+                saveComputers();
+
+                // Disconnect and reconnect immidiatly
+                disconnect();
+                computerConnect(undefined, currentcomputer['h'], 0, true);
+            }
+        }
+
+        function switchToTls2(stack, serviceName, response, status) {
+            if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
+            if (response.Body['ReturnValue'] != 0) { messagebox("Issue Certificate", "Failed to generate key pair, " + response.Body['ReturnValueStr']); return; }
+
+            // Get the new key pair
+            messagebox("TLS Setup", "Fetching certificate key...");
+            amtstack.Enum('AMT_PublicPrivateKeyPair', switchToTls3, response.Body['KeyPair']['ReferenceParameters']['SelectorSet']['Selector']['Value']);
+        }
+
+        function switchToTls3(stack, serviceName, response, status, tag) {
+            if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
+            var DERKey = null;
+            for (var i in response) { if (response[i]['InstanceID'] == tag) DERKey = response[i]['DERKey']; }
+
+            // Sign the key pair using the CA certifiate
+            messagebox("TLS Setup", "Creating TLS certificate...");
+            var cert = amtcert_signWithCaKey(DERKey, null, { 'CN': currentcomputer['name'], 'O': "None", 'ST': "None", 'C': "None" }, { 'CN': "Untrusted Root Certificate" }, { name: 'extKeyUsage', serverAuth: true });
+            if (cert == null) { messagebox("Issue Certificate", "Unable to sign certificate."); return; }
+
+            // Save cert and cert hash in computer list
+            messagebox("TLS Setup", "Uploading TLS certificate...");
+            currentcomputer['tlscert'] = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).toHex();
+            currentcomputer['tlscerthash'] = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex();
+            updateComputerDetails();
+            saveComputers();
+
+            // Place the resulting signed certificate back into AMT
+            var pem = forge.pki.certificateToPem(cert).replace(/(\r\n|\n|\r)/gm, '');
+            amtstack.AMT_PublicKeyManagementService_AddCertificate(pem.substring(27, pem.length - 25), switchToTls4);
+        }
+
+        function switchToTls4(stack, serviceName, response, status) {
+            if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
+
+            messagebox("TLS Setup", "Setting TLS certificate...");
+            var certInstanceId = response.Body['CreatedCertificate']['ReferenceParameters']['SelectorSet']['Selector']['Value'];
+
+            // Set the TLS certificate
+            setTlsSecurityPendingCalls = 3;
+            if (xxTLSCredentialContext.length > 0) {
+                // Modify the current context
+                var newTLSCredentialContext = Clone(xxTLSCredentialContext[0]);
+                newTLSCredentialContext['ElementInContext']['ReferenceParameters']['SelectorSet']['Selector']['Value'] = certInstanceId;
+                amtstack.Put('AMT_TLSCredentialContext', newTLSCredentialContext, switchToTls5, 0, 1);
+            } else {
+                // Add a new security context
+                amtstack.Create('AMT_TLSCredentialContext', {
+                    'ElementInContext': '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + certInstanceId + '</w:Selector></w:SelectorSet></a:ReferenceParameters>',
+                    'ElementProvidingContext': '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_TLSProtocolEndpointCollection') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="ElementName">TLSProtocolEndpointInstances Collection</w:Selector></w:SelectorSet></a:ReferenceParameters>'
+                }, switchToTls5);
+            }
+
+            // Figure out what index is local & remote
+            var localNdx = ((xxTlsSettings[0]['InstanceID'] == 'Intel(r) AMT LMS TLS Settings')) ? 0 : 1, remoteNdx = (1 - localNdx);
+
+            // Remote TLS settings
+            var xxTlsSettings2 = Clone(xxTlsSettings);
+            xxTlsSettings2[remoteNdx]['Enabled'] = true;
+            xxTlsSettings2[remoteNdx]['MutualAuthentication'] = false;
+            xxTlsSettings2[remoteNdx]['AcceptNonSecureConnections'] = true;
+            delete xxTlsSettings2[remoteNdx]['TrustedCN'];
+
+            // Local TLS settings
+            xxTlsSettings2[localNdx]['Enabled'] = true;
+            delete xxTlsSettings2[localNdx]['TrustedCN'];
+
+            // Update TLS settings
+            amtstack.Put('AMT_TLSSettingData', xxTlsSettings2[0], switchToTls5, 0, 1, xxTlsSettings2[0]);
+            amtstack.Put('AMT_TLSSettingData', xxTlsSettings2[1], switchToTls5, 0, 1, xxTlsSettings2[1]);
+        }
+
+        function switchToTls5(stack, name, response, status) {
+            if (stack) {
+                if (status != 200) { messagebox('', "Failed to set TLS certificate, status = " + status); return; }
+                if (response.Body['ReturnValueStr'] && !methodcheck(response)) return;
+            }
+
+            // Check if all the calls are done & perform a commit
+            if ((--setTlsSecurityPendingCalls) == 0) {
+                messagebox("TLS Setup", "Performing commit...");
+                amtstack.AMT_SetupAndConfigurationService_CommitChanges(null, switchToTls6);
+            }
+        }
+
+        function switchToTls6(stack, name, response, status) {
+            if (status != 200) { messagebox('', "Failed to set TLS security, status = " + status); return; }
+            if (response.Body['ReturnValue'] != 0) { messagebox('', "Failed to set TLS security, error: " + response.Body['ReturnValueStr']); return; }
+
+            // Switch current computer to TLS
+            messagebox("TLS Setup", "TLS setup completed.");
+            currentcomputer['tls'] = 1;
+            updateComputerDetails();
+            saveComputers();
+
+            setTimeout(function () {
+                setDialogMode();
+
+                // Disconnect and reconnect immidiatly
+                disconnect();
+                computerConnect(undefined, currentcomputer['h'], 0, true);
+            }, 2000);
+        }
+
+
         //
         // SYSTEM STATUS PANEL
         //
@@ -43617,7 +43776,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         function PullPowerState() {
             if (amtstack && amtstack.GetPendingActions() == 0 && amtsysstate && amtsysstate['CIM_ServiceAvailableToElement']) {
                 amtstack.Enum('CIM_ServiceAvailableToElement', function (stack, name, responses, status) {
-                    if (errcheck(status, stack)) return;
+                    if (status != 200) return; // If the polling fails, just skip it.
                     amtsysstate['CIM_ServiceAvailableToElement'].responses = responses;
                     if ((amtversion > 9) && (amtsysstate['CIM_ServiceAvailableToElement'] != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses.length > 0) && (amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'] == 2)) {
                         // If Intel AMT 10+ and powered on, poll the OS power state.
@@ -44472,6 +44631,9 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 var certInstanceId = xxTLSCredentialContext[0]['ElementInContext']['ReferenceParameters']['SelectorSet']['Selector']['Value'];
                 for (var i in xxCertificates) { if (xxCertificates[i]['InstanceID'] == certInstanceId) { xxTlsCurrentCert = i; } }
             }
+
+
+            try { if ((currentcomputer['tls'] == 0) && (xxTlsSettings[0]['MutualAuthentication'] !== true)) { QV('tlsNotification4', true); } } catch (ex) { console.log(ex); }
 
             // Setup the certificates
             for (var i in xxCertificates) {
@@ -45671,7 +45833,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         function showWifiStateDlg() {
             if (xxdialogMode) return;
             var s = '';
-            for (var i in xxWifiState) { s += '<input type=radio name=d11 id=wl' + i + ' value=' + i + ' ' + ((xxWireless['CIM_WiFiPort'].response['EnabledState'] == i)?'checked':'') + '>' + xxWifiState[i] + '<br>'; }
+            for (var i in xxWifiState) { s += '<label><input type=radio name=d11 id=wl' + i + ' value=' + i + ' ' + ((xxWireless['CIM_WiFiPort'].response['EnabledState'] == i)?'checked':'') + '>' + xxWifiState[i] + '</label><br>'; }
             setDialogMode(11, "Wireless State", 3, wifiStateDlg, s);
         }
 
@@ -47998,9 +48160,13 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         //
 
         amtPowerBootCapabilities = null;
+        amtOCRBootSources = null;
+        amtOCRPBAInstances = null;
+        amtOCRPBABootString = null;
+        var ocrminver = 15; //change it to lower value for mock up
         function showPowerActionDlg() {
             if (xxdialogMode) return;
-            statusbox("Power Actions", "Checking capabilities...");
+            statusbox("Power Actions", "Checking boot capabilities...");
             amtstack.Get('AMT_BootCapabilities', powerActionResponse00, 0, 1);
         }
 
@@ -48065,11 +48231,38 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 if (wsstack.comm.xtlsFingerprint == null) { x += ('<div style=color:red>' + "<b>WARNING:</b> TLS is not used, password will be sent in the clear." + '</div>'); }
                 rsepass = 1;
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
+            } else if (action == 999) {        
+                statusbox("Power Actions", "Checking boot sources...");            
+                amtstack.BatchEnum('',['CIM_BootSourceSetting'], powerActionDlgCheck00, true);
             } else {
                 powerActionDlg();
             }
         }
 
+        function powerActionDlgCheck00(stack, name, response, status) {          
+            if (status == 200 && response.CIM_BootSourceSetting != null) {
+                var srcs = response.CIM_BootSourceSetting.responses;
+                amtOCRBootSources = []
+                amtOCRPBAInstances = {}
+                amtOCRPBABootString = {}
+                for (var i = 0; i < srcs.length; i++) {
+                    amtOCRBootSources.push(srcs[i].InstanceID);
+                    var instanceid = srcs[i].InstanceID;
+                    if (instanceid != null && instanceid.toString().startsWith('Intel(r) AMT: Force OCR UEFI Boot')) {
+                        try {
+                            var arr = instanceid.trim().split(' ');
+                            idx = parseInt(arr[arr.length-1]);
+                            amtOCRPBAInstances[idx] = srcs[i].BIOSBootString;
+                            amtOCRPBABootString[idx] = srcs[i].BootString;
+                        } catch (e) { }
+                    }
+                }
+                
+                //console.log(JSON.stringify(amtOCRBootSources));
+                powerActionDlg();
+            }
+        }
+        
         function powerActionDlg() {
             //if (amtversion == 0) return;
             //if (amtversion > 6) { amtstack.Get('IPS_OptInService', powerActionResponse0); } else { amtstack.Get('AMT_BootSettingData', powerActionResponse1); }
@@ -48150,15 +48343,219 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             QE('idd_d24IDERBootDevice', !ospower);
             QE('idx_d24Verbocity', !ospower);
             QE('idd_d24RSEPass', !ospower);
+            // Add One Click Recovery option if firmare is >= 15
+            var opts = Q('idx_d24ForceBootDevice');            
+            if (amtversion >=ocrminver) {              
+              if (opts.options.length <=5) {
+                opt = document.createElement('option'); opt.value=5; opt.innerHTML='Force UEFI Boot Option';
+                if (amtPowerBootCapabilities['ForceUEFIPBABoot']) opts.appendChild(opt);
+                opt = document.createElement('option'); opt.value=6; opt.innerHTML='Force UEFI HTTPS Boot';
+                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot']) opts.appendChild(opt);
+              }              
+            } else {
+              for (var i=0; i<opts.options.length;i++) {                
+                if (opts.options[i].value>=5) {                  
+                  opts.options.remove(i)
+                }
+              }
+            
+            }
 
             // If the boot source is not "None" (0), disable all boot settings.
-            var bootSettingOpts = ['d24BiosPause', 'd24BiosSecureBoot', 'd24BiosSetup', 'd24ForceProgressEvents', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
-            if (idx_d24ForceBootDevice.value > 0) {
+            var bootSettingOpts = ['d24BiosPause',  'd24BiosSetup', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
+            // only reset the following options if version is less than OCR minimum version
+            if (amtversion<ocrminver) {
+              bootSettingOpts.push('d24BiosSecureBoot');
+              bootSettingOpts.push('d24ForceProgressEvents');              
+            }
+            
+            if (Q('idx_d24ForceBootDevice').value > 0) {
                 for (var i in bootSettingOpts) {
                     Q(bootSettingOpts[i]).checked = false;
+                }                
+            }
+            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], Q('idx_d24ForceBootDevice').value == 0); }
+            // rebuild idx_d24BootMediaIndex if HDD or CD/DVD boot
+            var d_fbd = Q('idx_d24ForceBootDevice');
+            var d_bmi = Q('idx_d24BootMediaIndex');
+            QV('idd_d24BootMediaIndex',true);
+            QV('idd_d24OCRPBAParams',false);
+            QV('idd_d24OCRHTTPSParams',false);
+            if (d_fbd.value == 1 || d_fbd.value ==3 ) {
+                d_bmi.innerHTML="<option value=0>Default</option><option value=0>Primary</option><option value=2>Secondary</option>";
+            } else if (d_fbd.value == 5) {
+                d_bmi.innerHTML="";
+                // force secure boot if Force UEFI Local PBA Boot is set and AMTSecureBootControl is not set
+                if (amtPowerBootCapabilities["AMTSecureBootControl"]!=null && amtPowerBootCapabilities["AMTSecureBootControl"]==false) {
+                    Q('d24BiosSecureBoot').checked = true
+                }
+                for (var o in amtOCRPBAInstances) {
+                    d_bmi.innerHTML+="<option value="+o+">"+amtOCRPBAInstances[o]+"</option>";
+                }
+                QV('idd_d24OCRPBAParams',true);
+                Q('d24OCRPBADevPath').value = amtOCRPBABootString[d_bmi.value];
+            } else if (d_fbd.value == 6) {
+                QV('idd_d24BootMediaIndex',false);
+                QV('idd_d24OCRHTTPSParams',true);
+            } else {
+                QV('idd_d24BootMediaIndex',false);
+                d_bmi.innerHTML="";//clear up                
+            }
+        }
+
+        function bootMediaIndexChanged() {
+            var d_fbd = Q('idx_d24ForceBootDevice');
+            var d_bmi = Q('idx_d24BootMediaIndex');
+            if (d_fbd.value==5) {// PBA
+                Q('d24OCRPBADevPath').value = amtOCRPBABootString[d_bmi.value];
+            }
+            var tmp = getTLVS();
+            console.log("Hexdump of the TLVs is "+ rstr2hex(tmp.join('')));
+            console.log("Base64 of the TLVs is "+ btoa(tmp.join('')));
+        }
+
+        function checkHttpsUrl() {
+
+            var httpsurl = null;
+            try {
+                if (Q('d24OCRHTTPSUrl').value.trim()=='') return;
+                httpsurl=require('url').parse(Q('d24OCRHTTPSUrl').value);
+            } catch (e) {
+                console.log("Error parsing url");  
+            }
+
+            if (httpsurl==null || (httpsurl.protocol != "https:")) {
+                console.log("HTTPS Url is needed");
+                Q('d24OCRHTTPSUrl').value = "";                
+                return;
+            } else {
+                if (httpsurl.port == null) httpsurl.port=443;
+            }
+            try {
+                var socket = require('tls').connect(httpsurl.port, httpsurl.host, { rejectUnauthorized: false }, function () {
+                    Q('d24OCRHTTPSCert256').value = socket.getPeerCertificate(true).fingerprint256.split(':').join('').toLowerCase();
+                    socket.end();
+                    //Debug: auto calculate TLVs                    
+                    try {
+                        tlv = getTLVS();
+                    } catch (e1) {
+                        console.log(e1)
+                    }
+                });
+            } catch (e) {
+                console.log("Unable to get peer certificate hash:"+e);
+            }
+        }
+
+        function checkAdvHttps() {
+            var txt = Q('d24OCRHTTPSAdv').innerHTML;
+            if (txt=='+') {
+                QV('idd_d24OCRHTTPSParams_ex', true);
+                Q('d24OCRHTTPSAdv').innerHTML ='-';
+                QS('idd_d24OCRHTTPSParams').height ='290px';
+            } else {
+                QV('idd_d24OCRHTTPSParams_ex', false);
+                Q('d24OCRHTTPSAdv').innerHTML ='+';
+                QS('idd_d24OCRHTTPSParams').height ='26px';
+            }
+        }
+
+        function checkAdvPba() {
+            var txt = Q('d24OCRPBAAdv').innerHTML;
+            if (txt=='+') {
+                QV('idd_d24OCRPBAParams_ex', true);
+                Q('d24OCRPBAAdv').innerHTML='-';
+                QS('idd_d24OCRPBAParams').height='100px';
+            } else {
+                QV('idd_d24OCRPBAParams_ex', false);
+                Q('d24OCRPBAAdv').innerHTML='+';
+                QS('idd_d24OCRPBAParams').height='26px';
+            }
+        }
+        
+        function makeTLV(ptype,dtype,len,data) {            
+            var tlv = '';
+            tlv+=ShortToStrX(0x8086);
+            tlv+=ShortToStrX(ptype & 0xFFFF);
+            tlv+=IntToStrX( len & 0xFFFFFFFF);
+            if (dtype=='bool') {
+                tlv+=String.fromCharCode(data & 0xFF);                
+            } else if (dtype=='short') {
+                tlv+=ShortToStrX(data);                
+            } else if (dtype=='int') {
+                tlv+=IntToStrX(data);                
+            } else if (dtype=='hex') { 
+                tlv+=hex2rstr(data);                               
+            } else if (dtype=='text') {
+                tlv+=data;                
+            }
+            //console.log("Paramtype: "+ptype+", Data type: "+dtype+", length: "+len+", Data: "+data+", TLV: "+tlv.toString('hex'));
+            return tlv;
+        }
+
+        function getTLVS() {
+            var tlvs = [];
+            var d_fbd = Q('idx_d24ForceBootDevice'); 
+            if (d_fbd.value == 5) {
+                // EFI Device Path, type=2
+                tlvs.push(makeTLV(0x0002,'text',Q('d24OCRPBADevPath').value.trim().length,Q('d24OCRPBADevPath').value.trim()));
+                // EFI Device Path Len, type 3
+                tlvs.push(makeTLV(0x0003,'short',4, Q('d24OCRPBADevPath').value.trim().length));
+                // Boot Image Hash SHA-256, type=4
+                if (Q('d24OCRPBABootImageSHA256').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0004,'hex',Q('d24OCRPBABootImageSHA256').value.length/2,Q('d24OCRPBABootImageSHA256').value));
+                }
+                // Boot Image Hash SHA-512, type=6
+                if (Q('d24OCRPBABootImageSHA512').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0006,'hex',Q('d24OCRPBABootImageSHA512').value.length/2,Q('d24OCRPBABootImageSHA512').value));
+                }
+                // EFI optional data, type 20
+                if (Q('d24OCRPBAOptionalData').value.trim() !='') {
+                    tlvs.push(makeTLV(0x0014,'hex',Q('d24OCRPBAOptionalData').value.length/2,Q('d24OCRPBAOptionalData').value));
+                }
+            } else if (d_fbd.value == 6) {
+                // HTTPS URL, type=1
+                tlvs.push(makeTLV(0x0001,'text',Q('d24OCRHTTPSUrl').value.trim().length,Q('d24OCRHTTPSUrl').value.trim()));
+                // EFI Device Path Len, type 3
+                tlvs.push(makeTLV(0x0003,'short',4, Q('d24OCRHTTPSUrl').value.trim().length));
+                // HTTPS Cert SHA-256, type 23
+                tlvs.push(makeTLV(0x0017,'hex', Q('d24OCRHTTPSCert256').value.length/2,Q('d24OCRHTTPSCert256').value));
+                // Boot Image Hash SHA-256, type=4
+                if (Q('d24OCRHTTPSBootImageSHA256').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0004,'hex', Q('d24OCRHTTPSBootImageSHA256').value.length/2,Q('d24OCRHTTPSBootImageSHA256').value));
+                }
+                // Boot Image Hash SHA-512, type=6
+                if (Q('d24OCRHTTPSBootImageSHA512').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0006,'hex', Q('d24OCRHTTPSBootImageSHA512').value.length/2,Q('d24OCRHTTPSBootImageSHA512').value));
+                }
+                // HTTPS Cert Server Name and verification method, type=21 & type=22
+                if (Q('d24OCRHTTPSCertServerName').value.trim() != '') {
+                    // HTTPS Cert name
+                    tlvs.push(makeTLV(0x0015,'text',Q('d24OCRHTTPSCertServerName').value.trim().length,Q('d24OCRHTTPSCertServerName').value.trim()));
+                    // Server name verification method
+                    tlvs.push(makeTLV(0x0016,'short',2,Q('d24OCRHTTPSCertVerifyMethod').value));
+                }
+                // HTTPS Cert sync with AMT
+                tlvs.push(makeTLV(0x0014,'bool',1,(Q('d24OCRHTTPSCertSync').checked?1:0)));
+                
+                // Server timeout
+                var tmout = 0;
+                try {
+                    tmout = parseInt(Q('d24OCRHTTPSReqTimeout').value);
+                } catch (e) {}
+                tlvs.push(makeTLV(0x001E,'short',2,tmout));  
+                if (Q('d24OCRHTTPSDigestUsername').value.trim() != '') {
+                    //HTTP Digest Username, type=40
+                    tlvs.push(makeTLV(0x0028,'text',Q('d24OCRHTTPSDigestUsername').value.trim().length,Q('d24OCRHTTPSDigestUsername').value.trim()));
+                    //HTTP Digest Username, type=41
+                    tlvs.push(makeTLV(0x0029,'text',Q('d24OCRHTTPSDigestPassword').value.trim().length,Q('d24OCRHTTPSDigestPassword').value.trim()));
+                }
+                // EFI optional data, type 20
+                if (Q('d24OCRHTTPSOptionalData').value.trim() !='') {
+                    tlvs.push(makeTLV(0x0014,'hex', Q('d24OCRHTTPSOptionalData').value.length/2,Q('d24OCRHTTPSOptionalData').value));
                 }
             }
-            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], idx_d24ForceBootDevice.value == 0); }
+            return tlvs;
         }
 
         function showAdvPowerDlgOk() {
@@ -48190,7 +48587,8 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 AvdPowerDlg.UseSOL = Q('d24SerialOverLan').checked;
                 AvdPowerDlg.UseSafeMode = Q('d24SafeMode').checked;
                 AvdPowerDlg.UserPasswordBypass = Q('d24UserPasswordBypass').checked;
-                AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;
+                AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;                
+
                 if ((AvdPowerDlg.SecureErase === true) && (Q('d24rsepass').value.length > 0)) { AvdPowerDlg.RSEPassword = Q('d24rsepass').value; }
 
                 // Attempt user consent
@@ -48336,11 +48734,19 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
                 rsepass = null;
+                
 
             }
             //if (((action == 104) || (action == 105)) && !r['SecureErase']) { /*console.log("This Intel&reg; AMT does not support Secure Erase");*/ cleanup(); return; }
-            console.log("Boot Action: " + action);
-            console.log("Setting Boot Settings: " + ObjectToString2(r));
+            //console.log("Boot Action: " + action);
+            //console.log("Setting Boot Settings: " + ObjectToString2(r));
+            
+            // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
+            if (amtversion>=ocrminver && (Q('idx_d24ForceBootDevice').value == 5 || Q('idx_d24ForceBootDevice').value == 6)) {//Force UEFI HTTPS Boot                
+                r['UefiBootParametersArray']=btoa(getTLVS().join(''));
+                r['UefiBootNumberOfParams']=getTLVS().length;
+                r['BootMediaIndex']=0;//do not use boot media index for OCR
+            }
             statusbox("Power Action", "Setting boot settings...");
             amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, r, 1);
         }
@@ -48360,19 +48766,27 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             var action = d5actionSelect.value, bootSource = null;
 
             if (action == 999) {
-                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot'][idx_d24ForceBootDevice.value - 1]; }
+                if (Q('idx_d24ForceBootDevice').value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force UEFI Boot Option', 'Force UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
             } else {
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
 
             }
-            console.log('ChangeBootOrder: ' + bootSource);
+            // handle OCR resource address mapped by InstanceID 
+            if (bootSource == 'Force WinRE Boot') bootSource = 'Force OCR UEFI Boot Option 1';// assume the first PBA is WinRE, will fix later
+            if (bootSource == 'Force UEFI Boot Option') bootSource = 'Force OCR UEFI Boot Option '+Q('idx_d24BootMediaIndex').value;// use boot device index
+            if (bootSource == 'Force UEFI HTTPS Boot') bootSource = 'Force OCR UEFI HTTPS Boot';// HTTPS boot 
+            
+            // Resetting Force boot data in case it was changed so that it won't be used on the next power action
+            Q("idx_d24ForceBootDevice").value = 0;
+
+            //console.log('ChangeBootOrder: ' + bootSource);
             amtstack.CIM_BootConfigSetting_ChangeBootOrder((bootSource == null)?bootSource:'<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">Intel(r) AMT: ' + bootSource + '</Selector></SelectorSet></ReferenceParameters>', powerActionResponse3);
         }
 
         var targetPowerAction = 0;
         function powerActionResponse3(stack, name, response, status) {
-            console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
+            //console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
             if (errcheck(status, stack)) return;
             //console.log("Performing Power State Change...");
             statusbox("Power Action", "Performing power action...");
