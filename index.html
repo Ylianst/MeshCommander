@@ -1460,10 +1460,10 @@
                 <div id="id_d21ipaddrsync">
                     <label><input type="checkbox" name="d21" id="d21ipsync" onclick="updateIPSetupDlg()">Operating system IP address sync</label><br>
                 </div>
-                <input type="radio" name="d21" id="d21o0" onclick="updateIPSetupDlg()"><span id="d21l0"></span><br>
-                <input type="radio" name="d21" id="d21o1" onclick="updateIPSetupDlg()"><span id="d21l1"></span><br>
+                <label><input type="radio" name="d21" id="d21o0" onclick="updateIPSetupDlg()"><span id="d21l0"></span></label><br>
+                <label><input type="radio" name="d21" id="d21o1" onclick="updateIPSetupDlg()"><span id="d21l1"></span></label><br>
                 <div id="id_d21manualdiv">
-                    <input type="radio" name="d21" id='d21o2' onclick="updateIPSetupDlg()"><span id="d21l2"></span><br><br>
+                    <label><input type="radio" name="d21" id='d21o2' onclick="updateIPSetupDlg()"><span id="d21l2"></span></label><br><br>
                     <div style="margin-left:20px">
                         <div style="height:26px"><input id="idx_d21address" onkeyup="updateIPSetupDlg()" style="float:right;width:230px"><div>IP address</div></div>
                         <div style="height:26px" id="id_d21subnetdiv"><input id="idx_d21subnet" onkeyup="updateIPSetupDlg()" style="float:right;width:230px"><div>Subnet mark</div></div>
@@ -1617,7 +1617,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.0';
+        var version = '0.8.1';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -4973,7 +4973,7 @@
         function PullPowerState() {
             if (amtstack && amtstack.GetPendingActions() == 0 && amtsysstate && amtsysstate['CIM_ServiceAvailableToElement']) {
                 amtstack.Enum('CIM_ServiceAvailableToElement', function (stack, name, responses, status) {
-                    if (errcheck(status, stack)) return;
+                    if (status != 200) return; // If the polling fails, just skip it.
                     amtsysstate['CIM_ServiceAvailableToElement'].responses = responses;
                     if ((amtversion > 9) && (amtsysstate['CIM_ServiceAvailableToElement'] != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses.length > 0) && (amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'] == 2)) {
                         // If Intel AMT 10+ and powered on, poll the OS power state.
@@ -5916,7 +5916,7 @@
             }
 
             // ###BEGIN###{Mode-NodeWebkit}
-            if (currentcomputer['tls'] == 0) { QV('tlsNotification4', true); }
+            try { if ((currentcomputer['tls'] == 0) && (xxTlsSettings[0]['MutualAuthentication'] !== true)) { QV('tlsNotification4', true); } } catch (ex) { console.log(ex); }
             // ###END###{Mode-NodeWebkit}
 
             // Setup the certificates
@@ -7170,7 +7170,7 @@
         function showWifiStateDlg() {
             if (xxdialogMode) return;
             var s = '';
-            for (var i in xxWifiState) { s += '<input type=radio name=d11 id=wl' + i + ' value=' + i + ' ' + ((xxWireless['CIM_WiFiPort'].response['EnabledState'] == i)?'checked':'') + '>' + xxWifiState[i] + '<br>'; }
+            for (var i in xxWifiState) { s += '<label><input type=radio name=d11 id=wl' + i + ' value=' + i + ' ' + ((xxWireless['CIM_WiFiPort'].response['EnabledState'] == i)?'checked':'') + '>' + xxWifiState[i] + '</label><br>'; }
             setDialogMode(11, "Wireless State", 3, wifiStateDlg, s);
         }
 

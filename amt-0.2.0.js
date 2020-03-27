@@ -703,7 +703,7 @@ function AmtStackCreateService(wsmanStack) {
                 try {
                     e = window.atob(responses.Body['EventRecords'][i]);
                 } catch (e) {
-                    console.log(e + " " + responses.Body['EventRecords'][i])
+                    console.log(e + ' ' + responses.Body['EventRecords'][i])
                 }
                 x = { 'AuditAppID': ReadShort(e, 0), 'EventID': ReadShort(e, 2), 'InitiatorType': e.charCodeAt(4) };
                 x['AuditApp'] = _AmtAuditStringTable[x['AuditAppID']];
