@@ -31,7 +31,7 @@ var CreateAmtRemoteIder = function () {
 
     // Private method
     // ###BEGIN###{IDERDebug}
-    function debug() { if (urlvars && urlvars['idertrace']) { console.log(...arguments); } }
+    function debug() { if (urlvars && urlvars['idertrace']) { console.log(arguments); } }
     // ###END###{IDERDebug}
 
     // Mode Sense
