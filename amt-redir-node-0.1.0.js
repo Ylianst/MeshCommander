@@ -231,7 +231,7 @@ var CreateAmtRedirect = function (module) {
                     if (accArray.byteLength < 10) break;
                     var cs = (10 + (accArray[9] << 8) + accArray[8]);
                     if (accArray.byteLength < cs) break;
-                    if (obj.m.ProcessBinaryData) { obj.m.ProcessBinaryData(obj.acc.slice(10, cs)); } else { obj.m.ProcessData(arrToStr(obj.acc.slice(10, cs))); }
+                    if (obj.m.ProcessBinaryData) { obj.m.ProcessBinaryData(obj.acc.slice(10, cs)); } else { obj.m.ProcessData(arrToStr(new Uint8Array(obj.acc.slice(10, cs)))); }
                     cmdsize = cs;
                     break;
                 case 0x2B: // Keep alive message (43)
@@ -243,13 +243,7 @@ var CreateAmtRedirect = function (module) {
                     obj.connectstate = 1;
                     obj.m.Start();
                     // KVM traffic, forward rest of accumulator directly.
-                    if (accArray.byteLength > 8) {
-                        if (obj.m.ProcessBinaryData) {
-                            obj.m.ProcessBinaryData(obj.acc.slice(8));
-                        } else {
-                            obj.m.ProcessData(arrToStr(new Uint8Array(obj.acc.slice(8))));
-                        }
-                    }
+                    if (accArray.byteLength > 8) { if (obj.m.ProcessBinaryData) { obj.m.ProcessBinaryData(obj.acc.slice(8)); } else { obj.m.ProcessData(arrToStr(new Uint8Array(obj.acc.slice(8)))); } }
                     cmdsize = accArray.byteLength;
                     break;
                 case 0xF0:
@@ -275,7 +269,7 @@ var CreateAmtRedirect = function (module) {
         obj.socket.write(new Buffer(x, 'binary'));
     }
 
-    obj.Send = function (x) {
+    obj.Send = obj.send = function (x) {
         if (obj.socket == null || obj.connectstate != 1) return;
         if (obj.protocol == 1) { obj.xxSend(String.fromCharCode(0x28, 0x00, 0x00, 0x00) + ToIntStr(obj.amtsequence++) + ToShortStr(x.length) + x); } else { obj.xxSend(x); }
     }

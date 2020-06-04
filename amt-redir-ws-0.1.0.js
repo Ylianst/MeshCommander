@@ -9,7 +9,9 @@ var CreateAmtRedirect = function (module, authCookie) {
     var obj = {};
     obj.m = module; // This is the inner module (Terminal or Desktop)
     module.parent = obj;
+    // ###BEGIN###{!Mode-Firmware}
     obj.authCookie = authCookie;
+    // ###END###{!Mode-Firmware}
     obj.State = 0;
     obj.socket = null;
     // ###BEGIN###{!Mode-Firmware}
@@ -31,6 +33,7 @@ var CreateAmtRedirect = function (module, authCookie) {
     function arrToStr(arr) { return String.fromCharCode.apply(null, arr); }
     function randomHex(length) { var r = ''; for (var i = 0; i < length; i++) { r += 'abcdef0123456789'.charAt(Math.floor(Math.random() * 16)); } return r; }
 
+    // ###BEGIN###{!Mode-Firmware}
     obj.Start = function (host, port, user, pass, tls) {
         obj.host = host;
         obj.port = port;
@@ -47,6 +50,19 @@ var CreateAmtRedirect = function (module, authCookie) {
         obj.socket.onclose = obj.xxOnSocketClosed;
         obj.xxStateChange(1);
     }
+    // ###END###{!Mode-Firmware}
+
+    // ###BEGIN###{Mode-Firmware}
+    obj.Start = function () {
+        obj.connectstate = 0;
+        obj.socket = new WebSocket(window.location.protocol.replace('http', 'ws') + '//' + window.location.host + '/ws-redirection');
+        obj.socket.binaryType = 'arraybuffer';
+        obj.socket.onopen = obj.xxOnSocketConnected;
+        obj.socket.onmessage = obj.xxOnMessage;
+        obj.socket.onclose = obj.xxOnSocketClosed;
+        obj.xxStateChange(1);
+    }
+    // ###END###{Mode-Firmware}
 
     obj.xxOnSocketConnected = function () {
         obj.xxStateChange(2);
@@ -86,7 +102,14 @@ var CreateAmtRedirect = function (module, authCookie) {
                             if (accArray.byteLength < 13) return;
                             var oemlen = accArray[12];
                             if (accArray.byteLength < 13 + oemlen) return;
+                            // ###BEGIN###{!Mode-Firmware}
+                            // Query for available authentication
                             obj.directSend(new Uint8Array([0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])); // Query for available authentication
+                            // ###END###{!Mode-Firmware}
+                            // ###BEGIN###{Mode-Firmware}
+                            // When using websocket, we are already authenticated. Send empty basic auth.
+                            obj.directSend(new Uint8Array([0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00]));
+                            // ###END###{Mode-Firmware}
                             cmdsize = (13 + oemlen);
                             break;
                         default:
@@ -102,6 +125,7 @@ var CreateAmtRedirect = function (module, authCookie) {
                     for (i = 0; i < authDataLen; i++) { authData.push(accArray[9 + i]); }
                     var authDataBuf = new Uint8Array(obj.acc.slice(9, 9 + authDataLen));
                     cmdsize = 9 + authDataLen;
+                    // ###BEGIN###{!Mode-Firmware}
                     if (authType == 0) {
                         // Query
                         if (authData.indexOf(4) >= 0) {
@@ -149,7 +173,9 @@ var CreateAmtRedirect = function (module, authCookie) {
                         var buf = String.fromCharCode(0x13, 0x00, 0x00, 0x00, authType) + IntToStrX(totallen) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(realm.length) + realm + String.fromCharCode(nonce.length) + nonce + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(cnonce.length) + cnonce + String.fromCharCode(snc.length) + snc + String.fromCharCode(digest.length) + digest;
                         if (authType == 4) buf += (String.fromCharCode(qop.length) + qop);
                         obj.xxSend(buf);
-                    } else if (status == 0) { // Success
+                    } else
+                    // ###END###{!Mode-Firmware}
+                    if (status == 0) { // Success
                         switch (obj.protocol) {
                             case 1: {
                                 // Serial-over-LAN: Send Intel AMT serial settings...

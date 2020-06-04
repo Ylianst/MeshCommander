@@ -41,7 +41,7 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
     obj.oldie = false;
     obj.CompressionLevel = 50;
     obj.ScalingLevel = 1024;
-    obj.FrameRateTimer = 50;
+    obj.FrameRateTimer = 10;
     obj.FirstDraw = false;
 
     obj.ScreenWidth = 960;
@@ -56,6 +56,11 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
     obj.onTouchEnabledChanged = null;
     obj.onDisplayinfo = null;
     obj.accumulator = null;
+
+    var xMouseCursorActive = true;
+    var xMouseCursorCurrent = 'default';
+    obj.mouseCursorActive = function (x) { if (xMouseCursorActive == x) return; xMouseCursorActive = x; obj.CanvasId.style.cursor = ((x == true) ? xMouseCursorCurrent : 'default'); }
+    var mouseCursors = ['default', 'progress', 'crosshair', 'pointer', 'help', 'text', 'no-drop', 'move', 'nesw-resize', 'ns-resize', 'nwse-resize', 'w-resize', 'alias', 'wait', 'none', 'not-allowed', 'col-resize', 'row-resize', 'copy', 'zoom-in', 'zoom-out'];
 
     obj.Start = function () {
         obj.State = 0;
@@ -213,7 +218,7 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
             jumboAdd = 8;
         }
         if ((cmdsize != str.length) && (obj.debugmode > 0)) { console.log(cmdsize, str.length, cmdsize == str.length); }
-        if ((command >= 18) && (command != 65)) { console.error("Invalid KVM command " + command + " of size " + cmdsize); console.log("Invalid KVM data", str.length, rstr2hex(str.substring(0, 40)) + '...'); return; }
+        if ((command >= 18) && (command != 65) && (command != 88)) { console.error("Invalid KVM command " + command + " of size " + cmdsize); console.log("Invalid KVM data", str.length, rstr2hex(str.substring(0, 40)) + '...'); return; }
         if (cmdsize > str.length) {
             //console.log('KVM accumulator set to ' + str.length + ' bytes, need ' + cmdsize + ' bytes.');
             obj.accumulator = str;
@@ -295,6 +300,13 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
                 } else {
                     console.log('KVM: ' + str.substring(1));
                 }
+                break;
+            case 88: // MNG_KVM_MOUSE_CURSOR
+                if (cmdsize != 5) break;
+                var cursorNum = str.charCodeAt(4);
+                if (cursorNum > mouseCursors.length) { cursorNum = 0; }
+                xMouseCursorCurrent = mouseCursors[cursorNum];
+                if (xMouseCursorActive) { obj.CanvasId.style.cursor = xMouseCursorCurrent; }
                 break;
         }
         return cmdsize + jumboAdd;

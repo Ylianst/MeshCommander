@@ -398,7 +398,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 obj.canvas.canvas.width = obj.width; obj.canvas.canvas.height = obj.height;
                 if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); } // ???
             }
-            obj.Send(String.fromCharCode(3, 0, 0, 0, 0, 0) + ShortToStr(obj.width) + ShortToStr(obj.height)); // FramebufferUpdateRequest
+            obj.send(String.fromCharCode(3, 0, 0, 0, 0, 0) + ShortToStr(obj.width) + ShortToStr(obj.height)); // FramebufferUpdateRequest
         } else {
             obj.UnGrabMouseInput();
             obj.UnGrabKeyInput();
@@ -743,7 +743,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         if (acc.byteLength < len) return 0;
         // ###BEGIN###{DesktopInband}
         if (obj.onKvmData != null) {
-            var d = arrToStr(acc.slice(8, len));
+            var d = arrToStr(new Uint8Array(acc.buffer.slice(8, len)));
             if ((d.length >= 16) && (d.substring(0, 15) == '\0KvmDataChannel')) {
                 if (obj.kvmDataSupported == false) { obj.kvmDataSupported = true; console.log('KVM Data Channel Supported.'); }
                 if (((obj.onKvmDataAck == -1) && (d.length == 16)) || (d.charCodeAt(15) != 0)) { obj.onKvmDataAck = true; }

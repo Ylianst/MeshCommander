@@ -913,21 +913,21 @@
                         <tr>
                             <td style="padding-top:2px;padding-bottom:2px;background:#CCC">
                                 <div style="float:right;text-align:right">
-                                    <input id="id_tcrbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="CR+LF" title="Toggle what the return key will send" onclick="termToggleCr()">
+                                    <input id="id_tcrbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="CR+LF" title="Toggle what the return key will send" onclick="termToggleCr();Q('id_tcrbutton').blur()">
                                     <!-- ###BEGIN###{TerminalSize} -->
-                                    <input id="id_tsizebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="80x25" title="Toggle terminal size" onclick="termToggleSize()">
+                                    <input id="id_tsizebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="80x25" title="Toggle terminal size" onclick="termToggleSize();Q('id_tsizebutton').blur()">
                                     <!-- ###END###{TerminalSize} -->
-                                    <input id="id_tfxkeysbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Intel (F10 = ESC+[OM)" title="Toggle F1 to F10 keys emulation type" onclick="termToggleFx()">
+                                    <input id="id_tfxkeysbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Intel (F10 = ESC+[OM)" title="Toggle F1 to F10 keys emulation type" onclick="termToggleFx();Q('id_tfxkeysbutton').blur()">
                                     <!-- ###BEGIN###{Terminal-Enumation-All} -->
-                                    <input id="id_ttypebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Extended Ascii" title="Toggle terminal emulation type" onclick="termToggleType()">&nbsp;
+                                    <input id="id_ttypebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Extended Ascii" title="Toggle terminal emulation type" onclick="termToggleType();Q('id_ttypebutton').blur()">&nbsp;
                                     <!-- ###END###{Terminal-Enumation-All} -->
                                 </div>
                                 <div>
                                     &nbsp;
-                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-C" onclick="termSendKey(3)">
-                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-X" onclick="termSendKey(24)">
-                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="ESC" onclick="termSendKey(27)">
-                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Backspace" onclick="termSendKey(8)">
+                                    <input id="id_toolbtncc" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-C" onclick="termSendKey(3);Q('id_toolbtncc').blur()">
+                                    <input id="id_toolbtncx" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-X" onclick="termSendKey(24);Q('id_toolbtncx').blur()">
+                                    <input id="id_toolbtnes" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="ESC" onclick="termSendKey(27);Q('id_toolbtnes').blur()">
+                                    <input id="id_toolbtnbs" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Backspace" onclick="termSendKey(8);Q('id_toolbtnbs').blur()">
                                     <input id="id_tpastebutton" type="button" onkeypress="return false" onkeydown="return false" class="cadbutton" value="Paste" disabled="disabled" onclick="setDialogMode(3,'Paste',3,termPaste)">
                                 </div>
                             </td>
@@ -1617,7 +1617,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.3';
+        var version = '0.8.4';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -7670,8 +7670,8 @@
             // ###END###{Mode-NodeWebkit}
         }
 
-        function termPaste() { terminal.m.TermSendKeys(d3pastetextarea.value) }
-        function termSendKey(k) { terminal.m.TermSendKey(k) }
+        function termPaste() { terminal.m.TermSendKeys(d3pastetextarea.value); return false; }
+        function termSendKey(k) { terminal.m.TermSendKey(k); return false; }
 
         // ###BEGIN###{TerminalSize}
         function termToggleSize() {
@@ -8401,7 +8401,7 @@
                     h = '<div class=filelist file=999><input file=999 style=float:left name=fd class=fcb type=checkbox onchange=p24setActions() value="' + f.nx + '">&nbsp;<span style=float:right title=\"' + title + '\">' + right + '</span><span><div class=fileIcon' + f.t + '></div><a style=cursor:pointer onclick=p24folderset(\"' + encodeURIComponent(f.nx) + '\")>' + shortname + '</a></span></div>';
                 } else {
                     var link = shortname;
-                    if (f.s > 0) { link = '<a rel=\"noreferrer noopener\" target=\"_blank\" style=cursor:pointer onclick=\"p24downloadfile("' + encodeURIComponent(newlinkpath + '/' + name) + '","' + encodeURIComponent(name) + '",' + f.s + ')\">' + shortname + '</a>'; }
+                    if (f.s > 0) { link = '<a rel=\"noreferrer noopener\" target=\"_blank\" style=cursor:pointer onclick=\'p24downloadfile("' + encodeURIComponent(newlinkpath + '/' + name) + '","' + encodeURIComponent(name) + '",' + f.s + ')\'>' + shortname + '</a>'; }
                     h = '<div class=filelist file=3><input file=3 style=float:left name=fd class=fcb type=checkbox onchange=p24setActions() value="' + f.nx + '">&nbsp;<span class=fsize>' + fdatestr + '</span><span style=float:right>' + fsize + '</span><span><div class=fileIcon' + f.t + '></div>' + link + '</span></div>';
                 }
 
