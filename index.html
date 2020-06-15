@@ -1811,7 +1811,7 @@
             Q('p13').addEventListener('drop', terminal_FileSelectHandler, false);
 // ###END###{Terminal}
 
-            // Master drag & drop
+            // Main drag & drop
             document.addEventListener('dragover', haltEvent, false);
             document.addEventListener('dragleave', haltEvent, false);
             document.addEventListener('drop', documentFileSelectHandler, false);
@@ -5074,7 +5074,7 @@
         }
 
         // ###BEGIN###{PowerControl}
-        var DMTFPowerStates = ['', '', "Power on", "Light sleep", "Deep sleep", "Power cycle (Soft off)", "Off - Hard", "Hibernate (Off soft)", "Soft off", "Power cycle (Off-hard)", "Master bus reset", "Diagnostic interrupt (NMI)", "Not applicable", "Off - Soft graceful", "Off - Hard graceful", "Master bus reset graceful", "Power cycle (Off - Soft graceful)", "Power cycle (Off - Hard graceful)", "Diagnostic interrupt (INIT)"];
+        var DMTFPowerStates = ['', '', "Power on", "Light sleep", "Deep sleep", "Power cycle (Soft off)", "Off - Hard", "Hibernate (Off soft)", "Soft off", "Power cycle (Off-hard)", "Main bus reset", "Diagnostic interrupt (NMI)", "Not applicable", "Off - Soft graceful", "Off - Hard graceful", "Master bus reset graceful", "Power cycle (Off - Soft graceful)", "Power cycle (Off - Hard graceful)", "Diagnostic interrupt (INIT)"];
         // ###END###{PowerControl}
         function updateSystemStatus() {
             if ((!amtsysstate) || (currentView > 99)) return;

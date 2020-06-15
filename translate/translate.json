@@ -12102,7 +12102,7 @@
     },
     {
       "de": "Kerberos-Hauptschlüssel geändert",
-      "en": "Kerberos Master Key Modified",
+      "en": "Kerberos Main Key Modified",
       "es": "Clave maestra Kerberos modificada",
       "fr": "Clé principale Kerberos modifiée",
       "it": "Chiave master Kerberos modificata",
