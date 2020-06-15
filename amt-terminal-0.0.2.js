@@ -77,7 +77,7 @@ var CreateAmtRemoteTerminal = function (divid, options) {
     }
 
     obj.ProcessData = function (str) {
-        if (obj.debugmode == 2) { console.log("TRecv(" + str.length + "): " + rstr2hex(str)); }
+        if (obj.debugmode == 2) { console.log('TRecv(' + str.length + '): ' + rstr2hex(str)); }
         if (obj.capture != null) obj.capture += str;
         // ###BEGIN###{Terminal-Enumation-UTF8}
         try { str = decode_utf8(utf8decodeBuffer + str); } catch (ex) { utf8decodeBuffer += str; return; } // If we get data in the middle of a UTF-8 code, buffer it for next time.
@@ -561,7 +561,7 @@ var CreateAmtRemoteTerminal = function (divid, options) {
                 break;
             case '\t': // tab
                 var tab = 8 - (_termx % 8)
-                for (var x = 0; x < tab; x++) _ProcessVt100Char(" ");
+                for (var x = 0; x < tab; x++) _ProcessVt100Char(' ');
                 break;
             case '\n': // Linefeed
                 _termy++;
@@ -645,8 +645,8 @@ var CreateAmtRemoteTerminal = function (divid, options) {
         }
     }
 
-    obj.TermSendKeys = function (keys) { if (obj.debugmode == 2) { console.log("TSend(" + keys.length + "): " + rstr2hex(keys), keys); } if (obj.parent) { obj.parent.Send(keys); } }
-    obj.TermSendKey = function (key) { if (obj.debugmode == 2) { console.log("TSend(1): " + rstr2hex(String.fromCharCode(key)), key); } if (obj.parent) { obj.parent.Send(String.fromCharCode(key)); } }
+    obj.TermSendKeys = function (keys) { if (obj.debugmode == 2) { console.log('TSend(' + keys.length + '): ' + rstr2hex(keys), keys); } if (obj.parent) { obj.parent.Send(keys); } }
+    obj.TermSendKey = function (key) { if (obj.debugmode == 2) { console.log('TSend(1): ' + rstr2hex(String.fromCharCode(key)), key); } if (obj.parent) { obj.parent.Send(String.fromCharCode(key)); } }
 
     function _TermMoveUp(linecount) {
         var x, y;
@@ -710,7 +710,7 @@ var CreateAmtRemoteTerminal = function (divid, options) {
         if (e.which == 45) { obj.TermSendKeys(String.fromCharCode(27, 91, 50, 126)); return true; }; // Insert
         if (e.which == 46) { obj.TermSendKeys(String.fromCharCode(27, 91, 51, 126)); return true; }; // Delete
 
-        if (e.which == 9) { obj.TermSendKeys("\t"); if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); return true; }; // TAB
+        if (e.which == 9) { obj.TermSendKeys('\t'); if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); return true; }; // TAB
 
         // F1 to F12 keys
         // ###BEGIN###{Terminal-FxEnumation-All}
@@ -764,7 +764,7 @@ var CreateAmtRemoteTerminal = function (divid, options) {
                 buf += '<span style="color:#' + _TermColors[(newat >> x1) & 0x3F] + ';background-color:#' + _TermColors[(newat >> x2) & 0x3F];
                 if (newat & _VTUNDERLINE) buf += ';text-decoration:underline';
                 buf += ';">';
-                closetag = "</span>" + closetag;
+                closetag = '</span>' + closetag;
                 oldat = newat;
             }
 
@@ -791,7 +791,7 @@ var CreateAmtRemoteTerminal = function (divid, options) {
 
         if (scrollBackBuffer.length > 800) { scrollBackBuffer = scrollBackBuffer.slice(scrollBackBuffer.length - 800); }
         var backbuffer = scrollBackBuffer.join('');
-        obj.DivElement.innerHTML = "<font size='4'><b>" + backbuffer + buf + closetag + "</b></font>";
+        obj.DivElement.innerHTML = '<font size="4"><b>' + backbuffer + buf + closetag + '</b></font>';
         obj.DivElement.scrollTop = obj.DivElement.scrollHeight;
         //if (obj.heightLock == 0) { setTimeout(obj.TermLockHeight, 10); }
     }

@@ -30,19 +30,19 @@ var CreateAmtRemoteServerIder = function () {
     // Private method, called by parent when it change state
     obj.xxStateChange = function (newstate) {
         if (obj.state == newstate) return;
-        debug("SIDER-StateChange", newstate);
+        debug('SIDER-StateChange', newstate);
         obj.state = newstate;
         if (obj.onStateChanged != null) { obj.onStateChanged(obj, obj.state); }
     }
 
     obj.Start = function (host, port, user, pass, tls) {
-        debug("SIDER-Start", host, port, user, pass, tls);
+        debug('SIDER-Start', host, port, user, pass, tls);
         obj.host = host;
         obj.port = port;
         obj.user = user;
         obj.pass = pass;
         obj.connectstate = 0;
-        obj.socket = new WebSocket(window.location.protocol.replace("http", "ws") + "//" + window.location.host + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/webider.ashx?host=" + host + "&port=" + port + "&tls=" + tls + ((user == '*') ? "&serverauth=1" : "") + ((typeof pass === "undefined") ? ("&serverauth=1&user=" + user) : "") + "&tls1only=" + obj.tlsv1only);
+        obj.socket = new WebSocket(window.location.protocol.replace('http', 'ws') + '//' + window.location.host + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/webider.ashx?host=' + host + '&port=' + port + '&tls=' + tls + ((user == '*') ? '&serverauth=1' : '') + ((typeof pass === 'undefined') ? ('&serverauth=1&user=' + user) : '') + '&tls1only=' + obj.tlsv1only);
         obj.socket.onopen = obj.xxOnSocketConnected;
         obj.socket.onmessage = obj.xxOnMessage;
         obj.socket.onclose = obj.xxOnSocketClosed;
@@ -50,7 +50,7 @@ var CreateAmtRemoteServerIder = function () {
     }
 
     obj.Stop = function () {
-        debug("SIDER-Stop");
+        debug('SIDER-Stop');
         if (obj.socket != null) { obj.socket.close(); obj.socket = null; }
         obj.xxStateChange(0);
     }
@@ -81,7 +81,7 @@ var CreateAmtRemoteServerIder = function () {
                 break;
             }
             case 'error': {
-                var iderErrorStrings = ["", "Floppy disk image does not exist", "Invalid floppy disk image", "Unable to open floppy disk image", "CDROM disk image does not exist", "Invalid CDROM disk image", "Unable to open CDROM disk image", "Can't perform IDER with no disk images"];
+                var iderErrorStrings = ['', "Floppy disk image does not exist", "Invalid floppy disk image", "Unable to open floppy disk image", "CDROM disk image does not exist", "Invalid CDROM disk image", "Unable to open CDROM disk image", "Can't perform IDER with no disk images"];
                 console.log('IDER Error: ' + iderErrorStrings[msg.code]);
                 // TODO: Display dialog box this error.
                 break;

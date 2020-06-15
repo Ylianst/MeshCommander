@@ -55,13 +55,13 @@ var CreateKvmDataChannel = function (webchannel, module, keepalive) {
                 fileReader.readAsArrayBuffer(e.data);
             } else {
                 // IE10, readAsBinaryString does not exist, use an alternative.
-                var binary = "", bytes = new Uint8Array(e.data), length = bytes.byteLength;
+                var binary = '', bytes = new Uint8Array(e.data), length = bytes.byteLength;
                 for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
                 obj.xxOnSocketData(binary);
             }
         } else {
             // If we get a string object, it maybe the WebRTC confirm. Ignore it.
-            //obj.debug("Agent Redir Relay - OnData - " + typeof e.data + " - " + e.data.length);
+            //obj.debug('Agent Redir Relay - OnData - ' + typeof e.data + ' - ' + e.data.length);
             obj.xxOnSocketData(e.data);
         }
     };
@@ -89,7 +89,7 @@ var CreateKvmDataChannel = function (webchannel, module, keepalive) {
             }
         } else {
             // If we get a string object, it maybe the WebRTC confirm. Ignore it.
-            //obj.debug("Agent Redir Relay - OnData - " + typeof e.data + " - " + e.data.length);
+            //obj.debug('Agent Redir Relay - OnData - ' + typeof e.data + ' - ' + e.data.length);
             obj.xxOnSocketData(e.data);
         }
     };
@@ -98,12 +98,12 @@ var CreateKvmDataChannel = function (webchannel, module, keepalive) {
         if (!data) return;
         if (typeof data === 'object') {
             // This is an ArrayBuffer, convert it to a string array (used in IE)
-            var binary = "", bytes = new Uint8Array(data), length = bytes.byteLength;
+            var binary = '', bytes = new Uint8Array(data), length = bytes.byteLength;
             for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
             data = binary;
         }
         else if (typeof data !== 'string') return;
-        //console.log("xxOnSocketData", rstr2hex(data));
+        //console.log('xxOnSocketData', rstr2hex(data));
         return obj.m.ProcessData(data);
     }
 

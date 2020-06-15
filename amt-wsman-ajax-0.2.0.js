@@ -36,7 +36,7 @@ var CreateWsmanComm = function (url) {
     // Private method
     obj.PerformAjaxEx = function (postdata, callback, tag, url, action) {
         if (obj.FailAllError != 0) { if (obj.FailAllError != 999) { obj.gotNextMessagesError({ status: obj.FailAllError }, 'error', null, [postdata, callback, tag]); } return; }
-        // console.log("SEND: " + postdata); // DEBUG
+        // console.log('SEND: ' + postdata); // DEBUG
 
         // We are in a AJAX browser environment
         obj.ActiveAjaxCount++;
@@ -44,7 +44,7 @@ var CreateWsmanComm = function (url) {
         var xdr = null; // TODO: See if we should re-use this object and if we do, when should we do it.
         try { xdr = new XDomainRequest(); } catch (e) { }
         if (!xdr) xdr = new XMLHttpRequest();
-        xdr.open(action ? action : "POST", url ? url : obj.Url);
+        xdr.open(action ? action : 'POST', url ? url : obj.Url);
         xdr.timeout = 15000;
         xdr.onload = function () { obj.gotNextMessages(xdr.responseText, 'success', xdr, [postdata, callback, tag]); };
         xdr.onerror = function () { obj.gotNextMessagesError(xdr, 'error', null, [postdata, callback, tag]); };
@@ -52,7 +52,7 @@ var CreateWsmanComm = function (url) {
         //xdr.send(postdata); // Works for text only, no binary.
 
         // Send POST body, this work with binary.
-        if (urlvars && urlvars['wsmantrace']) { console.log("WSMAN-SEND(" + postdata.length + "): " + postdata); }
+        if (urlvars && urlvars['wsmantrace']) { console.log('WSMAN-SEND(' + postdata.length + '): ' + postdata); }
         var b = new Uint8Array(postdata.length);
         for (var i = 0; i < postdata.length; ++i) { b[i] = postdata.charCodeAt(i); }
         xdr.send(b);
@@ -65,10 +65,10 @@ var CreateWsmanComm = function (url) {
 
     // Private method
     obj.gotNextMessages = function (data, status, request, callArgs) {
-        if (urlvars && urlvars['wsmantrace']) { console.log("WSMAN-RECV(" + data.length + "): " + data); }
+        if (urlvars && urlvars['wsmantrace']) { console.log('WSMAN-RECV(' + data.length + '): ' + data); }
         obj.ActiveAjaxCount--;
         if (obj.FailAllError == 999) return;
-        // console.log("RECV: " + data); // DEBUG
+        // console.log('RECV: ' + data); // DEBUG
         if (obj.FailAllError != 0) { callArgs[1](null, obj.FailAllError, callArgs[2]); return; }
         if (request.status != 200) { callArgs[1](null, request.status, callArgs[2]); obj.PerformNextAjax(); return; }
         callArgs[1](data, 200, callArgs[2]);
@@ -80,7 +80,7 @@ var CreateWsmanComm = function (url) {
         obj.ActiveAjaxCount--;
         if (obj.FailAllError == 999) return;
         if (obj.FailAllError != 0) { callArgs[1](null, obj.FailAllError, callArgs[2]); return; }
-        // if (s != 200) { console.log("ERROR, status=" + status + "\r\n\r\nreq=" + callArgs[0]); } // Debug: Display the request & response if something did not work.
+        // if (s != 200) { console.log('ERROR, status=' + status + '\r\n\r\nreq=' + callArgs[0]); } // Debug: Display the request & response if something did not work.
         if (obj.FailAllError != 999) { callArgs[1]({ Header: { HttpError: request.status } }, request.status, callArgs[2]); }
         obj.PerformNextAjax();
     }

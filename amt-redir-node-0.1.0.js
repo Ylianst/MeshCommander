@@ -85,7 +85,7 @@ var CreateAmtRedirect = function (module) {
         }
 
         if (urlvars && urlvars['redirtrace']) { console.log('REDIR-CONNECTED'); }
-        //obj.Debug("Socket Connected");
+        //obj.Debug('Socket Connected');
         obj.xxStateChange(2);
         if (obj.protocol == 1) obj.directSend(new Uint8Array([0x10, 0x00, 0x00, 0x00, 0x53, 0x4F, 0x4C, 0x20])); // SOL
         if (obj.protocol == 2) obj.directSend(new Uint8Array([0x10, 0x01, 0x00, 0x00, 0x4b, 0x56, 0x4d, 0x52])); // KVM
@@ -265,7 +265,7 @@ var CreateAmtRedirect = function (module) {
 
     obj.xxSend = function (x) {
         if (urlvars && urlvars['redirtrace']) { console.log('REDIR-SEND(' + x.length + '): ' + rstr2hex(x)); }
-        //obj.Debug("Send(" + x.length + "): " + rstr2hex(x));
+        //obj.Debug('Send(' + x.length + '): ' + rstr2hex(x));
         obj.socket.write(new Buffer(x, 'binary'));
     }
 
@@ -281,7 +281,7 @@ var CreateAmtRedirect = function (module) {
 
     obj.xxOnSocketClosed = function () {
         if (urlvars && urlvars['redirtrace']) { console.log('REDIR-CLOSED'); }
-        //obj.Debug("Socket Closed");
+        //obj.Debug('Socket Closed');
         obj.Stop();
     }
 
@@ -294,7 +294,7 @@ var CreateAmtRedirect = function (module) {
 
     obj.Stop = function () {
         if (urlvars && urlvars['redirtrace']) { console.log('REDIR-CLOSED'); }
-        //obj.Debug("Socket Stopped");
+        //obj.Debug('Socket Stopped');
         obj.xxStateChange(0);
         obj.connectstate = -1;
         obj.amtaccumulator = '';

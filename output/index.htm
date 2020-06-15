@@ -2574,7 +2574,7 @@ var CreateAmtScanner = function (func) {
             doCallback(new Error("Timeout exceeded"), null);
         }, 3000);
 
-        require("dns").reverse(ip, doCallback);
+        require('dns').reverse(ip, doCallback);
     }
 
     return obj;
@@ -2594,7 +2594,7 @@ var CreateAmtRemoteIder = function () {
     obj.tx_timeout = 0;         // Default 0
     obj.heartbeat = 20000;      // Default 20000
     obj.version = 1;
-    obj.acc = "";
+    obj.acc = '';
     obj.inSequence = 0;
     obj.outSequence = 0;
     obj.iderinfo = null;
@@ -3130,8 +3130,8 @@ function CreateIMRSDKWrapper() {
     
     var _IMRSDK;
     var _ImrSdkVersion;
-    var _ref = require("ref");
-    var _ffi = require("ffi");
+    var _ref = require('ref');
+    var _ffi = require('ffi');
     var _struct = require('ref-struct');
     var _arrayType = require('ref-array');
     obj.pendingData = {};
@@ -35623,66 +35623,66 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     }
 
     var convertAmtKeyCodeTable = {
-        "Pause": 19,
-        "CapsLock": 20,
-        "Space": 32,
-        "Quote": 39,
-        "Minus": 45,
-        "NumpadMultiply": 42,
-        "NumpadAdd": 43,
-        "PrintScreen": 44,
-        "Comma": 44,
-        "NumpadSubtract": 45,
-        "NumpadDecimal": 46,
-        "Period": 46,
-        "Slash": 47,
-        "NumpadDivide": 47,
-        "Semicolon": 59,
-        "Equal": 61,
-        "OSLeft": 91,
-        "BracketLeft": 91,
-        "OSRight": 91,
-        "Backslash": 92,
-        "BracketRight": 93,
-        "ContextMenu": 93,
-        "Backquote": 96,
-        "NumLock": 144,
-        "ScrollLock": 145,
-        "Backspace": 0xff08,
-        "Tab": 0xff09,
-        "Enter": 0xff0d,
-        "NumpadEnter": 0xff0d,
-        "Escape": 0xff1b,
-        "Delete": 0xffff,
-        "Home": 0xff50,
-        "PageUp": 0xff55,
-        "PageDown": 0xff56,
-        "ArrowLeft": 0xff51,
-        "ArrowUp": 0xff52,
-        "ArrowRight": 0xff53,
-        "ArrowDown": 0xff54,
-        "End": 0xff57,
-        "Insert": 0xff63,
-        "F1": 0xffbe,
-        "F2": 0xffbf,
-        "F3": 0xffc0,
-        "F4": 0xffc1,
-        "F5": 0xffc2,
-        "F6": 0xffc3,
-        "F7": 0xffc4,
-        "F8": 0xffc5,
-        "F9": 0xffc6,
-        "F10": 0xffc7,
-        "F11": 0xffc8,
-        "F12": 0xffc9,
-        "ShiftLeft": 0xffe1,
-        "ShiftRight": 0xffe2,
-        "ControlLeft": 0xffe3,
-        "ControlRight": 0xffe4,
-        "AltLeft": 0xffe9,
-        "AltRight": 0xffea,
-        "MetaLeft": 0xffe7,
-        "MetaRight": 0xffe8
+        'Pause': 19,
+        'CapsLock': 20,
+        'Space': 32,
+        'Quote': 39,
+        'Minus': 45,
+        'NumpadMultiply': 42,
+        'NumpadAdd': 43,
+        'PrintScreen': 44,
+        'Comma': 44,
+        'NumpadSubtract': 45,
+        'NumpadDecimal': 46,
+        'Period': 46,
+        'Slash': 47,
+        'NumpadDivide': 47,
+        'Semicolon': 59,
+        'Equal': 61,
+        'OSLeft': 91,
+        'BracketLeft': 91,
+        'OSRight': 91,
+        'Backslash': 92,
+        'BracketRight': 93,
+        'ContextMenu': 93,
+        'Backquote': 96,
+        'NumLock': 144,
+        'ScrollLock': 145,
+        'Backspace': 0xff08,
+        'Tab': 0xff09,
+        'Enter': 0xff0d,
+        'NumpadEnter': 0xff0d,
+        'Escape': 0xff1b,
+        'Delete': 0xffff,
+        'Home': 0xff50,
+        'PageUp': 0xff55,
+        'PageDown': 0xff56,
+        'ArrowLeft': 0xff51,
+        'ArrowUp': 0xff52,
+        'ArrowRight': 0xff53,
+        'ArrowDown': 0xff54,
+        'End': 0xff57,
+        'Insert': 0xff63,
+        'F1': 0xffbe,
+        'F2': 0xffbf,
+        'F3': 0xffc0,
+        'F4': 0xffc1,
+        'F5': 0xffc2,
+        'F6': 0xffc3,
+        'F7': 0xffc4,
+        'F8': 0xffc5,
+        'F9': 0xffc6,
+        'F10': 0xffc7,
+        'F11': 0xffc8,
+        'F12': 0xffc9,
+        'ShiftLeft': 0xffe1,
+        'ShiftRight': 0xffe2,
+        'ControlLeft': 0xffe3,
+        'ControlRight': 0xffe4,
+        'AltLeft': 0xffe9,
+        'AltRight': 0xffea,
+        'MetaLeft': 0xffe7,
+        'MetaRight': 0xffe8
     }
     function convertAmtKeyCode(e) {
         if (e.code.startsWith('Key') && e.code.length == 4) { return e.code.charCodeAt(3) + ((e.shiftKey == false) ? 32 : 0); }
@@ -36219,82 +36219,82 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
     }
 
     // Keyboard and Mouse I/O.
-    obj.MouseButton = { "NONE": 0x00, "LEFT": 0x02, "RIGHT": 0x08, "MIDDLE": 0x20 };
-    obj.KeyAction = { "NONE": 0, "DOWN": 1, "UP": 2, "SCROLL": 3, "EXUP": 4, "EXDOWN": 5, "DBLCLICK": 6 };
-    obj.InputType = { "KEY": 1, "MOUSE": 2, "CTRLALTDEL": 10, "TOUCH": 15 };
+    obj.MouseButton = { 'NONE': 0x00, 'LEFT': 0x02, 'RIGHT': 0x08, 'MIDDLE': 0x20 };
+    obj.KeyAction = { 'NONE': 0, 'DOWN': 1, 'UP': 2, 'SCROLL': 3, 'EXUP': 4, 'EXDOWN': 5, 'DBLCLICK': 6 };
+    obj.InputType = { 'KEY': 1, 'MOUSE': 2, 'CTRLALTDEL': 10, 'TOUCH': 15 };
     obj.Alternate = 0;
 
     var convertKeyCodeTable = {
-        "Pause": 19,
-        "CapsLock": 20,
-        "Space": 32,
-        "Quote": 222,
-        "Minus": 189,
-        "NumpadMultiply": 106,
-        "NumpadAdd": 107,
-        "PrintScreen": 44,
-        "Comma": 188,
-        "NumpadSubtract": 109,
-        "NumpadDecimal": 110,
-        "Period": 190,
-        "Slash": 191,
-        "NumpadDivide": 111,
-        "Semicolon": 186,
-        "Equal": 187,
-        "OSLeft": 91,
-        "BracketLeft": 219,
-        "OSRight": 91,
-        "Backslash": 220,
-        "BracketRight": 221,
-        "ContextMenu": 93,
-        "Backquote": 192,
-        "NumLock": 144,
-        "ScrollLock": 145,
-        "Backspace": 8,
-        "Tab": 9,
-        "Enter": 13,
-        "NumpadEnter": 13,
-        "Escape": 27,
-        "Delete": 46,
-        "Home": 36,
-        "PageUp": 33,
-        "PageDown": 34,
-        "ArrowLeft": 37,
-        "ArrowUp": 38,
-        "ArrowRight": 39,
-        "ArrowDown": 40,
-        "End": 35,
-        "Insert": 45,
-        "F1": 112,
-        "F2": 113,
-        "F3": 114,
-        "F4": 115,
-        "F5": 116,
-        "F6": 117,
-        "F7": 118,
-        "F8": 119,
-        "F9": 120,
-        "F10": 121,
-        "F11": 122,
-        "F12": 123,
-        "ShiftLeft": 16,
-        "ShiftRight": 16,
-        "ControlLeft": 17,
-        "ControlRight": 17,
-        "AltLeft": 18,
-        "AltRight": 18,
-        "MetaLeft": 91,
-        "MetaRight": 92,
-        "VolumeMute": 181
-        //"LaunchMail": 
-        //"LaunchApp1":
-        //"LaunchApp2":
-        //"BrowserStop":
-        //"MediaStop":
-        //"MediaTrackPrevious":
-        //"MediaTrackNext":
-        //"MediaPlayPause":
-        //"MediaSelect":
+        'Pause': 19,
+        'CapsLock': 20,
+        'Space': 32,
+        'Quote': 222,
+        'Minus': 189,
+        'NumpadMultiply': 106,
+        'NumpadAdd': 107,
+        'PrintScreen': 44,
+        'Comma': 188,
+        'NumpadSubtract': 109,
+        'NumpadDecimal': 110,
+        'Period': 190,
+        'Slash': 191,
+        'NumpadDivide': 111,
+        'Semicolon': 186,
+        'Equal': 187,
+        'OSLeft': 91,
+        'BracketLeft': 219,
+        'OSRight': 91,
+        'Backslash': 220,
+        'BracketRight': 221,
+        'ContextMenu': 93,
+        'Backquote': 192,
+        'NumLock': 144,
+        'ScrollLock': 145,
+        'Backspace': 8,
+        'Tab': 9,
+        'Enter': 13,
+        'NumpadEnter': 13,
+        'Escape': 27,
+        'Delete': 46,
+        'Home': 36,
+        'PageUp': 33,
+        'PageDown': 34,
+        'ArrowLeft': 37,
+        'ArrowUp': 38,
+        'ArrowRight': 39,
+        'ArrowDown': 40,
+        'End': 35,
+        'Insert': 45,
+        'F1': 112,
+        'F2': 113,
+        'F3': 114,
+        'F4': 115,
+        'F5': 116,
+        'F6': 117,
+        'F7': 118,
+        'F8': 119,
+        'F9': 120,
+        'F10': 121,
+        'F11': 122,
+        'F12': 123,
+        'ShiftLeft': 16,
+        'ShiftRight': 16,
+        'ControlLeft': 17,
+        'ControlRight': 17,
+        'AltLeft': 18,
+        'AltRight': 18,
+        'MetaLeft': 91,
+        'MetaRight': 92,
+        'VolumeMute': 181
+        //'LaunchMail': 
+        //'LaunchApp1':
+        //'LaunchApp2':
+        //'BrowserStop':
+        //'MediaStop':
+        //'MediaTrackPrevious':
+        //'MediaTrackNext':
+        //'MediaPlayPause':
+        //'MediaSelect':
     }
 
     function convertKeyCode(e) {
@@ -49509,8 +49509,8 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                     if (certificate['privateKey']) { cmenus.push("Issue new cert..." + '#cert_issueNew(' + certificate['h'] + ')'); }
                     cmenus.push("Export as .cer..." + '#cert_saveCertCer(' + certificate['h'] + ')');
                     if (certificate['privateKey']) { cmenus.push("Export as .p12..." + '#cert_saveCertP12(' + certificate['h'] + ')'); }
-                    x += " cm='" + cmenus.join('|') + "'";
-                    x += " onclick='cert_select(event, " + certificate['h'] + ")' id=CR-" + certificate['h'] + " ondblclick=cert_view(" + certificate['h'] + ")>";
+                    x += ' cm=\'' + cmenus.join('|') + '\'';
+                    x += ' onclick=\'cert_select(event, ' + certificate['h'] + ')\' id=CR-' + certificate['h'] + ' ondblclick=cert_view(' + certificate['h'] + ')>';
                     //x += '<input id=SC-' + certificate['h'] + ' type=checkbox style=float:left;margin-top:8px onclick=cert_onCertificateChecked()' + (certificate.checked?' checked':'') + ' />';
                     x += '<div style=float:right><span style=font-size:14px>' + extra.join(', ') + '</span>&nbsp;<input type=button value="' + "View..." + '" onclick=cert_view(' + certificate['h'] + ')>&nbsp;</div><div style=padding-top:2px>&nbsp;';
                     //x += '<img src=certificate.png style=vertical-align:text-top height=28 width=24 />';
@@ -49528,16 +49528,16 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             var x = '', certificate = getCertificate(h), cert = certificate.cert, commonName = cert.subject.getField('CN').value;
             var fingerprint = '', fingerprint2 = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex().toUpperCase();
             for (i = 0; i < fingerprint2.length; i++) { if ((i != 0) && (i % 2 == 0)) { fingerprint += ':'; } fingerprint += fingerprint2.substring(i, i + 1); }
-            x += '<img src=images-commander/cert' + ((certificate['privateKey']) ? '2' : '1') + ".png style=vertical-align:text-top;float:right;height:28px height=32 width=32 />";
+            x += '<img src=images-commander/cert' + ((certificate['privateKey']) ? '2' : '1') + '.png style=vertical-align:text-top;float:right;height:28px height=32 width=32 />';
             x += '<input id=certTrustedCheck type=checkbox>' + "This is a trusted certificate" + '<br>';
             var extKeyUsage = null;
             for (var i in certificate.cert.extensions) { if (certificate.cert.extensions[i].id == '2.5.29.37') { extKeyUsage = certificate.cert.extensions[i]; } }
             if ((certificate['privateKey']) && (extKeyUsage != null) && (extKeyUsage['2.16.840.1.113741.1.2.1'] == true)) { x += '<div><input id=certMutualAuth type=checkbox>Use for TLS console authentication<br></div>'; }
             x += '<br>';
 
-            var y = atob(certificate['certbin']).length + " bytes, <a style=cursor:pointer;color:blue onclick=cert_saveCertCer(" + h + ",1)>Save&nbsp.cer</a>";
-            if (certificate['privateKey']) { y += ", <a style=cursor:pointer;color:blue onclick=cert_saveCertP12(" + h + ")>Save&nbsp.p12</a>"; }
-            y += ", <a style=cursor:pointer;color:blue onclick=cert_saveCertCer(" + h + ",2)>Save&nbsp.pem</a>";
+            var y = atob(certificate['certbin']).length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=cert_saveCertCer(' + h + ',1)>' + "Save&nbsp.cer" + '</a>';
+            if (certificate['privateKey']) { y += ', <a style=cursor:pointer;color:blue onclick=cert_saveCertP12(' + h + ')>' + "Save&nbsp.p12" + '</a>'; }
+            y += ', <a style=cursor:pointer;color:blue onclick=cert_saveCertCer(" + h + ",2)>' + "Save&nbsp.pem" + '</a>';
             x += addHtmlValueNoTitle("Certificate", y);
             // Decode certificate usages
             y = [];

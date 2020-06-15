@@ -74,7 +74,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
     obj.PerformAjaxEx = function (postdata, callback, tag, url, action) {
         if (obj.FailAllError != 0) { obj.gotNextMessagesError({ status: obj.FailAllError }, 'error', null, [postdata, callback, tag, url, action]); return; }
         if (!postdata) postdata = '';
-        //obj.Debug("SEND: " + postdata); // DEBUG
+        //obj.Debug('SEND: ' + postdata); // DEBUG
 
         obj.ActiveAjaxCount++;
         return obj.PerformAjaxExNodeJS(postdata, callback, tag, url, action);
@@ -138,7 +138,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
         h += 'Host: ' + obj.host + ':' + obj.port + '\r\nContent-Length: ' + postdata.length + '\r\n\r\n' + postdata; // Use Content-Length
         //h += 'Host: ' + obj.host + ':' + obj.port + '\r\nTransfer-Encoding: chunked\r\n\r\n' + postdata.length.toString(16).toUpperCase() + '\r\n' + postdata + '\r\n0\r\n\r\n'; // Use Chunked-Encoding
         obj.xxSend(h);
-        //console.log("SEND: " + h); // Display send packet
+        //console.log('SEND: ' + h); // Display send packet
     }
 
     // Parse the HTTP digest header and return a list of key & values.
@@ -156,7 +156,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
 
     // NODE.js specific private method
     obj.xxConnectHttpSocket = function () {
-        //obj.Debug("xxConnectHttpSocket");
+        //obj.Debug('xxConnectHttpSocket');
         obj.socketParseState = 0;
         obj.socketAccumulator = '';
         obj.socketHeader = null;
@@ -256,10 +256,10 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
     // NODE.js specific private method
     obj.xxOnSocketData = function (data) {
         obj.xtlsDataReceived = true;
-        if (urlvars && urlvars['wsmantrace']) { console.log("WSMAN-RECV(" + data.length + "): " + data); }
+        if (urlvars && urlvars['wsmantrace']) { console.log('WSMAN-RECV(' + data.length + '): ' + data); }
         if (typeof data === 'object') {
             // This is an ArrayBuffer, convert it to a string array (used in IE)
-            var binary = "", bytes = new Uint8Array(data), length = bytes.byteLength;
+            var binary = '', bytes = new Uint8Array(data), length = bytes.byteLength;
             for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
             data = binary;
         }
@@ -287,12 +287,12 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
             }
             if (obj.socketParseState == 1) {
                 var csize = -1;
-                if ((obj.socketXHeader["connection"] != undefined) && (obj.socketXHeader["connection"].toLowerCase() == 'close') && ((obj.socketXHeader["transfer-encoding"] == undefined) || (obj.socketXHeader["transfer-encoding"].toLowerCase() != 'chunked'))) {
+                if ((obj.socketXHeader['connection'] != undefined) && (obj.socketXHeader['connection'].toLowerCase() == 'close') && ((obj.socketXHeader['transfer-encoding'] == undefined) || (obj.socketXHeader['transfer-encoding'].toLowerCase() != 'chunked'))) {
                     // The body ends with a close, in this case, we will only process the header
                     csize = 0;
-                } else if (obj.socketXHeader["content-length"] != undefined) {
+                } else if (obj.socketXHeader['content-length'] != undefined) {
                     // The body length is specified by the content-length
-                    csize = parseInt(obj.socketXHeader["content-length"]);
+                    csize = parseInt(obj.socketXHeader['content-length']);
                     if (obj.socketAccumulator.length < csize) return;
                     var data = obj.socketAccumulator.substring(0, csize);
                     obj.socketAccumulator = obj.socketAccumulator.substring(csize);
@@ -300,7 +300,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
                     csize = 0;
                 } else {
                     // The body is chunked
-                    var clen = obj.socketAccumulator.indexOf("\r\n");
+                    var clen = obj.socketAccumulator.indexOf('\r\n');
                     if (clen < 0) return; // Chunk length not found, exit now and get more data.
                     // Chunk length if found, lets see if we can get the data.
                     csize = parseInt(obj.socketAccumulator.substring(0, clen), 16);
@@ -311,7 +311,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
                     obj.socketData += data;
                 }
                 if (csize == 0) {
-                    //obj.Debug("xxOnSocketData DONE: (" + obj.socketData.length + "): " + obj.socketData);
+                    //obj.Debug('xxOnSocketData DONE: (' + obj.socketData.length + '): ' + obj.socketData);
                     obj.xxProcessHttpResponse(obj.socketXHeader, obj.socketData);
                     obj.socketParseState = 0;
                     obj.socketHeader = null;
@@ -322,7 +322,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
 
     // NODE.js specific private method
     obj.xxProcessHttpResponse = function (header, data) {
-        //obj.Debug("xxProcessHttpResponse: " + header.Directive[1]);
+        //obj.Debug('xxProcessHttpResponse: ' + header.Directive[1]);
 
         var s = parseInt(header.Directive[1]);
         if (isNaN(s)) s = 500;
@@ -336,8 +336,8 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
             obj.socket.end();
         } else {
             var r = obj.pendingAjaxCall.shift();
-            if (r == null || r.length < 1) { console.log("pendingAjaxCall error, " + r); return; }
-            //if (s != 200) { obj.Debug("Error, status=" + s + "\r\n\r\nreq=" + r[0] + "\r\n\r\nresp=" + data); } // Debug: Display the request & response if something did not work.
+            if (r == null || r.length < 1) { console.log('pendingAjaxCall error, ' + r); return; }
+            //if (s != 200) { obj.Debug('Error, status=' + s + '\r\n\r\nreq=' + r[0] + '\r\n\r\nresp=' + data); } // Debug: Display the request & response if something did not work.
             obj.authcounter = 0;
             obj.ActiveAjaxCount--;
             obj.gotNextMessages(data, 'success', { status: s }, r);
@@ -347,7 +347,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
 
     // NODE.js specific private method
     obj.xxOnSocketClosed = function (data) {
-        //obj.Debug("xxOnSocketClosed");
+        //obj.Debug('xxOnSocketClosed');
         obj.socketState = 0;
         if (obj.socket != null) { obj.socket.destroy(); obj.socket = null; }
         if (obj.pendingAjaxCall.length > 0) {
@@ -360,7 +360,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
     // NODE.js specific private method
     obj.xxSend = function (x) {
         if (obj.socketState == 2) {
-            if (urlvars && urlvars['wsmantrace']) { console.log("WSMAN-SEND(" + x.length + "): " + x); }
+            if (urlvars && urlvars['wsmantrace']) { console.log('WSMAN-SEND(' + x.length + '): ' + x); }
             obj.socket.write(new Buffer(x, 'binary'));
         }
     }

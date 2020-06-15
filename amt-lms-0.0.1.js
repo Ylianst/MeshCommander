@@ -14,7 +14,7 @@ var CreateLmsControl = function () {
 
     // Private method
     obj.Start = function () {
-        socket = new WebSocket(window.location.protocol.replace("http", "ws") + "//" + window.location.host + "/lms.ashx");
+        socket = new WebSocket(window.location.protocol.replace('http', 'ws') + '//' + window.location.host + '/lms.ashx');
         socket.onopen = _OnSocketConnected;
         socket.onmessage = _OnMessage;
         socket.onclose = obj.Stop;
@@ -49,7 +49,7 @@ var CreateLmsControl = function () {
                 fileReader.readAsArrayBuffer(e.data);
             } else {
                 // IE10, readAsBinaryString does not exist, use an alternative.
-                var binary = "", bytes = new Uint8Array(e.data), length = bytes.byteLength;
+                var binary = '', bytes = new Uint8Array(e.data), length = bytes.byteLength;
                 for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
                 _OnSocketData(binary);
             }
@@ -63,7 +63,7 @@ var CreateLmsControl = function () {
 
         if (typeof data === 'object') {
             // This is an ArrayBuffer, convert it to a string array (used in IE)
-            var binary = "";
+            var binary = '';
             var bytes = new Uint8Array(data);
             var length = bytes.byteLength;
             for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
@@ -85,7 +85,7 @@ var CreateLmsControl = function () {
 
     obj.SendCmd = function (cmdid, data) {
         if (socket == null || obj.State != 2) return;
-        if (!data || data == null) data = "";
+        if (!data || data == null) data = '';
         _Send(ShortToStrX(cmdid) + data);
     }
 

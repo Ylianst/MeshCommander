@@ -9,11 +9,16 @@ function CreateIMRSDKWrapper() {
     
     var _IMRSDK;
     var _ImrSdkVersion;
-    var _ref = require("ref");
-    var _ffi = require("ffi");
+    var _ref = require('ref');
+    var _ffi = require('ffi');
     var _struct = require('ref-struct');
     var _arrayType = require('ref-array');
     obj.pendingData = {};
+
+    // ###BEGIN###{IDERDebug}
+    var logFile = null
+    if (urlvars && urlvars['iderlog']) { logFile = require('fs').createWriteStream(urlvars['iderlog'], { flags: 'w' }); }
+    // ###END###{IDERDebug}
 
     // Callback from the native lib back into js (StdCall)
     var uintPtr = _ref.refType('uint');
@@ -24,7 +29,10 @@ function CreateIMRSDKWrapper() {
             var bufferLen = lengthPtr.readUInt32LE(0), buffer = _ref.reinterpret(bufferPtr, bufferLen);
             lengthPtr.writeUInt32LE(obj.pendingData[conID].length, 0);
             for (var i = 0; i < obj.pendingData[conID].length; i++) { buffer[i] = obj.pendingData[conID].charCodeAt(i); }
-            //console.log("ReceiveHandlerCallBack(conID: " + conID + ", Len: " + obj.pendingData[conID].length + ")");
+            // ###BEGIN###{IDERDebug}
+            //console.log('ReceiveHandlerCallBack(conID: ' + conID + ', Len: ' + obj.pendingData[conID].length + ')');
+            if (logFile != null) { logFile.write('IDERRECV: ' + rstr2hex(obj.pendingData[conID]) + '\r\n'); }
+            // ###END###{IDERDebug}
             obj.pendingData[conID] = '';
         } catch (e) { console.log(e); }
         return 0;
@@ -33,7 +41,10 @@ function CreateIMRSDKWrapper() {
         try {
             var buffer = _ref.reinterpret(ptr, length), str = '';
             for (var i = 0; i < length; i++) { str += String.fromCharCode(buffer[i]); }
-            //console.log("SendHandlerCallBack(conID: " + conID + ", Len: " + length + ")");
+            // ###BEGIN###{IDERDebug}
+            //console.log('SendHandlerCallBack(conID: ' + conID + ', Len: ' + length + ')');
+            if (logFile != null) { logFile.write('IDERSEND: ' + rstr2hex(str) + '\r\n'); }
+            // ###END###{IDERDebug}
             obj.client.write(str, 'binary');
         } catch (e) { console.log(e); }
         return 0;
@@ -80,29 +91,29 @@ function CreateIMRSDKWrapper() {
     function _Setup(lib) {
         try {
             _IMRSDK = _ffi.Library(lib, {
-                "IMR_Init": ['uint', [_IMRVersionPtr, 'string']],                                                                   // IMRResult IMR_Init(IMRVersion *version, char *ini_file);
-                "IMR_InitEx": ['uint', [_IMRVersionPtr, 'string', _SockCallBacksPtr]],                                              // IMRResult IMR_Init(IMRVersion *version, char *ini_file, void *funcPtrs);
-                "IMR_ReadyReadSock": ['uint', ['uint']],                                                                            // IMRResult IMR_ReadyReadSock(uint conid);
-                "IMR_Close": ['uint', []],                                                                                          // IMRResult IMR_Close();
-                "IMR_GetErrorStringLen": ['uint', ['uint', _intPtr]],                                                               // IMRResult IMR_GetErrorStringLen(IMRResult, int * str_len);
-                "IMR_GetErrorString": ['uint', ['uint', 'pointer']],                                                                // IMRResult IMR_GetErrorString(IMRResult, char * str);
-                "IMR_SetCertificateInfo": ['uint', ['string', 'string', 'string']],                                                 // IMRResult IMR_SetCertificateInfo(const char *root_cert, const char *private_cert, const char *cert_pass);
-                "IMR_SetClientCertificate": ['uint', ['string']],                                                                   // IMRResult IMR_SetClientCertificate(const char *common_name);
-                "IMR_AddClient": ['uint', ['int', 'string', 'pointer', _intPtr]],                                                   // IMRResult IMR_AddClient(ClientType new_client_type, char * client_ip, GUIDType client_guid, ClientID * new_client_id);
-                "IMR_RemoveClient": ['uint', ['int']],                                                                              // IMRResult IMR_RemoveClient(ClientID client_id);
-                "IMR_RemoveAllClients": ['uint', []],                                                                               // IMRResult IMR_RemoveAllClients();
-                "IMR_GetAllClients": ['uint', [_arrayType('int'), _intPtr]],                                                        // IMRResult IMR_GetAllClients(ClientID * client_list, int * client_list_size);
-                "IMR_GetClientInfo": ['uint', ['int', _IMRClientInfoPtr]],                                                          // IMRResult IMR_GetClientInfo(ClientID client_id, ClientInfo *);
-                "IMR_IDEROpenTCPSession": ['uint', ['int', _TCPSessionParamsPtr, _IDERToutPtr, 'string', 'string']],                // IMRResult IMR_IDEROpenTCPSession(ClientID client_id, TCPSessionParams * params, IDERTout * touts, char * drive0, char * drive1);
-                "IMR_IDEROpenTCPSessionEx": ['uint', ['int', _TCPSessionParamsExPtr, _IDERToutPtr, 'string', 'string']],            // IMRResult IMR_IDEROpenTCPSessionEx(ClientID client_id, TCPSessionParamsEx * params, IDERTout * touts, char * drive0, char * drive1);
-                "IMR_IDEROpenTCPSessionEx2": ['uint', ['int', _TCPSessionParamsEx2Ptr, _IDERToutPtr, 'string', 'string']],          // IMRResult IMR_IDEROpenTCPSessionEx2(ClientID client_id, TCPSessionParamsEx2 * params, IDERTout * touts, char * drive0, char * drive1);
-                "IMR_IDERCloseSession": ['uint', ['int']],                                                                          // IMRResult IMR_IDERCloseSession(ClientID client_id);
-                "IMR_IDERClientFeatureSupported" : ['uint', ['int', _FeaturesSupportedPtr]],                                        // IMRResult IMR_IDERClientFeatureSupported(ClientID client_id, FeaturesSupported * supported);
-                "IMR_IDERGetDeviceState" : ['uint', ['int', _IDERDeviceStatePtr]],                                                  // IMRResult IMR_IDERGetDeviceState(ClientID client_id, IDERDeviceState * state);
-                "IMR_IDERSetDeviceState" : ['uint', ['int', _IDERDeviceCmdPtr, _IDERDeviceResultPtr]],                              // IMRResult IMR_IDERSetDeviceState(ClientID client_id, IDERDeviceCmd * cmd, IDERDeviceResult * result);
-                "IMR_IDERGetSessionStatistics": ['uint', ['int', _IDERStatisticsPtr]],                                              // IMRResult IMR_IDERGetSessionStatistics(ClientID  client_id, IDERStatistics * stat);
-                "IMR_SetOpt": ['uint', ['int', 'string', 'string', 'int']],                                                         // IMRResult IMR_SetOpt(/*IN*/ClientID id, /*IN*/int optname, /*IN*/ const char *optval, /*IN*/ int optlen);
-                "IMR_GetOpt": ['uint', ['int', 'string', 'pointer', _intPtr]],                                                      // IMRResult IMR_GetOpt(/*IN*/ClientID id, /*IN*/int optname, /*OUT*/ char *optval, /*OUT*/ int* optlen);
+                'IMR_Init': ['uint', [_IMRVersionPtr, 'string']],                                                                   // IMRResult IMR_Init(IMRVersion *version, char *ini_file);
+                'IMR_InitEx': ['uint', [_IMRVersionPtr, 'string', _SockCallBacksPtr]],                                              // IMRResult IMR_Init(IMRVersion *version, char *ini_file, void *funcPtrs);
+                'IMR_ReadyReadSock': ['uint', ['uint']],                                                                            // IMRResult IMR_ReadyReadSock(uint conid);
+                'IMR_Close': ['uint', []],                                                                                          // IMRResult IMR_Close();
+                'IMR_GetErrorStringLen': ['uint', ['uint', _intPtr]],                                                               // IMRResult IMR_GetErrorStringLen(IMRResult, int * str_len);
+                'IMR_GetErrorString': ['uint', ['uint', 'pointer']],                                                                // IMRResult IMR_GetErrorString(IMRResult, char * str);
+                'IMR_SetCertificateInfo': ['uint', ['string', 'string', 'string']],                                                 // IMRResult IMR_SetCertificateInfo(const char *root_cert, const char *private_cert, const char *cert_pass);
+                'IMR_SetClientCertificate': ['uint', ['string']],                                                                   // IMRResult IMR_SetClientCertificate(const char *common_name);
+                'IMR_AddClient': ['uint', ['int', 'string', 'pointer', _intPtr]],                                                   // IMRResult IMR_AddClient(ClientType new_client_type, char * client_ip, GUIDType client_guid, ClientID * new_client_id);
+                'IMR_RemoveClient': ['uint', ['int']],                                                                              // IMRResult IMR_RemoveClient(ClientID client_id);
+                'IMR_RemoveAllClients': ['uint', []],                                                                               // IMRResult IMR_RemoveAllClients();
+                'IMR_GetAllClients': ['uint', [_arrayType('int'), _intPtr]],                                                        // IMRResult IMR_GetAllClients(ClientID * client_list, int * client_list_size);
+                'IMR_GetClientInfo': ['uint', ['int', _IMRClientInfoPtr]],                                                          // IMRResult IMR_GetClientInfo(ClientID client_id, ClientInfo *);
+                'IMR_IDEROpenTCPSession': ['uint', ['int', _TCPSessionParamsPtr, _IDERToutPtr, 'string', 'string']],                // IMRResult IMR_IDEROpenTCPSession(ClientID client_id, TCPSessionParams * params, IDERTout * touts, char * drive0, char * drive1);
+                'IMR_IDEROpenTCPSessionEx': ['uint', ['int', _TCPSessionParamsExPtr, _IDERToutPtr, 'string', 'string']],            // IMRResult IMR_IDEROpenTCPSessionEx(ClientID client_id, TCPSessionParamsEx * params, IDERTout * touts, char * drive0, char * drive1);
+                'IMR_IDEROpenTCPSessionEx2': ['uint', ['int', _TCPSessionParamsEx2Ptr, _IDERToutPtr, 'string', 'string']],          // IMRResult IMR_IDEROpenTCPSessionEx2(ClientID client_id, TCPSessionParamsEx2 * params, IDERTout * touts, char * drive0, char * drive1);
+                'IMR_IDERCloseSession': ['uint', ['int']],                                                                          // IMRResult IMR_IDERCloseSession(ClientID client_id);
+                'IMR_IDERClientFeatureSupported' : ['uint', ['int', _FeaturesSupportedPtr]],                                        // IMRResult IMR_IDERClientFeatureSupported(ClientID client_id, FeaturesSupported * supported);
+                'IMR_IDERGetDeviceState' : ['uint', ['int', _IDERDeviceStatePtr]],                                                  // IMRResult IMR_IDERGetDeviceState(ClientID client_id, IDERDeviceState * state);
+                'IMR_IDERSetDeviceState' : ['uint', ['int', _IDERDeviceCmdPtr, _IDERDeviceResultPtr]],                              // IMRResult IMR_IDERSetDeviceState(ClientID client_id, IDERDeviceCmd * cmd, IDERDeviceResult * result);
+                'IMR_IDERGetSessionStatistics': ['uint', ['int', _IDERStatisticsPtr]],                                              // IMRResult IMR_IDERGetSessionStatistics(ClientID  client_id, IDERStatistics * stat);
+                'IMR_SetOpt': ['uint', ['int', 'string', 'string', 'int']],                                                         // IMRResult IMR_SetOpt(/*IN*/ClientID id, /*IN*/int optname, /*IN*/ const char *optval, /*IN*/ int optlen);
+                'IMR_GetOpt': ['uint', ['int', 'string', 'pointer', _intPtr]],                                                      // IMRResult IMR_GetOpt(/*IN*/ClientID id, /*IN*/int optname, /*OUT*/ char *optval, /*OUT*/ int* optlen);
             });
         } catch (e) { return false; }
         return true;
@@ -114,7 +125,7 @@ function CreateIMRSDKWrapper() {
     // IMR_Init
     obj.Init = function() {
         var version = new _IMRVersion();
-        var error = _IMRSDK.IMR_Init(version.ref(), "imrsdk.ini");
+        var error = _IMRSDK.IMR_Init(version.ref(), 'imrsdk.ini');
         if (error == 4) return _ImrSdkVersion; // If already initialized, return previous version information.
         if (error != 0) { throw obj.GetErrorString(error); }
         _ImrSdkVersion = { major: version.major, minor: version.minor };
@@ -131,7 +142,7 @@ function CreateIMRSDKWrapper() {
         callbacks.SendHandler = SendHandlerCallBack;
         obj.client = client;
 
-        var error = _IMRSDK.IMR_InitEx(version.ref(), "imrsdk.ini", callbacks.ref());
+        var error = _IMRSDK.IMR_InitEx(version.ref(), 'imrsdk.ini', callbacks.ref());
         if (error == 4) return _ImrSdkVersion; // If already initialized, return previous version information.
         if (error != 0) { throw obj.GetErrorString(error); }
         _ImrSdkVersion = { major: version.major, minor: version.minor };
@@ -331,9 +342,9 @@ var CreateAmtRemoteIderIMR = function () {
 
         if (obj.m.onDialogPrompt) {
             if (require('os').platform() == 'win32') {
-                obj.m.onDialogPrompt(obj.m, { 'html': '<br>Select a CDROM and Floppy disk image to start the disk redirection.<br><br><br><div style=height:26px;margin-bottom:6px><select style=float:right;width:300px id=storagesourceoption onchange=onIderSourceChange()><option value=0 selected>ISO & IMG from file</option><option value=1>ISO from drive, IMG from file</option><option value=2>ISO from file, IMG from drive</option><option value=3>ISO & IMG from drive</option></select><div>Source</div></div><div style=height:20px><input type=file id=iderisofile accept=.iso style=float:right;width:300px><select style=float:right;width:300px;display:none id=iderisodrive><option>D:</option><option>E:</option><option>F:</option><option>G:</option><option>H:</option><option>I:</option></select><div>.ISO file</div></div><br><div style=height:20px><input type=file id=iderimgfile accept=.img style=float:right;width:300px><select style=float:right;width:300px;display:none id=iderimgdrive><option>A:</option><option>B:</option></select><div>.IMG file</div></div><br /><div style=height:26px><select style=float:right;width:300px id=storageserveroption><option value=0>On Reset</option><option value=1 selected>Gracefully</option><option value=2>Immediately</option></select><div>Start</div></div>' });
+                obj.m.onDialogPrompt(obj.m, { 'html': '<br>' + "Select a CDROM and Floppy disk image to start the disk redirection." + '<br><br><br><div style=height:26px;margin-bottom:6px><select style=float:right;width:300px id=storagesourceoption onchange=onIderSourceChange()><option value=0 selected>' + "ISO & IMG from file" + '</option><option value=1>' + "ISO from drive, IMG from file" + '</option><option value=2>' + "ISO from file, IMG from drive" + '</option><option value=3>' + "ISO & IMG from drive" + '</option></select><div>' + "Source" + '</div></div><div style=height:20px><input type=file id=iderisofile accept=.iso style=float:right;width:300px><select style=float:right;width:300px;display:none id=iderisodrive><option>D:</option><option>E:</option><option>F:</option><option>G:</option><option>H:</option><option>I:</option></select><div>' + ".ISO file" + '</div></div><br><div style=height:20px><input type=file id=iderimgfile accept=.img style=float:right;width:300px><select style=float:right;width:300px;display:none id=iderimgdrive><option>A:</option><option>B:</option></select><div>' + ".IMG file" + '</div></div><br /><div style=height:26px><select style=float:right;width:300px id=storageserveroption><option value=0>' + "On Reset" + '</option><option value=1 selected>' + "Gracefully" + '</option><option value=2>' + "Immediately" + '</option></select><div>' + "Start" + '</div></div>' });
             } else {
-                obj.m.onDialogPrompt(obj.m, { 'html': '<br>Select a CDROM and Floppy disk image to start the disk redirection.<br><br><br><div style=height:20px><input type=file id=iderisofile accept=.iso style=float:right;width:300px><div>.ISO file</div></div><br><div style=height:20px><input type=file id=iderimgfile accept=.img style=float:right;width:300px><div>.IMG file</div></div><br /><div style=height:26px><select style=float:right;width:300px id=storageserveroption><option value=0>On Reset</option><option value=1 selected>Gracefully</option><option value=2>Immediately</option></select><div>Start</div></div>' });
+                obj.m.onDialogPrompt(obj.m, { 'html': '<br>' + "Select a CDROM and Floppy disk image to start the disk redirection." + '<br><br><br><div style=height:20px><input type=file id=iderisofile accept=.iso style=float:right;width:300px><div>.ISO file</div></div><br><div style=height:20px><input type=file id=iderimgfile accept=.img style=float:right;width:300px><div>' + ".IMG file" + '</div></div><br /><div style=height:26px><select style=float:right;width:300px id=storageserveroption><option value=0>' + "On Reset" + '</option><option value=1 selected>' + "Gracefully" + '</option><option value=2>' + "Immediately" + '</option></select><div>' + "Start" + '</div></div>' });
             }
         }
     }
@@ -405,7 +416,7 @@ var CreateAmtRemoteIderIMR = function () {
     function startIderSession(userConsentFunc) {
         if (globalIderPendingCalls != 0) { console.log('Incomplete IDER cleanup (' + globalIderPendingCalls + ').'); return; }
         try {
-            //console.log("IDER-Start");
+            //console.log('IDER-Start');
             if (obj.m.xtlsoptions && obj.m.xtlsoptions.meshServerConnect) {
                 // Open thru MeshCentral websocket wrapper
                 obj.m.client = CreateWebSocketWrapper(obj.m.xtlsoptions.host, obj.m.xtlsoptions.port, '/webrelay.ashx?user=' + encodeURIComponent(obj.m.xtlsoptions.username) + '&pass=' + encodeURIComponent(obj.m.xtlsoptions.password) + '&host=' + encodeURIComponent(obj.m.host) + '&p=2', obj.m.xtlsoptions.xtlsFingerprint);
@@ -429,7 +440,7 @@ var CreateAmtRemoteIderIMR = function () {
                     // Check the Intel AMT certificate, it must be the same as the one used for WSMAN. If not, disconnect.
                     var iderTlsCertificate = obj.m.client.getPeerCertificate();
                     if ((iderTlsCertificate == null) || (obj.m.wsmanCert == null) || (iderTlsCertificate.fingerprint != obj.m.wsmanCert.fingerprint)) {
-                        console.log("Invalid IDER certificate, disconnecting.", iderTlsCertificate);
+                        console.log('Invalid IDER certificate, disconnecting.', iderTlsCertificate);
                         obj.m.Stop();
                     } else {
                         startIderSessionEx(userConsentFunc)
@@ -440,7 +451,7 @@ var CreateAmtRemoteIderIMR = function () {
             obj.m.client.setEncoding('binary');
 
             obj.m.client.on('data', function (data) {
-                //console.log("IDER-RECV(" + data.length + ", " + obj.receivedCount + "): " + rstr2hex(data));
+                //console.log('IDER-RECV(' + data.length + ', ' + obj.receivedCount + '): ' + rstr2hex(data));
 
                 if (obj.m.imrsdk == null) { return; }
 
@@ -470,7 +481,7 @@ var CreateAmtRemoteIderIMR = function () {
 
     function startIderSessionEx(userConsentFunc) {
         try {
-            //console.log("IDER-StartEx");
+            //console.log('IDER-StartEx');
             obj.m.userConsentFunc = userConsentFunc;
             obj.m.imrsdk = CreateIMRSDKWrapper();
             obj.m.imrsdk.InitEx(obj.m.client);

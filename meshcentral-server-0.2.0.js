@@ -23,7 +23,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
     obj.crypto = require('crypto');
     obj.constants = require('constants');
     obj.xtlsoptions = null;
-    obj.accumulator = "";
+    obj.accumulator = '';
     obj.accopcodes = 0;
     obj.acclen = -1;
     obj.accmask = false;
@@ -52,7 +52,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
     obj.connect = function () {
         obj.socketState = 1;
         if (obj.onStateChange != null) { obj.onStateChange(obj, obj.socketState); }
-        obj.accumulator = "";
+        obj.accumulator = '';
         obj.accopcodes = 0;
         obj.acclen = -1;
         obj.accmask = false;
@@ -71,7 +71,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
         obj.socket.on('error', _OnSocketClosed);
     }
 
-    obj.disconnect = function () { _OnSocketClosed("UserDisconnect"); }
+    obj.disconnect = function () { _OnSocketClosed('UserDisconnect'); }
     obj.send = function (obj) { _Send(obj); }
 
     // Called when the socket is connected, we still need to do work to get the websocket connected
@@ -87,7 +87,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
         if (obj.token != null) { urlExtras = '&token=' + obj.token; }
 
         // Send the websocket switching header
-        obj.socket.write(new Buffer('GET ' + obj.path + '?user=' + encodeURIComponent(obj.username) + '&pass=' + encodeURIComponent(obj.password) + urlExtras + " HTTP/1.1\r\nHost: " + obj.host + "\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n", "binary"));
+        obj.socket.write(new Buffer('GET ' + obj.path + '?user=' + encodeURIComponent(obj.username) + '&pass=' + encodeURIComponent(obj.password) + urlExtras + ' HTTP/1.1\r\nHost: ' + obj.host + '\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n', 'binary'));
     }
 
     // Called when socket data is received from the server
@@ -259,7 +259,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
     // Called to send websocket data to the server
     function _Send(object) {
         if (obj.socketState < 2) { return; }
-        var data = new Buffer(JSON.stringify(object), "binary");
+        var data = new Buffer(JSON.stringify(object), 'binary');
         var header = String.fromCharCode(129); // 129 is default full fragment op code
         if (data.length < 126) { header += String.fromCharCode(data.length); }
         else if (data.length < 65536) { header += String.fromCharCode(126) + ShortToStr(data.length); }

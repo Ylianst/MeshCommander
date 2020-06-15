@@ -884,7 +884,7 @@ ZLIB.inflateReset = function(strm, windowBits)
     if (!strm || !strm.state) return ZLIB.Z_STREAM_ERROR;
     state = strm.state;
 
-	if(typeof windowBits === "undefined")
+	if(typeof windowBits === 'undefined')
 		windowBits = DEF_WBITS;
 
     /* extract wrap request from windowBits parameter */
@@ -1283,12 +1283,12 @@ inf_leave: for (;;) {
             if(!NEEDBITS(s, 16)) break inf_leave;
             state.flags = s.hold;
             if ((state.flags & 0xff) != ZLIB.Z_DEFLATED) {
-                strm.msg = "unknown compression method";
+                strm.msg = 'unknown compression method';
                 state.mode = BAD;
                 break;
             }
             if (state.flags & 0xe000) {
-                strm.msg = "unknown header flags set";
+                strm.msg = 'unknown header flags set';
                 state.mode = BAD;
                 break;
             }
@@ -1330,7 +1330,7 @@ inf_leave: for (;;) {
 					CRC2(strm, s.hold);
 				}
                 INITBITS(s);
-				state.head.extra = "";
+				state.head.extra = '';
             }
             else if (state.head !== null) {
                 state.head.extra = null;
@@ -1368,14 +1368,14 @@ inf_leave: for (;;) {
             if (state.flags & 0x0800) {
                 if (s.have == 0) break inf_leave;
 				if (state.head !== null && state.head.name === null) {
-					state.head.name = "";
+					state.head.name = '';
 				}
                 copy = 0;
 				// TODO end = strm.input_data.indexOf("\0", s.next);
 				// TODO state.length => state.head.name.length
                 do {
                     len = strm.input_data.charAt(s.next + copy); copy++;
-					if(len === "\0")
+					if(len === '\0')
 						break;
                     if (state.head !== null &&
 						state.length < state.head.name_max) {
@@ -1388,7 +1388,7 @@ inf_leave: for (;;) {
 				}
                 s.have -= copy;
                 s.next += copy;
-                if (len !== "\0") break inf_leave;
+                if (len !== '\0') break inf_leave;
             }
             else if (state.head !== null)
                 state.head.name = null;
@@ -1399,13 +1399,13 @@ inf_leave: for (;;) {
                 if (s.have == 0) break inf_leave;
                 copy = 0;
 				if (state.head !== null && state.head.comment === null) {
-					state.head.comment = "";
+					state.head.comment = '';
 				}
 				// TODO end = strm.input_data.indexOf("\0", s.next);
 				// TODO state.length => state.head.comment.length
                 do {
                     len = strm.input_data.charAt(s.next + copy); copy++;
-					if(len === "\0")
+					if(len === '\0')
 						break;
                     if (state.head !== null &&
 						state.length < state.head.comm_max) {
@@ -1417,7 +1417,7 @@ inf_leave: for (;;) {
                     state.check = strm.checksum_function(state.check, strm.input_data, s.next, copy);
                 s.have -= copy;
                 s.next += copy;
-                if (len !== "\0") break inf_leave;
+                if (len !== '\0') break inf_leave;
             }
             else if (state.head !== null)
                 state.head.comment = null;
@@ -1426,7 +1426,7 @@ inf_leave: for (;;) {
             if (state.flags & 0x0200) {
                 if(!NEEDBITS(s, 16)) break inf_leave;
                 if (s.hold != (state.check & 0xffff)) {
-                    strm.msg = "header crc mismatch";
+                    strm.msg = 'header crc mismatch';
                     state.mode = BAD;
                     break;
                 }
@@ -1839,7 +1839,7 @@ inf_leave: for (;;) {
                      state.flags ? s.hold :
 //#endif
                      REVERSE(s.hold)) != state.check) {
-                    strm.msg = "incorrect data check";
+                    strm.msg = 'incorrect data check';
                     state.mode = BAD;
                     break;
                 }

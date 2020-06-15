@@ -55,7 +55,7 @@ var CreateAmtScanner = function (func) {
         if (range == null || (range.min > range.max)) return false;
         var rangeinfo = { id: id, range: rangestr, min: range.min, max: range.max, results: {}, resultCount: 0 };
         obj.rserver[id] = rangeinfo;
-        rangeinfo.server = obj.dgram.createSocket("udp4");
+        rangeinfo.server = obj.dgram.createSocket('udp4');
         rangeinfo.server.bind(0);
         rangeinfo.server.on('error', function(err) { console.log(err); });
         rangeinfo.server.on('message', function(data, rinfo) { obj.parseRmcpPacket(data, rinfo, 0, func, rangeinfo); });
@@ -74,7 +74,7 @@ var CreateAmtScanner = function (func) {
         return true;
     }
 
-    // Parse range, used to parse "ip", "ip/mask" or "ip-ip" notation.
+    // Parse range, used to parse 'ip', 'ip/mask' or 'ip-ip' notation.
     // Return the start and end value of the scan
     obj.parseIpv4Range = function (range) {
         if (range == undefined || range == null) return null;
@@ -225,10 +225,10 @@ var CreateAmtScanner = function (func) {
         // throw failed upon timeout
         timer = setTimeout(function () {
             timer = null; // Ensure timer is nullified
-            doCallback(new Error("Timeout exceeded"), null);
+            doCallback(new Error('Timeout exceeded'), null);
         }, 3000);
 
-        require("dns").reverse(ip, doCallback);
+        require('dns').reverse(ip, doCallback);
     }
 
     return obj;

@@ -33,7 +33,8 @@ function IntToStrX(v) { return String.fromCharCode(v & 0xFF, (v >> 8) & 0xFF, (v
 function MakeToArray(v) { if (!v || v == null || typeof v == 'object') return v; return [v]; }
 function SplitArray(v) { return v.split(','); }
 function Clone(v) { return JSON.parse(JSON.stringify(v)); }
-function EscapeHtml(x) { if (typeof x == "string") return x.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'); if (typeof x == "boolean") return x; if (typeof x == "number") return x; }
+function EscapeHtml(x) { if (typeof x == 'string') return x.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'); if (typeof x == 'boolean') return x; if (typeof x == 'number') return x; }
+function NoBreak(v) { return v.split(' ').join('&nbsp;'); }
 
 // Move an element from one position in an array to a new position
 function ArrayElementMove(arr, from, to) { arr.splice(to, 0, arr.splice(from, 1)[0]); };
@@ -42,8 +43,8 @@ function ArrayElementMove(arr, from, to) { arr.splice(to, 0, arr.splice(from, 1)
 function ObjectToStringEx(x, c) {
     var r = "";
     if (x != 0 && (!x || x == null)) return "(Null)";
-    if (x instanceof Array) { for (var i in x) { r += '<br />' + gap(c) + "Item #" + i + ": " + ObjectToStringEx(x[i], c + 1); } }
-    else if (x instanceof Object) { for (var i in x) { r += '<br />' + gap(c) + i + " = " + ObjectToStringEx(x[i], c + 1); } }
+    if (x instanceof Array) { for (var i in x) { r += '<br />' + gap(c) + "Item #" + i + ': ' + ObjectToStringEx(x[i], c + 1); } }
+    else if (x instanceof Object) { for (var i in x) { r += '<br />' + gap(c) + i + ' = ' + ObjectToStringEx(x[i], c + 1); } }
     else { r += EscapeHtml(x); }
     return r;
 }
@@ -52,8 +53,8 @@ function ObjectToStringEx(x, c) {
 function ObjectToStringEx2(x, c) {
     var r = "";
     if (x != 0 && (!x || x == null)) return "(Null)";
-    if (x instanceof Array) { for (var i in x) { r += '\r\n' + gap2(c) + "Item #" + i + ": " + ObjectToStringEx2(x[i], c + 1); } }
-    else if (x instanceof Object) { for (var i in x) { r += '\r\n' + gap2(c) + i + " = " + ObjectToStringEx2(x[i], c + 1); } }
+    if (x instanceof Array) { for (var i in x) { r += '\r\n' + gap2(c) + "Item #" + i + ': ' + ObjectToStringEx2(x[i], c + 1); } }
+    else if (x instanceof Object) { for (var i in x) { r += '\r\n' + gap2(c) + i + ' = ' + ObjectToStringEx2(x[i], c + 1); } }
     else { r += EscapeHtml(x); }
     return r;
 }
@@ -68,7 +69,7 @@ function ObjectToString2(x) { return ObjectToStringEx2(x, 0); }
 
 // Convert a hex string to a raw string
 function hex2rstr(d) {
-    if (typeof d != "string" || d.length == 0) return '';
+    if (typeof d != 'string' || d.length == 0) return '';
     var r = '', m = ('' + d).match(/../g), t;
     while (t = m.shift()) r += String.fromCharCode('0x' + t);
     return r

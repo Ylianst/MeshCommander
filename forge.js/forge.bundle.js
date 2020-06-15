@@ -41,12 +41,12 @@ var requirejs, require, define;
     function normalize(name, baseName) {
         var nameParts, nameSegment, mapValue, foundMap, lastIndex,
             foundI, foundStarMap, starI, i, j, part,
-            baseParts = baseName && baseName.split("/"),
+            baseParts = baseName && baseName.split('/'),
             map = config.map,
             starMap = (map && map['*']) || {};
 
         //Adjust any relative paths.
-        if (name && name.charAt(0) === ".") {
+        if (name && name.charAt(0) === '.') {
             //If have a base name, try to normalize against it,
             //otherwise, assume it is a top-level require that will
             //be relative to baseUrl in the end.
@@ -70,10 +70,10 @@ var requirejs, require, define;
                 //start trimDots
                 for (i = 0; i < name.length; i += 1) {
                     part = name[i];
-                    if (part === ".") {
+                    if (part === '.') {
                         name.splice(i, 1);
                         i -= 1;
-                    } else if (part === "..") {
+                    } else if (part === '..') {
                         if (i === 1 && (name[2] === '..' || name[0] === '..')) {
                             //End of the line. Keep at least one non-dot
                             //path segment at the front so it can be mapped
@@ -90,7 +90,7 @@ var requirejs, require, define;
                 }
                 //end trimDots
 
-                name = name.join("/");
+                name = name.join('/');
             } else if (name.indexOf('./') === 0) {
                 // No baseName, so this is ID is resolved relative
                 // to baseUrl, pull off the leading dot.
@@ -103,7 +103,7 @@ var requirejs, require, define;
             nameParts = name.split('/');
 
             for (i = nameParts.length; i > 0; i -= 1) {
-                nameSegment = nameParts.slice(0, i).join("/");
+                nameSegment = nameParts.slice(0, i).join('/');
 
                 if (baseParts) {
                     //Find the longest baseName segment match in the config.
@@ -291,13 +291,13 @@ var requirejs, require, define;
                 depName = map.f;
 
                 //Fast path CommonJS standard dependencies.
-                if (depName === "require") {
+                if (depName === 'require') {
                     args[i] = handlers.require(name);
-                } else if (depName === "exports") {
+                } else if (depName === 'exports') {
                     //CommonJS module spec 1.1
                     args[i] = handlers.exports(name);
                     usingExports = true;
-                } else if (depName === "module") {
+                } else if (depName === 'module') {
                     //CommonJS module spec 1.1
                     cjsModule = args[i] = handlers.module(name);
                 } else if (hasProp(defined, depName) ||
@@ -334,7 +334,7 @@ var requirejs, require, define;
     };
 
     requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
-        if (typeof deps === "string") {
+        if (typeof deps === 'string') {
             if (handlers[deps]) {
                 //callback in this case is really relName
                 return handlers[deps](callback);
@@ -427,7 +427,7 @@ var requirejs, require, define;
     };
 }());
 
-define("node_modules/almond/almond", function(){});
+define('node_modules/almond/almond', function(){});
 
 /**
  * Utility functions for web applications.
@@ -11645,8 +11645,8 @@ var j_lm = ((canary&0xffffff)==0xefcafe);
 function BigInteger(a,b,c) {
   this.data = [];
   if(a != null)
-    if("number" == typeof a) this.fromNumber(a,b,c);
-    else if(b == null && "string" != typeof a) this.fromString(a,256);
+    if('number' == typeof a) this.fromNumber(a,b,c);
+    else if(b == null && 'string' != typeof a) this.fromString(a,256);
     else this.fromString(a,b);
 }
 
@@ -11704,10 +11704,10 @@ if(typeof(navigator) === 'undefined')
 {
    BigInteger.prototype.am = am3;
    dbits = 28;
-} else if(j_lm && (navigator.appName == "Microsoft Internet Explorer")) {
+} else if(j_lm && (navigator.appName == 'Microsoft Internet Explorer')) {
   BigInteger.prototype.am = am2;
   dbits = 30;
-} else if(j_lm && (navigator.appName != "Netscape")) {
+} else if(j_lm && (navigator.appName != 'Netscape')) {
   BigInteger.prototype.am = am1;
   dbits = 26;
 } else { // Mozilla/Netscape seems to prefer am3
@@ -11725,14 +11725,14 @@ BigInteger.prototype.F1 = BI_FP-dbits;
 BigInteger.prototype.F2 = 2*dbits-BI_FP;
 
 // Digit conversions
-var BI_RM = "0123456789abcdefghijklmnopqrstuvwxyz";
+var BI_RM = '0123456789abcdefghijklmnopqrstuvwxyz';
 var BI_RC = new Array();
 var rr,vv;
-rr = "0".charCodeAt(0);
+rr = '0'.charCodeAt(0);
 for(vv = 0; vv <= 9; ++vv) BI_RC[rr++] = vv;
-rr = "a".charCodeAt(0);
+rr = 'a'.charCodeAt(0);
 for(vv = 10; vv < 36; ++vv) BI_RC[rr++] = vv;
-rr = "A".charCodeAt(0);
+rr = 'A'.charCodeAt(0);
 for(vv = 10; vv < 36; ++vv) BI_RC[rr++] = vv;
 
 function int2char(n) { return BI_RM.charAt(n); }
@@ -11776,7 +11776,7 @@ function bnpFromString(s,b) {
   while(--i >= 0) {
     var x = (k==8)?s[i]&0xff:intAt(s,i);
     if(x < 0) {
-      if(s.charAt(i) == "-") mi = true;
+      if(s.charAt(i) == '-') mi = true;
       continue;
     }
     mi = false;
@@ -11806,7 +11806,7 @@ function bnpClamp() {
 
 // (public) return string representation in given radix
 function bnToString(b) {
-  if(this.s < 0) return "-"+this.negate().toString(b);
+  if(this.s < 0) return '-'+this.negate().toString(b);
   var k;
   if(b == 16) k = 4;
   else if(b == 8) k = 3;
@@ -11814,7 +11814,7 @@ function bnToString(b) {
   else if(b == 32) k = 5;
   else if(b == 4) k = 2;
   else return this.toRadix(b);
-  var km = (1<<k)-1, d, m = false, r = "", i = this.t;
+  var km = (1<<k)-1, d, m = false, r = '', i = this.t;
   var p = this.DB-(i*this.DB)%k;
   if(i-- > 0) {
     if(p < this.DB && (d = this.data[i]>>p) > 0) { m = true; r = int2char(d); }
@@ -11830,7 +11830,7 @@ function bnToString(b) {
       if(m) r += int2char(d);
     }
   }
-  return m?r:"0";
+  return m?r:'0';
 }
 
 // (public) -this
@@ -12232,10 +12232,10 @@ else return 1;
 //(protected) convert to radix string
 function bnpToRadix(b) {
 if(b == null) b = 10;
-if(this.signum() == 0 || b < 2 || b > 36) return "0";
+if(this.signum() == 0 || b < 2 || b > 36) return '0';
 var cs = this.chunkSize(b);
 var a = Math.pow(b,cs);
-var d = nbv(a), y = nbi(), z = nbi(), r = "";
+var d = nbv(a), y = nbi(), z = nbi(), r = '';
 this.divRemTo(d,y,z);
 while(y.signum() > 0) {
  r = (a+z.intValue()).toString(b).substr(1) + r;
@@ -12253,7 +12253,7 @@ var d = Math.pow(b,cs), mi = false, j = 0, w = 0;
 for(var i = 0; i < s.length; ++i) {
  var x = intAt(s,i);
  if(x < 0) {
-   if(s.charAt(i) == "-" && this.signum() == 0) mi = true;
+   if(s.charAt(i) == '-' && this.signum() == 0) mi = true;
    continue;
  }
  w = b*w+x;
@@ -12273,7 +12273,7 @@ if(mi) BigInteger.ZERO.subTo(this,this);
 
 //(protected) alternate constructor
 function bnpFromNumber(a,b,c) {
-if("number" == typeof b) {
+if('number' == typeof b) {
  // new BigInteger(int,int,RNG)
  if(a < 2) this.fromInt(1);
  else {

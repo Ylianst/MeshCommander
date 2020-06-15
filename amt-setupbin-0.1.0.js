@@ -6,10 +6,10 @@
 
 // Intel(R) AMT Setup.bin GUID's
 var AmtSetupBinSetupGuids = [
-    "\xb5\x16\xfb\x71\x87\xcb\xf9\x4a\xb4\x41\xca\x7b\x38\x35\x78\xf9", // Version 1
-    "\x96\xb2\x81\x58\xcf\x6b\x72\x4c\x8b\x91\xa1\x5e\x51\x2e\x99\xc4", // Version 2
-    "\xa7\xf7\xf6\xc6\x89\xc4\xf6\x47\x93\xed\xe2\xe5\x02\x0d\xa5\x1d", // Version 3
-    "\xaa\xa9\x34\x52\xe1\x29\xa9\x44\x8d\x4d\x08\x1c\x07\xb9\x63\x53"  // Version 4
+    '\xb5\x16\xfb\x71\x87\xcb\xf9\x4a\xb4\x41\xca\x7b\x38\x35\x78\xf9', // Version 1
+    '\x96\xb2\x81\x58\xcf\x6b\x72\x4c\x8b\x91\xa1\x5e\x51\x2e\x99\xc4', // Version 2
+    '\xa7\xf7\xf6\xc6\x89\xc4\xf6\x47\x93\xed\xe2\xe5\x02\x0d\xa5\x1d', // Version 3
+    '\xaa\xa9\x34\x52\xe1\x29\xa9\x44\x8d\x4d\x08\x1c\x07\xb9\x63\x53'  // Version 4
 ];
 
 // Notes about version 2 of setup.bin:
@@ -205,12 +205,12 @@ var AmtSetupBinEncode = function (obj) {
     r += IntToStrX(obj.records.length);
     r += IntToStrX(obj.dataRecordsConsumed);
     r += ShortToStrX(obj.dataRecordChunkCount);
-    while (r.length < 512) { r += "\0"; } // Pad the header
+    while (r.length < 512) { r += '\0'; } // Pad the header
     out.push(r);
 
     // Write each record
     for (var i in obj.records) {
-        var r2 = "", rec = obj.records[i];
+        var r2 = '', rec = obj.records[i];
         r2 += IntToStrX(rec.typeIdentifier);
         r2 += IntToStrX(rec.flags);
         r2 += IntToStrX(0);                                                 // Reserved
@@ -231,7 +231,7 @@ var AmtSetupBinEncode = function (obj) {
 
         // Write each variable
         for (var j in rec.variables) {
-            var r3 = "", v = rec.variables[j], data = v.value;
+            var r3 = '', v = rec.variables[j], data = v.value;
             v.type = AmtSetupBinVarIds[v.moduleid][v.varid][0];             // Set the correct type if not alreay connect
             if ((v.type > 0) && (v.type < 4)) {                             // If this is a numeric value, encode it correctly
                 data = parseInt(data);
@@ -245,11 +245,11 @@ var AmtSetupBinEncode = function (obj) {
             r3 += ShortToStrX(data.length);                                 // Variable Length
             r3 += ShortToStrX(0);                                           // Reserved
             r3 += data;                                                     // Variable Data
-            while (r3.length % 4 != 0) { r3 += "\0"; }                      // Pad the variable
+            while (r3.length % 4 != 0) { r3 += '\0'; }                      // Pad the variable
             r2 += r3;
         }
 
-        while (r2.length < 512) { r2 += "\0"; }                             // Pad the record
+        while (r2.length < 512) { r2 += '\0'; }                             // Pad the record
         if ((rec.flags & 2) != 0) { r2 = r2.substring(0, 24) + AmtSetupBinScrambleRecordData(r2.substring(24)); } // Scramble the record starting at byte 24, after the header
         out.push(r2);
     }
@@ -266,8 +266,8 @@ function AmtSetupBinVariableCompare(a, b) {
 }
 
 // Scramble and un-scramble records
-function AmtSetupBinScrambleRecordData(data) { var out = ""; for (var i = 0; i < data.length; i++) { out += String.fromCharCode((data.charCodeAt(i) + 17) & 0xFF); } return out; }
-function AmtSetupBinDescrambleRecordData(data) { var out = ""; for (var i = 0; i < data.length; i++) { out += String.fromCharCode((data.charCodeAt(i) + 0xEF) & 0xFF); } return out; }
+function AmtSetupBinScrambleRecordData(data) { var out = ''; for (var i = 0; i < data.length; i++) { out += String.fromCharCode((data.charCodeAt(i) + 17) & 0xFF); } return out; }
+function AmtSetupBinDescrambleRecordData(data) { var out = ''; for (var i = 0; i < data.length; i++) { out += String.fromCharCode((data.charCodeAt(i) + 0xEF) & 0xFF); } return out; }
 
 // Find a moduleid/varid in the variable list, if found, move it to the top
 //function AmtSetupBinMoveToTop(variables, moduleid, varid) { var i = -1; for (var j in variables) { if ((variables[j].moduleid == moduleid) && (variables[j].varid == varid)) { i = j; } } if (i > 1) { ArrayElementMove(variables, i, 0); } }

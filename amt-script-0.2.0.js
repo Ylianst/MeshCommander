@@ -126,7 +126,7 @@ function script_setup(binary, startvars) {
                 argval = argval.substring(1);
                 if (argtyp < 2) {
                     // Get the value and replace all {var} with variable values
-                    while (argval.split("{").length > 1) { var t = argval.split("{").pop().split("}").shift(); argval = argval.replace('{' + t + '}', obj.getVar(t)); }
+                    while (argval.split('{').length > 1) { var t = argval.split('{').pop().split('}').shift(); argval = argval.replace('{' + t + '}', obj.getVar(t)); }
                     if (argtyp == 1) { obj.variables['__' + i] = decodeURI(argval); argval = '__' + i; } // If argtyp is 1, this is a literal. Store in temp variable.
                     args.push(argval);
                 }
@@ -250,12 +250,12 @@ function script_setup(binary, startvars) {
                             // ###BEGIN###{Certificates}
                             obj.state = 2;
                             // DERKey, xxCaPrivateKey, certattributes, issuerattributes
-                            amtcert_signWithCaKey(argsval[0], null, argsval[1], { 'CN': 'Untrusted Root Certificate' }, obj.xxSignWithDummyCaReturn);
+                            amtcert_signWithCaKey(argsval[0], null, argsval[1], { 'CN': "Untrusted Root Certificate" }, obj.xxSignWithDummyCaReturn);
                             // ###END###{Certificates}
                             break;
                         default: {
                             obj.state = 9;
-                            console.error("Script Error, unknown command: " + cmdid);
+                            console.error('Script Error, unknown command: ' + cmdid);
                         }
                     }
                 } else {
@@ -399,7 +399,7 @@ function script_decompile(binary, onecmd) {
         var argcount = ReadShort(binary, ptr + 4);
         var argptr = ptr + 6;
         var argstr = '';
-        if (!(onecmd >= 0)) r += ":label" + (ptr - 6) + "\n";
+        if (!(onecmd >= 0)) r += ':label' + (ptr - 6) + '\n';
         // Loop on each argument, moving forward by the argument length each time
         for (var i = 0; i < argcount; i++) {
             var arglen = ReadShort(binary, argptr);
@@ -411,19 +411,19 @@ function script_decompile(binary, onecmd) {
             else if (argtyp == 3) { // Label
                 var target = ReadInt(argval, 1);
                 var label = labels[target];
-                if (!label) { label = ":label" + target; labels[label] = target; }
+                if (!label) { label = ':label' + target; labels[label] = target; }
                 argstr += ' ' + label;
             }
             argptr += (2 + arglen);
         }
         // Go in the script function table to decode the function
         if (cmdid < 10000) {
-            r += script_functionTable1[cmdid] + argstr + "\n";
+            r += script_functionTable1[cmdid] + argstr + '\n';
         } else {
             if (cmdid >= 20000) {
-                r += script_functionTable3[cmdid - 20000] + argstr + "\n"; // Optional methods
+                r += script_functionTable3[cmdid - 20000] + argstr + '\n'; // Optional methods
             } else {
-                r += script_functionTable2[cmdid - 10000] + argstr + "\n";
+                r += script_functionTable2[cmdid - 10000] + argstr + '\n';
             }
         }
         ptr += cmdlen;

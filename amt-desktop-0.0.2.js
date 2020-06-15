@@ -91,16 +91,16 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
             if ((obj.state == 0) && (obj.acc.byteLength >= 12)) {
                 // Getting handshake & version
                 cmdsize = 12;
-                //if (obj.acc.substring(0, 4) != "RFB ") { return obj.Stop(); }
+                //if (obj.acc.substring(0, 4) != 'RFB ') { return obj.Stop(); }
                 //var version = parseFloat(obj.acc.substring(4, 11));
-                //console.log("KVersion: " + version);
+                //console.log('KVersion: ' + version);
                 obj.state = 1;
                 obj.send('RFB 003.008\n');
             }
             else if ((obj.state == 1) && (obj.acc.byteLength >= 1)) {
                 // Getting security options
                 cmdsize = obj.acc[0] + 1;
-                obj.send(String.fromCharCode(1)); // Send the "None" security type. Since we already authenticated using redirection digest auth, we don't need to do this again.
+                obj.send(String.fromCharCode(1)); // Send the 'None' security type. Since we already authenticated using redirection digest auth, we don't need to do this again.
                 obj.state = 2;
             }
             else if ((obj.state == 2) && (obj.acc.byteLength >= 4)) {
@@ -135,14 +135,14 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 obj.gsh = obj.acc[15];
                 obj.bsh = obj.acc[16];
                 var name = obj.acc.substring(24, 24 + namelen);
-                console.log("name: " + name);
-                console.log("width: " + obj.width + ", height: " + obj.height);
-                console.log("bits-per-pixel: " + obj.xbpp);
-                console.log("depth: " + obj.depth);
-                console.log("big-endian-flag: " + obj.bigend);
-                console.log("true-colour-flag: " + obj.truecolor);
-                console.log("rgb max: " + obj.rmax + "," + obj.gmax + "," + obj.bmax);
-                console.log("rgb shift: " + obj.rsh + "," + obj.gsh + "," + obj.bsh);
+                console.log('name: ' + name);
+                console.log('width: ' + obj.width + ', height: ' + obj.height);
+                console.log('bits-per-pixel: ' + obj.xbpp);
+                console.log('depth: ' + obj.depth);
+                console.log('big-endian-flag: ' + obj.bigend);
+                console.log('true-colour-flag: ' + obj.truecolor);
+                console.log('rgb max: ' + obj.rmax + ',' + obj.gmax + ',' + obj.bmax);
+                console.log('rgb shift: ' + obj.rsh + ',' + obj.gsh + ',' + obj.bsh);
                 */
 
                 // SetEncodings, with AMT we can't omit RAW, must be specified.
@@ -199,7 +199,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     encoding = accview.getUint32(8);
 
                 if (encoding < 17) {
-                    if ((width < 1) || (width > 64) || (height < 1) || (height > 64)) { console.log("Invalid tile size (" + width + "," + height + "), disconnecting."); return obj.Stop(); }
+                    if ((width < 1) || (width > 64) || (height < 1) || (height > 64)) { console.log('Invalid tile size (' + width + ',' + height + '), disconnecting.'); return obj.Stop(); }
 
                     // Set the spare bitmap to the right size if it's not already. This allows us to recycle the spare most if not all the time.
                     if ((obj.sparew != width) || (obj.spareh != height)) {
@@ -225,7 +225,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     obj.send(String.fromCharCode(3, 0, 0, 0, 0, 0) + ShortToStr(obj.width) + ShortToStr(obj.height)); // FramebufferUpdateRequest
                     cmdsize = 12;
                     if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
-                    //console.log("New desktop width: " + obj.width + ", height: " + obj.height);
+                    //console.log('New desktop width: ' + obj.width + ', height: ' + obj.height);
                 } else if (encoding == 0) {
                     // RAW encoding
                     var ptr = 12, cs = 12 + (s * obj.bpp);
@@ -256,7 +256,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     else {
                         // This is compressed ZLib data, decompress and process it. (TODO: This need to be optimized, remove str/arr conversions)
                         var str = obj.inflate.inflate(arrToStr(new Uint8Array(obj.acc.buffer.slice(ptr, ptr + datalen - dx))));
-                        if (str.length > 0) { _decodeLRE(strToArr(str), 0, x, y, width, height, s, str.length); } else { console.log("Invalid deflate data"); }
+                        if (str.length > 0) { _decodeLRE(strToArr(str), 0, x, y, width, height, s, str.length); } else { console.log('Invalid deflate data'); }
                     }
                     // ###END###{Inflate}
 
@@ -595,66 +595,66 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.send = function (x) { if (obj.parent) { obj.parent.send(x); } }
 
     var convertAmtKeyCodeTable = {
-        "Pause": 19,
-        "CapsLock": 20,
-        "Space": 32,
-        "Quote": 39,
-        "Minus": 45,
-        "NumpadMultiply": 42,
-        "NumpadAdd": 43,
-        "PrintScreen": 44,
-        "Comma": 44,
-        "NumpadSubtract": 45,
-        "NumpadDecimal": 46,
-        "Period": 46,
-        "Slash": 47,
-        "NumpadDivide": 47,
-        "Semicolon": 59,
-        "Equal": 61,
-        "OSLeft": 91,
-        "BracketLeft": 91,
-        "OSRight": 91,
-        "Backslash": 92,
-        "BracketRight": 93,
-        "ContextMenu": 93,
-        "Backquote": 96,
-        "NumLock": 144,
-        "ScrollLock": 145,
-        "Backspace": 0xff08,
-        "Tab": 0xff09,
-        "Enter": 0xff0d,
-        "NumpadEnter": 0xff0d,
-        "Escape": 0xff1b,
-        "Delete": 0xffff,
-        "Home": 0xff50,
-        "PageUp": 0xff55,
-        "PageDown": 0xff56,
-        "ArrowLeft": 0xff51,
-        "ArrowUp": 0xff52,
-        "ArrowRight": 0xff53,
-        "ArrowDown": 0xff54,
-        "End": 0xff57,
-        "Insert": 0xff63,
-        "F1": 0xffbe,
-        "F2": 0xffbf,
-        "F3": 0xffc0,
-        "F4": 0xffc1,
-        "F5": 0xffc2,
-        "F6": 0xffc3,
-        "F7": 0xffc4,
-        "F8": 0xffc5,
-        "F9": 0xffc6,
-        "F10": 0xffc7,
-        "F11": 0xffc8,
-        "F12": 0xffc9,
-        "ShiftLeft": 0xffe1,
-        "ShiftRight": 0xffe2,
-        "ControlLeft": 0xffe3,
-        "ControlRight": 0xffe4,
-        "AltLeft": 0xffe9,
-        "AltRight": 0xffea,
-        "MetaLeft": 0xffe7,
-        "MetaRight": 0xffe8
+        'Pause': 19,
+        'CapsLock': 20,
+        'Space': 32,
+        'Quote': 39,
+        'Minus': 45,
+        'NumpadMultiply': 42,
+        'NumpadAdd': 43,
+        'PrintScreen': 44,
+        'Comma': 44,
+        'NumpadSubtract': 45,
+        'NumpadDecimal': 46,
+        'Period': 46,
+        'Slash': 47,
+        'NumpadDivide': 47,
+        'Semicolon': 59,
+        'Equal': 61,
+        'OSLeft': 91,
+        'BracketLeft': 91,
+        'OSRight': 91,
+        'Backslash': 92,
+        'BracketRight': 93,
+        'ContextMenu': 93,
+        'Backquote': 96,
+        'NumLock': 144,
+        'ScrollLock': 145,
+        'Backspace': 0xff08,
+        'Tab': 0xff09,
+        'Enter': 0xff0d,
+        'NumpadEnter': 0xff0d,
+        'Escape': 0xff1b,
+        'Delete': 0xffff,
+        'Home': 0xff50,
+        'PageUp': 0xff55,
+        'PageDown': 0xff56,
+        'ArrowLeft': 0xff51,
+        'ArrowUp': 0xff52,
+        'ArrowRight': 0xff53,
+        'ArrowDown': 0xff54,
+        'End': 0xff57,
+        'Insert': 0xff63,
+        'F1': 0xffbe,
+        'F2': 0xffbf,
+        'F3': 0xffc0,
+        'F4': 0xffc1,
+        'F5': 0xffc2,
+        'F6': 0xffc3,
+        'F7': 0xffc4,
+        'F8': 0xffc5,
+        'F9': 0xffc6,
+        'F10': 0xffc7,
+        'F11': 0xffc8,
+        'F12': 0xffc9,
+        'ShiftLeft': 0xffe1,
+        'ShiftRight': 0xffe2,
+        'ControlLeft': 0xffe3,
+        'ControlRight': 0xffe4,
+        'AltLeft': 0xffe9,
+        'AltRight': 0xffea,
+        'MetaLeft': 0xffe7,
+        'MetaRight': 0xffe8
     }
     function convertAmtKeyCode(e) {
         if (e.code.startsWith('Key') && e.code.length == 4) { return e.code.charCodeAt(3) + ((e.shiftKey == false) ? 32 : 0); }
@@ -723,7 +723,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
             if (k == 220) kk = 92; // \
             if (k == 221) kk = 93; // ]
             if (k == 222) kk = 39; // '
-            //console.log('Key' + d + ": " + k + " = " + kk);
+            //console.log('Key' + d + ': ' + k + ' = ' + kk);
             obj.sendkey(kk, d);
         }
         return obj.haltEvent(e);
@@ -821,7 +821,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.handleKeyDown = function (e) { return _keyevent(1, e); }
     obj.haltEvent = function (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); return false; }
 
-    // RFB "PointerEvent" and mouse handlers
+    // RFB 'PointerEvent' and mouse handlers
     obj.mousedblclick = function (e) { }
     obj.mousedown = function (e) { obj.buttonmask |= (1 << e.button); return obj.mousemove(e, 1); }
     obj.mouseup = function (e) { obj.buttonmask &= (0xFFFF - (1 << e.button)); return obj.mousemove(e, 1); }

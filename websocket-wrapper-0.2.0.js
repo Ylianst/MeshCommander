@@ -61,7 +61,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         obj.socket.on('error', _OnSocketClosed);
     }
 
-    obj.disconnect = function () { _OnSocketClosed("UserDisconnect"); }
+    obj.disconnect = function () { _OnSocketClosed('UserDisconnect'); }
     obj.send = function (obj) { _Send(obj); }
     obj.setEncoding = function(encoding) { }
     obj.setTimeout = function (timeout) { }
@@ -77,10 +77,10 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         // Check if this is really the MeshServer we want to connect to
         obj.xtlsCertificate = obj.socket.getPeerCertificate();
         obj.xtlsFingerprint = obj.xtlsCertificate.fingerprint.split(':').join('').toLowerCase();
-        if (obj.xtlsFingerprint != obj.certhash.split(':').join('').toLowerCase()) { console.error("Hash match fail", obj.xtlsFingerprint, obj.certhash.split(':').join('').toLowerCase()); _OnSocketClosed("HashMatchFail"); return; }
+        if (obj.xtlsFingerprint != obj.certhash.split(':').join('').toLowerCase()) { console.error('Hash match fail', obj.xtlsFingerprint, obj.certhash.split(':').join('').toLowerCase()); _OnSocketClosed('HashMatchFail'); return; }
 
         // Send the websocket switching header
-        obj.socket.write(new Buffer("GET " + obj.path + " HTTP/1.1\r\nHost: " + obj.host + "\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n", "binary"));
+        obj.socket.write(new Buffer('GET ' + obj.path + ' HTTP/1.1\r\nHost: ' + obj.host + '\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n', 'binary'));
     }
 
     // Called when socket data is received from the server
@@ -100,7 +100,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                     if (obj.onconnect) { obj.onconnect(); }
                 } else {
                     // Fail
-                    if (header == null) { _OnSocketClosed("Bad header"); } else { _OnSocketClosed(header._Path); }
+                    if (header == null) { _OnSocketClosed('Bad header'); } else { _OnSocketClosed(header._Path); }
                 }
             }
         }
@@ -168,7 +168,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
     // Called to send websocket data to the server
     function _Send(object) {
         if (obj.socketState < 2) { return; }
-        var data = new Buffer(JSON.stringify(object), "binary");
+        var data = new Buffer(JSON.stringify(object), 'binary');
         var header = String.fromCharCode(129); // 129 is default full fragment op code (129 = text, 130 = binary)
         if (data.length < 126) { header += String.fromCharCode(data.length); }
         else if (data.length < 65536) { header += String.fromCharCode(126) + ShortToStr(data.length); }

@@ -14,7 +14,7 @@ var CreateAmtRemoteIder = function () {
     obj.tx_timeout = 0;         // Default 0
     obj.heartbeat = 20000;      // Default 20000
     obj.version = 1;
-    obj.acc = "";
+    obj.acc = '';
     obj.inSequence = 0;
     obj.outSequence = 0;
     obj.iderinfo = null;
@@ -31,6 +31,8 @@ var CreateAmtRemoteIder = function () {
 
     // Private method
     // ###BEGIN###{IDERDebug}
+    var logFile = null;
+    if (urlvars && urlvars['iderlog']) { logFile = require('fs').createWriteStream(urlvars['iderlog'], { flags: 'w' }); }
     function debug() { if (urlvars && urlvars['idertrace']) { console.log(arguments); } }
     // ###END###{IDERDebug}
 
@@ -66,7 +68,7 @@ var CreateAmtRemoteIder = function () {
     // Private method, called by parent when it change state
     obj.xxStateChange = function (newstate) {
         // ###BEGIN###{IDERDebug}
-        debug("IDER-StateChange", newstate);
+        debug('IDER-StateChange', newstate);
         // ###END###{IDERDebug}
         if (newstate == 0) { obj.Stop(); }
         if (newstate == 3) { obj.Start(); }
@@ -74,7 +76,7 @@ var CreateAmtRemoteIder = function () {
 
     obj.Start = function () {
         // ###BEGIN###{IDERDebug}
-        debug("IDER-Start");
+        debug('IDER-Start');
         debug(obj.floppy, obj.cdrom);
         // ###END###{IDERDebug}
         obj.bytesToAmt = 0;
@@ -100,7 +102,7 @@ var CreateAmtRemoteIder = function () {
 
     obj.Stop = function () {
         // ###BEGIN###{IDERDebug}
-        debug("IDER-Stop");
+        debug('IDER-Stop');
         // ###END###{IDERDebug}
         //if (obj.pingTimer) { clearInterval(obj.pingTimer); obj.pingTimer = null; }
         obj.parent.Stop();
@@ -111,6 +113,7 @@ var CreateAmtRemoteIder = function () {
         obj.bytesFromAmt += data.length;
         obj.acc += data;
         // ###BEGIN###{IDERDebug}
+        if (logFile != null) { logFile.write('IDERRECV: ' + rstr2hex(data) + '\r\n'); }
         debug('IDER-ProcessData', obj.acc.length, rstr2hex(obj.acc));
         // ###END###{IDERDebug}
 
@@ -139,6 +142,7 @@ var CreateAmtRemoteIder = function () {
         obj.parent.xxSend(x);
         obj.bytesToAmt += x.length;
         // ###BEGIN###{IDERDebug}
+        if (logFile != null) { logFile.write('IDERSEND: ' + rstr2hex(x) + '\r\n'); }
         if (cmdid != 0x4B) { debug('IDER-SendData', x.length, rstr2hex(x)); }
         // ###END###{IDERDebug}
     }
@@ -195,19 +199,19 @@ var CreateAmtRemoteIder = function () {
 
                 if (obj.iderinfo.proto != 0) {
                     // ###BEGIN###{IDERDebug}
-                    debug("Unknown proto", obj.iderinfo.proto);
+                    debug('Unknown proto', obj.iderinfo.proto);
                     // ###END###{IDERDebug}
                     obj.Stop();
                 }
                 if (obj.iderinfo.readbfr > 8192) {
                     // ###BEGIN###{IDERDebug}
-                    debug("Illegal read buffer size", obj.iderinfo.readbfr);
+                    debug('Illegal read buffer size', obj.iderinfo.readbfr);
                     // ###END###{IDERDebug}
                     obj.Stop();
                 }
                 if (obj.iderinfo.writebfr > 8192) {
                     // ###BEGIN###{IDERDebug}
-                    debug("Illegal write buffer size", obj.iderinfo.writebfr);
+                    debug('Illegal write buffer size', obj.iderinfo.writebfr);
                     // ###END###{IDERDebug}
                     obj.Stop();
                 }
@@ -267,13 +271,13 @@ var CreateAmtRemoteIder = function () {
                     case 2: // REGS_STATUS
                         obj.enabled = (value & 2) ? true : false;
                         // ###BEGIN###{IDERDebug}
-                        debug("IDER Status: " + obj.enabled);
+                        debug('IDER Status: ' + obj.enabled);
                         // ###END###{IDERDebug}
                         break;
                     case 3: // REGS_TOGGLE
                         if (value != 1) {
                             // ###BEGIN###{IDERDebug}
-                            debug("Register toggle failure");
+                            debug('Register toggle failure');
                             // ###END###{IDERDebug}
                         } //else { obj.SendDisableEnableFeatures(2); }
                         break;
@@ -330,7 +334,7 @@ var CreateAmtRemoteIder = function () {
         {
             case 0x00: // TEST_UNIT_READY:
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: TEST_UNIT_READY", dev);
+                debug('SCSI: TEST_UNIT_READY', dev);
                 // ###END###{IDERDebug}
                 switch (dev) {
                     case 0xA0: // DEV_FLOPPY
@@ -343,7 +347,7 @@ var CreateAmtRemoteIder = function () {
                         break;
                     default:
                         // ###BEGIN###{IDERDebug}
-                        debug("SCSI Internal error 3", dev);
+                        debug('SCSI Internal error 3', dev);
                         // ###END###{IDERDebug}
                         return -1;
                 }
@@ -354,7 +358,7 @@ var CreateAmtRemoteIder = function () {
                 len = cdb.charCodeAt(4);
                 if (len == 0) { len = 256; }
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: READ_6", dev, lba, len);
+                debug('SCSI: READ_6', dev, lba, len);
                 // ###END###{IDERDebug}
                 sendDiskData(dev, lba, len, featureRegister);
                 break;
@@ -363,21 +367,21 @@ var CreateAmtRemoteIder = function () {
                 len = cdb.charCodeAt(4);
                 if (len == 0) { len = 256; }
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: WRITE_6", dev, lba, len);
+                debug('SCSI: WRITE_6', dev, lba, len);
                 // ###END###{IDERDebug}
                 obj.SendCommandEndResponse(1, 0x02, dev, 0x3a, 0x00); // Write is not supported, remote no medium.
                 return -1;
                 /*
             case 0x15: // MODE_SELECT_6:
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI ERROR: MODE_SELECT_6", dev);
+                debug('SCSI ERROR: MODE_SELECT_6', dev);
                 // ###END###{IDERDebug}
                 obj.SendCommandEndResponse(1, 0x05, dev, 0x20, 0x00);
                 return -1;
                 */
             case 0x1a: // MODE_SENSE_6
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: MODE_SENSE_6", dev);
+                debug('SCSI: MODE_SENSE_6', dev);
                 // ###END###{IDERDebug}
                 if ((cdb.charCodeAt(2) == 0x3f) && (cdb.charCodeAt(3) == 0x00)) {
                     var a = 0, b = 0;
@@ -394,7 +398,7 @@ var CreateAmtRemoteIder = function () {
                             break;
                         default:
                             // ###BEGIN###{IDERDebug}
-                            debug("SCSI Internal error 6", dev);
+                            debug('SCSI Internal error 6', dev);
                             // ###END###{IDERDebug}
                             return -1;
                     }
@@ -411,7 +415,7 @@ var CreateAmtRemoteIder = function () {
                 break;
             case 0x1e: // LOCK_UNLOCK - ALLOW_MEDIUM_REMOVAL
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: ALLOW_MEDIUM_REMOVAL", dev);
+                debug('SCSI: ALLOW_MEDIUM_REMOVAL', dev);
                 // ###END###{IDERDebug}
                 if ((dev == 0xA0) && (obj.floppy == null)) { obj.SendCommandEndResponse(1, 0x02, dev, 0x3a, 0x00); return -1; }
                 if ((dev == 0xB0) && (obj.cdrom == null)) { obj.SendCommandEndResponse(1, 0x02, dev, 0x3a, 0x00); return -1; }
@@ -419,7 +423,7 @@ var CreateAmtRemoteIder = function () {
                 break;
             case 0x23: // READ_FORMAT_CAPACITIES (Floppy only)
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: READ_FORMAT_CAPACITIES", dev);
+                debug('SCSI: READ_FORMAT_CAPACITIES', dev);
                 // ###END###{IDERDebug}
                 var buflen = ReadShort(cdb, 7);
                 var mediaStatus = 0, sectors;
@@ -436,7 +440,7 @@ var CreateAmtRemoteIder = function () {
                         break;
                     default:
                         // ###BEGIN###{IDERDebug}
-                        debug("SCSI Internal error 4", dev);
+                        debug('SCSI Internal error 4', dev);
                         // ###END###{IDERDebug}
                         return -1;
                 }
@@ -445,7 +449,7 @@ var CreateAmtRemoteIder = function () {
                 break;
             case 0x25: // READ_CAPACITY
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: READ_CAPACITY", dev);
+                debug('SCSI: READ_CAPACITY', dev);
                 // ###END###{IDERDebug}
                 var len = 0;
                 switch(dev)
@@ -466,13 +470,13 @@ var CreateAmtRemoteIder = function () {
                         break;
                     default:
                         // ###BEGIN###{IDERDebug}
-                        debug("SCSI Internal error 4", dev);
+                        debug('SCSI Internal error 4', dev);
                         // ###END###{IDERDebug}
                         return -1;
                 }
                 //if (dev == 0xA0) { dev = 0x00; } else { dev = 0x10; } // Weird but seems to work.
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: READ_CAPACITY2", dev, deviceFlags);
+                debug('SCSI: READ_CAPACITY2', dev, deviceFlags);
                 // ###END###{IDERDebug}
                 obj.SendDataToHost(deviceFlags, true, IntToStr(len) + String.fromCharCode(0, 0, ((dev == 0xB0) ? 0x08 : 0x02), 0), featureRegister & 1);
                 break;
@@ -480,7 +484,7 @@ var CreateAmtRemoteIder = function () {
                 lba = ReadInt(cdb, 2);
                 len = ReadShort(cdb, 7);
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: READ_10", dev, lba, len);
+                debug('SCSI: READ_10', dev, lba, len);
                 // ###END###{IDERDebug}
                 sendDiskData(dev, lba, len, featureRegister);
                 break;
@@ -489,7 +493,7 @@ var CreateAmtRemoteIder = function () {
                 lba = ReadInt(cdb, 2);
                 len = ReadShort(cdb, 7);
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: WRITE_10", dev, lba, len);
+                debug('SCSI: WRITE_10', dev, lba, len);
                 // ###END###{IDERDebug}
                 obj.SendGetDataFromHost(dev, 512 * len); // Floppy writes only, accept sectors of 512 bytes
                 break;
@@ -499,7 +503,7 @@ var CreateAmtRemoteIder = function () {
                 var format = cdb.charCodeAt(2) & 0x07;
                 if (format == 0) { format = cdb.charCodeAt(9) >> 6; }
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: READ_TOC, dev=" + dev + ", buflen=" + buflen + ", msf=" + msf + ", format=" + format);
+                debug('SCSI: READ_TOC, dev=' + dev + ', buflen=' + buflen + ', msf=' + msf + ', format=' + format);
                 // ###END###{IDERDebug}
 
                 switch (dev) {
@@ -511,7 +515,7 @@ var CreateAmtRemoteIder = function () {
                         break;
                     default:
                         // ###BEGIN###{IDERDebug}
-                        debug("SCSI Internal error 9", dev);
+                        debug('SCSI Internal error 9', dev);
                         // ###END###{IDERDebug}
                         return -1;
                 }
@@ -531,7 +535,7 @@ var CreateAmtRemoteIder = function () {
                 var buflen = ReadShort(cdb, 7);
 
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: GET_CONFIGURATION", dev, sendall, firstcode, buflen);
+                debug('SCSI: GET_CONFIGURATION', dev, sendall, firstcode, buflen);
                 // ###END###{IDERDebug}
 
                 if (buflen == 0) { obj.SendDataToHost(dev, true, IntToStr(0x003c) + IntToStr(0x0008), featureRegister & 1); return -1; } // TODO: Fixed this return, it's not correct.
@@ -561,7 +565,7 @@ var CreateAmtRemoteIder = function () {
                 //var buflen = (cdb.charCodeAt(7) << 8) + cdb.charCodeAt(8);
                 //if (buflen == 0) { obj.SendDataToHost(dev, true, IntToStr(0x003c) + IntToStr(0x0008), featureRegister & 1); return -1; } // TODO: Fixed this return, it's not correct.
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: GET_EVENT_STATUS_NOTIFICATION", dev, cdb.charCodeAt(1), cdb.charCodeAt(4), cdb.charCodeAt(9));
+                debug('SCSI: GET_EVENT_STATUS_NOTIFICATION', dev, cdb.charCodeAt(1), cdb.charCodeAt(4), cdb.charCodeAt(9));
                 // ###END###{IDERDebug}
                 if ((cdb.charCodeAt(1) != 0x01) && (cdb.charCodeAt(4) != 0x10)) {
                     // ###BEGIN###{IDERDebug}
@@ -580,19 +584,19 @@ var CreateAmtRemoteIder = function () {
                 break;
             case 0x51: // READ_DISC_INFO
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI READ_DISC_INFO", dev);
+                debug('SCSI READ_DISC_INFO', dev);
                 // ###END###{IDERDebug}
                 obj.SendCommandEndResponse(0, 0x05, dev, 0x20, 0x00); // Correct
                 return -1;
             case 0x55: // MODE_SELECT_10:
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI ERROR: MODE_SELECT_10", dev);
+                debug('SCSI ERROR: MODE_SELECT_10', dev);
                 // ###END###{IDERDebug}
                 obj.SendCommandEndResponse(1, 0x05, dev, 0x20, 0x00);
                 return -1;
             case 0x5a: // MODE_SENSE_10
                 // ###BEGIN###{IDERDebug}
-                debug("SCSI: MODE_SENSE_10", dev, cdb.charCodeAt(2) & 0x3f);
+                debug('SCSI: MODE_SENSE_10', dev, cdb.charCodeAt(2) & 0x3f);
                 // ###END###{IDERDebug}
                 var buflen = ReadShort(cdb, 7);
                 //var pc = cdb.charCodeAt(2) & 0xc0;
@@ -627,7 +631,7 @@ var CreateAmtRemoteIder = function () {
                 break;
             default: // UNKNOWN COMMAND
                 // ###BEGIN###{IDERDebug}
-                debug("IDER: Unknown SCSI command", cdb.charCodeAt(0));
+                debug('IDER: Unknown SCSI command', cdb.charCodeAt(0));
                 // ###END###{IDERDebug}
                 obj.SendCommandEndResponse(0, 0x05, dev, 0x20, 0x00);
                 return -1;

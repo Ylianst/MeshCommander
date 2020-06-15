@@ -56,8 +56,8 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
     // Private method
     obj.PerformAjaxEx = function (postdata, callback, tag, url, action) {
         if (obj.FailAllError != 0) { obj.gotNextMessagesError({ status: obj.FailAllError }, 'error', null, [postdata, callback, tag, url, action]); return; }
-        if (!postdata) postdata = "";
-        //console.log("SEND: " + postdata); // DEBUG
+        if (!postdata) postdata = '';
+        //console.log('SEND: ' + postdata); // DEBUG
 
         // We are in a websocket relay environment 
         obj.ActiveAjaxCount++;
@@ -87,11 +87,11 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
 
     // Websocket relay specific private method (Content Length Encoding)
     obj.sendRequest = function (postdata, url, action) {
-        url = url ? url : "/wsman";
-        action = action ? action : "POST";
-        var h = action + " " + url + " HTTP/1.1\r\n";
+        url = url ? url : '/wsman';
+        action = action ? action : 'POST';
+        var h = action + ' ' + url + ' HTTP/1.1\r\n';
         if (obj.challengeParams != null) {
-            obj.digestRealm = obj.challengeParams["realm"];
+            obj.digestRealm = obj.challengeParams['realm'];
             if (obj.digestRealmMatch && (obj.digestRealm != obj.digestRealmMatch)) {
                 obj.FailAllError = 997; // Cause all new responses to be silent. 997 = Digest Realm check error
                 obj.CancelAllQueries(997);
@@ -120,10 +120,10 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
 
     // Websocket relay specific private method
     obj.xxConnectHttpSocket = function () {
-        //obj.Debug("xxConnectHttpSocket");
+        //obj.Debug('xxConnectHttpSocket');
         obj.inDataCount = 0;
         obj.socketState = 1;
-        obj.socket = new WebSocket(window.location.protocol.replace("http", "ws") + "//" + window.location.host + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/webrelay.ashx?p=1&host=" + obj.host + "&port=" + obj.port + "&tls=" + obj.tls + "&tls1only=" + obj.tlsv1only + ((user == '*') ? "&serverauth=1" : "") + ((typeof pass === "undefined") ? ("&serverauth=1&user=" + user) : "")); // The "p=1" indicates to the relay that this is a WSMAN session
+        obj.socket = new WebSocket(window.location.protocol.replace('http', 'ws') + '//' + window.location.host + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/webrelay.ashx?p=1&host=' + obj.host + '&port=' + obj.port + '&tls=' + obj.tls + '&tls1only=' + obj.tlsv1only + ((user == '*') ? '&serverauth=1' : '') + ((typeof pass === 'undefined') ? ('&serverauth=1&user=' + user) : '')); // The 'p=1' indicates to the relay that this is a WSMAN session
         obj.socket.binaryType = 'arraybuffer';
         obj.socket.onopen = _OnSocketConnected;
         obj.socket.onmessage = _OnMessage;
@@ -137,26 +137,26 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
         obj.socketAccumulator = '';
         obj.socketHeader = null;
         obj.socketData = '';
-        //console.log("xxOnSocketConnected");
+        //console.log('xxOnSocketConnected');
         for (i in obj.pendingAjaxCall) { obj.sendRequest(obj.pendingAjaxCall[i][0], obj.pendingAjaxCall[i][3], obj.pendingAjaxCall[i][4]); }
     }
 
     // Websocket relay specific private method
     function _OnMessage(e) {
-        //obj.Debug("_OnSocketData (" + data.byteLength + "): " + data);
+        //obj.Debug('_OnSocketData (' + data.byteLength + '): ' + data);
         obj.socketAccumulator += arrToStr(new Uint8Array(e.data));
         while (true) {
             if (obj.socketParseState == 0) {
-                var headersize = obj.socketAccumulator.indexOf("\r\n\r\n");
+                var headersize = obj.socketAccumulator.indexOf('\r\n\r\n');
                 if (headersize < 0) return;
                 //obj.Debug(obj.socketAccumulator.substring(0, headersize)); // Display received HTTP header
-                obj.socketHeader = obj.socketAccumulator.substring(0, headersize).split("\r\n");
+                obj.socketHeader = obj.socketAccumulator.substring(0, headersize).split('\r\n');
                 if (obj.amtVersion == null) { for (var i in obj.socketHeader) { if (obj.socketHeader[i].indexOf('Server: Intel(R) Active Management Technology ') == 0) { obj.amtVersion = obj.socketHeader[i].substring(46); } } }
                 obj.socketAccumulator = obj.socketAccumulator.substring(headersize + 4);
                 obj.socketParseState = 1;
                 obj.socketData = '';
                 obj.socketXHeader = { Directive: obj.socketHeader[0].split(' ') };
-                //console.log("Header", obj.socketXHeader);
+                //console.log('Header', obj.socketXHeader);
                 for (i in obj.socketHeader) {
                     if (i != 0) {
                         var x2 = obj.socketHeader[i].indexOf(':');
@@ -166,7 +166,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
             }
             if (obj.socketParseState == 1) {
                 var csize = -1;
-                if ((obj.socketXHeader['connection'] != undefined) && (obj.socketXHeader['connection'].toLowerCase() == 'close') && ((obj.socketXHeader["transfer-encoding"] == undefined) || (obj.socketXHeader["transfer-encoding"].toLowerCase() != 'chunked'))) {
+                if ((obj.socketXHeader['connection'] != undefined) && (obj.socketXHeader['connection'].toLowerCase() == 'close') && ((obj.socketXHeader['transfer-encoding'] == undefined) || (obj.socketXHeader['transfer-encoding'].toLowerCase() != 'chunked'))) {
                     // The body ends with a close, in this case, we will only process the header
                     csize = 0;
                 } else if (obj.socketXHeader['content-length'] != undefined) {
@@ -191,7 +191,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
                     obj.socketData += data;
                 }
                 if (csize == 0) {
-                    //obj.Debug("_OnSocketData DONE: (" + obj.socketData.length + "): " + obj.socketData);
+                    //obj.Debug('_OnSocketData DONE: (' + obj.socketData.length + '): ' + obj.socketData);
                     _ProcessHttpResponse(obj.socketXHeader, obj.socketData);
                     obj.socketParseState = 0;
                     obj.socketHeader = null;
@@ -202,7 +202,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
 
     // Websocket relay specific private method
     function _ProcessHttpResponse(header, data) {
-        //obj.Debug("_ProcessHttpResponse: " + header.Directive[1]);
+        //obj.Debug('_ProcessHttpResponse: ' + header.Directive[1]);
 
         var s = parseInt(header.Directive[1]);
         if (isNaN(s)) {
@@ -217,7 +217,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
             }
         } else {
             var r = obj.pendingAjaxCall.shift();
-            // if (s != 200) { obj.Debug("Error, status=" + s + "\r\n\r\nreq=" + r[0] + "\r\n\r\nresp=" + data); } // Debug: Display the request & response if something did not work.
+            // if (s != 200) { obj.Debug('Error, status=' + s + '\r\n\r\nreq=' + r[0] + '\r\n\r\nresp=' + data); } // Debug: Display the request & response if something did not work.
             obj.authcounter = 0;
             obj.ActiveAjaxCount--;
             obj.gotNextMessages(data, 'success', { status: s }, r);
@@ -227,7 +227,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
 
     // Websocket relay specific private method
     function _OnSocketClosed(data) {
-        //console.log("_OnSocketClosed");
+        //console.log('_OnSocketClosed');
         if (obj.inDataCount == 0) { obj.tlsv1only = (1 - obj.tlsv1only); }
         obj.socketState = 0;
         if (obj.socket != null) { obj.socket.close(); obj.socket = null; }
@@ -240,7 +240,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
 
     // Websocket relay specific private method
     function _Send(x) {
-        //console.log("SEND: " + x); // DEBUG
+        //console.log('SEND: ' + x); // DEBUG
         if (obj.socketState == 2 && obj.socket != null && obj.socket.readyState == WebSocket.OPEN) {
             var b = new Uint8Array(x.length);
             for (var i = 0; i < x.length; ++i) { b[i] = x.charCodeAt(i); }
