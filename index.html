@@ -2313,7 +2313,7 @@
             }
 
             // Language menu
-            var languagemenu = new gui.MenuItem({ label: "Languages" });
+            var languagemenu = new gui.MenuItem({ label: "Language" });
             var languagesubmenu = new gui.Menu();
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'en'), label: "English", click: function () { window.location.href = 'commander.htm'; } }));
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'zh-chs'), label: "Chinese (Simplified)", click: function () { window.location.href = 'commander_zh-chs.htm'; } }));
