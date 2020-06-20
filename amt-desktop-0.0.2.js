@@ -75,6 +75,11 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     function strToArr(str) { var arr = new Uint8Array(str.length); for (var i = 0, j = str.length; i < j; ++i) { arr[i] = str.charCodeAt(i); } return arr }
 
     obj.ProcessBinaryData = function (data) {
+        // ###BEGIN###{DesktopRecorder}
+        // Record the data if needed
+        if ((obj.recordedData != null) && (obj.recordedHolding !== true)) { obj.recordedData.push(recordingEntry(2, 1, String.fromCharCode.apply(null, new Uint8Array(data)))); }
+        // ###END###{DesktopRecorder}
+
         // Append to accumulator
         if (obj.acc == null) {
             obj.acc = new Uint8Array(data);
@@ -120,6 +125,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 cmdsize = 24 + namelen;
                 obj.canvas.canvas.width = obj.rwidth = obj.width = obj.ScreenWidth = accview.getUint16(0);
                 obj.canvas.canvas.height = obj.rheight = obj.height = obj.ScreenHeight = accview.getUint16(2);
+
+                // ###BEGIN###{DesktopRecorder}
+                obj.DeskRecordServerInit = String.fromCharCode.apply(null, new Uint8Array(obj.acc.buffer.slice(0, 24 + namelen)));
+                // ###END###{DesktopRecorder}
 
                 // These are all values we don't really need, we are going to only run in RGB565 or RGB332 and not use the flexibility provided by these settings.
                 // Makes the javascript code smaller and maybe a bit faster.
@@ -178,6 +187,12 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                         if (obj.acc.byteLength < 4) return;
                         obj.state = 100 + accview.getUint16(2); // Read the number of tiles that are going to be sent, add 100 and use that as our protocol state.
                         cmdsize = 4;
+
+                        // ###BEGIN###{DesktopRecorder}
+                        // This is the start of a new frame, start recording now if needed.
+                        if (obj.recordedHolding === true) { delete obj.recordedHolding; obj.recordedData.push(recordingEntry(2, 1, String.fromCharCode.apply(null, obj.acc))); }
+                        // ###END###{DesktopRecorder}
+
                         break;
                     case 2: // This is the bell, do nothing.
                         cmdsize = 1;
@@ -888,6 +903,62 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         }
         return Position;
     }
+
+    // ###BEGIN###{DesktopRecorder}
+    obj.StartRecording = function () {
+        if ((obj.recordedData != null) && (obj.DeskRecordServerInit != null)) return false;
+
+        // Take a screen shot and save it to file
+        var b64image = obj.CanvasId.toDataURL('image/png').split(',')[1];
+
+        // This is an ArrayBuffer, convert it to a string array
+        //var binary = '', bytes = new Uint8Array(fileReader.result), length = bytes.byteLength;
+        //for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
+        obj.recordedHolding = true;
+        obj.recordedData = [];
+        obj.recordedStart = Date.now();
+        obj.recordedSize = 0;
+        obj.recordedData.push(recordingEntry(1, 0, JSON.stringify({ magic: 'MeshCentralRelaySession', ver: 1, time: new Date().toLocaleString(), protocol: 200, bpp: obj.bpp }))); // Metadata, 200 = Midstream Intel AMT KVM
+        obj.recordedData.push(recordingEntry(2, 1, obj.DeskRecordServerInit));
+
+        /*
+        // Save a screenshot
+        var cmdlen = (8 + binary.length);
+        if (cmdlen > 65000) {
+            // Jumbo Packet
+            obj.recordedData.push(recordingEntry(2, 1, ShortToStr(27) + ShortToStr(8) + IntToStr(cmdlen) + ShortToStr(3) + ShortToStr(0) + ShortToStr(0) + ShortToStr(0) + binary));
+        } else {
+            // Normal packet
+            obj.recordedData.push(recordingEntry(2, 1, ShortToStr(3) + ShortToStr(cmdlen) + ShortToStr(0) + ShortToStr(0) + binary));
+        }
+        */
+        return true;
+    }
+
+    obj.StopRecording = function () {
+        if (obj.recordedData == null) return;
+        var r = obj.recordedData;
+        r.push(recordingEntry(3, 0, 'MeshCentralMCREC'));
+        delete obj.recordedData;
+        delete obj.recordedStart;
+        delete obj.recordedSize;
+        return r;
+    }
+
+    function recordingEntry(type, flags, data) {
+        //console.log('recordingEntry', type, flags, (typeof data == 'number')?data:data.length);
+        // Header: Type (2) + Flags (2) + Size(4) + Time(8)
+        // Type (1 = Header, 2 = Network Data), Flags (1 = Binary, 2 = User), Size (4 bytes), Time (8 bytes)
+        var now = Date.now();
+        if (typeof data == 'number') {
+            obj.recordedSize += data;
+            return ShortToStr(type) + ShortToStr(flags) + IntToStr(data) + IntToStr(now >> 32) + IntToStr(now & 32);
+        } else {
+            obj.recordedSize += data.length;
+            return ShortToStr(type) + ShortToStr(flags) + IntToStr(data.length) + IntToStr(now >> 32) + IntToStr(now & 32) + data;
+        }
+    }
+    // ###END###{DesktopRecorder}
 
     return obj;
 }

@@ -961,7 +961,9 @@
                                     <input id="idx_deskFocusBtn" type="button" title="Toggle focus mode, when active only the region around the mouse is updated" onkeypress="return false" onkeydown="return false" value="Focus All" onclick="deskToggleFocus()" style="margin-right:3px">
                                     <!-- ###END###{DesktopFocus} -->
                                     <!-- ###BEGIN###{FileSaver} -->
+                                    <!-- ###BEGIN###{!DesktopRecorder} -->
                                     <input id="idx_deskSaveBtn" type="button" title="Save a screenshot of the remote desktop" onkeypress="return false" onkeydown="return false" value="Save..." onclick="deskSaveImage()" style="margin-right:3px">
+                                    <!-- ###END###{!DesktopRecorder} -->
                                     <!-- ###END###{FileSaver} -->
                                     <input type="button" value="Settings..." title="Edit remote desktop settings" onkeypress="return false" onkeydown="return false" onclick="showDesktopSettings()" style="margin-right:3px">
                                     <!-- ###BEGIN###{IDER} -->
@@ -1002,6 +1004,14 @@
                             <input id="specialkeylistinput" type="button" onkeypress="return false" class="bottombutton" value="Send" onclick="sendSpecialKey()">&nbsp;
                         </div>
                         -->
+                                <!-- ###BEGIN###{FileSaver} -->
+                                <!-- ###BEGIN###{DesktopRecorder} -->
+                                <div id="id_DeskRecorderTools" style=float:right>
+                                    <span id=DeskSaveImageButton title="Save a screenshot of the remote desktop"><img src='images-commander/icon-camera.png' onclick=deskSaveImage() height=16 width=16 style=padding-top:2px;padding-right:4px;cursor:pointer /></span>
+                                    <span id=DeskRecordButton title="Record remote desktop session to file" style="padding-right:8px"><img id=DeskRecordButtonImage src='images-commander/icon-film.png' onclick=deskRecordSession() height=16 width=16 style=padding-top:2px;cursor:pointer /></span>
+                                </div>
+                                <!-- ###END###{DesktopRecorder} -->
+                                <!-- ###END###{FileSaver} -->
                                 <!-- ###BEGIN###{Desktop-Multi} -->
                                 <div id="id_DeskScreenSelector" style=float:right></div>
                                 <!-- ###END###{Desktop-Multi} -->
@@ -1837,9 +1847,9 @@
 
 // ###BEGIN###{FileSaver}
             // ###BEGIN###{Desktop}
-            if (!Q('Desk')['toBlob']) { // On some browsers like IE, we can't save screen shots. Hide the scheenshot/capture buttons.
-                QV('idx_deskSaveBtn', false);
-            }
+            // ###BEGIN###{!Mode-NodeWebkit}
+            if (!Q('Desk')['toBlob']) { QV('idx_deskSaveBtn', false); }// On some browsers like IE, we can't save screen shots. Hide the sceeenshot/capture buttons.
+            // ###END###{!Mode-NodeWebkit}
             // ###END###{Desktop}
 // ###END###{FileSaver}
 
@@ -1998,9 +2008,7 @@
             haltEvent(e);
             // ###BEGIN###{IDER}
             var diskimages = true;
-            console.log(e.dataTransfer.files);
             for (var i = 0; i < e.dataTransfer.files.length; i++) {
-                console.log(i, e.dataTransfer.files[i]);
                 if ((e.dataTransfer.files[i].name.toLowerCase().endsWith('.img') == false) && (e.dataTransfer.files[i].name.toLowerCase().endsWith('.iso') == false)) { diskimages = false; }
             }
             if ((diskimages == true) && (e.dataTransfer != null) && (currentView > 0) && (currentView < 100) && ((e.dataTransfer.files.length == 1) || (e.dataTransfer.files.length == 2))) {
@@ -8062,6 +8070,9 @@
             // ###END###{DesktopType}
             switch (state) {
                 case 0:
+                    // ###BEGIN###{DesktopRecorder}
+                    if (desktop.m.recordedData != null) { deskRecordSession(); }
+                    // ###END###{DesktopRecorder}
                     // desktop.m.ResetScreen();
                     // ###BEGIN###{DesktopInband}
                     webRtcDesktopReset();
@@ -8288,26 +8299,41 @@
         }
 
         // ###BEGIN###{FileSaver}
+        // ###BEGIN###{DesktopRecorder}
+        // Toggle desktop session recording
+        function deskRecordSession() {
+            if (desktop == null) return;
+            if (desktop.m.recordedData == null) {
+                // Start recording
+                if ((desktop.State === 3) && (desktop.m.StartRecording())) { Q('DeskRecordButtonImage').src = 'images-commander/icon-film-red.png'; }
+            } else {
+                // Stop recording
+                Q('DeskRecordButtonImage').src = 'images-commander/icon-film.png';
+                var d = new Date(), n = 'AmtDesktopSesion-' + currentcomputer['name'] + '-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
+                saveAs(data2blob(desktop.m.StopRecording().join('')), n + '.mcrec');
+            }
+        }
+        // ###END###{DesktopRecorder}
+        // ###END###{FileSaver}
+
+        // ###BEGIN###{FileSaver}
         // Save the desktop image to file
         function deskSaveImage() {
             if (xxdialogMode || desktop.State != 3) return;
             var n = 'Desktop', d = new Date();
             if (amtsysstate) { n += '-' + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
-            n += '-' + d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
-            Q('Desk')['toBlob'](
-                function(blob) {
-                    // ###BEGIN###{!Mode-NodeWebkit}
-                    saveAs(blob, n + '.jpg');
-                    // ###END###{!Mode-NodeWebkit}
-                    // ###BEGIN###{Mode-NodeWebkit}
-                    var chooser = document.createElement('input');
-                    chooser.setAttribute('type', 'file');
-                    chooser.setAttribute('nwsaveas', n + '.jpg');
-                    chooser.addEventListener('change', function () { require('fs').writeFile(this.value, blob, function () { }); }, false);
-                    chooser.click();
-                    // ###END###{Mode-NodeWebkit}
-                }
-            );
+            n += '-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
+            // ###BEGIN###{!Mode-NodeWebkit}
+            Q('Desk')['toBlob']( function (blob) { saveAs(blob, n + '.jpg'); } );
+            // ###END###{!Mode-NodeWebkit}
+            // ###BEGIN###{Mode-NodeWebkit}
+            var b64image = document.getElementById('Desk').toDataURL('image/png').split(',')[1];
+            var chooser = document.createElement('input');
+            chooser.setAttribute('type', 'file');
+            chooser.setAttribute('nwsaveas', n + '.png');
+            chooser.addEventListener('change', function () { console.log('cc'); require('fs').writeFile(this.value, b64image, 'base64', function () { }); }, false);
+            chooser.click();
+            // ###END###{Mode-NodeWebkit}
         }
         // ###END###{FileSaver}
 

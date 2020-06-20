@@ -6,7 +6,6 @@
 
 function CreateIMRSDKWrapper() {
     var obj = {};
-    
     var _IMRSDK;
     var _ImrSdkVersion;
     var _ref = require('ref');
@@ -22,23 +21,28 @@ function CreateIMRSDKWrapper() {
 
     // Callback from the native lib back into js (StdCall)
     var uintPtr = _ref.refType('uint');
-    var OpenHandlerCallBack = _ffi.Callback('int', ['uint', 'uint'], _ffi.FFI_STDCALL, function (clientID, conID) { obj.pendingData[conID] = ''; return 0; });
-    var CloseHandlerCallBack = _ffi.Callback('int', ['uint'], _ffi.FFI_STDCALL, function (conID) { obj.pendingData[conID] = ''; return 0; });
+    var OpenHandlerCallBack = _ffi.Callback('int', ['uint', 'uint'], _ffi.FFI_STDCALL, function (clientID, conID) { obj.conID = conID; obj.pendingData[conID] = ''; return 0; });
+    var CloseHandlerCallBack = _ffi.Callback('int', ['uint'], _ffi.FFI_STDCALL, function (conID) { obj.pendingData[conID] = null; return 0; });
     var ReceiveHandlerCallBack = _ffi.Callback('int', ['pointer', uintPtr, 'uint'], _ffi.FFI_STDCALL, function (bufferPtr, lengthPtr, conID) {
         try {
-            var bufferLen = lengthPtr.readUInt32LE(0), buffer = _ref.reinterpret(bufferPtr, bufferLen);
-            lengthPtr.writeUInt32LE(obj.pendingData[conID].length, 0);
-            for (var i = 0; i < obj.pendingData[conID].length; i++) { buffer[i] = obj.pendingData[conID].charCodeAt(i); }
-            // ###BEGIN###{IDERDebug}
-            //console.log('ReceiveHandlerCallBack(conID: ' + conID + ', Len: ' + obj.pendingData[conID].length + ')');
-            if (logFile != null) { logFile.write('IDERRECV: ' + rstr2hex(obj.pendingData[conID]) + '\r\n'); }
-            // ###END###{IDERDebug}
-            obj.pendingData[conID] = '';
+            if (obj.pendingData[conID] == null) {
+                lengthPtr.writeUInt32LE(0, 0); // Send a close
+            } else {
+                var bufferLen = lengthPtr.readUInt32LE(0), buffer = _ref.reinterpret(bufferPtr, bufferLen);
+                lengthPtr.writeUInt32LE(obj.pendingData[conID].length, 0);
+                for (var i = 0; i < obj.pendingData[conID].length; i++) { buffer[i] = obj.pendingData[conID].charCodeAt(i); }
+                // ###BEGIN###{IDERDebug}
+                //console.log('ReceiveHandlerCallBack(conID: ' + conID + ', Len: ' + obj.pendingData[conID].length + ')');
+                if (logFile != null) { logFile.write('IDERRECV: ' + rstr2hex(obj.pendingData[conID]) + '\r\n'); }
+                // ###END###{IDERDebug}
+                obj.pendingData[conID] = '';
+            }
         } catch (e) { console.log(e); }
         return 0;
     });
     var SendHandlerCallBack = _ffi.Callback('int', ['pointer', 'uint', 'uint'], _ffi.FFI_STDCALL, function (ptr, length, conID) {
         try {
+            if (obj.client == null) return;
             var buffer = _ref.reinterpret(ptr, length), str = '';
             for (var i = 0; i < length; i++) { str += String.fromCharCode(buffer[i]); }
             // ###BEGIN###{IDERDebug}
@@ -123,7 +127,7 @@ function CreateIMRSDKWrapper() {
     if (_Setup('imrsdk') == false) { if (_Setup('imrsdk_x64') == false) { return null; } }
 
     // IMR_Init
-    obj.Init = function() {
+    obj.Init = function () {
         var version = new _IMRVersion();
         var error = _IMRSDK.IMR_Init(version.ref(), 'imrsdk.ini');
         if (error == 4) return _ImrSdkVersion; // If already initialized, return previous version information.
@@ -133,7 +137,7 @@ function CreateIMRSDKWrapper() {
     }
 
     // IMR_InitEx
-    obj.InitEx = function(client) {
+    obj.InitEx = function (client) {
         var version = new _IMRVersion();
         var callbacks = new _SockCallBacks();
         callbacks.OpenHandler = OpenHandlerCallBack;
@@ -247,7 +251,10 @@ function CreateIMRSDKWrapper() {
     }
 
     // IMR_IDERCloseSession
-    obj.IDERCloseSessionAsync = function (client_id, func) { _IMRSDK.IMR_IDERCloseSession.async(client_id, func); }
+    obj.IDERCloseSessionAsync = function (client_id, func) {
+        //console.log('IDERCloseSessionAsync', client_id);
+        _IMRSDK.IMR_IDERCloseSession.async(client_id, func);
+    }
     
     // IMR_IDERClientFeatureSupported
     obj.IDERClientFeatureSupported = function (client_id) {
@@ -306,10 +313,12 @@ function CreateIMRSDKWrapper() {
 }
 
 globalIderPendingCalls = 0;
+globalIderWrapper = null;
+globalIderClientId = null;
 
 // Construct a Intel AMT IDER object
 var CreateAmtRemoteIderIMR = function () {
-    if (globalIderPendingCalls != 0) { console.log('Incomplete IDER cleanup (' + globalIderPendingCalls + ').'); return null; } // IDER is not ready.
+    if (globalIderPendingCalls != 0) { console.log('Incomplete IDER cleanup (A, ' + globalIderPendingCalls + ').'); return null; } // IDER is not ready.
     var _net = require('net');
     var _tls = require('tls');
 
@@ -360,10 +369,11 @@ var CreateAmtRemoteIderIMR = function () {
             try
             {
                 if (obj.m.clientid !== undefined) {
-                    try { obj.m.imrsdk.IDERCloseSessionAsync(obj.m.clientid, function (error) { }); } catch (e) { }
-                    delete obj.m.clientid;
+                    try { obj.m.imrsdk.IDERCloseSessionAsync(obj.m.clientid, function (error) { console.log('IDERCloseSessionAsync-Response', error); }); } catch (e) { console.log(e); }
+                    //try { obj.m.imrsdk.RemoveClient(obj.m.clientid); } catch (e) { console.log(e); }
+                    //delete obj.m.clientid;
                 }
-                obj.m.imrsdk.Close(function (error) { });
+                //obj.m.imrsdk.Close(function (error) { });
             } catch (e) { }
             delete obj.m.imrsdk;
         }
@@ -414,7 +424,7 @@ var CreateAmtRemoteIderIMR = function () {
     }
 
     function startIderSession(userConsentFunc) {
-        if (globalIderPendingCalls != 0) { console.log('Incomplete IDER cleanup (' + globalIderPendingCalls + ').'); return; }
+        if (globalIderPendingCalls != 0) { console.log('Incomplete IDER cleanup (B, ' + globalIderPendingCalls + ').'); return; }
         try {
             //console.log('IDER-Start');
             if (obj.m.xtlsoptions && obj.m.xtlsoptions.meshServerConnect) {
@@ -452,18 +462,17 @@ var CreateAmtRemoteIderIMR = function () {
 
             obj.m.client.on('data', function (data) {
                 //console.log('IDER-RECV(' + data.length + ', ' + obj.receivedCount + '): ' + rstr2hex(data));
-
-                if (obj.m.imrsdk == null) { return; }
+                if ((obj.m.imrsdk == null) || (obj.m.imrsdk.pendingData[obj.m.imrsdk.conID] == null)) { return; }
 
                 if ((obj.receivedCount == 0) && (data.charCodeAt(0) == 0x11) && (data.charCodeAt(1) == 0x05)) {
                     // We got a user consent error, handle it now before IMRSDK.dll can get it.
                     console.log('IDER user consent required.');
-                    obj.m.imrsdk.pendingData[obj.m.clientid] = String.fromCharCode(0x11, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00); // Try to cause a fault.
-                    obj.m.imrsdk.ReadyReadSock(0, function (x, error) { });
+                    obj.m.imrsdk.pendingData[obj.m.imrsdk.conID] = String.fromCharCode(0x11, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00); // Try to cause a fault.
+                    obj.m.imrsdk.ReadyReadSock(obj.m.imrsdk.conID, function (x, error) { });
                     setTimeout(function () { obj.m.userConsentFunc(startIderSession); }, 500);
                 } else {
-                    if (obj.m.imrsdk.pendingData[obj.m.clientid] == null) { obj.m.imrsdk.pendingData[obj.m.clientid] = data; } else { obj.m.imrsdk.pendingData[obj.m.clientid] += data; }
-                    obj.m.imrsdk.ReadyReadSock(0, function (x, error) { });
+                    obj.m.imrsdk.pendingData[obj.m.imrsdk.conID] += data;
+                    obj.m.imrsdk.ReadyReadSock(obj.m.imrsdk.conID, function (x, error) { });
                 }
                 obj.receivedCount += data.length;
             });
@@ -483,15 +492,19 @@ var CreateAmtRemoteIderIMR = function () {
         try {
             //console.log('IDER-StartEx');
             obj.m.userConsentFunc = userConsentFunc;
-            obj.m.imrsdk = CreateIMRSDKWrapper();
-            obj.m.imrsdk.InitEx(obj.m.client);
-            obj.m.imrsdk.RemoveAllClients();
-            if (obj.m.amtcertpath) { obj.m.imrsdk.SetCertificateInfo(obj.m.amtcertpath, null, null); }
-            obj.m.clientid = obj.m.imrsdk.AddClient(obj.m.tls + 1, obj.m.host);
+            if (globalIderWrapper == null) {
+                obj.m.imrsdk = globalIderWrapper = CreateIMRSDKWrapper();
+                obj.m.imrsdk.InitEx(obj.m.client);
+                if (obj.m.amtcertpath) { obj.m.imrsdk.SetCertificateInfo(obj.m.amtcertpath, null, null); }
+            } else {
+                obj.m.imrsdk = globalIderWrapper;
+                obj.m.imrsdk.client = obj.m.client;
+            }
+            obj.m.clientid = globalIderClientId = obj.m.imrsdk.AddClient(obj.m.tls + 1, 'HOST' + Math.random());
+            obj.m.imrsdk.pendingData[obj.m.clientid] = '';
+
             globalIderPendingCalls++;
-            //console.log('IDEROpenTCPSessionAsync-call');
             var error = obj.m.imrsdk.IDEROpenTCPSessionAsync(obj.m.clientid, obj.m.user, obj.m.pass, obj.m.imgpath, obj.m.isopath, function (error) {
-                //console.log('IDEROpenTCPSessionAsync-callback(' + error + ')');
                 globalIderPendingCalls--;
                 if (obj.m.imrsdk == null) return; // We closed already, exit now.
                 if ((error == 38) && (userConsentFunc != undefined)) { obj.m.Stop(); userConsentFunc(startIderSession); return; }
@@ -510,7 +523,7 @@ var CreateAmtRemoteIderIMR = function () {
                 }
             });
         } catch (e) {
-            //console.log(e);
+            console.log(e);
             obj.m.Stop();
             obj.m.onDialogPrompt(obj.m, { 'html': e }, 1);
         }
