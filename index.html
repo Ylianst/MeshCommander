@@ -202,6 +202,45 @@
         }
     </style>
 <!-- ###END###{DesktopInbandFiles} -->
+<!-- ###BEGIN###{SessionRecording} -->
+    <style>
+        .cameraIcon {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHdSURBVDhPxZLPTxpREMe/+yKgxF13xbJKBHvBBBuLRkvkCqTBXrhAbz0CiR41oX9AL7019doDSf+OEuFI1CgkShN6IhHwQBrCFlsCr++tTxB/nP0kk/fmOzO7k3mDZ0cS5xgLLleme939MBgMTJ+wNELI91ar9dkU7iBFt6NKpVL51O/3ZyORyJfm1dV0Lpf7wYqJyDEhkkTD4fBbp9P5m/uUWafT+SVpmvbT6P5ZNkVKIUmPNjVElmUoioJ6vQ673X5JLFbrstvths/nGyv2eDxIJZNIp9J4ubQkVODg6wGq1SpCoRB6vZ6LUFbj9XoRCAREChCLxZDP57G6+hqvVlZweJhHIp4wY5mPGQSDQRQKBd4y4JzXafTdNk2mU9Q6aaOOF3O00WzSzcAb0+e2tr5O640G1Rfmhxo3WZEp4cO4y+bGBsrlMkqlklCA84tznJ6djnV5C7k/MsMwMKtpN2MWqKoKdUblUxfKiAlxDjk+OcGExYKd3R2Uz0rw+/1wOBxQZhQUi0WRNeLBB9g+IPE+gWw2i/29fVC2TPzJ4vE4n7rIGiHpuk6v//2Fhf213W4LmQXYk7oXF/kFtVrN3JH72Gw28EX61jGMrcfW57bkqdjU1OTRjfd8AP8BU66nHfOXwycAAAAASUVORK5CYII=);
+            height: 16px;
+            width: 16px;
+            cursor: pointer;
+            border: none;
+            margin-top:2px;
+            margin-right:4px;
+            cursor:pointer;
+            float:right;
+        }
+
+        .videoIcon {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADaSURBVDhPxdKrEgFRAMbxRWMUJBIZRSRIqiBIXkHwBqLmAcx4Bt2MzowsoAiCQHdZ/2/tcZsda1bwzfz27J5z9uy5rPVrIm6pFNFFATOcoTTRgfouVOGVGHawXT0oNZi6C8p4SdgtM0jdbp1oNs+lEoJm5xk1jqEvndCAkoWZ2RZpvEQvKmqIo4INVjBJoIQpDlD7Eff0Ydb5jSXMcnO6aDSvjp+0UMcenh38zKFTsbUHqggcc4yB87cBBtBxOlnjfZP8VJHESJuYRxtR+EU7P8HQeXr8iEFjWVe3r1ZV/X1h0wAAAABJRU5ErkJggg==);
+            height: 16px;
+            width: 16px;
+            cursor: pointer;
+            border: none;
+            margin-top:2px;
+            margin-right:4px;
+            cursor:pointer;
+            float:right;
+        }
+
+        .videoIconRed {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAEPSURBVDhPxZOxTsJQFIZvDZPGhTjhQpzBYFwccOUV2HgABxl9BwfCA5jAwkhMCIsDYXJx8QGIsYSFgcG4EQL4/ff0ApsUB//ky3/uac/f9rZ1f1WUuFvn85fYHYyhEcXxPOlXsQr06T2rtysfwEknWAxnWqNHTn6gr8EXa7k13NJ/taXpKPFzCMOS7mbXJV2saOVWIWAEAyvdEp6sdF2YWemm0LNyq/AIOewUyjCBDwjKwjW8wRdMeIwF7hUx3MTrttxLCr8hZMbshQKUlvGH9lcNvqGtAO1uWr1DCaKwiWl1BX7/Dg3Y6N8C9J3odfuATxUp1QHtQ09voUBxD8fwm1Yw5BtoacHs5mc8UM79ANr0QFg91nqAAAAAAElFTkSuQmCC);
+            height: 16px;
+            width: 16px;
+            cursor: pointer;
+            border: none;
+            margin-top:2px;
+            margin-right:4px;
+            cursor:pointer;
+            float:right;
+        }
+    </style>
+<!-- ###END###{SessionRecording} -->
 <!-- ###BEGIN###{Look-Commander} -->
     <!-- ###BEGIN###{!ComputerSelector-Local-ScriptOnly} -->
     <!-- ###BEGIN###{!Mode-LMS} -->
@@ -516,6 +555,9 @@
         <!-- ###BEGIN###{USBSetup} -->
         <div class="menuitem" onclick="toolmenuclick(102)"><span id="id_menuitem2" style="display:none">&bull; </span>USB Setup.bin Editor</div>
         <!-- ###END###{USBSetup} -->
+        <!-- ###BEGIN###{SessionRecording} -->
+        <div class="menuitem" onclick="toolmenuclick(104)"><span id="id_menuitem4" style="display:none">&bull; </span>Session Player</div>
+        <!-- ###END###{SessionRecording} -->
     </div>
     <!-- ###END###{ComputerSelector} -->
     <!-- ###BEGIN###{Mode-LMS} -->
@@ -1004,11 +1046,14 @@
                             <input id="specialkeylistinput" type="button" onkeypress="return false" class="bottombutton" value="Send" onclick="sendSpecialKey()">&nbsp;
                         </div>
                         -->
+                                <!-- ###BEGIN###{DesktopClipboard} -->
+                                <input id="id_DeskKvmClipButton" value="Clipboard" type="button" style="float:right;display:none" onclick=deskClipboard() />
+                                <!-- ###END###{DesktopClipboard} -->
                                 <!-- ###BEGIN###{FileSaver} -->
                                 <!-- ###BEGIN###{DesktopRecorder} -->
                                 <div id="id_DeskRecorderTools" style=float:right>
-                                    <span id=DeskSaveImageButton title="Save a screenshot of the remote desktop"><img src='images-commander/icon-camera.png' onclick=deskSaveImage() height=16 width=16 style=padding-top:2px;padding-right:4px;cursor:pointer /></span>
-                                    <span id=DeskRecordButton title="Record remote desktop session to file" style="padding-right:8px"><img id=DeskRecordButtonImage src='images-commander/icon-film.png' onclick=deskRecordSession() height=16 width=16 style=padding-top:2px;cursor:pointer /></span>
+                                    <div id=DeskRecordButton class="videoIcon" title="Record remote desktop session to file" onclick=deskRecordSession()></div>
+                                    <div id=DeskSaveImageButton class="cameraIcon" title="Save a screenshot of the remote desktop" onclick=deskSaveImage()></div>
                                 </div>
                                 <!-- ###END###{DesktopRecorder} -->
                                 <!-- ###END###{FileSaver} -->
@@ -1627,7 +1672,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.5';
+        var version = '0.8.6';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -1635,7 +1680,9 @@
         var urlvars = {};
         var amtstack;
         var wsstack = null;
+// ###BEGIN###{WsmanBrowser}
         var AllWsman = 'AMT_8021xCredentialContext,AMT_8021XProfile,AMT_ActiveFilterStatistics,AMT_AgentPresenceCapabilities,AMT_AgentPresenceInterfacePolicy,AMT_AgentPresenceService,AMT_AgentPresenceWatchdog,AMT_AgentPresenceWatchdogAction,AMT_AlarmClockService,IPS_AlarmClockOccurrence,AMT_AssetTable,AMT_AssetTableService,AMT_AuditLog,AMT_AuditPolicyRule,AMT_AuthorizationService,AMT_BootCapabilities,AMT_BootSettingData,AMT_ComplexFilterEntryBase,AMT_CRL,AMT_CryptographicCapabilities,AMT_EACCredentialContext,AMT_EndpointAccessControlService,AMT_EnvironmentDetectionInterfacePolicy,AMT_EnvironmentDetectionSettingData,AMT_EthernetPortSettings,AMT_EventLogEntry,AMT_EventManagerService,AMT_EventSubscriber,AMT_FilterEntryBase,AMT_FilterInSystemDefensePolicy,AMT_GeneralSettings,AMT_GeneralSystemDefenseCapabilities,AMT_Hdr8021Filter,AMT_HeuristicPacketFilterInterfacePolicy,AMT_HeuristicPacketFilterSettings,AMT_HeuristicPacketFilterStatistics,AMT_InterfacePolicy,AMT_IPHeadersFilter,AMT_KerberosSettingData,AMT_ManagementPresenceRemoteSAP,AMT_MessageLog,AMT_MPSUsernamePassword,AMT_NetworkFilter,AMT_NetworkPortDefaultSystemDefensePolicy,AMT_NetworkPortSystemDefenseCapabilities,AMT_NetworkPortSystemDefensePolicy,AMT_PCIDevice,AMT_PETCapabilities,AMT_PETFilterForTarget,AMT_PETFilterSetting,AMT_ProvisioningCertificateHash,AMT_PublicKeyCertificate,AMT_PublicKeyManagementCapabilities,AMT_PublicKeyManagementService,AMT_PublicPrivateKeyPair,AMT_RedirectionService,AMT_RemoteAccessCapabilities,AMT_RemoteAccessCredentialContext,AMT_RemoteAccessPolicyAppliesToMPS,AMT_RemoteAccessPolicyRule,AMT_RemoteAccessService,AMT_SetupAndConfigurationService,AMT_SNMPEventSubscriber,AMT_StateTransitionCondition,AMT_SystemDefensePolicy,AMT_SystemDefensePolicyInService,AMT_SystemDefenseService,AMT_SystemPowerScheme,AMT_ThirdPartyDataStorageAdministrationService,AMT_ThirdPartyDataStorageService,AMT_TimeSynchronizationService,AMT_TLSCredentialContext,AMT_TLSProtocolEndpoint,AMT_TLSProtocolEndpointCollection,AMT_TLSSettingData,AMT_TrapTargetForService,AMT_UserInitiatedConnectionService,AMT_WebUIService,AMT_WiFiPortConfigurationService,CIM_AbstractIndicationSubscription,CIM_Account,CIM_AccountManagementCapabilities,CIM_AccountManagementService,CIM_AccountOnSystem,CIM_AdminDomain,CIM_AlertIndication,CIM_AssignedIdentity,CIM_AssociatedPowerManagementService,CIM_AuthenticationService,CIM_AuthorizationService,CIM_BIOSElement,CIM_BIOSFeature,CIM_BIOSFeatureBIOSElements,CIM_BootConfigSetting,CIM_BootService,CIM_BootSettingData,CIM_BootSourceSetting,CIM_Capabilities,CIM_Card,CIM_Chassis,CIM_Chip,CIM_Collection,CIM_Component,CIM_ComputerSystem,CIM_ComputerSystemPackage,CIM_ConcreteComponent,CIM_ConcreteDependency,CIM_Controller,CIM_CoolingDevice,CIM_Credential,CIM_CredentialContext,CIM_CredentialManagementService,CIM_Dependency,CIM_DeviceSAPImplementation,CIM_ElementCapabilities,CIM_ElementConformsToProfile,CIM_ElementLocation,CIM_ElementSettingData,CIM_ElementSoftwareIdentity,CIM_ElementStatisticalData,CIM_EnabledLogicalElement,CIM_EnabledLogicalElementCapabilities,CIM_EthernetPort,CIM_Fan,CIM_FilterCollection,CIM_FilterCollectionSubscription,CIM_HostedAccessPoint,CIM_HostedDependency,CIM_HostedService,CIM_Identity,CIM_IEEE8021xCapabilities,CIM_IEEE8021xSettings,CIM_Indication,CIM_IndicationService,CIM_InstalledSoftwareIdentity,CIM_KVMRedirectionSAP,CIM_LANEndpoint,CIM_ListenerDestination,CIM_ListenerDestinationWSManagement,CIM_Location,CIM_Log,CIM_LogEntry,CIM_LogicalDevice,CIM_LogicalElement,CIM_LogicalPort,CIM_LogicalPortCapabilities,CIM_LogManagesRecord,CIM_ManagedCredential,CIM_ManagedElement,CIM_ManagedSystemElement,CIM_MediaAccessDevice,CIM_MemberOfCollection,CIM_Memory,CIM_MessageLog,CIM_NetworkPort,CIM_NetworkPortCapabilities,CIM_NetworkPortConfigurationService,CIM_OrderedComponent,CIM_OwningCollectionElement,CIM_OwningJobElement,CIM_PCIController,CIM_PhysicalComponent,CIM_PhysicalElement,CIM_PhysicalElementLocation,CIM_PhysicalFrame,CIM_PhysicalMemory,CIM_PhysicalPackage,CIM_Policy,CIM_PolicyAction,CIM_PolicyCondition,CIM_PolicyInSystem,CIM_PolicyRule,CIM_PolicyRuleInSystem,CIM_PolicySet,CIM_PolicySetAppliesToElement,CIM_PolicySetInSystem,CIM_PowerManagementCapabilities,CIM_PowerManagementService,CIM_PowerSupply,CIM_Privilege,CIM_PrivilegeManagementCapabilities,CIM_PrivilegeManagementService,CIM_ProcessIndication,CIM_Processor,CIM_ProtocolEndpoint,CIM_ProvidesServiceToElement,CIM_Realizes,CIM_RecordForLog,CIM_RecordLog,CIM_RedirectionService,CIM_ReferencedProfile,CIM_RegisteredProfile,CIM_RemoteAccessAvailableToElement,CIM_RemoteIdentity,CIM_RemotePort,CIM_RemoteServiceAccessPoint,CIM_Role,CIM_RoleBasedAuthorizationService,CIM_RoleBasedManagementCapabilities,CIM_RoleLimitedToTarget,CIM_SAPAvailableForElement,CIM_SecurityService,CIM_Sensor,CIM_Service,CIM_ServiceAccessBySAP,CIM_ServiceAccessPoint,CIM_ServiceAffectsElement,CIM_ServiceAvailableToElement,CIM_ServiceSAPDependency,CIM_ServiceServiceDependency,CIM_SettingData,CIM_SharedCredential,CIM_SoftwareElement,CIM_SoftwareFeature,CIM_SoftwareFeatureSoftwareElements,CIM_SoftwareIdentity,CIM_StatisticalData,CIM_StorageExtent,CIM_System,CIM_SystemBIOS,CIM_SystemComponent,CIM_SystemDevice,CIM_SystemPackaging,CIM_UseOfLog,CIM_Watchdog,CIM_WiFiEndpoint,CIM_WiFiEndpointCapabilities,CIM_WiFiEndpointSettings,CIM_WiFiPort,CIM_WiFiPortCapabilities,IPS_AdminProvisioningRecord,IPS_ClientProvisioningRecord,IPS_HostBasedSetupService,IPS_HostIPSettings,IPS_HTTPProxyService,IPS_HTTPProxyAccessPoint,IPS_IderSessionUsingPort,IPS_IPv6PortSettings,IPS_KVMRedirectionSettingData,IPS_KvmSessionUsingPort,IPS_ManualProvisioningRecord,IPS_OptInService,IPS_PowerManagementService,IPS_ProvisioningAuditRecord,IPS_ProvisioningRecordLog,IPS_RasSessionUsingPort,IPS_ScreenConfigurationService,IPS_ScreenSettingData,IPS_SecIOService,IPS_SessionUsingPort,IPS_SolSessionUsingPort,IPS_TLSProvisioningRecord,IPS_WatchDogAction'.split(',');
+// ###END###{WsmanBrowser}
         var disconnecturl = null;
 // ###BEGIN###{Terminal}
         var terminal;
@@ -1763,6 +1810,10 @@
             if (urlvars['ignoretls']) { NW_TlsSecurityMode = 0; }
             if (urlvars['skiptlshostcheck']) { NW_SkipTlsHostnameCheck = parseInt(urlvars['skiptlshostcheck']); }
             // ###END###{Mode-NodeWebkit}
+
+            // ###BEGIN###{DesktopClipboard}
+            if (urlvars['kvmclip']) { QV('id_DeskKvmClipButton', true); }
+            // ###END###{DesktopClipboard}
 
 // ###BEGIN###{ContextMenus}
             document.onclick = function (e) { hideContextMenu(); }
@@ -2327,6 +2378,7 @@
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'zh-chs'), label: "Chinese (Simplified)", click: function () { window.location.href = 'commander_zh-chs.htm'; } }));
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'nl'), label: "Dutch", click: function () { window.location.href = 'commander_nl.htm'; } }));
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'fr'), label: "French", click: function () { window.location.href = 'commander_fr.htm'; } }));
+            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'de'), label: "German", click: function () { window.location.href = 'commander_de.htm'; } }));
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'it'), label: "Italian", click: function () { window.location.href = 'commander_it.htm'; } }));
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'ja'), label: "Japanese", click: function () { window.location.href = 'commander_ja.htm'; } }));
             languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'pt'), label: "Portuguese", click: function () { window.location.href = 'commander_pt.htm'; } }));
@@ -3071,6 +3123,9 @@
             // ###END###{SystemDefense}
             // ###BEGIN###{Desktop}
             QE('id_DeskCAD', false);
+            // ###BEGIN###{DesktopClipboard}
+            QE('id_DeskKvmClipButton', false);
+            // ###END###{DesktopClipboard}
             QE('DeskWD', false);
             QE('deskkeys', false);
             if (urlvars['kvmviewonly']) { QE('id_DeskVO', false); Q('id_DeskVO').checked = true; }
@@ -3229,6 +3284,9 @@
             // ###BEGIN###{CertificateManager}
             QV('id_menuitem3', currentView == 103);
             // ###END###{CertificateManager}
+            // ###BEGIN###{SessionRecording}
+            QV('id_menuitem4', currentView == 104);
+            // ###END###{SessionRecording}
 
             var d = (QS('id_computerSelectorMenu').display == 'none');
             if (d == true && xxdialogMode) return;
@@ -3253,6 +3311,9 @@
             // ###BEGIN###{CertificateManager}
             QV('id_menuitem3', currentView == 103);
             // ###END###{CertificateManager}
+            // ###BEGIN###{SessionRecording}
+            QV('id_menuitem4', currentView == 104);
+            // ###END###{SessionRecording}
 
             var d = (QS('id_computerSelectorMenu').display == 'none');
             if (x == -1) { QV('id_computerSelectorMenu', false); xxdialogMode = undefined; return; }
@@ -5284,9 +5345,11 @@
             // ###BEGIN###{PowerControl}
             buttons += AddButton("Power Actions...", 'showPowerActionDlg()') + ' ';
             // ###END###{PowerControl}
+            // ###BEGIN###{WsmanBrowser}
             // ###BEGIN###{FileSaver}
             buttons += AddButton("Save State...", 'saveEntireAmtState()') + ' ';
             // ###END###{FileSaver}
+            // ###END###{WsmanBrowser}
             // ###BEGIN###{Scripting}
             buttons += AddButton("Run Script...", 'script_runScriptDlg()') + ' ';
             // ###END###{Scripting}
@@ -5498,6 +5561,7 @@
             }
         }
 
+// ###BEGIN###{WsmanBrowser}
 // ###BEGIN###{FileSaver}
         var IntelAmtEntireState;
         var IntelAmtEntireStateCalls;
@@ -5541,6 +5605,7 @@
             // ###END###{Mode-NodeWebkit}
         }
 // ###END###{FileSaver}
+// ###END###{WsmanBrowser}
 
 // ###BEGIN###{Desktop-Settings}
 
@@ -8068,6 +8133,9 @@
             // ###BEGIN###{DesktopType}
             QE('id_DeskType', input);
             // ###END###{DesktopType}
+            // ###BEGIN###{DesktopClipboard}
+            QE('id_DeskKvmClipButton', state == 3);
+            // ###END###{DesktopClipboard}
             switch (state) {
                 case 0:
                     // ###BEGIN###{DesktopRecorder}
@@ -8298,6 +8366,17 @@
             }
         }
 
+        // ###BEGIN###{DesktopClipboard}
+        // Toggle desktop session recording
+        function deskClipboard() {
+            if (xxdialogMode || (desktop == null) || (desktop.State != 3)) return;
+            setDialogMode(11, "Clipboard", 3, deskClipboardEx, "Enter text to send to Intel&reg; AMT clipboard." + '<br><textarea id=kvmClipText style=width:100%;height:120px;resize:none;margin-top:8px />');
+            focusTextBox('kvmClipText');
+        }
+
+        function deskClipboardEx() { desktop.m.sendClipboardData(Q('kvmClipText').value.split('\\0').join('\0')); }
+        // ###END###{DesktopClipboard}
+
         // ###BEGIN###{FileSaver}
         // ###BEGIN###{DesktopRecorder}
         // Toggle desktop session recording
@@ -8305,10 +8384,11 @@
             if (desktop == null) return;
             if (desktop.m.recordedData == null) {
                 // Start recording
-                if ((desktop.State === 3) && (desktop.m.StartRecording())) { Q('DeskRecordButtonImage').src = 'images-commander/icon-film-red.png'; }
+                if ((desktop.State === 3) && (desktop.m.StartRecording())) { Q('DeskRecordButton').classList.remove('videoIcon'); Q('DeskRecordButton').classList.add('videoIconRed'); }
             } else {
                 // Stop recording
-                Q('DeskRecordButtonImage').src = 'images-commander/icon-film.png';
+                Q('DeskRecordButton').classList.remove('videoIconRed');
+                Q('DeskRecordButton').classList.add('videoIcon');
                 var d = new Date(), n = 'AmtDesktopSesion-' + currentcomputer['name'] + '-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
                 saveAs(data2blob(desktop.m.StopRecording().join('')), n + '.mcrec');
             }
@@ -12189,6 +12269,7 @@
                 else if (p == 2) { p = "MeshCentral Desktop"; }
                 else if (p == 100) { p = "Intel&reg; AMT WSMAN"; }
                 else if (p == 101) { p = "Intel&reg; AMT Redirection"; }
+                else if (p == 200) { p = "Intel&reg; AMT KVM"; }
                 x += addInfoNoEsc("Protocol", p);
             }
             QV('srec_DeskParent', false);
@@ -12230,6 +12311,22 @@
                 amtDesktop.onScreenSizeChange = srec_deskAdjust;
                 amtDesktop.State = 3;
                 amtDesktop.Start();
+                srec_deskAdjust();
+            } else if (recFileMetadata.protocol == 200) {
+                // Intel AMT Midstream KVM
+                recFileProtocol = 200;
+                x += '<br /><br /><span style=color:gray>' + "Press [space] to play/pause." + '</span>';
+                QE('srec_PlayButton', true);
+                QE('srec_PauseButton', false);
+                QE('srec_RestartButton', false);
+                QV('srec_toggleviewmode', true);
+                recFileStartTime = recFileLastTime = time;
+                amtDesktop = CreateAmtRemoteDesktop('srec_Desk');
+                amtDesktop.onScreenSizeChange = srec_deskAdjust;
+                amtDesktop.State = 3;
+                amtDesktop.Start();
+                if (recFileMetadata.bpp) { amtDesktop.bpp = recFileMetadata.bpp; }
+                amtDesktop.state = 3;
                 srec_deskAdjust();
             }
             QV('srec_metadatadiv', true);
@@ -12279,6 +12376,11 @@
                         readState = 1;
                         if (data.length > 8) { amtDesktop.ProcessData(data.substring(8)); }
                     } else if (readState == 1) { amtDesktop.ProcessData(data); }
+                } else if (recFileProtocol == 200) {
+                    // Intel AMT midstream KVM
+                    var view = new Uint8Array(data.length);
+                    for (var i = 0; i < data.length; i++) { view[i] = data.charCodeAt(i); }
+                    amtDesktop.ProcessBinaryData(view.buffer);
                 }
             } else if ((type == 2) && flagBinary && flagUser) {
                 // User --> Device data
@@ -12286,6 +12388,14 @@
                     // Intel AMT KVM
                     if (rstr2hex(data) == '0000000008080001000700070003050200000000') { amtDesktop.bpp = 1; } // Switch to 1 byte per pixel.
                 }
+            }
+
+            // This is a PNG screenshot of the display, load it and render it.
+            if ((type == 3) && (recFileProtocol == 200)) {
+                var tile = new Image();
+                tile.src = 'data:image/png;base64,' + btoa(data);
+                tile.onload = function () { amtDesktop.canvas.drawImage(tile, 0, 0); }
+                tile.error = function () { }
             }
 
             recFileLastTime = time;
@@ -12374,7 +12484,7 @@
             QE('srec_PlayButton', false);
             QE('srec_PauseButton', true);
             QE('srec_RestartButton', false);
-            if ((recFileProtocol == 2) || (recFileProtocol == 101)) {
+            if ((recFileProtocol == 2) || (recFileProtocol == 101) || (recFileProtocol == 200)) {
                 QV('srec_DeskParent', true);
                 QV('srec_TermParent', false);
             } else if ((recFileProtocol == 1) && (agentTerminal == null)) {
@@ -12425,6 +12535,11 @@
                 amtDesktop.onScreenSizeChange = srec_deskAdjust;
                 amtDesktop.State = 3;
                 amtDesktop.Start();
+                if (recFileMetadata.protocol == 200) {
+                    if (recFileMetadata.bpp) { amtDesktop.bpp = recFileMetadata.bpp; }
+                    amtDesktop.state = 3;
+                    srec_deskAdjust();
+                }
             }
             if (agentTerminal) { agentTerminal = null; }
         }
@@ -12797,9 +12912,11 @@
         window['SaveHardwareLog'] = SaveHardwareLog;
         // ###END###{FileSaver}
         // ###END###{HardwareInfo}
+        // ###BEGIN###{WsmanBrowser}
         // ###BEGIN###{FileSaver}
         window['saveEntireAmtState'] = saveEntireAmtState;
         // ###END###{FileSaver}
+        // ###END###{WsmanBrowser}
         // ###BEGIN###{ContextMenus}
         window['handleContextMenu'] = handleContextMenu;
         window['hideContextMenu'] = hideContextMenu;

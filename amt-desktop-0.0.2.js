@@ -765,6 +765,8 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 //if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-Recv(' + (d.length - 16) + '): ' + d.substring(16)); }
                 if (d.length >= 16) { obj.onKvmData(d.substring(16)); } // Event the data and ack
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
+            } else {
+                console.log('Got KVM clipboard data:', d);
             }
         }
         // ###END###{DesktopInband}
@@ -788,6 +790,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         if (obj.lastKeepAlive < Date.now() - 5000) { obj.lastKeepAlive = Date.now(); obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(16) + '\0KvmDataChannel\0'); }
     }
     // ###END###{DesktopInband}
+
+    // ###BEGIN###{DesktopClipboard}
+    obj.sendClipboardData = function (x) { obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x); }
+    // ###END###{DesktopClipboard}
 
     obj.SendCtrlAltDelMsg = function () { obj.sendcad(); }
     obj.sendcad = function () { obj.sendkey([[0xFFE3, 1], [0xFFE9, 1], [0xFFFF, 1], [0xFFFF, 0], [0xFFE9, 0], [0xFFE3, 0]]); } // Control down, Alt down, Delete down, Delete up , Alt up , Control up
@@ -907,34 +913,16 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     // ###BEGIN###{DesktopRecorder}
     obj.StartRecording = function () {
         if ((obj.recordedData != null) && (obj.DeskRecordServerInit != null)) return false;
-
-        // Take a screen shot and save it to file
-        var b64image = obj.CanvasId.toDataURL('image/png').split(',')[1];
-
-        // This is an ArrayBuffer, convert it to a string array
-        //var binary = '', bytes = new Uint8Array(fileReader.result), length = bytes.byteLength;
-        //for (var i = 0; i < length; i++) { binary += String.fromCharCode(bytes[i]); }
         obj.recordedHolding = true;
         obj.recordedData = [];
         obj.recordedStart = Date.now();
         obj.recordedSize = 0;
-        obj.recordedData.push(recordingEntry(1, 0, JSON.stringify({ magic: 'MeshCentralRelaySession', ver: 1, time: new Date().toLocaleString(), protocol: 200, bpp: obj.bpp }))); // Metadata, 200 = Midstream Intel AMT KVM
-        obj.recordedData.push(recordingEntry(2, 1, obj.DeskRecordServerInit));
-
-        /*
-        // Save a screenshot
-        var cmdlen = (8 + binary.length);
-        if (cmdlen > 65000) {
-            // Jumbo Packet
-            obj.recordedData.push(recordingEntry(2, 1, ShortToStr(27) + ShortToStr(8) + IntToStr(cmdlen) + ShortToStr(3) + ShortToStr(0) + ShortToStr(0) + ShortToStr(0) + binary));
-        } else {
-            // Normal packet
-            obj.recordedData.push(recordingEntry(2, 1, ShortToStr(3) + ShortToStr(cmdlen) + ShortToStr(0) + ShortToStr(0) + binary));
-        }
-        */
+        obj.recordedData.push(recordingEntry(1, 0, JSON.stringify({ magic: 'MeshCentralRelaySession', ver: 1, time: new Date().toLocaleString(), protocol: 200, bpp: obj.bpp, screenSize: [obj.width, obj.height] }))); // Metadata, 200 = Midstream Intel AMT KVM
+        obj.recordedData.push(recordingEntry(2, 1, obj.DeskRecordServerInit)); // This is the server init command
+        obj.recordedData.push(recordingEntry(3, 0, atob(obj.CanvasId.toDataURL('image/png').split(',')[1]))); // Take a screen shot
         return true;
     }
-
+    
     obj.StopRecording = function () {
         if (obj.recordedData == null) return;
         var r = obj.recordedData;
