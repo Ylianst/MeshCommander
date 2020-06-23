@@ -10059,7 +10059,7 @@
                 // EFI Device Path, type=2
                 tlvs.push(makeTLV(0x0002,'text',Q('d24OCRPBADevPath').value.trim().length,Q('d24OCRPBADevPath').value.trim()));
                 // EFI Device Path Len, type 3
-                tlvs.push(makeTLV(0x0003,'short',4, Q('d24OCRPBADevPath').value.trim().length));
+                tlvs.push(makeTLV(0x0003,'short',2, Q('d24OCRPBADevPath').value.trim().length));
                 // Boot Image Hash SHA-256, type=4
                 if (Q('d24OCRPBABootImageSHA256').value.trim() != '') {
                     tlvs.push(makeTLV(0x0004,'hex',Q('d24OCRPBABootImageSHA256').value.length/2,Q('d24OCRPBABootImageSHA256').value));
@@ -10076,7 +10076,7 @@
                 // HTTPS URL, type=1
                 tlvs.push(makeTLV(0x0001,'text',Q('d24OCRHTTPSUrl').value.trim().length,Q('d24OCRHTTPSUrl').value.trim()));
                 // EFI Device Path Len, type 3
-                tlvs.push(makeTLV(0x0003,'short',4, Q('d24OCRHTTPSUrl').value.trim().length));
+                tlvs.push(makeTLV(0x0003,'short',2, Q('d24OCRHTTPSUrl').value.trim().length));
                 // HTTPS Cert SHA-256, type 23
                 tlvs.push(makeTLV(0x0017,'hex', Q('d24OCRHTTPSCert256').value.length/2,Q('d24OCRHTTPSCert256').value));
                 // Boot Image Hash SHA-256, type=4
