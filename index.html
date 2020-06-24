@@ -2072,7 +2072,8 @@
             // Create a web server to serve One Client Recovery (OCR) disk image files.
             webserver = CreateWebServer();
             webserver.generateCertificate();
-            webserver.start(function () { webserver.setupBootImage('C:\\temp\\ubuntu-18.04-desktop-amd64.iso', '127.0.0.1'); });
+            //webserver.start(function () { webserver.setupBootImage('C:\\temp\\ubuntu-18.04-desktop-amd64.iso', '127.0.0.1'); });
+            webserver.start();
             webserver.onTransfers = function (webserver, transfers) {
                 var x = '';
                 for (var i in transfers) { x += '<div style="width:350px;position:relative;padding:3px"><span style="position:absolute;padding:3px;font-weight:bold">' + transfers[i].xfilename + '</span><div style="height:20px;background-color:#4CAF50;width:' + Math.floor((transfers[i].progress.count * 100) / transfers[i].xsize) + '%;border-radius:4px"></div></div>'; }
@@ -9876,6 +9877,12 @@
                 addOption('d5actionSelect', "Reset to PXE", 400);
                 addOption('d5actionSelect', "Power on to PXE", 401);
                 // ###BEGIN###{PowerControl-Advanced}
+                // ###BEGIN###{PowerControl-OneClick}
+                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) {
+                    addOption('d5actionSelect', "Reset to HTTPS Boot", 600);
+                    addOption('d5actionSelect', "Power on to HTTPS Boot", 601);
+                }
+                // ###END###{PowerControl-OneClick}
                 addOption('d5actionSelect', "Custom action...", 999);
                 // ###END###{PowerControl-Advanced}
                 if (amtversion > 5) { addOption('d5actionSelect', "User consent...", 998); } // On AMT 5 and higher, offer the option of doing user consent alone.
@@ -9885,8 +9892,31 @@
             }
         }
 
+        // ###BEGIN###{PowerControl-Advanced}
+        // ###BEGIN###{PowerControl-OneClick}
+        function oneClickFileSelect() { QE('idx_dlgOkButton', Q('ocrfile').files.length == 1); }
+        // ###END###{PowerControl-OneClick}
+        // ###END###{PowerControl-Advanced}
+
         function powerActionDlgCheck() {
             var action = d5actionSelect.value;
+
+            // ###BEGIN###{PowerControl-Advanced}
+            // ###BEGIN###{PowerControl-OneClick}
+            if ((action == 600) || (action == 601)) {
+                var x = "Select a disk image for remote boot." + '<br /><br /><input id=ocrfile type=file onchange=oneClickFileSelect() accept=".iso">';
+                setDialogMode(11, "HTTPS Boot", 3, function () {
+                    var files = Q('ocrfile').files;
+                    if (files.length != 1) return;
+                    webserver.setupBootImage(files[0].path, wsstack.comm.socket.localAddress);
+                    powerActionDlg();
+                }, x);
+                QE('idx_dlgOkButton', false);
+                return;
+            }
+            // ###END###{PowerControl-OneClick}
+            // ###END###{PowerControl-Advanced}
+
             if ((action == 500) || (action == 501)) {
                 // Perform OS wake from standby or OS sleep (Intel AMT 10+)
                 amtstack.RequestOSPowerStateChange((action == 501)?3:2, function (stack, name, response, status) {
@@ -10183,7 +10213,17 @@
                 rsepass = null;
                 // ###BEGIN###{PowerControl-Advanced}
             }
+
+            // ###BEGIN###{PowerControl-OneClick}
+            // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
+            if ((action == 600) || (action == 601)) { // Force UEFI HTTPS Boot
+                r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
+                r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
+                r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
+            }
+            // ###END###{PowerControl-OneClick}
             // ###END###{PowerControl-Advanced}
+
             //if (((action == 104) || (action == 105)) && !r['SecureErase']) { /*console.log("This Intel&reg; AMT does not support Secure Erase");*/ cleanup(); return; }
             console.log("Boot Action: " + action);
             console.log("Setting Boot Settings: " + ObjectToString2(r));
@@ -10206,13 +10246,22 @@
             var action = d5actionSelect.value, bootSource = null;
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) {
+                // ###BEGIN###{!PowerControl-OneClick}
                 if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot'][idx_d24ForceBootDevice.value - 1]; }
+                // ###END###{!PowerControl-OneClick}
+                // ###BEGIN###{PowerControl-OneClick}
+                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force OCR UEFI Boot Option ' + Q('idx_d24BootMediaIndex').value, 'Force OCR UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
+                // ###END###{PowerControl-OneClick}
             } else {
             // ###END###{PowerControl-Advanced}
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
-                // ###BEGIN###{PowerControl-Advanced}
+            // ###BEGIN###{PowerControl-Advanced}
             }
+
+            // Resetting Force boot data in case it was changed so that it won't be used on the next power action
+            Q('idx_d24ForceBootDevice').value = 0;
+
             // ###END###{PowerControl-Advanced}
             console.log('ChangeBootOrder: ' + bootSource);
             amtstack.CIM_BootConfigSetting_ChangeBootOrder((bootSource == null)?bootSource:'<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">Intel(r) AMT: ' + bootSource + '</Selector></SelectorSet></ReferenceParameters>', powerActionResponse3);
@@ -10225,8 +10274,8 @@
             //console.log("Performing Power State Change...");
             statusbox("Power Action", "Performing power action...");
             var action = d5actionSelect.value;
-            if (action == 100 || action == 201 || action == 203 || action == 300 || action == 401) action = 2; // Power up
-            if (action == 101 || action == 200 || action == 202 || action == 301 || action == 400) action = 10; // Reset
+            if (action == 100 || action == 201 || action == 203 || action == 300 || action == 401 || action == 601) action = 2; // Power up
+            if (action == 101 || action == 200 || action == 202 || action == 301 || action == 400 || action == 600) action = 10; // Reset
             if (action == 104) action = 2; // Power on with Remote Secure Erase
             if (action == 105) action = 10; // Reset with Remote Secure Erase
             // ###BEGIN###{PowerControl-Advanced}

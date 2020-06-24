@@ -22,6 +22,7 @@ var CreateWebServer = function () {
     obj.transfers = [];            // List of currently active file transfers.
     obj.transfersTimer = null;     // When file transfers are active, this is a half second timer.
     obj.onTransfers = null;        // Callback for transfers status.
+    obj.lastBootImageArgs = null;
 
     // Return a random number between min and max
     function random(min, max) { return Math.floor(min + Math.random() * (max - min)); }
@@ -135,7 +136,7 @@ var CreateWebServer = function () {
         var name = ('' + Math.random()).substring(2);
         obj.responses['/' + name] = { type: 'application/octet-stream', file: filePath };
         console.log('https://' + ip + ':' + obj.port + '/' + name);
-        return {
+        obj.lastBootImageArgs = {
             args: btoa(
                 makeUefiBootParam(1, 'http' + ((obj.cert != null)?'s':'') + '://' + ip + ':' + obj.port + '/' + name) +   // OCR_EFI_NETWORK_DEVICE_PATH
                 makeUefiBootParam(20, 0, 1) +                                           // OCR_HTTPS_CERT_SYNC_ROOT_CA
@@ -143,6 +144,7 @@ var CreateWebServer = function () {
                 makeUefiBootParam(30, 60, 2)),                                          // OCR_HTTPS_REQUEST_TIMEOUT (60 seconds)
             argscount: 4
         };
+        return obj.lastBootImageArgs;
     }
 
     return obj;
