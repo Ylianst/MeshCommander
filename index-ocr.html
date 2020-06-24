@@ -9,7 +9,7 @@
 <!-- ###END###{ComputerSelectorNoImages} -->
 <!-- ###BEGIN###{ComputerSelector-Local-ScriptOnly} -->
 <!-- ###END###{ComputerSelector-Local-ScriptOnly} -->
-<html lang="en" style="height:100%">
+<html style="height:100%">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
@@ -86,11 +86,6 @@
 <!-- ###BEGIN###{Terminal} -->
     <script type="text/javascript" src="amt-terminal-0.0.2.js"></script>
 <!-- ###END###{Terminal} -->
-<!-- ###BEGIN###{PowerControl-Advanced} -->
-<!-- ###BEGIN###{PowerControl-OneClick} -->
-    <script type="text/javascript" src="webserver-0.0.1.js"></script>
-<!-- ###END###{PowerControl-Advanced} -->
-<!-- ###END###{PowerControl-OneClick} -->
 <!-- ###BEGIN###{Inflate} -->
     <script type="text/javascript" src="zlib.js"></script>
     <script type="text/javascript" src="zlib-inflate.js"></script>
@@ -207,45 +202,6 @@
         }
     </style>
 <!-- ###END###{DesktopInbandFiles} -->
-<!-- ###BEGIN###{SessionRecording} -->
-    <style>
-        .cameraIcon {
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHdSURBVDhPxZLPTxpREMe/+yKgxF13xbJKBHvBBBuLRkvkCqTBXrhAbz0CiR41oX9AL7019doDSf+OEuFI1CgkShN6IhHwQBrCFlsCr++tTxB/nP0kk/fmOzO7k3mDZ0cS5xgLLleme939MBgMTJ+wNELI91ar9dkU7iBFt6NKpVL51O/3ZyORyJfm1dV0Lpf7wYqJyDEhkkTD4fBbp9P5m/uUWafT+SVpmvbT6P5ZNkVKIUmPNjVElmUoioJ6vQ673X5JLFbrstvths/nGyv2eDxIJZNIp9J4ubQkVODg6wGq1SpCoRB6vZ6LUFbj9XoRCAREChCLxZDP57G6+hqvVlZweJhHIp4wY5mPGQSDQRQKBd4y4JzXafTdNk2mU9Q6aaOOF3O00WzSzcAb0+e2tr5O640G1Rfmhxo3WZEp4cO4y+bGBsrlMkqlklCA84tznJ6djnV5C7k/MsMwMKtpN2MWqKoKdUblUxfKiAlxDjk+OcGExYKd3R2Uz0rw+/1wOBxQZhQUi0WRNeLBB9g+IPE+gWw2i/29fVC2TPzJ4vE4n7rIGiHpuk6v//2Fhf213W4LmQXYk7oXF/kFtVrN3JH72Gw28EX61jGMrcfW57bkqdjU1OTRjfd8AP8BU66nHfOXwycAAAAASUVORK5CYII=);
-            height: 16px;
-            width: 16px;
-            cursor: pointer;
-            border: none;
-            margin-top:2px;
-            margin-right:4px;
-            cursor:pointer;
-            float:right;
-        }
-
-        .videoIcon {
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADaSURBVDhPxdKrEgFRAMbxRWMUJBIZRSRIqiBIXkHwBqLmAcx4Bt2MzowsoAiCQHdZ/2/tcZsda1bwzfz27J5z9uy5rPVrIm6pFNFFATOcoTTRgfouVOGVGHawXT0oNZi6C8p4SdgtM0jdbp1oNs+lEoJm5xk1jqEvndCAkoWZ2RZpvEQvKmqIo4INVjBJoIQpDlD7Eff0Ydb5jSXMcnO6aDSvjp+0UMcenh38zKFTsbUHqggcc4yB87cBBtBxOlnjfZP8VJHESJuYRxtR+EU7P8HQeXr8iEFjWVe3r1ZV/X1h0wAAAABJRU5ErkJggg==);
-            height: 16px;
-            width: 16px;
-            cursor: pointer;
-            border: none;
-            margin-top:2px;
-            margin-right:4px;
-            cursor:pointer;
-            float:right;
-        }
-
-        .videoIconRed {
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAEPSURBVDhPxZOxTsJQFIZvDZPGhTjhQpzBYFwccOUV2HgABxl9BwfCA5jAwkhMCIsDYXJx8QGIsYSFgcG4EQL4/ff0ApsUB//ky3/uac/f9rZ1f1WUuFvn85fYHYyhEcXxPOlXsQr06T2rtysfwEknWAxnWqNHTn6gr8EXa7k13NJ/taXpKPFzCMOS7mbXJV2saOVWIWAEAyvdEp6sdF2YWemm0LNyq/AIOewUyjCBDwjKwjW8wRdMeIwF7hUx3MTrttxLCr8hZMbshQKUlvGH9lcNvqGtAO1uWr1DCaKwiWl1BX7/Dg3Y6N8C9J3odfuATxUp1QHtQ09voUBxD8fwm1Yw5BtoacHs5mc8UM79ANr0QFg91nqAAAAAAElFTkSuQmCC);
-            height: 16px;
-            width: 16px;
-            cursor: pointer;
-            border: none;
-            margin-top:2px;
-            margin-right:4px;
-            cursor:pointer;
-            float:right;
-        }
-    </style>
-<!-- ###END###{SessionRecording} -->
 <!-- ###BEGIN###{Look-Commander} -->
     <!-- ###BEGIN###{!ComputerSelector-Local-ScriptOnly} -->
     <!-- ###BEGIN###{!Mode-LMS} -->
@@ -443,9 +399,6 @@
         <div id="id_lmsData2" style="margin:10px"></div>
     </div>
     <!-- ###END###{Mode-LMS} -->
-    <!-- ###BEGIN###{PowerControl-OneClick} -->
-    <div id=TransferNotification style="display:none;background-color:lightgrey;position:absolute;left:10px;bottom:10px;border-radius:5px;padding:4px;z-index:1000;box-shadow:0px 0px 10px #333"></div>
-    <!-- ###END###{PowerControl-OneClick} -->
     <!-- ###BEGIN###{Mode-NodeWebkit} -->
     <div id=LeftSideToolBar style="position:absolute;left:0px;bottom:0px;width:52px;top:69px;background:#113962;background:linear-gradient(to bottom, #104893 0%,#113962 100%);color:white;display:none">
         <div style="height:23px"></div>
@@ -563,9 +516,6 @@
         <!-- ###BEGIN###{USBSetup} -->
         <div class="menuitem" onclick="toolmenuclick(102)"><span id="id_menuitem2" style="display:none">&bull; </span>USB Setup.bin Editor</div>
         <!-- ###END###{USBSetup} -->
-        <!-- ###BEGIN###{SessionRecording} -->
-        <div class="menuitem" onclick="toolmenuclick(104)"><span id="id_menuitem4" style="display:none">&bull; </span>Session Player</div>
-        <!-- ###END###{SessionRecording} -->
     </div>
     <!-- ###END###{ComputerSelector} -->
     <!-- ###BEGIN###{Mode-LMS} -->
@@ -963,21 +913,21 @@
                         <tr>
                             <td style="padding-top:2px;padding-bottom:2px;background:#CCC">
                                 <div style="float:right;text-align:right">
-                                    <input id="id_tcrbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="CR+LF" title="Toggle what the return key will send" onclick="termToggleCr();Q('id_tcrbutton').blur()">
+                                    <input id="id_tcrbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="CR+LF" title="Toggle what the return key will send" onclick="termToggleCr()">
                                     <!-- ###BEGIN###{TerminalSize} -->
-                                    <input id="id_tsizebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="80x25" title="Toggle terminal size" onclick="termToggleSize();Q('id_tsizebutton').blur()">
+                                    <input id="id_tsizebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="80x25" title="Toggle terminal size" onclick="termToggleSize()">
                                     <!-- ###END###{TerminalSize} -->
-                                    <input id="id_tfxkeysbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Intel (F10 = ESC+[OM)" title="Toggle F1 to F10 keys emulation type" onclick="termToggleFx();Q('id_tfxkeysbutton').blur()">
+                                    <input id="id_tfxkeysbutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Intel (F10 = ESC+[OM)" title="Toggle F1 to F10 keys emulation type" onclick="termToggleFx()">
                                     <!-- ###BEGIN###{Terminal-Enumation-All} -->
-                                    <input id="id_ttypebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Extended Ascii" title="Toggle terminal emulation type" onclick="termToggleType();Q('id_ttypebutton').blur()">&nbsp;
+                                    <input id="id_ttypebutton" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event);return false" class="bottombutton" value="Extended Ascii" title="Toggle terminal emulation type" onclick="termToggleType()">&nbsp;
                                     <!-- ###END###{Terminal-Enumation-All} -->
                                 </div>
                                 <div>
                                     &nbsp;
-                                    <input id="id_toolbtncc" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-C" onclick="termSendKey(3);Q('id_toolbtncc').blur()">
-                                    <input id="id_toolbtncx" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-X" onclick="termSendKey(24);Q('id_toolbtncx').blur()">
-                                    <input id="id_toolbtnes" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="ESC" onclick="termSendKey(27);Q('id_toolbtnes').blur()">
-                                    <input id="id_toolbtnbs" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Backspace" onclick="termSendKey(8);Q('id_toolbtnbs').blur()">
+                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-C" onclick="termSendKey(3)">
+                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-X" onclick="termSendKey(24)">
+                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="ESC" onclick="termSendKey(27)">
+                                    <input type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Backspace" onclick="termSendKey(8)">
                                     <input id="id_tpastebutton" type="button" onkeypress="return false" onkeydown="return false" class="cadbutton" value="Paste" disabled="disabled" onclick="setDialogMode(3,'Paste',3,termPaste)">
                                 </div>
                             </td>
@@ -1011,9 +961,7 @@
                                     <input id="idx_deskFocusBtn" type="button" title="Toggle focus mode, when active only the region around the mouse is updated" onkeypress="return false" onkeydown="return false" value="Focus All" onclick="deskToggleFocus()" style="margin-right:3px">
                                     <!-- ###END###{DesktopFocus} -->
                                     <!-- ###BEGIN###{FileSaver} -->
-                                    <!-- ###BEGIN###{!DesktopRecorder} -->
                                     <input id="idx_deskSaveBtn" type="button" title="Save a screenshot of the remote desktop" onkeypress="return false" onkeydown="return false" value="Save..." onclick="deskSaveImage()" style="margin-right:3px">
-                                    <!-- ###END###{!DesktopRecorder} -->
                                     <!-- ###END###{FileSaver} -->
                                     <input type="button" value="Settings..." title="Edit remote desktop settings" onkeypress="return false" onkeydown="return false" onclick="showDesktopSettings()" style="margin-right:3px">
                                     <!-- ###BEGIN###{IDER} -->
@@ -1054,17 +1002,6 @@
                             <input id="specialkeylistinput" type="button" onkeypress="return false" class="bottombutton" value="Send" onclick="sendSpecialKey()">&nbsp;
                         </div>
                         -->
-                                <!-- ###BEGIN###{DesktopClipboard} -->
-                                <input id="id_DeskKvmClipButton" value="Clipboard" type="button" style="float:right;display:none" onclick=deskClipboard() />
-                                <!-- ###END###{DesktopClipboard} -->
-                                <!-- ###BEGIN###{FileSaver} -->
-                                <!-- ###BEGIN###{DesktopRecorder} -->
-                                <div id="id_DeskRecorderTools" style=float:right>
-                                    <div id=DeskRecordButton class="videoIcon" title="Record remote desktop session to file" onclick=deskRecordSession()></div>
-                                    <div id=DeskSaveImageButton class="cameraIcon" title="Save a screenshot of the remote desktop" onclick=deskSaveImage()></div>
-                                </div>
-                                <!-- ###END###{DesktopRecorder} -->
-                                <!-- ###END###{FileSaver} -->
                                 <!-- ###BEGIN###{Desktop-Multi} -->
                                 <div id="id_DeskScreenSelector" style=float:right></div>
                                 <!-- ###END###{Desktop-Multi} -->
@@ -1595,16 +1532,39 @@
                     </select>
                     <div>Boot Source</div>
                 </div>
-                <div style=height:26px>
-                    <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
-                        <option value=0>None</option>
-                        <option value=1>Index 1</option>
-                        <option value=2>Index 2</option>
-                        <option value=3>Index 3</option>
-                        <option value=3>Index 4</option>
+                <div style=height:26px id=idd_d24BootMediaIndex>
+                    <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange=bootMediaIndexChanged()>
                     </select>
                     <div>Boot Media Index</div>
                 </div>
+                <div style=height:26px id=idd_d24OCRHTTPSParams>
+                    <div style=height:26px><label style='display:inline-block'>HTTPS URL [<a href="javascript:checkAdvHttps()" id="d24OCRHTTPSAdv">+</a>]</label><input type="text" id="d24OCRHTTPSUrl" style="float:right;width:200px" onChange="javacript:checkHttpsUrl()" maxlength=300><br></div>
+                    <div id='idd_d24OCRHTTPSParams_ex' style='display:none'>
+                        <div style=height:26px><label style='display:inline-block'>Certificate SHA256</label><input type="text" id="d24OCRHTTPSCert256" style="float:right;width:200px"maxlength=300><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA256 Hash</label><input type="text" id="d24OCRHTTPSBootImageSHA256" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA512 Hash</label><input type="text" id="d24OCRHTTPSBootImageSHA512" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Certificate Server Name</label><input type="text" id="d24OCRHTTPSCertServerName" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Server Verification Method</label>
+                            <select id="d24OCRHTTPSCertVerifyMethod" style="float:right;width:200px">
+                                <option value=1>Full Name</option>
+                                <option value=2>Domain Suffix</option>
+                                <option value=3>Other</option>
+                            </select><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Sync Root CA with AMT</label><input type="checkbox" id="d24OCRHTTPSCertSync" checked='checked' style="float:right;"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Request Timeout</label><input type="text" id="d24OCRHTTPSReqTimeout" value='0' style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Digest Username</label><input type="text" id="d24OCRHTTPSDigestUsername" maxlength=16 style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Digest Password</label><input type="password" id="d24OCRHTTPSDigestPassword" maxlength=16 style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Optional Data (hex)</label><input type="text" id="d24OCRHTTPSOptionalData" maxlength=100 style="float:right;width:200px"><br></div>
+                    </div>
+                </div>
+                <div style=height:26px id=idd_d24OCRPBAParams>
+                    <div style=height:26px><label style='display:inline-block'>Device Path [<a href="javascript:checkAdvPba()"id="d24OCRPBAAdv">+</a>]</label><input type="text" id="d24OCRPBADevPath" style="float:right;width:200px" maxlength=300><br></div>
+                    <div id='idd_d24OCRPBAParams_ex' style='display:none'>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA256 Hash</label><input type="text" id="d24OCRPBABootImageSHA256" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Image SHA512 Hash</label><input type="text" id="d24OCRPBABootImageSHA512" style="float:right;width:200px"><br></div>
+                        <div style=height:26px><label style='display:inline-block'>Optional Data (hex)</label><input type="text" id="d24OCRPBAOptionalData" maxlength=100 style="float:right;width:200px"><br></div>
+                    </div>
+                </div>                
                 <div style=height:26px id=idd_d24IDERBootDevice>
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
                         <option value=0>Boot to floppy</option>
@@ -1619,7 +1579,7 @@
                         <option id="idx_d24Verbocity2" value=2>Verbose</option>
                         <option id="idx_d24Verbocity3" value=3>Blank Screen</option>
                     </select>
-                    <div>Verbocity</div>
+                    <div>Verbosity</div>
                 </div>
                 <div style=height:26px id=idd_d24RSEPass>
                     <div style="float:right;width:200px"><input type=password id=d24rsepass maxlength=32 style=float:right;width:100%></div>
@@ -1680,7 +1640,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.6';
+        var version = '0.8.3-alpha4';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -1688,9 +1648,7 @@
         var urlvars = {};
         var amtstack;
         var wsstack = null;
-// ###BEGIN###{WsmanBrowser}
-        var AllWsman = 'AMT_8021xCredentialContext,AMT_8021XProfile,AMT_ActiveFilterStatistics,AMT_AgentPresenceCapabilities,AMT_AgentPresenceInterfacePolicy,AMT_AgentPresenceService,AMT_AgentPresenceWatchdog,AMT_AgentPresenceWatchdogAction,AMT_AlarmClockService,IPS_AlarmClockOccurrence,AMT_AssetTable,AMT_AssetTableService,AMT_AuditLog,AMT_AuditPolicyRule,AMT_AuthorizationService,AMT_BootCapabilities,AMT_BootSettingData,AMT_ComplexFilterEntryBase,AMT_CRL,AMT_CryptographicCapabilities,AMT_EACCredentialContext,AMT_EndpointAccessControlService,AMT_EnvironmentDetectionInterfacePolicy,AMT_EnvironmentDetectionSettingData,AMT_EthernetPortSettings,AMT_EventLogEntry,AMT_EventManagerService,AMT_EventSubscriber,AMT_FilterEntryBase,AMT_FilterInSystemDefensePolicy,AMT_GeneralSettings,AMT_GeneralSystemDefenseCapabilities,AMT_Hdr8021Filter,AMT_HeuristicPacketFilterInterfacePolicy,AMT_HeuristicPacketFilterSettings,AMT_HeuristicPacketFilterStatistics,AMT_InterfacePolicy,AMT_IPHeadersFilter,AMT_KerberosSettingData,AMT_ManagementPresenceRemoteSAP,AMT_MessageLog,AMT_MPSUsernamePassword,AMT_NetworkFilter,AMT_NetworkPortDefaultSystemDefensePolicy,AMT_NetworkPortSystemDefenseCapabilities,AMT_NetworkPortSystemDefensePolicy,AMT_PCIDevice,AMT_PETCapabilities,AMT_PETFilterForTarget,AMT_PETFilterSetting,AMT_ProvisioningCertificateHash,AMT_PublicKeyCertificate,AMT_PublicKeyManagementCapabilities,AMT_PublicKeyManagementService,AMT_PublicPrivateKeyPair,AMT_RedirectionService,AMT_RemoteAccessCapabilities,AMT_RemoteAccessCredentialContext,AMT_RemoteAccessPolicyAppliesToMPS,AMT_RemoteAccessPolicyRule,AMT_RemoteAccessService,AMT_SetupAndConfigurationService,AMT_SNMPEventSubscriber,AMT_StateTransitionCondition,AMT_SystemDefensePolicy,AMT_SystemDefensePolicyInService,AMT_SystemDefenseService,AMT_SystemPowerScheme,AMT_ThirdPartyDataStorageAdministrationService,AMT_ThirdPartyDataStorageService,AMT_TimeSynchronizationService,AMT_TLSCredentialContext,AMT_TLSProtocolEndpoint,AMT_TLSProtocolEndpointCollection,AMT_TLSSettingData,AMT_TrapTargetForService,AMT_UserInitiatedConnectionService,AMT_WebUIService,AMT_WiFiPortConfigurationService,CIM_AbstractIndicationSubscription,CIM_Account,CIM_AccountManagementCapabilities,CIM_AccountManagementService,CIM_AccountOnSystem,CIM_AdminDomain,CIM_AlertIndication,CIM_AssignedIdentity,CIM_AssociatedPowerManagementService,CIM_AuthenticationService,CIM_AuthorizationService,CIM_BIOSElement,CIM_BIOSFeature,CIM_BIOSFeatureBIOSElements,CIM_BootConfigSetting,CIM_BootService,CIM_BootSettingData,CIM_BootSourceSetting,CIM_Capabilities,CIM_Card,CIM_Chassis,CIM_Chip,CIM_Collection,CIM_Component,CIM_ComputerSystem,CIM_ComputerSystemPackage,CIM_ConcreteComponent,CIM_ConcreteDependency,CIM_Controller,CIM_CoolingDevice,CIM_Credential,CIM_CredentialContext,CIM_CredentialManagementService,CIM_Dependency,CIM_DeviceSAPImplementation,CIM_ElementCapabilities,CIM_ElementConformsToProfile,CIM_ElementLocation,CIM_ElementSettingData,CIM_ElementSoftwareIdentity,CIM_ElementStatisticalData,CIM_EnabledLogicalElement,CIM_EnabledLogicalElementCapabilities,CIM_EthernetPort,CIM_Fan,CIM_FilterCollection,CIM_FilterCollectionSubscription,CIM_HostedAccessPoint,CIM_HostedDependency,CIM_HostedService,CIM_Identity,CIM_IEEE8021xCapabilities,CIM_IEEE8021xSettings,CIM_Indication,CIM_IndicationService,CIM_InstalledSoftwareIdentity,CIM_KVMRedirectionSAP,CIM_LANEndpoint,CIM_ListenerDestination,CIM_ListenerDestinationWSManagement,CIM_Location,CIM_Log,CIM_LogEntry,CIM_LogicalDevice,CIM_LogicalElement,CIM_LogicalPort,CIM_LogicalPortCapabilities,CIM_LogManagesRecord,CIM_ManagedCredential,CIM_ManagedElement,CIM_ManagedSystemElement,CIM_MediaAccessDevice,CIM_MemberOfCollection,CIM_Memory,CIM_MessageLog,CIM_NetworkPort,CIM_NetworkPortCapabilities,CIM_NetworkPortConfigurationService,CIM_OrderedComponent,CIM_OwningCollectionElement,CIM_OwningJobElement,CIM_PCIController,CIM_PhysicalComponent,CIM_PhysicalElement,CIM_PhysicalElementLocation,CIM_PhysicalFrame,CIM_PhysicalMemory,CIM_PhysicalPackage,CIM_Policy,CIM_PolicyAction,CIM_PolicyCondition,CIM_PolicyInSystem,CIM_PolicyRule,CIM_PolicyRuleInSystem,CIM_PolicySet,CIM_PolicySetAppliesToElement,CIM_PolicySetInSystem,CIM_PowerManagementCapabilities,CIM_PowerManagementService,CIM_PowerSupply,CIM_Privilege,CIM_PrivilegeManagementCapabilities,CIM_PrivilegeManagementService,CIM_ProcessIndication,CIM_Processor,CIM_ProtocolEndpoint,CIM_ProvidesServiceToElement,CIM_Realizes,CIM_RecordForLog,CIM_RecordLog,CIM_RedirectionService,CIM_ReferencedProfile,CIM_RegisteredProfile,CIM_RemoteAccessAvailableToElement,CIM_RemoteIdentity,CIM_RemotePort,CIM_RemoteServiceAccessPoint,CIM_Role,CIM_RoleBasedAuthorizationService,CIM_RoleBasedManagementCapabilities,CIM_RoleLimitedToTarget,CIM_SAPAvailableForElement,CIM_SecurityService,CIM_Sensor,CIM_Service,CIM_ServiceAccessBySAP,CIM_ServiceAccessPoint,CIM_ServiceAffectsElement,CIM_ServiceAvailableToElement,CIM_ServiceSAPDependency,CIM_ServiceServiceDependency,CIM_SettingData,CIM_SharedCredential,CIM_SoftwareElement,CIM_SoftwareFeature,CIM_SoftwareFeatureSoftwareElements,CIM_SoftwareIdentity,CIM_StatisticalData,CIM_StorageExtent,CIM_System,CIM_SystemBIOS,CIM_SystemComponent,CIM_SystemDevice,CIM_SystemPackaging,CIM_UseOfLog,CIM_Watchdog,CIM_WiFiEndpoint,CIM_WiFiEndpointCapabilities,CIM_WiFiEndpointSettings,CIM_WiFiPort,CIM_WiFiPortCapabilities,IPS_AdminProvisioningRecord,IPS_ClientProvisioningRecord,IPS_HostBasedSetupService,IPS_HostIPSettings,IPS_HTTPProxyService,IPS_HTTPProxyAccessPoint,IPS_IderSessionUsingPort,IPS_IPv6PortSettings,IPS_KVMRedirectionSettingData,IPS_KvmSessionUsingPort,IPS_ManualProvisioningRecord,IPS_OptInService,IPS_PowerManagementService,IPS_ProvisioningAuditRecord,IPS_ProvisioningRecordLog,IPS_RasSessionUsingPort,IPS_ScreenConfigurationService,IPS_ScreenSettingData,IPS_SecIOService,IPS_SessionUsingPort,IPS_SolSessionUsingPort,IPS_TLSProvisioningRecord,IPS_WatchDogAction'.split(',');
-// ###END###{WsmanBrowser}
+        var AllWsman = 'AMT_8021xCredentialContext,AMT_8021XProfile,AMT_ActiveFilterStatistics,AMT_AgentPresenceCapabilities,AMT_AgentPresenceInterfacePolicy,AMT_AgentPresenceService,AMT_AgentPresenceWatchdog,AMT_AgentPresenceWatchdogAction,AMT_AlarmClockService,IPS_AlarmClockOccurrence,AMT_AssetTable,AMT_AssetTableService,AMT_AuditLog,AMT_AuditPolicyRule,AMT_AuthorizationService,AMT_BootCapabilities,AMT_BootSettingData,AMT_ComplexFilterEntryBase,AMT_CRL,AMT_CryptographicCapabilities,AMT_EACCredentialContext,AMT_EndpointAccessControlService,AMT_EnvironmentDetectionInterfacePolicy,AMT_EnvironmentDetectionSettingData,AMT_EthernetPortSettings,AMT_EventLogEntry,AMT_EventManagerService,AMT_EventSubscriber,AMT_FilterEntryBase,AMT_FilterInSystemDefensePolicy,AMT_GeneralSettings,AMT_GeneralSystemDefenseCapabilities,AMT_Hdr8021Filter,AMT_HeuristicPacketFilterInterfacePolicy,AMT_HeuristicPacketFilterSettings,AMT_HeuristicPacketFilterStatistics,AMT_InterfacePolicy,AMT_IPHeadersFilter,AMT_KerberosSettingData,AMT_ManagementPresenceRemoteSAP,AMT_MessageLog,AMT_MPSUsernamePassword,AMT_NetworkFilter,AMT_NetworkPortDefaultSystemDefensePolicy,AMT_NetworkPortSystemDefenseCapabilities,AMT_NetworkPortSystemDefensePolicy,AMT_PCIDevice,AMT_PETCapabilities,AMT_PETFilterForTarget,AMT_PETFilterSetting,AMT_ProvisioningCertificateHash,AMT_PublicKeyCertificate,AMT_PublicKeyManagementCapabilities,AMT_PublicKeyManagementService,AMT_PublicPrivateKeyPair,AMT_RedirectionService,AMT_RemoteAccessCapabilities,AMT_RemoteAccessCredentialContext,AMT_RemoteAccessPolicyAppliesToMPS,AMT_RemoteAccessPolicyRule,AMT_RemoteAccessService,AMT_SetupAndConfigurationService,AMT_SNMPEventSubscriber,AMT_StateTransitionCondition,AMT_SystemDefensePolicy,AMT_SystemDefensePolicyInService,AMT_SystemDefenseService,AMT_SystemPowerScheme,AMT_ThirdPartyDataStorageAdministrationService,AMT_ThirdPartyDataStorageService,AMT_TimeSynchronizationService,AMT_TLSCredentialContext,AMT_TLSProtocolEndpoint,AMT_TLSProtocolEndpointCollection,AMT_TLSSettingData,AMT_TrapTargetForService,AMT_UserInitiatedConnectionService,AMT_WebUIService,AMT_WiFiPortConfigurationService,CIM_AbstractIndicationSubscription,CIM_Account,CIM_AccountManagementCapabilities,CIM_AccountManagementService,CIM_AccountOnSystem,CIM_AdminDomain,CIM_AlertIndication,CIM_AssignedIdentity,CIM_AssociatedPowerManagementService,CIM_AuthenticationService,CIM_AuthorizationService,CIM_BIOSElement,CIM_BIOSFeature,CIM_BIOSFeatureBIOSElements,CIM_BootConfigSetting,CIM_BootService,CIM_BootSettingData,CIM_BootSourceSetting,CIM_Capabilities,CIM_Card,CIM_Chassis,CIM_Chip,CIM_Collection,CIM_Component,CIM_ComputerSystem,CIM_ComputerSystemPackage,CIM_ConcreteComponent,CIM_ConcreteDependency,CIM_Controller,CIM_CoolingDevice,CIM_Credential,CIM_CredentialContext,CIM_CredentialManagementService,CIM_Dependency,CIM_DeviceSAPImplementation,CIM_ElementCapabilities,CIM_ElementConformsToProfile,CIM_ElementLocation,CIM_ElementSettingData,CIM_ElementSoftwareIdentity,CIM_ElementStatisticalData,CIM_EnabledLogicalElement,CIM_EnabledLogicalElementCapabilities,CIM_EthernetPort,CIM_Fan,CIM_FilterCollection,CIM_FilterCollectionSubscription,CIM_HostedAccessPoint,CIM_HostedDependency,CIM_HostedService,CIM_Identity,CIM_IEEE8021xCapabilities,CIM_IEEE8021xSettings,CIM_Indication,CIM_IndicationService,CIM_InstalledSoftwareIdentity,CIM_KVMRedirectionSAP,CIM_LANEndpoint,CIM_ListenerDestination,CIM_ListenerDestinationWSManagement,CIM_Location,CIM_Log,CIM_LogEntry,CIM_LogicalDevice,CIM_LogicalElement,CIM_LogicalPort,CIM_LogicalPortCapabilities,CIM_LogManagesRecord,CIM_ManagedCredential,CIM_ManagedElement,CIM_ManagedSystemElement,CIM_MediaAccessDevice,CIM_MemberOfCollection,CIM_Memory,CIM_MessageLog,CIM_NetworkPort,CIM_NetworkPortCapabilities,CIM_NetworkPortConfigurationService,CIM_OrderedComponent,CIM_OwningCollectionElement,CIM_OwningJobElement,CIM_PCIController,CIM_PhysicalComponent,CIM_PhysicalElement,CIM_PhysicalElementLocation,CIM_PhysicalFrame,CIM_PhysicalMemory,CIM_PhysicalPackage,CIM_Policy,CIM_PolicyAction,CIM_PolicyCondition,CIM_PolicyInSystem,CIM_PolicyRule,CIM_PolicyRuleInSystem,CIM_PolicySet,CIM_PolicySetAppliesToElement,CIM_PolicySetInSystem,CIM_PowerManagementCapabilities,CIM_PowerManagementService,CIM_PowerSupply,CIM_Privilege,CIM_PrivilegeManagementCapabilities,CIM_PrivilegeManagementService,CIM_ProcessIndication,CIM_Processor,CIM_ProtocolEndpoint,CIM_ProvidesServiceToElement,CIM_Realizes,CIM_RecordForLog,CIM_RecordLog,CIM_RedirectionService,CIM_ReferencedProfile,CIM_RegisteredProfile,CIM_RemoteAccessAvailableToElement,CIM_RemoteIdentity,CIM_RemotePort,CIM_RemoteServiceAccessPoint,CIM_Role,CIM_RoleBasedAuthorizationService,CIM_RoleBasedManagementCapabilities,CIM_RoleLimitedToTarget,CIM_SAPAvailableForElement,CIM_SecurityService,CIM_Sensor,CIM_Service,CIM_ServiceAccessBySAP,CIM_ServiceAccessPoint,CIM_ServiceAffectsElement,CIM_ServiceAvailableToElement,CIM_ServiceSAPDependency,CIM_ServiceServiceDependency,CIM_SettingData,CIM_SharedCredential,CIM_SoftwareElement,CIM_SoftwareFeature,CIM_SoftwareFeatureSoftwareElements,CIM_SoftwareIdentity,CIM_StatisticalData,CIM_StorageExtent,CIM_System,CIM_SystemBIOS,CIM_SystemComponent,CIM_SystemDevice,CIM_SystemPackaging,CIM_UseOfLog,CIM_Watchdog,CIM_WiFiEndpoint,CIM_WiFiEndpointCapabilities,CIM_WiFiEndpointSettings,CIM_WiFiPort,CIM_WiFiPortCapabilities,IPS_AdminProvisioningRecord,IPS_ClientProvisioningRecord,IPS_HostBasedSetupService,IPS_HostIPSettings,IPS_HTTPProxyService,IPS_HTTPProxyAccessPoint,IPS_IderSessionUsingPort,IPS_IPv6PortSettings,IPS_KVMRedirectionSettingData,IPS_KvmSessionUsingPort,IPS_ManualProvisioningRecord,IPS_OptInService,IPS_ProvisioningAuditRecord,IPS_ProvisioningRecordLog,IPS_RasSessionUsingPort,IPS_ScreenConfigurationService,IPS_ScreenSettingData,IPS_SecIOService,IPS_SessionUsingPort,IPS_SolSessionUsingPort,IPS_TLSProvisioningRecord,IPS_WatchDogAction'.split(',');
         var disconnecturl = null;
 // ###BEGIN###{Terminal}
         var terminal;
@@ -1711,7 +1669,7 @@
         var currentMeshNode = null;
 // ###END###{Mode-MeshCentral2}
         var webcompilerfeatures = [/*###WEBCOMPILERFEATURES###*/];
-        var StatusStrs = ["Disconnected", "Connecting...", "Setup...", "Connected"];
+        var StatusStrs = ['Disconnected', 'Connecting...', 'Setup...', 'Connected'];
 // ###BEGIN###{Scripting}
         var scriptstate;
 // ###END###{Scripting}
@@ -1741,11 +1699,6 @@
         // ###BEGIN###{MeshServerConnect}
         var meshCentralServer = null;
         // ###END###{MeshServerConnect}
-        // ###BEGIN###{PowerControl-Advanced}
-        // ###BEGIN###{PowerControl-OneClick}
-        var webserver = null;
-        // ###END###{PowerControl-OneClick}
-        // ###END###{PowerControl-Advanced}
 
         function startup() {
             // This is a bit freeky, but all HTML input elements are just going to be accessible directly.
@@ -1824,20 +1777,16 @@
             if (urlvars['skiptlshostcheck']) { NW_SkipTlsHostnameCheck = parseInt(urlvars['skiptlshostcheck']); }
             // ###END###{Mode-NodeWebkit}
 
-            // ###BEGIN###{DesktopClipboard}
-            if (urlvars['kvmclip']) { QV('id_DeskKvmClipButton', true); }
-            // ###END###{DesktopClipboard}
-
-            // ###BEGIN###{ContextMenus}
+// ###BEGIN###{ContextMenus}
             document.onclick = function (e) { hideContextMenu(); }
-            // ###END###{ContextMenus}
+// ###END###{ContextMenus}
 
-            // ###BEGIN###{SessionRecording}
+// ###BEGIN###{SessionRecording}
             srec_cleanup();
             Q('srec_PlaySpeed').value = 1;
-            // ###END###{SessionRecording}
+// ###END###{SessionRecording}
 
-            // ###BEGIN###{Mode-LMS}
+// ###BEGIN###{Mode-LMS}
             // Setup LMS
             lms = CreateLmsControl();
             lms.onStateChanged = lmsChangedState;
@@ -1848,14 +1797,14 @@
             QH('id_computername', 'Configuration Console v' + version);
             go(101);
             lmsRefresh();
-            // ###END###{Mode-LMS}
+// ###END###{Mode-LMS}
 
-            // ###BEGIN###{WsmanBrowser}
+// ###BEGIN###{WsmanBrowser}
             // Add all WSMAN objects to WSMAN browser
             for (var w in AllWsman) { var option = document.createElement('option'); option.text = AllWsman[w]; option.id = 'WSB-' + AllWsman[w]; Q('id_QuerySelect').add(option); }
-            // ###END###{WsmanBrowser}
+// ###END###{WsmanBrowser}
 
-            // ###BEGIN###{Desktop}
+// ###BEGIN###{Desktop}
             // Setup the remote desktop
             desktop = CreateAmtRedirect(CreateAmtRemoteDesktop('Desk', Q('id_mainarea')));
             desktop.onStateChanged = onDesktopStateChange;
@@ -1866,16 +1815,16 @@
             var s = '';
             //for (var c = 1; c < 13; c++) s += '<option value="' + (0xffbd + c) + '">F' + c +;
             //QH('specialkeylist', s);
-            // ###END###{Desktop}
+// ###END###{Desktop}
 
-            // ###BEGIN###{Terminal}
+// ###BEGIN###{Terminal}
             // Setup the terminal
             terminal = CreateAmtRedirect(CreateAmtRemoteTerminal('Term'));
             terminal.onStateChanged = onTerminalStateChange;
             // ###BEGIN###{Terminal-Enumation-All}
             Q('id_ttypebutton').value = terminalEmulations[terminal.m.terminalEmulation];
             // ###END###{Terminal-Enumation-All}
-            Q('id_tcrbutton').value = (terminal.m.lineFeed == '\r\n')?"CR+LF":"LF";
+            Q('id_tcrbutton').value = (terminal.m.lineFeed == '\r\n')?'CR+LF':'LF';
 
             QE('idx_connectbutton2', true);
 
@@ -1883,44 +1832,44 @@
             Q('p13').addEventListener('dragover', haltEvent, false);
             Q('p13').addEventListener('dragleave', haltEvent, false);
             Q('p13').addEventListener('drop', terminal_FileSelectHandler, false);
-            // ###END###{Terminal}
+// ###END###{Terminal}
 
-            // Main drag & drop
+            // Master drag & drop
             document.addEventListener('dragover', haltEvent, false);
             document.addEventListener('dragleave', haltEvent, false);
             document.addEventListener('drop', documentFileSelectHandler, false);
 
-            // ###BEGIN###{Certificates}
+// ###BEGIN###{Certificates}
             // Setup Terminal drag & drop
             Q('p16').addEventListener('dragover', haltEvent, false);
             Q('p16').addEventListener('dragleave', haltEvent, false);
             Q('p16').addEventListener('drop', cert_FileSelectHandler, false);
-            // ###END###{Certificates}
+// ###END###{Certificates}
 
-            // ###BEGIN###{CertificateManager}
+// ###BEGIN###{CertificateManager}
             // Setup Certificate Manager drag & drop
             Q('id_certManagerPanel').addEventListener('dragover', haltEvent, false);
             Q('id_certManagerPanel').addEventListener('dragleave', haltEvent, false);
             Q('id_certManagerPanel').addEventListener('drop', cert_importCertOk2, false);
-            // ###END###{CertificateManager}
+// ###END###{CertificateManager}
 
-            // ###BEGIN###{CertificateManager}
+// ###BEGIN###{CertificateManager}
             cert_loadCertificates();
             cert_updateCertificateList();
-            // ###END###{CertificateManager}
+// ###END###{CertificateManager}
 
-            // ###BEGIN###{FileSaver}
+// ###BEGIN###{FileSaver}
             // ###BEGIN###{Desktop}
-            // ###BEGIN###{!Mode-NodeWebkit}
-            if (!Q('Desk')['toBlob']) { QV('idx_deskSaveBtn', false); }// On some browsers like IE, we can't save screen shots. Hide the sceeenshot/capture buttons.
-            // ###END###{!Mode-NodeWebkit}
+            if (!Q('Desk')['toBlob']) { // On some browsers like IE, we can't save screen shots. Hide the scheenshot/capture buttons.
+                QV('idx_deskSaveBtn', false);
+            }
             // ###END###{Desktop}
-            // ###END###{FileSaver}
+// ###END###{FileSaver}
 
-            // ###BEGIN###{ComputerSelector}
+// ###BEGIN###{ComputerSelector}
 
             if (!urlvars['host']) { go(101); }
-            QH('id_computername', format("Remote Management Console v{0}", version));
+            QH('id_computername', 'Remote Management Console v' + version);
 
             // ###BEGIN###{ComputerSelector-Local}
             if (urlvars['host']) {
@@ -1957,18 +1906,18 @@
                 updateComputerList();
                 // ###END###{ComputerSelector-Local-ScriptOnly}
             }
-                // ###BEGIN###{!Mode-NodeWebkit}
+            // ###BEGIN###{!Mode-NodeWebkit}
             else if (urlvars['connect']) { loadServerComputer(); }
-                // ###END###{!Mode-NodeWebkit}
+            // ###END###{!Mode-NodeWebkit}
             else {
                 // ###BEGIN###{Mode-NodeWebkit}
                 if (urlvars['list']) {
                     // Read the computers from a file list
                     var listok = 0;
                     try {
-                        var ctext = require('fs').readFileSync(urlvars['list'], 'utf8');
+                        var ctext = require("fs").readFileSync(urlvars['list'], "utf8");
                         if ((ctext.length > 2) && (ctext.charCodeAt(0) == 65533) && (ctext.charCodeAt(1) == 65533)) { // This is unicode detection
-                            ctext = require('fs').readFileSync(urlvars['list'], 'utf16le');
+                            ctext = require("fs").readFileSync(urlvars['list'], "utf16le");
                             if ((ctext.length > 1) && (ctext.charCodeAt(0) == 65279)) { ctext = ctext.substring(1); }
                         }
                         if (ctext) {
@@ -2008,10 +1957,10 @@
                 }
                 // ###END###{Mode-NodeWebkit}
                 // ###BEGIN###{!Mode-NodeWebkit}
-                // Setup the computer selector
-                loadComputers();
+                    // Setup the computer selector
+                    loadComputers();
                 // ###END###{!Mode-NodeWebkit}
-            }
+                }
             // ###END###{ComputerSelector-Local}
 
             // ###BEGIN###{ComputerSelector-Remote}
@@ -2019,20 +1968,20 @@
             loadServerComputerList();
             // ###END###{ComputerSelector-Remote}
 
-            // ###END###{ComputerSelector}
+// ###END###{ComputerSelector}
 
-            // ###BEGIN###{Mode-Firmware}
+// ###BEGIN###{Mode-Firmware}
             connect('/wsman');
-            // ###END###{Mode-Firmware}
+// ###END###{Mode-Firmware}
 
-            // ###BEGIN###{USBSetup}
+// ###BEGIN###{USBSetup}
             usb_displaySetupBin();
 
             // Add all possible variable types to dialog 16
             var options = '';
-            for (var i in AmtSetupBinVarIds) { for (var j in AmtSetupBinVarIds[i]) { options += '<option value="' + i + '-' + j + '">' + AmtSetupBinVarIds[i][j][1] } }
+            for (var i in AmtSetupBinVarIds) { for (var j in AmtSetupBinVarIds[i]) { options += '<option value="' + i + "-" + j + '">' + AmtSetupBinVarIds[i][j][1] } }
             QH('d16type', options);
-            // ###END###{USBSetup}
+// ###END###{USBSetup}
 
             document.onkeyup = handleKeyUp;
             document.onkeydown = handleKeyDown;
@@ -2053,10 +2002,10 @@
             // ###BEGIN###{Mode-NodeWebkit}
             NW_AutoUpdateCheck();
             // ###BEGIN###{!ComputerSelector-Local-ScriptOnly}
-            if (urlvars['help'] || urlvars['?']) { messagebox("Commander Line Options", '<div style=text-align:left><b>-host:[hostname]</b>, ' + "Hostname or IP of Intel&reg; AMT" + '<br/><b>-user:[username]</b>, ' + "Digest login username" + '<br/><b>-pass:[password]</b>, ' + "Digest login password" + '<br/><b>-tls</b>, ' + "Connect using TLS security" + '<br/><b>-kvm</b>, ' + "Once connected go to remote desktop" + '<br/><b>-kvmfull</b>, ' + "Once connected go to fullscreen remote desktop" + '<br/><b>-kvmonly</b>, ' + "Perform fullscreen remote desktop only" + '<br/><b>-sol</b>, ' + "Once connected go to terminal" + '<br/><b>-script:[file]</b>, ' + "Run a script" + '<br/><b>-autoexit</b>, ' + "Exit after script is done" + '<br/><b>-ignoretls</b>, ' + "Don't check Intel&reg; AMT TLS certificate" + '<br/></div>'); }
+            if (urlvars['help'] || urlvars['?']) { messagebox("Commander Line Options", '<div style=text-align:left><b>-host:[hostname]</b>, Hostname or IP of Intel&reg; AMT<br/><b>-user:[username]</b>, Digest login username<br/><b>-pass:[password]</b>, Digest login password<br/><b>-tls</b>, Connect using TLS security<br/><b>-kvm</b>, Once connected go to remote desktop<br/><b>-kvmfull</b>, Once connected go to fullscreen remote desktop<br/><b>-kvmonly</b>, Perform fullscreen remote desktop only<br/><b>-sol</b>, Once connected go to terminal<br/><b>-script:[file]</b>, Run a script<br/><b>-autoexit</b>, Exit after script is done<br/><b>-ignoretls</b>, Don\'t check Intel&reg; AMT TLS certificate<br/></div>'); }
             // ###END###{!ComputerSelector-Local-ScriptOnly}
             // ###BEGIN###{ComputerSelector-Local-ScriptOnly}
-            if (urlvars['help'] || urlvars['?']) { messagebox("Commander Line Options", '<div style=text-align:left><b>-list:[listfile]</b>, ' + "List of computers to run a script on" + '<br/><b>-script:[file]</b>, ' + "Run a script" + '<br/><b>-autoexit</b>, ' + "Exit after all scripts are done" + '<br/><b>-ignoretls</b>, ' + "Don't check Intel&reg; AMT TLS certificate" + '<br/></div>'); }
+            if (urlvars['help'] || urlvars['?']) { messagebox("Commander Line Options", '<div style=text-align:left><b>-list:[listfile]</b>, List of computers to run a script on<br/><b>-script:[file]</b>, Run a script<br/><b>-autoexit</b>, Exit after all scripts are done<br/><b>-ignoretls</b>, Don\'t check Intel&reg; AMT TLS certificate<br/></div>'); }
             // ###END###{ComputerSelector-Local-ScriptOnly}
             // ###END###{Mode-NodeWebkit}
 
@@ -2066,31 +2015,15 @@
             Q('p24filetable').addEventListener('dragover', p24fileDragOver, false);
             Q('p24filetable').addEventListener('dragleave', p24fileDragLeave, false);
             // ###END###{DesktopInbandFiles}
-
-            // ###BEGIN###{PowerControl-Advanced}
-            // ###BEGIN###{PowerControl-OneClick}
-            // Create a web server to serve One Client Recovery (OCR) disk image files.
-            webserver = CreateWebServer();
-            webserver.generateCertificate();
-            webserver.start(function () { webserver.setupBootImage('C:\\temp\\ubuntu-18.04-desktop-amd64.iso', '127.0.0.1'); });
-            webserver.onTransfers = function (webserver, transfers) {
-                var x = '';
-                for (var i in transfers) { x += '<div style="width:350px;position:relative;padding:3px"><span style="position:absolute;padding:3px;font-weight:bold">' + transfers[i].xfilename + '</span><div style="height:20px;background-color:#4CAF50;width:' + Math.floor((transfers[i].progress.count * 100) / transfers[i].xsize) + '%;border-radius:4px"></div></div>'; }
-                QV('TransferNotification', transfers.length > 0);
-                QH('TransferNotification', x);
-            }
-
-            //console.log('WebServer Cert Hash RAW', webserver.certHashRaw);
-            //console.log('WebServer Cert Hash HEX', webserver.certHashHex);
-            // ###END###{PowerControl-OneClick}
-            // ###END###{PowerControl-Advanced}
         }
 
         function documentFileSelectHandler(e) {
             haltEvent(e);
             // ###BEGIN###{IDER}
             var diskimages = true;
+            console.log(e.dataTransfer.files);
             for (var i = 0; i < e.dataTransfer.files.length; i++) {
+                console.log(i, e.dataTransfer.files[i]);
                 if ((e.dataTransfer.files[i].name.toLowerCase().endsWith('.img') == false) && (e.dataTransfer.files[i].name.toLowerCase().endsWith('.iso') == false)) { diskimages = false; }
             }
             if ((diskimages == true) && (e.dataTransfer != null) && (currentView > 0) && (currentView < 100) && ((e.dataTransfer.files.length == 1) || (e.dataTransfer.files.length == 2))) {
@@ -2246,7 +2179,7 @@
             // Add Mac OS X specific menu
             var os = require('os');
             if (os.platform() == 'darwin') { mainmenu.createMacBuiltin('MeshCommander', { hideEdit: true, hideWindow: true }); }
-            var filemenu = new gui.MenuItem({ label: "File" });
+            var filemenu = new gui.MenuItem({ label: 'File' });
             var filemenusub = new gui.Menu();
             var seperator = false;
             var toolsmenu = null;
@@ -2355,7 +2288,7 @@
             // Explicit exit action not required on Mac. The MacBuiltin menu includes native option to quit application (Quit)
             if (os.platform() != 'darwin') {
                 if (seperator == true) filemenusub.append(new gui.MenuItem({ type: 'separator' }));
-                filemenusub.append(new gui.MenuItem({ label: "Exit", click: NW_Exit }));
+                filemenusub.append(new gui.MenuItem({ label: 'Exit', click: NW_Exit }));
             }
 
             filemenu.submenu  = filemenusub;
@@ -2401,22 +2334,6 @@
                 toolsmenusub.append(new gui.MenuItem({ label: "Settings", click: showDesktopSettings }));
                 toolsmenu.submenu  = toolsmenusub;
             }
-
-            // Language menu
-            var languagemenu = new gui.MenuItem({ label: "Language" });
-            var languagesubmenu = new gui.Menu();
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'en'), label: "English", click: function () { window.location.href = 'commander.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'zh-chs'), label: "Chinese (Simplified)", click: function () { window.location.href = 'commander_zh-chs.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'nl'), label: "Dutch", click: function () { window.location.href = 'commander_nl.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'fr'), label: "French", click: function () { window.location.href = 'commander_fr.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'de'), label: "German", click: function () { window.location.href = 'commander_de.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'it'), label: "Italian", click: function () { window.location.href = 'commander_it.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'ja'), label: "Japanese", click: function () { window.location.href = 'commander_ja.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'pt'), label: "Portuguese", click: function () { window.location.href = 'commander_pt.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'ru'), label: "Russian", click: function () { window.location.href = 'commander_ru.htm'; } }));
-            languagesubmenu.append(new gui.MenuItem({ type: 'checkbox', checked: (document.documentElement.lang == 'es'), label: "Spanish", click: function () { window.location.href = 'commander_es.htm'; } }));
-            languagemenu.submenu = languagesubmenu;
-
             var helpmenu = new gui.MenuItem({ label: "Help" });
             var helpmenusub = new gui.Menu();
             // ###BEGIN###{Look-Commander}
@@ -2459,7 +2376,6 @@
             if (toolsmenu != null) mainmenu.append(toolsmenu);
             if (scriptmenu != null) mainmenu.append(scriptmenu);
             if (securitymenu != null) mainmenu.append(securitymenu);
-            mainmenu.append(languagemenu);
             mainmenu.append(helpmenu);
             gui.Window.get().menu = mainmenu;
         }
@@ -3154,9 +3070,6 @@
             // ###END###{SystemDefense}
             // ###BEGIN###{Desktop}
             QE('id_DeskCAD', false);
-            // ###BEGIN###{DesktopClipboard}
-            QE('id_DeskKvmClipButton', false);
-            // ###END###{DesktopClipboard}
             QE('DeskWD', false);
             QE('deskkeys', false);
             if (urlvars['kvmviewonly']) { QE('id_DeskVO', false); Q('id_DeskVO').checked = true; }
@@ -3260,7 +3173,7 @@
         }
 
         function onProcessChanged(a, b) {
-            QS('id_progressbar').width = ((a * 100) / b) + '%';
+            QS('id_progressbar').width = ((a * 100) / b) + "%";
             if (a == 0) refreshButtons(true); // If nothing is being done, re-enable refresh buttons
 
             // ###BEGIN###{Mode-NodeWebkit}
@@ -3315,9 +3228,6 @@
             // ###BEGIN###{CertificateManager}
             QV('id_menuitem3', currentView == 103);
             // ###END###{CertificateManager}
-            // ###BEGIN###{SessionRecording}
-            QV('id_menuitem4', currentView == 104);
-            // ###END###{SessionRecording}
 
             var d = (QS('id_computerSelectorMenu').display == 'none');
             if (d == true && xxdialogMode) return;
@@ -3342,9 +3252,6 @@
             // ###BEGIN###{CertificateManager}
             QV('id_menuitem3', currentView == 103);
             // ###END###{CertificateManager}
-            // ###BEGIN###{SessionRecording}
-            QV('id_menuitem4', currentView == 104);
-            // ###END###{SessionRecording}
 
             var d = (QS('id_computerSelectorMenu').display == 'none');
             if (x == -1) { QV('id_computerSelectorMenu', false); xxdialogMode = undefined; return; }
@@ -3366,9 +3273,9 @@
             d4name.value = d4tags.value = d4hostname.value = d4password.value = '';
             d4username.value = "admin";
             if (kerberos != null) {
-                QH('d4security', '<option value=0>' + "Digest / None" + '</option><option value=1>' + "Digest / TLS" + '</option><option value=2>' + "Kerberos / None" + '</option><option value=3>' + "Kerberos / TLS" + '</option>');
+                QH('d4security', '<option value=0>Digest / None</option><option value=1>Digest / TLS</option><option value=2>Kerberos / None</option><option value=3>Kerberos / TLS</option>');
             } else {
-                QH('d4security', '<option value=0>' + "Digest / None" + '</option><option value=1>' + "Digest / TLS" + '</option>');
+                QH('d4security', '<option value=0>Digest / None</option><option value=1>Digest / TLS</option>');
             }
             d4security.value = 0;
             setDialogMode(4, "Add Computer", 3, function () { addComputerButton(); });
@@ -3608,16 +3515,16 @@
             var k = Q('d4security').value >= 2;
             // ###BEGIN###{!Mode-NodeWebkit}
             if (k) {
-                computerlist.push({ 'h': Math.random(), 'name': encodeURIComponent(d4name.value), 'host': encodeURIComponent(d4hostname.value), 'tags': encodeURIComponent(d4tags.value), 'user': '*', 'pass': encodeURIComponent(Q('d4kerberos').value), 'tls': d4security.value % 2 });
+                computerlist.push({ 'h': Math.random(), "name": encodeURIComponent(d4name.value), "host": encodeURIComponent(d4hostname.value), "tags": encodeURIComponent(d4tags.value), "user": "*", "pass": encodeURIComponent(Q('d4kerberos').value), "tls": d4security.value % 2 });
             } else {
-                computerlist.push({ 'h': Math.random(), 'name': encodeURIComponent(d4name.value), 'host': encodeURIComponent(d4hostname.value), 'tags': encodeURIComponent(d4tags.value), 'user': encodeURIComponent(d4username.value), 'pass': encodeURIComponent(d4password.value), 'tls': d4security.value % 2 });
+                computerlist.push({ 'h': Math.random(), "name": encodeURIComponent(d4name.value), "host": encodeURIComponent(d4hostname.value), "tags": encodeURIComponent(d4tags.value), "user": encodeURIComponent(d4username.value), "pass": encodeURIComponent(d4password.value), "tls": d4security.value % 2 });
             }
             // ###END###{!Mode-NodeWebkit}
             // ###BEGIN###{Mode-NodeWebkit}
             if (k) {
-                computerlist.push({ 'h': Math.random(), 'name': encodeURIComponent(d4name.value), 'host': encodeURIComponent(d4hostname.value), 'tags': encodeURIComponent(d4tags.value), 'user': '*', 'pass': encodeURIComponent(Q('d4kerberos').value), 'tls': d4security.value % 2, 'tlscerthash': getCertPinning(d4hostname.value) });
+                computerlist.push({ 'h': Math.random(), "name": encodeURIComponent(d4name.value), "host": encodeURIComponent(d4hostname.value), "tags": encodeURIComponent(d4tags.value), "user": "*", "pass": encodeURIComponent(Q('d4kerberos').value), "tls": d4security.value % 2, "tlscerthash": getCertPinning(d4hostname.value) });
             } else {
-                computerlist.push({ 'h': Math.random(), 'name': encodeURIComponent(d4name.value), 'host': encodeURIComponent(d4hostname.value), 'tags': encodeURIComponent(d4tags.value), 'user': encodeURIComponent(d4username.value), 'pass': encodeURIComponent(d4password.value), 'tls': d4security.value % 2, 'tlscerthash': getCertPinning(d4hostname.value) });
+                computerlist.push({ 'h': Math.random(), "name": encodeURIComponent(d4name.value), "host": encodeURIComponent(d4hostname.value), "tags": encodeURIComponent(d4tags.value), "user": encodeURIComponent(d4username.value), "pass": encodeURIComponent(d4password.value), "tls": d4security.value % 2, "tlscerthash": getCertPinning(d4hostname.value) });
             }
             // ###END###{Mode-NodeWebkit}
             saveComputers();
@@ -3640,16 +3547,16 @@
             // If connected to a MeshCentral server, only edit the device name
             // ###BEGIN###{MeshServerConnect}
             if (meshCentralServer != null) {
-                var x = '<div style=height:26px><input id=d11deviceName style=float:right;width:200px value="' + decodeURIComponent(c['name'] ? c['name'] : '') + '"><div>' + "Friendly Name" + '</div></div>';
+                var x = '<div style=height:26px><input id=d11deviceName style=float:right;width:200px value="' + decodeURIComponent(c['name'] ? c['name'] : '') + '"><div>Friendly Name</div></div>';
                 setDialogMode(11, "Edit Device", 3, computerEditMeshOk, x, c);
                 return;
             }
             // ###END###{MeshServerConnect}
 
             if (kerberos != null || c['user'] == '*') {
-                QH('d4security', '<option value=0>' + "Digest / None" + '</option><option value=1>' + "Digest / TLS" + '</option><option value=2>' + "Kerberos / None" + '</option><option value=3>' + "Kerberos / TLS" + '</option>');
+                QH('d4security', '<option value=0>Digest / None</option><option value=1>Digest / TLS</option><option value=2>Kerberos / None</option><option value=3>Kerberos / TLS</option>');
             } else {
-                QH('d4security', '<option value=0>' + "Digest / None" + '</option><option value=1>' + "Digest / TLS" + '</option>');
+                QH('d4security', '<option value=0>Digest / None</option><option value=1>Digest / TLS</option>');
             }
             d4name.value = decodeURIComponent(c['name']?c['name']:'');
             d4tags.value = decodeURIComponent(c['tags']?c['tags']:'');
@@ -3793,14 +3700,14 @@
                     if (securityok == true) {
                         if (computer['tls'] != 0) { extra.push("TLS"); }
                     } else {
-                        extra.push((computer['tls'] == 0) ? NoBreak("No Security") : "TLS");
+                        extra.push((computer['tls'] == 0) ? "No&nbsp;Security" : "TLS");
                     }
                 } else {
-                    extra.push((computer['tls'] == 0) ? NoBreak("No Security") : "TLS");
+                    extra.push((computer['tls'] == 0) ? "No&nbsp;Security" : "TLS");
                 }
                 // ###END###{MeshServerConnect}
                 // ###BEGIN###{!MeshServerConnect}
-                extra.push((computer['tls'] == 0) ? NoBreak("No Security") : "TLS");
+                extra.push((computer['tls'] == 0) ? "No&nbsp;Security" : "TLS");
                 // ###END###{!MeshServerConnect}
                 var name = decodeURIComponent(computer['host']);
                 if (computer['name'] && computer['name'] != '') name = decodeURIComponent(computer['name']);
@@ -4016,7 +3923,7 @@
                 // ###BEGIN###{MeshServerConnect}
                 if (meshCentralServer == null) {
                 // ###END###{MeshServerConnect}
-                if (currentcomputer['user'] != '*') {
+                if (currentcomputer['user'] != "*") {
                     x += addComputerDetailsEntry("Authentication", "Digest / " + EscapeHtml(decodeURIComponent(currentcomputer['user'])));
                 } else {
                     if (currentcomputer['pass'] == '') {
@@ -4045,12 +3952,12 @@
                     var mode = '';
                     if (currentcomputer['pstate'] == 2) { mode = "ACM"; if (currentcomputer['pmode'] == 2) mode = "CCM"; }
                     if (mode != '') mode = ' / ' + mode;
-                    x += addComputerDetailsEntry("Intel&reg; AMT", "v" + currentcomputer['ver'] + mode);
+                    x += addComputerDetailsEntry("Intel&reg AMT", "v" + currentcomputer['ver'] + mode);
                 }
                 if (currentcomputer['date']) { x += addComputerDetailsEntry("Last Connection", new Date(currentcomputer['date']).toDateString()); }
                 if (currentcomputer['digestrealm']) {
                     // ###BEGIN###{ContextMenus}
-                    x += '<div cm="' + NoBreak("Remove Realm...") + '#removeCurrentRealm(' + currentcomputer['h'] + ')">';
+                    x += '<div cm="' + "Remove&nbsp;Realm..." + '#removeCurrentRealm(' + currentcomputer['h'] + ')">';
                     // ###END###{ContextMenus}
                     x += addComputerDetailsEntry("Digest Realm", '<span style=font-size:x-small>' + currentcomputer['digestrealm'] + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentRealm(' + currentcomputer['h'] + ')><u>' + "Remove Realm" + '</u></a></span>');
                     // ###BEGIN###{ContextMenus}
@@ -4062,7 +3969,7 @@
                 if (currentcomputer['tlscerthash']) {
                     if (currentcomputer['tlscert']) {
                         // ###BEGIN###{ContextMenus}
-                        x += '<div cm="' + NoBreak("View Certificate...") + '#viewCurrentPinCertificate(' + currentcomputer['h'] + ')|' + NoBreak("Remove Pinning...") + '#removeCurrentPinCertificate(' + currentcomputer['h'] + ')">';
+                        x += '<div cm="' + "View&nbsp;Certificate..." + '#viewCurrentPinCertificate(' + currentcomputer['h'] + ')|' + "Remove&nbsp;Pinning..." + '#removeCurrentPinCertificate(' + currentcomputer['h'] + ')">';
                         // ###END###{ContextMenus}
                         x += addComputerDetailsEntry("TLS Certificate", '<span title="Cert hash: ' + currentcomputer['tlscerthash'] + '">' + "Pinned to specific certificate" + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=viewCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Show Certificate" + '</u></a> <a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Remove Pinning" + '</u></a></span>');
                         // ###BEGIN###{ContextMenus}
@@ -4070,7 +3977,7 @@
                         // ###END###{ContextMenus}
                     } else {
                         // ###BEGIN###{ContextMenus}
-                        x += '<div cm="' + NoBreak("Remove Pinning...") + '#removeCurrentPinCertificate(' + currentcomputer['h'] + ')">';
+                        x += '<div cm="' + "Remove&nbsp;Pinning..." + '#removeCurrentPinCertificate(' + currentcomputer['h'] + ')">';
                         // ###END###{ContextMenus}
                         x += addComputerDetailsEntry("TLS Certificate", '<span title="Cert hash: ' + currentcomputer['tlscerthash'] + '">' + "Pinned to specific certificate" + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Remove Pinning" + '</u></a></span>');
                         // ###BEGIN###{ContextMenus}
@@ -4130,7 +4037,7 @@
             var x = '<img src=images-commander/cert1.png style=float:right height=32 width=32 />';
             x += 'This certificate is pinned to computer ' + c['name'] + '. When connecting, if this certificate is received the connection will allowed. Hit delete button to un-pin.<br>';
             // ###BEGIN###{FileSaver}
-            //x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadCert(' + h + ')>' + "Download" + '</a>');
+            //x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes, <a style=cursor:pointer;color:blue onclick=downloadCert(" + h + ")>Download</a>");
             // ###END###{FileSaver}
             // ###BEGIN###{!FileSaver}
             //x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes");
@@ -4200,7 +4107,7 @@
             if (urlvars['host']) return;
             // ###BEGIN###{Mode-NodeWebkit}
             var ctext = null;
-            try { ctext = localStorage.getItem('computers'); } catch (ex) { }
+            try { ctext = localStorage.getItem('computers'); } catch (ex) {}
             if (ctext) {
                 try { computerlist = JSON.parse(ctext); } catch (e) {
                     if (ctext.length > 512) { // Add trivial security, not intended to be real security. This just avoids storing data in plain text, but it's almost the same.
@@ -4221,7 +4128,7 @@
             // ###END###{Mode-NodeWebkit}
             // ###BEGIN###{!Mode-NodeWebkit}
             var ctext = null;
-            try { ctext = localStorage.getItem('computers'); } catch (ex) { }
+            try { localStorage.getItem('computers'); } catch (ex) { }
             if (ctext) { try { computerlist = JSON.parse(ctext); } catch (e) { computerlist = []; } }
             // ###END###{!Mode-NodeWebkit}
             updateComputerList();
@@ -4249,7 +4156,7 @@
                 // ###END###{Terminal}
                 var username = currentcomputer['user'];
                 if (username == '') { username = 'admin'; }
-                require('nw.gui').Window.open(window.location.href + '?host=' + currentcomputer['host'] + '&user=' + username + '&pass=' + currentcomputer['pass'] + '&tls=' + currentcomputer['tls'] + adder, { 'icon': 'favicon.png', 'toolbar': false, 'frame': true, 'width': 970, 'min_width': 970, 'height': 760, 'min_height': 640 });
+                require('nw.gui').Window.open(window.location.href + '?host=' + currentcomputer['host'] + '&user=' + username + '&pass=' + currentcomputer['pass'] + '&tls=' + currentcomputer['tls'] + adder, { "icon": "favicon.png", "toolbar": false, "frame": true, "width": 970, "min_width": 970, "height": 760, "min_height": 640 });
                 //require('child_process').exec('nw.exe -host:' + decodeURIComponent(currentcomputer['host']) + ' -user:' + decodeURIComponent(currentcomputer['user']) + ' -pass:' + decodeURIComponent(currentcomputer['pass']) + ((currentcomputer['tls']==1)?' -tls':''), function (error, stdout, stderr) { });
                 return;
             }
@@ -4480,7 +4387,7 @@
 
         function mscript_console(msg, scriptstate) {
             scriptstate.computer['consolemsg'] = msg;
-            scriptstate.computer['consolemsgs'] += (msg + '\r\n');
+            scriptstate.computer['consolemsgs'] += (msg + "\r\n");
             if (scriptstate.computer.consoledialog) { Q(scriptstate.computer.consoledialog).value = scriptstate.computer['consolemsgs']; }
             QH('XI-' + scriptstate.computer['h'], msg);
         }
@@ -4847,7 +4754,7 @@
                 // ###BEGIN###{!ComputerSelector-Local-ScriptOnly}
                 if (urlvars['host'] && urlvars['script']) {
                     try {
-                        var data = require('fs').readFileSync(urlvars['script'], 'utf8');
+                        var data = require("fs").readFileSync(urlvars['script'], "utf8");
                         if (data) { script_onScriptRead( { target: { result: data }} ); }
                     } catch (e) { messagebox("Run Script", "Invalid script file.") }
                 }
@@ -4891,7 +4798,7 @@
             var c = showTlsCertTempCert = cert?cert:wsstack.comm.getPeerCertificate(), x = '<br>';
             if (msg) x = '<div>' + msg + '</div><br />';
             // ###BEGIN###{FileSaver}
-            x += addHtmlValue("Certificate", c.raw.length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadTlsCert()>' + "Download" + '</a>');
+            x += addHtmlValue("Certificate", c.raw.length + " bytes, <a style=cursor:pointer;color:blue onclick=downloadTlsCert()>Download</a>");
             // ###END###{FileSaver}
             // ###BEGIN###{!FileSaver}
             x += addHtmlValue("Certificate", c.raw.length + " bytes");
@@ -4899,14 +4806,14 @@
 
             // Display certificate key usages
             var y = [];
-            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.2') >= 0) { y.push(NoBreak("TLS Client")); }
-            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.3') >= 0) { y.push(NoBreak("Code Signing")); }
+            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.2') >= 0) { y.push("TLS&nbsp;Client"); }
+            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.3') >= 0) { y.push("Code&nbsp;Signing"); }
             if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.4') >= 0) { y.push("EMail"); }
-            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.1') >= 0) { y.push(NoBreak("TLS Server")); }
-            if (c.ext_key_usage.indexOf('2.16.840.1.113741.1.2.1') >= 0) { y.push(NoBreak("Intel&reg; AMT Console")); }
-            if (c.ext_key_usage.indexOf('2.16.840.1.113741.1.2.2') >= 0) { y.push(NoBreak("Intel&reg; AMT Agent")); }
-            if (c.ext_key_usage.indexOf('2.16.840.1.113741.1.2.3') >= 0) { y.push(NoBreak("Intel&reg; AMT Activation")); }
-            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.8') >= 0) { y.push(NoBreak("Time Stamping")); }
+            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.1') >= 0) { y.push("TLS&nbsp;Server"); }
+            if (c.ext_key_usage.indexOf('2.16.840.1.113741.1.2.1') >= 0) { y.push("Intel&reg;&nbsp;AMT Console"); }
+            if (c.ext_key_usage.indexOf('2.16.840.1.113741.1.2.2') >= 0) { y.push("Intel&reg;&nbsp;AMT Agent"); }
+            if (c.ext_key_usage.indexOf('2.16.840.1.113741.1.2.3') >= 0) { y.push("Intel&reg;&nbsp;AMT Activation"); }
+            if (c.ext_key_usage.indexOf('1.3.6.1.5.5.7.3.8') >= 0) { y.push("Time&nbsp;Stamping"); }
             if (y.length > 0) { x += addHtmlValueNoTitle("Certificate Usage", y.join(', ') + '.') + '<br clear=all />'; }
 
             x += '<br><div style="border-bottom:1px solid gray"><i>' + "Certificate Subject" + '</i></div><br>';
@@ -5093,8 +5000,10 @@
                     amtsysstate['CIM_ServiceAvailableToElement'].responses = responses;
                     if ((amtversion > 9) && (amtsysstate['CIM_ServiceAvailableToElement'] != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses.length > 0) && (amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'] == 2)) {
                         // If Intel AMT 10+ and powered on, poll the OS power state.
-                        amtstack.Get('IPS_PowerManagementService', function (stack, name, response, status) {
-                            if (status == 200) { amtsysstate['IPS_PowerManagementService'].response = response.Body; updateSystemStatus(); }
+                        amtstack.Enum('CIM_EnabledLogicalElement', function (stack, name, responses, status) {
+                            if (errcheck(status, stack)) return;
+                            amtsysstate['CIM_EnabledLogicalElement'].responses = responses;
+                            updateSystemStatus();
                         });
                     } else {
                         updateSystemStatus();
@@ -5114,7 +5023,7 @@
             // ###BEGIN###{!Look-Intel-SBT}
             var query = ['CIM_ServiceAvailableToElement', '*AMT_GeneralSettings', 'AMT_EthernetPortSettings', '*AMT_RedirectionService', 'CIM_ElementSettingData'];
             if (amtversion > 5) query.push('IPS_IPv6PortSettings', '*CIM_KVMRedirectionSAP', '*IPS_OptInService','*IPS_KVMRedirectionSettingData');
-            if (amtversion > 9) query.push('*IPS_ScreenConfigurationService', '*IPS_PowerManagementService');
+            if (amtversion > 9) query.push('*IPS_ScreenConfigurationService', 'CIM_EnabledLogicalElement');
             amtstack.BatchEnum('', query, processSystemStatus, true);
             // ###END###{!Look-Intel-SBT}
             // ###BEGIN###{Wireless}
@@ -5174,7 +5083,7 @@
         }
 
         // ###BEGIN###{PowerControl}
-        var DMTFPowerStates = ['', '', "Power on", "Light sleep", "Deep sleep", "Power cycle (Soft off)", "Off - Hard", "Hibernate (Off soft)", "Soft off", "Power cycle (Off-hard)", "Main bus reset", "Diagnostic interrupt (NMI)", "Not applicable", "Off - Soft graceful", "Off - Hard graceful", "Master bus reset graceful", "Power cycle (Off - Soft graceful)", "Power cycle (Off - Hard graceful)", "Diagnostic interrupt (INIT)"];
+        var DMTFPowerStates = ['', '', "Power on", "Light sleep", "Deep sleep", "Power cycle (Soft off)", "Off - Hard", "Hibernate (Off soft)", "Soft off", "Power cycle (Off-hard)", "Master bus reset", "Diagnostic interrupt (NMI)", "Not applicable", "Off - Soft graceful", "Off - Hard graceful", "Master bus reset graceful", "Power cycle (Off - Soft graceful)", "Power cycle (Off - Hard graceful)", "Diagnostic interrupt (INIT)"];
         // ###END###{PowerControl}
         function updateSystemStatus() {
             if ((!amtsysstate) || (currentView > 99)) return;
@@ -5186,7 +5095,12 @@
             if ((amtsysstate['CIM_ServiceAvailableToElement'] != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses != null) && (amtsysstate['CIM_ServiceAvailableToElement'].responses.length > 0)) {
                 t = DMTFPowerStates[amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState']];
                 // If Intel AMT 10+, check OS power saving state.
-                if ((amtversion > 9) && (t == "Power on") && (amtsysstate['IPS_PowerManagementService']) && (amtsysstate['IPS_PowerManagementService'].response) && (amtsysstate['IPS_PowerManagementService'].response['OSPowerSavingState'] == 3)) { t = 'Standby (Connected)'; }
+                if ((amtversion > 9) && (t == "Power on") && (amtsysstate['CIM_EnabledLogicalElement']) && (amtsysstate['CIM_EnabledLogicalElement'].responses) && (amtsysstate['CIM_EnabledLogicalElement'].responses.length > 0)) {
+                    for (var i in amtsysstate['CIM_EnabledLogicalElement'].responses) {
+                        var j = amtsysstate['CIM_EnabledLogicalElement'].responses[i];
+                        if ((j['CreationClassName'] == 'IPS_PowerManagementService') && (j['OSPowerSavingState'] == 3)) { t = 'Standby (Connected)'; }
+                    }
+                }
                 // ###BEGIN###{Terminal}
                 QH('id_p13power', t); // Display the power state on the terminal form
                 // ###END###{Terminal}
@@ -5201,7 +5115,7 @@
 
             host = gs['HostName'];
             y = gs['DomainName'];
-            if (y != null && y.length > 0) host += '.' + y;
+            if (y != null && y.length > 0) host += "." + y;
             if (host.length == 0) { host = ('<i>' + "None" + '</i>'); } else { host = EscapeHtml(host); }
             x += TableEntry("Name & Domain", addLinkConditional(host, 'showEditNameDlg()', xxAccountAdminName));
             if (HardwareInventory) x += TableEntry("System ID", guidToStr(HardwareInventory['CIM_ComputerSystemPackage'].response['PlatformGUID'].toLowerCase()));
@@ -5215,28 +5129,28 @@
                 // ###END###{!Look-Intel-SBT}
 
                 // ###BEGIN###{Look-Intel-SBT}
-                x += TableEntry("Intel&reg; SBT", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; SBT", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-Intel-SBT}
                 // ###BEGIN###{Look-Intel-SM}
-                x += TableEntry("Intel&reg; SM", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; SM", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-Intel-SM}
                 // ###BEGIN###{Look-Intel-AMT}
-                x += TableEntry("Intel&reg; AMT", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; AMT", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-Intel-AMT}
                 // ###BEGIN###{Look-Commander}
-                x += TableEntry("Intel&reg; ME", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; ME", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-Commander}
                 // ###BEGIN###{Look-ISDU}
-                x += TableEntry("Intel&reg; ME", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; ME", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-ISDU}
                 // ###BEGIN###{Look-BrandedCommander}
-                x += TableEntry("Intel&reg; ME", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; ME", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-BrandedCommander}
                 // ###BEGIN###{Look-Unite}
-                x += TableEntry("Intel&reg; ME", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; ME", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-Unite}
                 // ###BEGIN###{Look-MeshCentral}
-                x += TableEntry("Intel&reg; ME", 'v' + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
+                x += TableEntry("Intel&reg; ME", "v" + getItem(amtlogicalelements, 'InstanceID', 'AMT')['VersionString'] + mode);
                 // ###END###{Look-MeshCentral}
 
                 // ###BEGIN###{ComputerSelector}
@@ -5255,18 +5169,18 @@
 
             // ###BEGIN###{MeshServerConnect}
             if (meshCentralServer != null) {
-                QH('id_computername', "Computer: " + ((gs['HostName'] == '') ? ('<i>' + "None" + '</i>') : gs['HostName']) + ", Server: " + meshCentralServer.host);
+                QH('id_computername', 'Computer: ' + ((gs['HostName'] == '') ? ('<i>' + "None" + '</i>') : gs['HostName']) + ', Server: ' + meshCentralServer.host);
             } else {
-                QH('id_computername', "Computer: " + ((gs['HostName'] == '') ? ('<i>' + "None" + '</i>') : gs['HostName']));
+                QH('id_computername', 'Computer: ' + ((gs['HostName'] == '') ? ('<i>' + "None" + '</i>') : gs['HostName']));
             }
             // ###END###{MeshServerConnect}
             // ###BEGIN###{!MeshServerConnect}
-            QH('id_computername', "Computer: " + ((gs['HostName'] == '') ? ('<i>' + "None" + '</i>') : gs['HostName']));
+            QH('id_computername', 'Computer: ' + ((gs['HostName'] == '') ? ('<i>' + "None" + '</i>') : gs['HostName']));
             // ###END###{!MeshServerConnect}
 
             // ###END###{!Mode-MeshCentral2}
             // ###BEGIN###{Mode-NodeWebkit}
-            if (gs['HostName'] != '') { require('nw.gui').Window.get().title = NW_WindowTitle + ' - ' + gs['HostName']; } else { require('nw.gui').Window.get().title = NW_WindowTitle; }
+            if (gs['HostName'] != '') { require('nw.gui').Window.get().title = NW_WindowTitle + " - " + gs['HostName']; } else { require('nw.gui').Window.get().title = NW_WindowTitle; }
             // ###END###{Mode-NodeWebkit}
 
             // ###BEGIN###{PowerControl}
@@ -5298,17 +5212,17 @@
                 if (sol) features += ", Serial-over-LAN";
                 if (ider) features += ", IDE-Redirect";
                 if (kvm) features += ", KVM";
-                if (features == '') features = '  ' + "None";
+                if (features == '') features = "  None";
                 x += TableEntry("Active Features", addLinkConditional(features.substring(2), 'showFeaturesDlg()', xxAccountAdminName));
             }
 
             if ((amtsysstate['IPS_KVMRedirectionSettingData'] != null) && (amtsysstate['IPS_KVMRedirectionSettingData'].response)) {
                 var desktopSettings = amtsysstate['IPS_KVMRedirectionSettingData'].response;
-                var screenname = "Primary display";
-                if ((amtversion > 7) && (desktopSettings['DefaultScreen'] !== undefined) && (desktopSettings['DefaultScreen'] < 255)) { screenname = ["Primary display", "Secondary display", "3rd display"][desktopSettings['DefaultScreen']]; }
-                features = '<span title="' + format("The default remote display is {0}", screenname.toLowerCase()) + '">' + screenname + '</span>';
+                var screenname = 'Primary display';
+                if ((amtversion > 7) && (desktopSettings['DefaultScreen'] !== undefined) && (desktopSettings['DefaultScreen'] < 255)) { screenname = ['Primary display', 'Secondary display', '3rd display'][desktopSettings['DefaultScreen']]; }
+                features = '<span title="The default remote display is the ' + screenname.toLowerCase() + '">' + screenname + '</span>';
                 if (desktopSettings['Is5900PortEnabled'] == true) { features += ", Port 5900 enabled"; }
-                if (desktopSettings['OptInPolicy'] == true) { features += ", " + desktopSettings['OptInPolicyTimeout'] + ' ' + ((desktopSettings['OptInPolicyTimeout'] > 0)?"seconds opt-in":"second opt-in"); }
+                if (desktopSettings['OptInPolicy'] == true) { features += ", " + desktopSettings['OptInPolicyTimeout'] + " second" + ((desktopSettings['OptInPolicyTimeout'] > 0)?'s':'') + " opt-in"; }
                 features += ", " + desktopSettings['SessionTimeout'] + " minute" + ((desktopSettings['SessionTimeout'] > 0) ? 's' : '') + " session timeout";
 
                 // Screen blanking on AMT 10 and higher
@@ -5372,17 +5286,15 @@
             // ###END###{!Look-Intel-SBT}
 
             if (amtdeltatime) { x += TableEntry("Date & Time", addLinkConditional(new Date(new Date().getTime() + amtdeltatime).toLocaleString(), 'syncClock()', xxAccountAdminName)); }
-            var buttons = AddRefreshButton('PullSystemStatus()') + ' ';
+            var buttons = AddRefreshButton('PullSystemStatus()') + " ";
             // ###BEGIN###{PowerControl}
-            buttons += AddButton("Power Actions...", 'showPowerActionDlg()') + ' ';
+            buttons += AddButton("Power Actions...", 'showPowerActionDlg()') + " ";
             // ###END###{PowerControl}
-            // ###BEGIN###{WsmanBrowser}
             // ###BEGIN###{FileSaver}
-            buttons += AddButton("Save State...", 'saveEntireAmtState()') + ' ';
+            buttons += AddButton("Save State...", 'saveEntireAmtState()') + " ";
             // ###END###{FileSaver}
-            // ###END###{WsmanBrowser}
             // ###BEGIN###{Scripting}
-            buttons += AddButton("Run Script...", 'script_runScriptDlg()') + ' ';
+            buttons += AddButton("Run Script...", 'script_runScriptDlg()') + " ";
             // ###END###{Scripting}
             x += TableEnd(buttons);
             QH('id_TableSysStatus', x);
@@ -5414,7 +5326,7 @@
             x += TableEntry("Name & Domain", addLinkConditional(host + fqdnshare, 'showEditNameDlg(1)', xxAccountAdminName));
 
             // Dynamic DNS
-            var ddns = "Disabled";
+            var ddns = 'Disabled';
             if (gs['DDNSUpdateEnabled'] == true) {
                 ddns = "Enabled each " + gs['DDNSPeriodicUpdateInterval'] + " minutes, TTL is " + gs['DDNSTTL'] + " minutes";
             } else if (gs['DDNSUpdateByDHCPServerEnabled'] == true) {
@@ -5428,7 +5340,7 @@
                 if (z['WLANLinkProtectionLevel'] || (y == 1)) { amtwirelessif = y; } // Set the wireless interface, this seems to cover new wireless only computers and older computers with dual interfaces.
                 if ((y == 0) && (amtwirelessif != y) && (z['MACAddress'] == '00-00-00-00-00-00')) { continue; } // On computers with only wireless, the wired interface will have a null MAC, skip it.
                 if (y == 0) systemdefense++;
-                x += '<br><h2>' + ((amtwirelessif == y)?"Wireless Interface":"Wired Interface") + '</h2>';
+                x += '<br><h2>' + ((amtwirelessif == y)?"Wireless":"Wired") + " Interface</h2>";
                 x += TableStart();
 
                 /*
@@ -5485,7 +5397,7 @@
 
                 // Display IPv4 current settings
                 x += TableEntry("IPv4 address", isIpAddress(z['IPAddress'],"None"));
-                if (isIpAddress(z['DefaultGateway'])) { x += TableEntry("IPv4 gateway / Mask", z['DefaultGateway'] + ' / ' + isIpAddress(z['SubnetMask'],"None")); }
+                if (isIpAddress(z['DefaultGateway'])) { x += TableEntry("IPv4 gateway / Mask", z['DefaultGateway'] + " / " + isIpAddress(z['SubnetMask'],"None")); }
                 
                 var dns = z['PrimaryDNS'];
                 if (isIpAddress(dns)) {
@@ -5496,7 +5408,7 @@
                 if ((amtsysstate['IPS_IPv6PortSettings'].status == 200) && (amtversion > 5)) {
                     // Check if IPv6 is enabled for this interface
                     var zz = amtsysstate['IPS_IPv6PortSettings'].responses[y];
-                    var ipv6state = "Disabled", ipv6, ipv6manual, elementSettings = amtsysstate['CIM_ElementSettingData'].responses;
+                    var ipv6state = 'Disabled', ipv6, ipv6manual, elementSettings = amtsysstate['CIM_ElementSettingData'].responses;
                     for (var i = 0; i < elementSettings.length; i++) {
                         if (elementSettings[i]['SettingData'] && elementSettings[i]['SettingData']['ReferenceParameters']['SelectorSet']['Selector']['Value'] == 'Intel(r) IPS IPv6 Settings ' + y) {
                             ipv6 = (elementSettings[i]['IsCurrent'] == 1);
@@ -5506,7 +5418,7 @@
                     // Check if manual addresses have been added
                     if (ipv6 == true) { 
                         ipv6manual = isIpAddress(zz['IPv6Address']) || isIpAddress(zz['DefaultRouter']) || isIpAddress(zz['PrimaryDNS']) || isIpAddress(zz['SecondaryDNS']);
-                        ipv6state = (ipv6manual ? "Enabled, Automatic & manual addresses" : "Enabled, Automatic addresses");
+                        ipv6state = 'Enabled, Automatic ' + (ipv6manual?"& manual":'') + " addresses";
                     }
 
                     // Display IPv6 current settings
@@ -5559,10 +5471,10 @@
         function showLinkPolicyDlg(y) {
             if (xxdialogMode) return;
             var z = amtsysstate['AMT_EthernetPortSettings'].responses[y], s = '';
-            s += '<label><input type=checkbox id=d11p1 value=1 ' + ((z['LinkPolicy'].indexOf(1) >= 0) ? 'checked' : '') + '>Available in S0/AC - Powered on & plugged in</label><br>';
-            s += '<label><input type=checkbox id=d11p2 value=14 ' + ((z['LinkPolicy'].indexOf(14) >= 0) ? 'checked' : '') + '>Available in Sx/AC - Sleeping & plugged in</label><br>';
-            s += '<label><input type=checkbox id=d11p3 value=16 ' + ((z['LinkPolicy'].indexOf(16) >= 0) ? 'checked' : '') + '>Available in S0/DC - Powered on & on battery</label><br>';
-            s += '<label><input type=checkbox id=d11p4 value=224 ' + ((z['LinkPolicy'].indexOf(224) >= 0) ? 'checked' : '') + '>Available in Sx/DC - Sleeping & on battery</label><br>';
+            s += '<label><input type=checkbox id=d11p1 value=1 ' + ((z['LinkPolicy'].indexOf(1) >= 0) ? "checked" : '') + '>Available in S0/AC - Powered on & plugged in</label><br>';
+            s += '<label><input type=checkbox id=d11p2 value=14 ' + ((z['LinkPolicy'].indexOf(14) >= 0) ? "checked" : '') + '>Available in Sx/AC - Sleeping & plugged in</label><br>';
+            s += '<label><input type=checkbox id=d11p3 value=16 ' + ((z['LinkPolicy'].indexOf(16) >= 0) ? "checked" : '') + '>Available in S0/DC - Powered on & on battery</label><br>';
+            s += '<label><input type=checkbox id=d11p4 value=224 ' + ((z['LinkPolicy'].indexOf(224) >= 0) ? "checked" : '') + '>Available in Sx/DC - Sleeping & on battery</label><br>';
             setDialogMode(11, "Link Policy", 3, showLinkPolicyDlgEx, s, y);
         }
 
@@ -5592,7 +5504,6 @@
             }
         }
 
-// ###BEGIN###{WsmanBrowser}
 // ###BEGIN###{FileSaver}
         var IntelAmtEntireState;
         var IntelAmtEntireStateCalls;
@@ -5600,7 +5511,7 @@
             if (xxdialogMode) return;
             var n = '', d = new Date();
             if (amtsysstate) { n = '-' + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
-            n += '-' + d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);;
+            n += '-' + d.getFullYear() + '-' + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + "-" + ("0" + d.getMinutes()).slice(-2);;
             idx_d19savestatefilename.value = 'amtstate' + n + '.json';
             setDialogMode(19, "Save Entire Intel&reg; AMT State", 3, saveEntireAmtStateOk);
         }
@@ -5636,7 +5547,6 @@
             // ###END###{Mode-NodeWebkit}
         }
 // ###END###{FileSaver}
-// ###END###{WsmanBrowser}
 
 // ###BEGIN###{Desktop-Settings}
 
@@ -5689,7 +5599,7 @@
         }
 
         function showDesktopSettingsDlgOk3(stack, name, response, status) {
-            if (status != 200) { messagebox("Error", format("Screen Blanking could not be set, blanking may not be supported on this system ({0}).", status)); return; }
+            if (status != 200) { messagebox("Error", "Screen Blanking could not be set, blanking may not be supported on this system (" + status + ")."); return; }
             amtstack.Get('IPS_ScreenConfigurationService', function (stack, name, response, status) {
                 if (status == 200) { amtsysstate['IPS_ScreenConfigurationService'].response = response.Body; updateSystemStatus(); }
             }, 0, 1);
@@ -5719,10 +5629,10 @@
             if (processMessageLog0responses != null) { fr = ((processMessageLog0responses[0]['IsFrozen'] == true) ? AddButton("Un-freeze Log", 'FreezeLog(0)') : AddButton("Freeze Log", 'FreezeLog(1)')); }
 
             // ###BEGIN###{!FileSaver}
-            x += TableEnd('<div style=float:right><input id=eventFilter placeholder="' + "Filter" + '" style=margin:4px onkeyup=eventFilter()>&nbsp;</div><div>&nbsp;' + AddRefreshButton('PullEventLog(1)') + AddButton("Clear Log", 'ClearLog()') + fr);
+            x += TableEnd('<div style=float:right><input id=eventFilter placeholder=Filter style=margin:4px onkeyup=eventFilter()>&nbsp;</div><div>&nbsp;' + AddRefreshButton('PullEventLog(1)') + AddButton("Clear Log", 'ClearLog()') + fr);
             // ###END###{!FileSaver}
             // ###BEGIN###{FileSaver}
-            x += TableEnd('<div style=float:right><input id=eventFilter placeholder="' + "Filter" + '" style=margin:4px onkeyup=eventFilter()>&nbsp;</div><div>&nbsp;' + AddRefreshButton('PullEventLog(1)') + AddButton("Clear Log", 'ClearLog()') + AddButton("Save...", 'SaveEventLog()') + fr);
+            x += TableEnd('<div style=float:right><input id=eventFilter placeholder=Filter style=margin:4px onkeyup=eventFilter()>&nbsp;</div><div>&nbsp;' + AddRefreshButton('PullEventLog(1)') + AddButton("Clear Log", 'ClearLog()') + AddButton("Save...", 'SaveEventLog()') + fr);
             // ###END###{FileSaver}
             QH('id_TableEventLog', x + '<br>');
         }
@@ -5743,7 +5653,7 @@
                 y++;
                 var icon = 1, m = messages[i];
                 if (m['EventSeverity'] >= 8) { icon = 2; } if (m['EventSeverity'] >= 16) { icon = 3; }
-                x += '<tr id=xamtevent' + i + ' class=r3 onclick=showEventDetails(' + i + ')><td class=r1><p><div class=icon' + icon + ' style=display:block;float:left;margin-left:5px;margin-right:5px></div>' + (parseInt(i) + 1) + '<td class=r1 title="' + m['Time'].toLocaleString() + '">' + m['Time'].toLocaleDateString('en', { year: 'numeric', month: '2-digit', day: 'numeric' }) + '<br>' + m['Time'].toLocaleTimeString('en', { hour:'2-digit', minute:'2-digit', second:'2-digit' }) + '<td class=r1>' + m['EntityStr'].replace('(r)', '&reg;') + '<td class=r1>' + m['Desc'];
+                x += '<tr id=xamtevent' + i + ' class=r3 onclick=showEventDetails(' + i + ')><td class=r1><p><div class=icon' + icon + ' style=display:block;float:left;margin-left:5px;margin-right:5px></div>' + (parseInt(i) + 1) + '<td class=r1 title="' + m['Time'].toLocaleString() + '">' + m['Time'].toLocaleDateString('en', { year: "numeric", month: "2-digit", day: "numeric" }) + '<br>' + m['Time'].toLocaleTimeString('en', { hour:"2-digit", minute:"2-digit", second:"2-digit" }) + '<td class=r1>' + m['EntityStr'].replace("(r)", "&reg;") + '<td class=r1>' + m['Desc'];
             }
             x += TableEnd(y == 0 ? '&nbsp;' : '');
             QH('id_TableEventLog2', x + '<br>');
@@ -5853,7 +5763,7 @@
             for (var i in subscriptionsFilters) { x += '<option value="' + subscriptionsFilters[i]['InstanceID'] + '">' + subscriptionsFilters[i]['CollectionName'].substring(13) + '</option>'; }
             x += '</select><div style=padding-top:4px>' + "Filter" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px><input id=suburl style=float:right;width:260px maxlength=253 onkeyup=newSubscriptionUpdate() value="http://"><div style=padding-top:4px>' + "URL" + '</div></div>';
-            x += '<div style=height:26px;margin-top:4px><select id=subauth style=float:right;width:260px onchange=newSubscriptionUpdate()><option value=0>' + "None" + '</option><option value=1>' + "Digest" + '</option></select><div style=padding-top:4px>' + "Authentication" + '</div></div>';
+            x += '<div style=height:26px;margin-top:4px><select id=subauth style=float:right;width:260px onchange=newSubscriptionUpdate()><option value=0>None</option><option value=1>' + "Digest" + '</option></select><div style=padding-top:4px>' + "Authentication" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px id=subxuser><input id=subuser style=float:right;width:260px maxlength=32 onkeyup=newSubscriptionUpdate()><div style=padding-top:4px>' + "Username" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px id=subxpass><input id=subpass style=float:right;width:260px maxlength=32 onkeyup=newSubscriptionUpdate()><div style=padding-top:4px>' + "Password" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px><input id=subargs style=float:right;width:260px maxlength=128><div style=padding-top:4px>' + "Arguments" + '</div></div>';
@@ -5919,10 +5829,10 @@
             auditLog = messages;
             var i, x = '<table class=log1 cellpadding=0 cellspacing=0 style=width:100%;border-radius:8px>';
             // ###BEGIN###{!FileSaver}
-            x += TableEnd('<div style=float:right><input id=auditFilter placeholder="' + "Filter" + '" style=margin:4px onkeyup=auditFilter()>&nbsp;</div><div> ' + AddRefreshButton('PullAuditLog(1)') + AddButton("Clear Log", 'ClearAuditLog()') /* + AddButton("Settings...", 'ShowAuditLogSettings()')*/) + '<br>';
+            x += TableEnd('<div style=float:right><input id=auditFilter placeholder=Filter style=margin:4px onkeyup=auditFilter()>&nbsp;</div><div> ' + AddRefreshButton('PullAuditLog(1)') + AddButton("Clear Log", 'ClearAuditLog()') /* + AddButton("Settings...", 'ShowAuditLogSettings()')*/) + '<br>';
             // ###END###{!FileSaver}
             // ###BEGIN###{FileSaver}
-            x += TableEnd('<div style=float:right><input id=auditFilter placeholder="' + "Filter" + '" style=margin:4px onkeyup=auditFilter()>&nbsp;</div><div> ' + AddRefreshButton('PullAuditLog(1)') + AddButton("Save...", 'SaveAuditLog()') + AddButton("Clear Log", 'ClearAuditLog()') /* + AddButton("Settings...", 'ShowAuditLogSettings()')*/) + '<br>';
+            x += TableEnd('<div style=float:right><input id=auditFilter placeholder=Filter style=margin:4px onkeyup=auditFilter()>&nbsp;</div><div> ' + AddRefreshButton('PullAuditLog(1)') + AddButton("Save...", 'SaveAuditLog()') + AddButton("Clear Log", 'ClearAuditLog()') /* + AddButton("Settings...", 'ShowAuditLogSettings()')*/) + '<br>';
             // ###END###{FileSaver}
             if (messages.length == 0) {
                 x = "No audit log events found.";
@@ -5938,7 +5848,7 @@
                     if (m['Event']) description += ", " + m['Event'];
                     if (m['ExStr'] != null) description += ", " + m['ExStr'];
                     if (initiator != '' && addr != '') initiator += ", ";
-                    x += '<tr id=xamtaudit' + i + ' class=r3 onclick=showAuditDetails(' + i + ')><td class=r1 title="' + m['Time'].toLocaleString() + '">&nbsp;&nbsp;' + m['Time'].toLocaleDateString('en', { year: 'numeric', month: '2-digit', day: 'numeric' }) + '<br>&nbsp;&nbsp;' + m['Time'].toLocaleTimeString('en', { hour:'2-digit', minute:'2-digit', second:'2-digit' }) + '<td class=r1>' + initiator + addr + '<td class=r1>' + description;
+                    x += '<tr id=xamtaudit' + i + ' class=r3 onclick=showAuditDetails(' + i + ')><td class=r1 title="' + m['Time'].toLocaleString() + '">&nbsp;&nbsp;' + m['Time'].toLocaleDateString('en', { year: "numeric", month: "2-digit", day: "numeric" }) + '<br>&nbsp;&nbsp;' + m['Time'].toLocaleTimeString('en', { hour:"2-digit", minute:"2-digit", second:"2-digit" }) + '<td class=r1>' + initiator + addr + '<td class=r1>' + description;
                 }
                 x += TableEnd(y == 0 ? '&nbsp;' : '') + '<br>';
             }
@@ -6052,10 +5962,10 @@
 
         function getTlsSecurityState(x) {
             if (xxTlsSettings[x]['Enabled'] == false) return "Disabled";
-            var r = ((xxTlsSettings[x]['MutualAuthentication'] == true) ? "Mutual-auth TLS" : "Server-auth TLS") + ((xxTlsSettings[x]['AcceptNonSecureConnections'] == true) ? " and non-TLS" : '');
+            var r = ((xxTlsSettings[x]['MutualAuthentication'] == true) ? 'Mutual-auth TLS' : 'Server-auth TLS') + ((xxTlsSettings[x]['AcceptNonSecureConnections'] == true) ? " and non-TLS" : '');
             if ((xxTlsSettings[x]['MutualAuthentication'] == true) && (xxTlsSettings[x]['TrustedCN'])) {
                 var trustedCn = MakeToArray(xxTlsSettings[x]['TrustedCN']);
-                if (trustedCn.length > 0) { r += ', ' + ((trustedCn.length > 1) ? 'Trusted names' : 'Trusted name') + ': ' + trustedCn.join(', ') + '.'; }
+                if (trustedCn.length > 0) { r += ", Trusted name" + ((trustedCn.length > 1)?'s':'') + ": " + trustedCn.join(', ') + "."; }
             }
             return r;
         }
@@ -6104,7 +6014,7 @@
             if (xxdialogMode) return;
             var c = xxCertificates[h], x = '<br>';
             // ###BEGIN###{FileSaver}
-            x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadCert(' + h + ')>' + "Download" + '</a>');
+            x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes, <a style=cursor:pointer;color:blue onclick=downloadCert(" + h + ")>Download</a>");
             // ###END###{FileSaver}
             // ###BEGIN###{!FileSaver}
             x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes");
@@ -6128,7 +6038,7 @@
             }
             */
 
-            x += '<br><div style="border-bottom:1px solid gray"><i>' + "Certificate Subject" + '</i></div><br>';
+            x += '<br><div style="border-bottom:1px solid gray"><i>Certificate Subject</i></div><br>';
             for (var i in c.XSubject) { if (c.XSubject[i]) { x += addHtmlValue(xxCertSubjectNames[i] ? xxCertSubjectNames[i] : i, EscapeHtml(c.XSubject[i])); } }
             // x += addHtmlValueNoTitle("Fingerprint", c.fingerprint.substring(0,29) + '<br />' + c.fingerprint.substring(30)); // TODO: Parse the certificate using Forge and get the fingerprint
             x += '<br><div style="border-bottom:1px solid gray"><i>' + "Issuer Certificate" + '</i></div><br>';
@@ -6967,7 +6877,7 @@
             if (xxdialogMode) return;
             var x = '';
             x += '<div style=height:26px;margin-top:4px><select id=policySelection style=float:right;width:266px><option value=-1>' + "None";
-            for (var i in xxSystemDefense['AMT_SystemDefensePolicy'].responses) { x += '<option value=' + i + ((xxSystemDefenceLinkedPolicy[network] && xxSystemDefense['AMT_SystemDefensePolicy'].responses[i]['InstanceID'] == xxSystemDefenceLinkedPolicy[network]['InstanceID']) ? ' selected' : '') + '>' + xxSystemDefense['AMT_SystemDefensePolicy'].responses[i]['PolicyName']; }
+            for (var i in xxSystemDefense['AMT_SystemDefensePolicy'].responses) { x += '<option value=' + i + ((xxSystemDefenceLinkedPolicy[network] && xxSystemDefense['AMT_SystemDefensePolicy'].responses[i]['InstanceID'] == xxSystemDefenceLinkedPolicy[network]['InstanceID']) ? ' selected' : '') + ">" + xxSystemDefense['AMT_SystemDefensePolicy'].responses[i]['PolicyName']; }
             x += '</select><div style=padding-top:4px>' + "Default Policy" + '</div></div>';
             setDialogMode(11, "Default System Defense Policy", 3, changeDefaultPolicyOk, x, network);
         }
@@ -7125,11 +7035,11 @@
                 x += '<div style=height:26px;margin-top:4px><div style=float:right><select id=xfilter style=width:186px>';
                 for (var i in xxSystemDefense['AMT_Hdr8021Filter'].responses) {
                     var filter = xxSystemDefense['AMT_Hdr8021Filter'].responses[i];
-                    x += '<option value=' + filter['InstanceID'] + '>' + filter['Name'];
+                    x += '<option value=' + filter['InstanceID'] + ">" + filter['Name'];
                 }
                 for (var i in xxSystemDefense['AMT_IPHeadersFilter'].responses) {
                     var filter = xxSystemDefense['AMT_IPHeadersFilter'].responses[i];
-                    x += '<option value=' + filter['InstanceID'] + '>' + filter['Name'];
+                    x += '<option value=' + filter['InstanceID'] + ">" + filter['Name'];
                 }
                 x += '</select><input id=addFilterButton type=button value=Add style=width:80px onclick=addFilterButton()></div><div style=padding-top:4px>' + "Add Filter" + '</div></div>';
             }
@@ -7391,17 +7301,17 @@
         // http://www.dmtf.org/sites/default/files/standards/documents/DSP0134_2.7.1.pdf
         var DMTFCPUStatus = ["Unknown", "Enabled", "Disabled by User", "Disabled By BIOS (POST Error)", "Idle", "Other"];
         var DMTFMemType = ["Unknown", "Other", "DRAM", "Synchronous DRAM", "Cache DRAM", "EDO", "EDRAM", "VRAM", "SRAM", "RAM", "ROM", "Flash", "EEPROM", "FEPROM", "EPROM", "CDRAM", "3DRAM", "SDRAM", "SGRAM", "RDRAM", "DDR", "DDR-2", "BRAM", "FB-DIMM", "DDR3", "FBD2", "DDR4", "LPDDR", "LPDDR2", "LPDDR3", "LPDDR4"];
-        var DMTFMemFormFactor = ['', "Other","Unknown","SIMM","SIP","Chip","DIP","ZIP","Proprietary Card","DIMM","TSOP","Row of chips","RIMM","SODIMM","SRIMM","FB-DIM"];
+        var DMTFMemFormFactor = ['', 'Other','Unknown','SIMM','SIP','Chip','DIP','ZIP','Proprietary Card','DIMM','TSOP','Row of chips','RIMM','SODIMM','SRIMM','FB-DIM'];
         var DMTFProcFamilly = { // Page 46 of DMTF document
-            191: "Intel&reg; Core&trade; 2 Duo Processor",
-            192: "Intel&reg; Core&trade; 2 Solo processor",
-            193: "Intel&reg; Core&trade; 2 Extreme processor",
-            194: "Intel&reg; Core&trade; 2 Quad processor",
-            195: "Intel&reg; Core&trade; 2 Extreme mobile processor",
-            196: "Intel&reg; Core&trade; 2 Duo mobile processor",
-            197: "Intel&reg; Core&trade; 2 Solo mobile processor",
-            198: "Intel&reg; Core&trade; i7 processor",
-            199: "Dual-Core Intel&reg; Celeron&reg; processor" };
+            191: 'Intel&reg; Core&trade; 2 Duo Processor',
+            192: 'Intel&reg; Core&trade; 2 Solo processor',
+            193: 'Intel&reg; Core&trade; 2 Extreme processor',
+            194: 'Intel&reg; Core&trade; 2 Quad processor',
+            195: 'Intel&reg; Core&trade; 2 Extreme mobile processor',
+            196: 'Intel&reg; Core&trade; 2 Duo mobile processor',
+            197: 'Intel&reg; Core&trade; 2 Solo mobile processor',
+            198: 'Intel&reg; Core&trade; i7 processor',
+            199: 'Dual-Core Intel&reg; Celeron&reg; processor' };
 
         var HardwareInventory;
         function processHardware(stack, name, responses, status) {
@@ -7482,7 +7392,7 @@
             // Now find the name of the power schema in the AMT_SystemPowerScheme table
             for (var j = 0; j < AmtSystemPowerSchemes.length; j++) {
                 var selected = ((AmtSystemPowerSchemes[j]['SchemeGUID'] == currentguid)?' checked':'');
-                s += '<input type=radio name=powerpolicy value=\"' + AmtSystemPowerSchemes[j]['InstanceID'] + '\" ' + selected + '>' + AmtSystemPowerSchemes[j]['Description'] + '<br>';
+                s += '<input type=radio name=powerpolicy value=\"' + AmtSystemPowerSchemes[j]['InstanceID'] + "\" " + selected + '>' + AmtSystemPowerSchemes[j]['Description'] + '<br>';
             }
 
             setDialogMode(11, "Intel&reg; AMT Power Policy", 3, showPowerPolicyDlgOk, s);
@@ -7579,8 +7489,8 @@
                         r['Handle'] = -1;
                     }
                     x += '<div class=itemBar onclick=showUserDetails(' + r['Handle'] + ')><div style=float:right>';
-                    if (state > 0 && xxAccountAdminName) x += ' ' + AddButton2((state == 1?'Disable':'Enable'), 'changeAccountStateButton(event,' + r['Handle'] + ',' + state + ')');
-                    if (!hidden && xxAccountAdminName) x += ' ' + AddButton2("Edit...", 'changeAccountButton(event,' + r['Handle'] + ')');
+                    if (state > 0 && xxAccountAdminName) x += " " + AddButton2((state == 1?'Disable':'Enable'), 'changeAccountStateButton(event,' + r['Handle'] + ',' + state + ')');
+                    if (!hidden && xxAccountAdminName) x += " " + AddButton2("Edit...", 'changeAccountButton(event,' + r['Handle'] + ')');
                     x += '</div><div style=padding-top:3px;width:330px;float:left;overflow-x:hidden title="' + name + '"><b>' + name + '</b></div><div style=padding-top:3px>' + rb + '</div></div>';
                 }
             }
@@ -7645,7 +7555,7 @@
         function updateRealms(r) {
             QV('id_d2permissions', r != null);
             if (r != null) {
-                var x = '<li><label><input type=checkbox onchange=updateAccountDialog() id=rx3' + ((r.indexOf(3) >= 0)?' checked':'') + '>' + "Administrator" + '</label></li><hr />';
+                var x = '<li><label><input type=checkbox onchange=updateAccountDialog() id=rx3' + ((r.indexOf(3) >= 0)?' checked':'') + '>Administrator</label></li><hr />';
                 for (var y in amtstack.RealmNames) { var c = ''; if (r.indexOf(parseInt(y)) >= 0) c = ' checked'; if (amtstack.RealmNames[y]) x += '<li><label><input type=checkbox onchange=updateAccountDialog() id=rx' + y + c + '>' + amtstack.RealmNames[y] + '</label></li>'; }
                 QH('id_d2realms', x);
             }
@@ -7665,7 +7575,7 @@
             var i, n = a['DigestUsername'];
             if (!n) n = GetSidString(atob(a['KerberosUserSid']));
             x += addHtmlValue("Name", n);
-            if (xxAccountEnabledInfo[h]) { x += addHtmlValue("State", ((xxAccountEnabledInfo[h]['Enabled'] == true)?"Enabled":"Disabled")); }
+            if (xxAccountEnabledInfo[h]) { x += addHtmlValue("State", ((xxAccountEnabledInfo[h]['Enabled'] == true)?'Enabled':'Disabled')); }
             if (n == xxAccountAdminName) {
                 x += addHtmlValue("Permission", "Administrator");
             } else {
@@ -7790,8 +7700,8 @@
             // ###END###{Mode-NodeWebkit}
         }
 
-        function termPaste() { terminal.m.TermSendKeys(d3pastetextarea.value); return false; }
-        function termSendKey(k) { terminal.m.TermSendKey(k); return false; }
+        function termPaste() { terminal.m.TermSendKeys(d3pastetextarea.value) }
+        function termSendKey(k) { terminal.m.TermSendKey(k) }
 
         // ###BEGIN###{TerminalSize}
         function termToggleSize() {
@@ -7844,8 +7754,8 @@
             } else {
                 if (terminal.m.capture.length > 0) {
                     var n = 'TerminalCapture', d = new Date();
-                    if (amtsysstate) { n += '-' + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
-                    n += '-' + d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
+                    if (amtsysstate) { n += "-" + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
+                    n += '-' + d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + "-" + ("0" + d.getMinutes()).slice(-2);
                     // ###BEGIN###{!Mode-NodeWebkit}
                     saveAs(data2blob(terminal.m.capture), n + '.txt');
                     delete terminal.m.capture;
@@ -8164,14 +8074,8 @@
             // ###BEGIN###{DesktopType}
             QE('id_DeskType', input);
             // ###END###{DesktopType}
-            // ###BEGIN###{DesktopClipboard}
-            QE('id_DeskKvmClipButton', state == 3);
-            // ###END###{DesktopClipboard}
             switch (state) {
                 case 0:
-                    // ###BEGIN###{DesktopRecorder}
-                    if (desktop.m.recordedData != null) { deskRecordSession(); }
-                    // ###END###{DesktopRecorder}
                     // desktop.m.ResetScreen();
                     // ###BEGIN###{DesktopInband}
                     webRtcDesktopReset();
@@ -8397,54 +8301,27 @@
             }
         }
 
-        // ###BEGIN###{DesktopClipboard}
-        // Toggle desktop session recording
-        function deskClipboard() {
-            if (xxdialogMode || (desktop == null) || (desktop.State != 3)) return;
-            setDialogMode(11, "Clipboard", 3, deskClipboardEx, "Enter text to send to Intel&reg; AMT clipboard." + '<br><textarea id=kvmClipText style=width:100%;height:120px;resize:none;margin-top:8px />');
-            focusTextBox('kvmClipText');
-        }
-
-        function deskClipboardEx() { desktop.m.sendClipboardData(Q('kvmClipText').value.split('\\0').join('\0')); }
-        // ###END###{DesktopClipboard}
-
-        // ###BEGIN###{FileSaver}
-        // ###BEGIN###{DesktopRecorder}
-        // Toggle desktop session recording
-        function deskRecordSession() {
-            if (desktop == null) return;
-            if (desktop.m.recordedData == null) {
-                // Start recording
-                if ((desktop.State === 3) && (desktop.m.StartRecording())) { Q('DeskRecordButton').classList.remove('videoIcon'); Q('DeskRecordButton').classList.add('videoIconRed'); }
-            } else {
-                // Stop recording
-                Q('DeskRecordButton').classList.remove('videoIconRed');
-                Q('DeskRecordButton').classList.add('videoIcon');
-                var d = new Date(), n = 'AmtDesktopSesion-' + currentcomputer['name'] + '-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
-                saveAs(data2blob(desktop.m.StopRecording().join('')), n + '.mcrec');
-            }
-        }
-        // ###END###{DesktopRecorder}
-        // ###END###{FileSaver}
-
         // ###BEGIN###{FileSaver}
         // Save the desktop image to file
         function deskSaveImage() {
             if (xxdialogMode || desktop.State != 3) return;
             var n = 'Desktop', d = new Date();
-            if (amtsysstate) { n += '-' + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
-            n += '-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
-            // ###BEGIN###{!Mode-NodeWebkit}
-            Q('Desk')['toBlob']( function (blob) { saveAs(blob, n + '.jpg'); } );
-            // ###END###{!Mode-NodeWebkit}
-            // ###BEGIN###{Mode-NodeWebkit}
-            var b64image = document.getElementById('Desk').toDataURL('image/png').split(',')[1];
-            var chooser = document.createElement('input');
-            chooser.setAttribute('type', 'file');
-            chooser.setAttribute('nwsaveas', n + '.png');
-            chooser.addEventListener('change', function () { console.log('cc'); require('fs').writeFile(this.value, b64image, 'base64', function () { }); }, false);
-            chooser.click();
-            // ###END###{Mode-NodeWebkit}
+            if (amtsysstate) { n += "-" + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
+            n += '-' + d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + "-" + ("0" + d.getMinutes()).slice(-2);
+            Q('Desk')['toBlob'](
+                function(blob) {
+                    // ###BEGIN###{!Mode-NodeWebkit}
+                    saveAs(blob, n + '.jpg');
+                    // ###END###{!Mode-NodeWebkit}
+                    // ###BEGIN###{Mode-NodeWebkit}
+                    var chooser = document.createElement('input');
+                    chooser.setAttribute('type', 'file');
+                    chooser.setAttribute('nwsaveas', n + '.jpg');
+                    chooser.addEventListener('change', function () { require('fs').writeFile(this.value, blob, function () { }); }, false);
+                    chooser.click();
+                    // ###END###{Mode-NodeWebkit}
+                }
+            );
         }
         // ###END###{FileSaver}
 
@@ -8491,7 +8368,7 @@
             if (data.action == 'download') { p24gotDownloadCommand(data); return; }
             if (data.action == 'upload') { p24gotUploadData(data); return; }
             if (data.action == 'pong') { return; }
-            data.path = data.path.replace(/\//g, '\\');
+            data.path = data.path.replace(/\//g, "\\");
             if ((p24filetree != null) && (data.path == p24filetree.path)) {
                 // This is an update to the same folder
                 var checkedNames = p24getCheckedNames();
@@ -8537,12 +8414,12 @@
                 // Figure out the name and shortname
                 var f = filetreexx[i], name = f.n, shortname;
                 shortname = name;
-                if (name.length > 70) { shortname = '<span title="' + EscapeHtml(name) + '">' + EscapeHtml(name.substring(0, 70)) + "..." + '</span>'; } else { shortname = EscapeHtml(name); }
+                if (name.length > 70) { shortname = '<span title="' + EscapeHtml(name) + '">' + EscapeHtml(name.substring(0, 70)) + "...</span>"; } else { shortname = EscapeHtml(name); }
                 name = EscapeHtml(name);
 
                 // Figure out the date
                 var fdatestr = '';
-                if (f.d != null) { var fdate = new Date(f.d), fdatestr = (fdate.getMonth() + 1) + '/' + (fdate.getDate()) + '/' + fdate.getFullYear() + ' ' + fdate.toLocaleTimeString() + '&nbsp;'; }
+                if (f.d != null) { var fdate = new Date(f.d), fdatestr = (fdate.getMonth() + 1) + "/" + (fdate.getDate()) + "/" + fdate.getFullYear() + " " + fdate.toLocaleTimeString() + "&nbsp;"; }
 
                 // Figure out the size
                 var fsize = '';
@@ -8554,7 +8431,7 @@
                     h = '<div class=filelist file=999><input file=999 style=float:left name=fd class=fcb type=checkbox onchange=p24setActions() value="' + f.nx + '">&nbsp;<span style=float:right title=\"' + title + '\">' + right + '</span><span><div class=fileIcon' + f.t + '></div><a style=cursor:pointer onclick=p24folderset(\"' + encodeURIComponent(f.nx) + '\")>' + shortname + '</a></span></div>';
                 } else {
                     var link = shortname;
-                    if (f.s > 0) { link = '<a rel=\"noreferrer noopener\" target=\"_blank\" style=cursor:pointer onclick=\'p24downloadfile("' + encodeURIComponent(newlinkpath + '/' + name) + '","' + encodeURIComponent(name) + '",' + f.s + ')\'>' + shortname + '</a>'; }
+                    if (f.s > 0) { link = '<a rel=\"noreferrer noopener\" target=\"_blank\" style=cursor:pointer onclick=\"p24downloadfile("' + encodeURIComponent(newlinkpath + '/' + name) + '","' + encodeURIComponent(name) + '",' + f.s + ')\">' + shortname + '</a>'; }
                     h = '<div class=filelist file=3><input file=3 style=float:left name=fd class=fcb type=checkbox onchange=p24setActions() value="' + f.nx + '">&nbsp;<span class=fsize>' + fdatestr + '</span><span style=float:right>' + fsize + '</span><span><div class=fileIcon' + f.t + '></div>' + link + '</span></div>';
                 }
 
@@ -8852,10 +8729,10 @@
             // ###END###{IDER-IMRSDK}
 
             // Setup the IDER session (WebSocket)
-            var x = '<div>' + "Mount disk images on a Intel&reg; AMT computer - Experimental." + '</div><br />';
-            x += '<div style=height:26px><input id=floppyImageInput type=file style=float:right;width:250px accept=".img"><div>' + NoBreak("Floppy (.img)") + '</div></div>';
-            x += '<div style=height:26px><input id=cdromImageInput type=file style=float:right;width:250px accept=".iso"><div>' + NoBreak("CDROM (.iso)") + '</div></div>';
-            x += '<div style=height:26px><select id=iderStartType style=float:right;width:250px><option value=0>' + "On next boot" + '<option value=1>' + "Graceful" + '<option value=2>' + "Immediate" + '</select><div>' + "Session Start" + '</div></div>';
+            var x = '<div>Mount disk images on a Intel&reg; AMT computer - Experimental.</div><br />';
+            x += '<div style=height:26px><input id=floppyImageInput type=file style=float:right;width:250px accept=".img"><div>Floppy&nbsp;(.img)</div></div>';
+            x += '<div style=height:26px><input id=cdromImageInput type=file style=float:right;width:250px accept=".iso"><div>CDROM&nbsp;(.iso)</div></div>';
+            x += '<div style=height:26px><select id=iderStartType style=float:right;width:250px><option value=0>On next boot<option value=1>Graceful<option value=2>Immediate</select><div>Session Start</div></div>';
             setDialogMode(11, "Storage Redirection", 3, iderStart2, x);
             var iderurl = null;
             try { iderurl = localStorage.getItem('iderurl'); } catch (ex) { }
@@ -9118,9 +8995,9 @@
             xxPolicies = { 'User': [], 'Alert': [], 'Periodic': [] };
             for (var i in responses['AMT_RemoteAccessPolicyAppliesToMPS'].responses) {
                 var policy = responses['AMT_RemoteAccessPolicyAppliesToMPS'].responses[i];
-                var server = Clone(getItem(xxCiraServers, 'Name', getItem(policy['ManagedElement']['ReferenceParameters']['SelectorSet']['Selector'], '@Name', 'Name')['Value']));
+                var server = Clone(getItem(xxCiraServers, "Name", getItem(policy['ManagedElement']['ReferenceParameters']['SelectorSet']['Selector'], "@Name", "Name")['Value']));
                 server.MpsType = policy['MpsType']; // MpsType was added in Intel AMT 11.6
-                var ptype = (getItem(policy['PolicySet']['ReferenceParameters']['SelectorSet']['Selector'], '@Name', 'PolicyRuleName')['Value']).split(' ')[0];
+                var ptype = (getItem(policy['PolicySet']['ReferenceParameters']['SelectorSet']['Selector'], "@Name", "PolicyRuleName")['Value']).split(' ')[0];
                 xxPolicies[ptype].push(server);
             }
 
@@ -9129,8 +9006,8 @@
 
         function updateRemoteAccess() {
             if (xxEnvironementDetection == null) return;
-            var x = '', e = "Disabled", ciraProxySupport = (xxRemoteAccess['IPS_HTTPProxyService'] && xxRemoteAccess['IPS_HTTPProxyAccessPoint']);
-            if (xxEnvironementDetection['DetectionStrings'] && xxEnvironementDetection['DetectionStrings'].length > 0) { e = "Enabled, " + xxEnvironementDetection['DetectionStrings'].length + ' ' + (xxEnvironementDetection['DetectionStrings'].length > 1?'domains':'domain'); }
+            var x = '', e = 'Disabled', ciraProxySupport = (xxRemoteAccess['IPS_HTTPProxyService'] && xxRemoteAccess['IPS_HTTPProxyAccessPoint']);
+            if (xxEnvironementDetection['DetectionStrings'] && xxEnvironementDetection['DetectionStrings'].length > 0) { e = 'Enabled, ' + xxEnvironementDetection['DetectionStrings'].length + ' domain' + (xxEnvironementDetection['DetectionStrings'].length > 1?'s':''); }
 
             // General settings
             x += TableStart();
@@ -9543,7 +9420,7 @@
         function showEditNameDlg(x) {
             if (xxdialogMode) return;
             var t = amtsysstate['AMT_GeneralSettings'].response['HostName'], y = amtsysstate['AMT_GeneralSettings'].response['DomainName'];
-            if (y != null && y.length > 0) t += '.' + y;
+            if (y != null && y.length > 0) t += "." + y;
             var r = '<br><div style=height:26px><input id=d11name value="' + t + '" style=float:right;width:200px><div>' + "Name & Domain" + '</div></div>';
             if (x == 1) {
                 var s = (amtsysstate['AMT_GeneralSettings'].response['SharedFQDN'] == true);
@@ -9671,7 +9548,6 @@
             2 - Global IPv6 address obtained from DHCPv6 Server,
             3 - IPv6 unicast address configured by the user,
             4 - Returned by FW for IPv6 addresses that are not owned by FW (such as IPv6 router address, configuration server address etc.)
-
         IPv6 %AddrState%:
             0 - DAD is still in process for this address,
             1 - Address is valid and may be used for new communication,
@@ -9833,9 +9709,13 @@
         //
 
         amtPowerBootCapabilities = null;
+        amtOCRBootSources = null;
+        amtOCRPBAInstances = null;
+        amtOCRPBABootString = null;
+        var ocrminver = 15; //change it to lower value for mock up
         function showPowerActionDlg() {
             if (xxdialogMode) return;
-            statusbox("Power Actions", "Checking capabilities...");
+            statusbox("Power Actions", "Checking boot capabilities...");
             amtstack.Get('AMT_BootCapabilities', powerActionResponse00, 0, 1);
         }
 
@@ -9895,7 +9775,7 @@
                     setTimeout(function () { setDialogMode(0); }, 1300);
                 });
             } else if ((action == 104) || (action == 105)) {
-                var x = ("Confirm execution of Intel&reg; Remote Secure Erase?" + '<br>' + "Enter Secure Erase password if required." + '<br>');
+                var x = ("Confirm execution of Intel&reg Remote Secure Erase?" + '<br>' + "Enter Secure Erase password if required." + '<br>');
                 x += ('<br><div style=height:16px><input type=password id=rsepass maxlength=32 style=float:right;width:240px><div>' + "Password" + '</div></div>');
                 x += ('<br><div style=color:red>' + "<b>WARNING:</b> This will wipe data on the remote system." + '</div>');
                 // ###BEGIN###{Mode-NodeWebkit}
@@ -9903,11 +9783,38 @@
                 // ###END###{Mode-NodeWebkit}
                 rsepass = 1;
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
+            } else if (action == 999) {        
+                statusbox("Power Actions", "Checking boot sources...");            
+                amtstack.BatchEnum('',['CIM_BootSourceSetting'], powerActionDlgCheck00, true);
             } else {
                 powerActionDlg();
             }
         }
 
+        function powerActionDlgCheck00(stack, name, response, status) {          
+            if (status == 200 && response.CIM_BootSourceSetting != null) {
+                var srcs = response.CIM_BootSourceSetting.responses;
+                amtOCRBootSources = []
+                amtOCRPBAInstances = {}
+                amtOCRPBABootString = {}
+                for (var i = 0; i < srcs.length; i++) {
+                    amtOCRBootSources.push(srcs[i].InstanceID);
+                    var instanceid = srcs[i].InstanceID;
+                    if (instanceid != null && instanceid.toString().startsWith('Intel(r) AMT: Force OCR UEFI Boot')) {
+                        try {
+                            var arr = instanceid.trim().split(' ');
+                            idx = parseInt(arr[arr.length-1]);
+                            amtOCRPBAInstances[idx] = srcs[i].BIOSBootString;
+                            amtOCRPBABootString[idx] = srcs[i].BootString;
+                        } catch (e) { }
+                    }
+                }
+                
+                //console.log(JSON.stringify(amtOCRBootSources));
+                powerActionDlg();
+            }
+        }
+        
         function powerActionDlg() {
             //if (amtversion == 0) return;
             //if (amtversion > 6) { amtstack.Get('IPS_OptInService', powerActionResponse0); } else { amtstack.Get('AMT_BootSettingData', powerActionResponse1); }
@@ -9993,15 +9900,220 @@
             QE('idd_d24IDERBootDevice', !ospower);
             QE('idx_d24Verbocity', !ospower);
             QE('idd_d24RSEPass', !ospower);
+            // Add One Click Recovery option if firmare is >= 15
+            var opts = Q('idx_d24ForceBootDevice');            
+            if (amtversion >=ocrminver) {              
+              if (opts.options.length <=5) {
+                opt = document.createElement('option'); opt.value=5; opt.innerHTML='Force UEFI Boot Option';
+                if (amtPowerBootCapabilities['ForceUEFIPBABoot']) opts.appendChild(opt);
+                opt = document.createElement('option'); opt.value=6; opt.innerHTML='Force UEFI HTTPS Boot';
+                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot']) opts.appendChild(opt);
+              }              
+            } else {
+              for (var i=0; i<opts.options.length;i++) {                
+                if (opts.options[i].value>=5) {                  
+                  opts.options.remove(i)
+                }
+              }
+            
+            }
 
             // If the boot source is not "None" (0), disable all boot settings.
-            var bootSettingOpts = ['d24BiosPause', 'd24BiosSecureBoot', 'd24BiosSetup', 'd24ForceProgressEvents', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
-            if (idx_d24ForceBootDevice.value > 0) {
+            var bootSettingOpts = ['d24BiosPause',  'd24BiosSetup', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
+            // only reset the following options if version is less than OCR minimum version
+            if (amtversion<ocrminver) {
+              bootSettingOpts.push('d24BiosSecureBoot');
+              bootSettingOpts.push('d24ForceProgressEvents');              
+            }
+            
+            if (Q('idx_d24ForceBootDevice').value > 0) {
                 for (var i in bootSettingOpts) {
                     Q(bootSettingOpts[i]).checked = false;
+                }                
+            }
+            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], Q('idx_d24ForceBootDevice').value == 0); }
+            // rebuild idx_d24BootMediaIndex if HDD or CD/DVD boot
+            var d_fbd = Q('idx_d24ForceBootDevice');
+            var d_bmi = Q('idx_d24BootMediaIndex');
+            QV('idd_d24BootMediaIndex',true);
+            QV('idd_d24OCRPBAParams',false);
+            QV('idd_d24OCRHTTPSParams',false);
+            if (d_fbd.value == 1 || d_fbd.value ==3 ) {
+                d_bmi.innerHTML="<option value=0>Default</option><option value=0>Primary</option><option value=2>Secondary</option>";
+            } else if (d_fbd.value == 5) {
+                d_bmi.innerHTML="";
+                // force secure boot if Force UEFI Local PBA Boot is set and AMTSecureBootControl is not set
+                if (amtPowerBootCapabilities["AMTSecureBootControl"]!=null && amtPowerBootCapabilities["AMTSecureBootControl"]==false) {
+                    Q('d24BiosSecureBoot').checked = true
+                }
+                for (var o in amtOCRPBAInstances) {
+                    d_bmi.innerHTML+="<option value="+o+">"+amtOCRPBAInstances[o]+"</option>";
+                }
+                QV('idd_d24OCRPBAParams',true);
+                Q('d24OCRPBADevPath').value = amtOCRPBABootString[d_bmi.value];
+            } else if (d_fbd.value == 6) {
+                QV('idd_d24BootMediaIndex',false);
+                QV('idd_d24OCRHTTPSParams',true);
+            } else {
+                QV('idd_d24BootMediaIndex',false);
+                d_bmi.innerHTML="";//clear up                
+            }
+        }
+
+        function bootMediaIndexChanged() {
+            var d_fbd = Q('idx_d24ForceBootDevice');
+            var d_bmi = Q('idx_d24BootMediaIndex');
+            if (d_fbd.value==5) {// PBA
+                Q('d24OCRPBADevPath').value = amtOCRPBABootString[d_bmi.value];
+            }
+            var tmp = getTLVS();
+            console.log("Hexdump of the TLVs is "+ rstr2hex(tmp.join('')));
+            console.log("Base64 of the TLVs is "+ btoa(tmp.join('')));
+        }
+
+        function checkHttpsUrl() {
+            // ###BEGIN###{Mode-NodeWebkit}
+            var httpsurl = null;
+            try {
+                if (Q('d24OCRHTTPSUrl').value.trim()=='') return;
+                httpsurl=require('url').parse(Q('d24OCRHTTPSUrl').value);
+            } catch (e) {
+                console.log("Error parsing url");  
+            }
+
+            if (httpsurl==null || (httpsurl.protocol != "https:")) {
+                console.log("HTTPS Url is needed");
+                Q('d24OCRHTTPSUrl').value = "";                
+                return;
+            } else {
+                if (httpsurl.port == null) httpsurl.port=443;
+            }
+            try {
+                var socket = require('tls').connect(httpsurl.port, httpsurl.host, { rejectUnauthorized: false }, function () {
+                    Q('d24OCRHTTPSCert256').value = socket.getPeerCertificate(true).fingerprint256.split(':').join('').toLowerCase();
+                    socket.end();
+                    //Debug: auto calculate TLVs                    
+                    try {
+                        tlv = getTLVS();
+                    } catch (e1) {
+                        console.log(e1)
+                    }
+                });
+            } catch (e) {
+                console.log("Unable to get peer certificate hash:"+e);
+            }
+            // ###END###{Mode-NodeWebkit}
+        }
+
+        function checkAdvHttps() {
+            var txt = Q('d24OCRHTTPSAdv').innerHTML;
+            if (txt=='+') {
+                QV('idd_d24OCRHTTPSParams_ex', true);
+                Q('d24OCRHTTPSAdv').innerHTML ='-';
+                QS('idd_d24OCRHTTPSParams').height ='290px';
+            } else {
+                QV('idd_d24OCRHTTPSParams_ex', false);
+                Q('d24OCRHTTPSAdv').innerHTML ='+';
+                QS('idd_d24OCRHTTPSParams').height ='26px';
+            }
+        }
+
+        function checkAdvPba() {
+            var txt = Q('d24OCRPBAAdv').innerHTML;
+            if (txt=='+') {
+                QV('idd_d24OCRPBAParams_ex', true);
+                Q('d24OCRPBAAdv').innerHTML='-';
+                QS('idd_d24OCRPBAParams').height='100px';
+            } else {
+                QV('idd_d24OCRPBAParams_ex', false);
+                Q('d24OCRPBAAdv').innerHTML='+';
+                QS('idd_d24OCRPBAParams').height='26px';
+            }
+        }
+        
+        function makeTLV(ptype,dtype,len,data) {            
+            var tlv = '';
+            tlv+=ShortToStrX(0x8086);
+            tlv+=ShortToStrX(ptype & 0xFFFF);
+            tlv+=IntToStrX( len & 0xFFFFFFFF);
+            if (dtype=='bool') {
+                tlv+=String.fromCharCode(data & 0xFF);                
+            } else if (dtype=='short') {
+                tlv+=ShortToStrX(data);                
+            } else if (dtype=='int') {
+                tlv+=IntToStrX(data);                
+            } else if (dtype=='hex') { 
+                tlv+=hex2rstr(data);                               
+            } else if (dtype=='text') {
+                tlv+=data;                
+            }
+            //console.log("Paramtype: "+ptype+", Data type: "+dtype+", length: "+len+", Data: "+data+", TLV: "+tlv.toString('hex'));
+            return tlv;
+        }
+
+        function getTLVS() {
+            var tlvs = [];
+            var d_fbd = Q('idx_d24ForceBootDevice'); 
+            if (d_fbd.value == 5) {
+                // EFI Device Path, type=2
+                tlvs.push(makeTLV(0x0002,'text',Q('d24OCRPBADevPath').value.trim().length,Q('d24OCRPBADevPath').value.trim()));
+                // EFI Device Path Len, type 3
+                tlvs.push(makeTLV(0x0003,'short',2, Q('d24OCRPBADevPath').value.trim().length));
+                // Boot Image Hash SHA-256, type=4
+                if (Q('d24OCRPBABootImageSHA256').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0004,'hex',Q('d24OCRPBABootImageSHA256').value.length/2,Q('d24OCRPBABootImageSHA256').value));
+                }
+                // Boot Image Hash SHA-512, type=6
+                if (Q('d24OCRPBABootImageSHA512').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0006,'hex',Q('d24OCRPBABootImageSHA512').value.length/2,Q('d24OCRPBABootImageSHA512').value));
+                }
+                // EFI optional data, type 20
+                if (Q('d24OCRPBAOptionalData').value.trim() !='') {
+                    tlvs.push(makeTLV(0x0014,'hex',Q('d24OCRPBAOptionalData').value.length/2,Q('d24OCRPBAOptionalData').value));
+                }
+            } else if (d_fbd.value == 6) {
+                // HTTPS URL, type=1
+                tlvs.push(makeTLV(0x0001,'text',Q('d24OCRHTTPSUrl').value.trim().length,Q('d24OCRHTTPSUrl').value.trim()));
+                // EFI Device Path Len, type 3
+                tlvs.push(makeTLV(0x0003,'short',2, Q('d24OCRHTTPSUrl').value.trim().length));
+                // HTTPS Cert SHA-256, type 23
+                tlvs.push(makeTLV(0x0017,'hex', Q('d24OCRHTTPSCert256').value.length/2,Q('d24OCRHTTPSCert256').value));
+                // Boot Image Hash SHA-256, type=4
+                if (Q('d24OCRHTTPSBootImageSHA256').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0004,'hex', Q('d24OCRHTTPSBootImageSHA256').value.length/2,Q('d24OCRHTTPSBootImageSHA256').value));
+                }
+                // Boot Image Hash SHA-512, type=6
+                if (Q('d24OCRHTTPSBootImageSHA512').value.trim() != '') {
+                    tlvs.push(makeTLV(0x0006,'hex', Q('d24OCRHTTPSBootImageSHA512').value.length/2,Q('d24OCRHTTPSBootImageSHA512').value));
+                }
+                // HTTPS Cert Server Name and verification method, type=21 & type=22
+                if (Q('d24OCRHTTPSCertServerName').value.trim() != '') {
+                    // HTTPS Cert name
+                    tlvs.push(makeTLV(0x0015,'text',Q('d24OCRHTTPSCertServerName').value.trim().length,Q('d24OCRHTTPSCertServerName').value.trim()));
+                    // Server name verification method
+                    tlvs.push(makeTLV(0x0016,'short',2,Q('d24OCRHTTPSCertVerifyMethod').value));
+                }
+                // HTTPS Cert sync with AMT
+                tlvs.push(makeTLV(0x0014,'bool',1,(Q('d24OCRHTTPSCertSync').checked?1:0)));
+                
+                // Server timeout
+                var tmout = 0;
+                try {
+                    tmout = parseInt(Q('d24OCRHTTPSReqTimeout').value);
+                } catch (e) {}
+                tlvs.push(makeTLV(0x001E,'short',2,tmout));  
+                if (Q('d24OCRHTTPSDigestUsername').value.trim() != '') {
+                    //HTTP Digest Username, type=40
+                    tlvs.push(makeTLV(0x0028,'text',Q('d24OCRHTTPSDigestUsername').value.trim().length,Q('d24OCRHTTPSDigestUsername').value.trim()));
+                    //HTTP Digest Username, type=41
+                    tlvs.push(makeTLV(0x0029,'text',Q('d24OCRHTTPSDigestPassword').value.trim().length,Q('d24OCRHTTPSDigestPassword').value.trim()));
+                }
+                // EFI optional data, type 20
+                if (Q('d24OCRHTTPSOptionalData').value.trim() !='') {
+                    tlvs.push(makeTLV(0x0014,'hex', Q('d24OCRHTTPSOptionalData').value.length/2,Q('d24OCRHTTPSOptionalData').value));
                 }
             }
-            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], idx_d24ForceBootDevice.value == 0); }
+            return tlvs;
         }
 
         function showAdvPowerDlgOk() {
@@ -10033,7 +10145,8 @@
                 AvdPowerDlg.UseSOL = Q('d24SerialOverLan').checked;
                 AvdPowerDlg.UseSafeMode = Q('d24SafeMode').checked;
                 AvdPowerDlg.UserPasswordBypass = Q('d24UserPasswordBypass').checked;
-                AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;
+                AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;                
+
                 if ((AvdPowerDlg.SecureErase === true) && (Q('d24rsepass').value.length > 0)) { AvdPowerDlg.RSEPassword = Q('d24rsepass').value; }
 
                 // Attempt user consent
@@ -10181,12 +10294,20 @@
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
                 rsepass = null;
+                
                 // ###BEGIN###{PowerControl-Advanced}
             }
             // ###END###{PowerControl-Advanced}
             //if (((action == 104) || (action == 105)) && !r['SecureErase']) { /*console.log("This Intel&reg; AMT does not support Secure Erase");*/ cleanup(); return; }
-            console.log("Boot Action: " + action);
-            console.log("Setting Boot Settings: " + ObjectToString2(r));
+            //console.log("Boot Action: " + action);
+            //console.log("Setting Boot Settings: " + ObjectToString2(r));
+            
+            // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
+            if (amtversion>=ocrminver && (Q('idx_d24ForceBootDevice').value == 5 || Q('idx_d24ForceBootDevice').value == 6)) {//Force UEFI HTTPS Boot                
+                r['UefiBootParametersArray']=btoa(getTLVS().join(''));
+                r['UefiBootNumberOfParams']=getTLVS().length;
+                r['BootMediaIndex']=0;//do not use boot media index for OCR
+            }
             statusbox("Power Action", "Setting boot settings...");
             amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, r, 1);
         }
@@ -10206,21 +10327,29 @@
             var action = d5actionSelect.value, bootSource = null;
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) {
-                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot'][idx_d24ForceBootDevice.value - 1]; }
+                if (Q('idx_d24ForceBootDevice').value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force UEFI Boot Option', 'Force UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
             } else {
             // ###END###{PowerControl-Advanced}
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
                 // ###BEGIN###{PowerControl-Advanced}
             }
+            // handle OCR resource address mapped by InstanceID 
+            if (bootSource == 'Force WinRE Boot') bootSource = 'Force OCR UEFI Boot Option 1';// assume the first PBA is WinRE, will fix later
+            if (bootSource == 'Force UEFI Boot Option') bootSource = 'Force OCR UEFI Boot Option '+Q('idx_d24BootMediaIndex').value;// use boot device index
+            if (bootSource == 'Force UEFI HTTPS Boot') bootSource = 'Force OCR UEFI HTTPS Boot';// HTTPS boot 
+            
+            // Resetting Force boot data in case it was changed so that it won't be used on the next power action
+            Q("idx_d24ForceBootDevice").value = 0;
+
             // ###END###{PowerControl-Advanced}
-            console.log('ChangeBootOrder: ' + bootSource);
+            //console.log('ChangeBootOrder: ' + bootSource);
             amtstack.CIM_BootConfigSetting_ChangeBootOrder((bootSource == null)?bootSource:'<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">Intel(r) AMT: ' + bootSource + '</Selector></SelectorSet></ReferenceParameters>', powerActionResponse3);
         }
 
         var targetPowerAction = 0;
         function powerActionResponse3(stack, name, response, status) {
-            console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
+            //console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
             if (errcheck(status, stack)) return;
             //console.log("Performing Power State Change...");
             statusbox("Power Action", "Performing power action...");
@@ -10356,7 +10485,7 @@
                             if (i != ii || j != jj) {
                                 if (xx != '') { x += xx; xx = '<br>'; }
                                 ii = i; jj = j;
-                                if (i != '') { xx += EscapeHtml(i + ' / ' + j); } else { xx += "Root"; }
+                                if (i != '') { xx += EscapeHtml(i + " / " + j); } else { xx += "Root"; }
                             }
                             //var handle = "\"" + i + "\",\"" + j + "\",\"" + k + "\"";
                             var handle = '\"' + i + ((i != '') ? '/' : '') + j + ((j != '') ? '/' : '') + k + '\"';
@@ -10472,9 +10601,9 @@
             } else {
                 x += '<br><div style=height:20px><input id=mstoragefile style=float:right;width:240px readonly disabled=disabled value="' + filename + '" ><div>' + "Upload file" + '</div></div>';
             }
-            x += '<br><div style=height:16px><input id=mstoragevendor placeholder="' + "Vendor" + '" list=mstoragevendorlist maxlength=11 style=float:right;width:240px><div>' + "Vendor name" + '</div></div>';
-            x += '<br><div style=height:16px><input id=mstorageapplication placeholder="' + "App" + '" list=mstorageapplicationlist maxlength=11 style=float:right;width:240px><div>' + "Application name" + '</div></div>';
-            x += '<br><div style=height:16px><input id=mstoragefilename placeholder="' + "Filename" + '" maxlength=11 style=float:right;width:240px><div>' + "Filename" + '</div></div>';
+            x += '<br><div style=height:16px><input id=mstoragevendor placeholder=Vendor list=mstoragevendorlist maxlength=11 style=float:right;width:240px><div>' + "Vendor name" + '</div></div>';
+            x += '<br><div style=height:16px><input id=mstorageapplication placeholder=App list=mstorageapplicationlist maxlength=11 style=float:right;width:240px><div>' + "Application name" + '</div></div>';
+            x += '<br><div style=height:16px><input id=mstoragefilename placeholder=Filename maxlength=11 style=float:right;width:240px><div>' + "Filename" + '</div></div>';
             x += '<br><div style=height:16px><input id=mstoragetype placeholder=application/octet-stream list=mstoragetypelist style=float:right;width:240px><div>' + "MIME Type" + '</div></div>';
             x += '<br><div style=height:16px><input id=mstoragelink style=float:right;width:240px><div title=\"' + "If set, creates a link to this content from the main web page" + '\">' + "Link" + '</div></div><br>';
             x += '<datalist id=mstoragevendorlist>';
@@ -10616,11 +10745,11 @@
                         xxAlarms = response;
                         for (var i = 0; i < response.length; i++) {
                             var waketime = convertAmtDataStr(response[i]['StartTime']['Datetime']);
-                            var details = '<b>' + response[i]['ElementName'] + '</b>, ' + "wake on" + ' ' + waketime.toLocaleString().replace(', ', " at ");
-                            if (response[i]['Interval'] != undefined) { details += " and each" + _fmtinterval(response[i]['Interval']['Interval']); }
+                            var details = '<b>' + response[i]['ElementName'] + '</b>, wake on ' + waketime.toLocaleString().replace(', ', ' at ');
+                            if (response[i]['Interval'] != undefined) { details += ' and each' + _fmtinterval(response[i]['Interval']['Interval']); }
                             if (response[i]['DeleteOnCompletion'] == true) { details += ", delete when done"; }
                             x += '<div class=itemBar onclick=showAlertDetails(' + i + ')><div style=float:right>';
-                            if (xxAccountAdminName) x += ' ' + AddButton2("Edit...", 'showAddAlarm(" + i + ")');
+                            if (xxAccountAdminName) x += " " + AddButton2("Edit...", 'showAddAlarm(" + i + ")');
                             x += '</div><div style=padding-top:3px;width:auto;float:left;overflow-x:hidden>' + details + '</div></div>';
                         }
                     } else {
@@ -11107,7 +11236,7 @@
                         if (block['vars'][i]['type'] == 2) { attributes += ' onkeypress=\'return numbersOnly(event)\'' }
                         if (block['vars'][i]['type'] == 1 || block['vars'][i]['type'] == 2) { d = '<input title="' + block['vars'][i]['desc'] + '" id=scriptXvalue_' + i + ' value="' + block['vars'][i]['value'] + '" ' + attributes + ' style=width:100%></input>'; }
                         if (block['vars'][i]['type'] == 3) {
-                            d = '<select title=\'' + block['vars'][i]['desc'] + '\' id=scriptXvalue_' + i + ' style=width:100%;padding:0;margin:0>';
+                            d = '<select title=\'' + block['vars'][i]['desc'] + '\' id=scriptXvalue_' + i + " style=width:100%;padding:0;margin:0>";
                             for (var j in block['vars'][i]['values']) { d += '<option value=' + j + (j == block['vars'][i]['value'] ? ' selected' : '') + '>' + block['vars'][i]['values'][j] + '</option>'; }
                             d += '</select>';
                         }
@@ -11209,8 +11338,8 @@
                 if (script_BuildingBlocks['_start']) { script += '##### Starting Block #####\r\n' + script_BuildingBlocks['_start']['code'] + '\r\n\r\n'; }
                 for (var i in script_BlockScript) {
                     var code = script_BlockScript[i]['code'];
-                    code = code.split('%%%~%%%').join(i);
-                    for (var j in script_BlockScript[i]['vars']) { code = code.split('%%%' + j + '%%%').join(script_BlockScript[i]['vars'][j]['value']); }
+                    code = code.split("%%%~%%%").join(i);
+                    for (var j in script_BlockScript[i]['vars']) { code = code.split("%%%" + j + "%%%").join(script_BlockScript[i]['vars'][j]['value']); }
                     script += '##### Block: ' + script_BlockScript[i]['name'] + ' #####\r\nHighlightBlock __t ' + i + '\r\n' + code + '\r\n\r\n';
                 }
                 if (script_BuildingBlocks['_end']) { script += '##### Ending Block #####\r\n' + script_BuildingBlocks['_end']['code'] + '\r\nHighlightBlock\r\n'; }
@@ -11322,7 +11451,7 @@
                 var vs = [];
                 for (var i in runstate.variables) { if (!i.startsWith('__')) vs.push(i); }
                 vs.sort();
-                //for (var i in vs) { r += vs[i] + ' = ' + script_toString(runstate.variables[vs[i]]) + "\n"; }
+                //for (var i in vs) { r += vs[i] + " = " + script_toString(runstate.variables[vs[i]]) + "\n"; }
                 for (var i in vs) {
                     if (typeof runstate.variables[vs[i]] == 'object') {
                         r += '<b>' + vs[i] + '</b> = ' + ObjectToStringEx(runstate.variables[vs[i]], 2) + '<br>';
@@ -11433,9 +11562,9 @@
                     if (certificate['privateKey']) { cmenus.push("Issue new cert..." + '#cert_issueNew(' + certificate['h'] + ')'); }
                     cmenus.push("Export as .cer..." + '#cert_saveCertCer(' + certificate['h'] + ')');
                     if (certificate['privateKey']) { cmenus.push("Export as .p12..." + '#cert_saveCertP12(' + certificate['h'] + ')'); }
-                    x += ' cm=\'' + cmenus.join('|') + '\'';
+                    x += " cm='" + cmenus.join('|') + "'";
                     // ###END###{ContextMenus}
-                    x += ' onclick=\'cert_select(event, ' + certificate['h'] + ')\' id=CR-' + certificate['h'] + ' ondblclick=cert_view(' + certificate['h'] + ')>';
+                    x += " onclick='cert_select(event, " + certificate['h'] + ")' id=CR-" + certificate['h'] + " ondblclick=cert_view(" + certificate['h'] + ")>";
                     //x += '<input id=SC-' + certificate['h'] + ' type=checkbox style=float:left;margin-top:8px onclick=cert_onCertificateChecked()' + (certificate.checked?' checked':'') + ' />';
                     x += '<div style=float:right><span style=font-size:14px>' + extra.join(', ') + '</span>&nbsp;<input type=button value="' + "View..." + '" onclick=cert_view(' + certificate['h'] + ')>&nbsp;</div><div style=padding-top:2px>&nbsp;';
                     // ###BEGIN###{Look-BrandedCommander}
@@ -11456,16 +11585,16 @@
             var x = '', certificate = getCertificate(h), cert = certificate.cert, commonName = cert.subject.getField('CN').value;
             var fingerprint = '', fingerprint2 = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex().toUpperCase();
             for (i = 0; i < fingerprint2.length; i++) { if ((i != 0) && (i % 2 == 0)) { fingerprint += ':'; } fingerprint += fingerprint2.substring(i, i + 1); }
-            x += '<img src=images-commander/cert' + ((certificate['privateKey']) ? '2' : '1') + '.png style=vertical-align:text-top;float:right;height:28px height=32 width=32 />';
+            x += '<img src=images-commander/cert' + ((certificate['privateKey']) ? '2' : '1') + ".png style=vertical-align:text-top;float:right;height:28px height=32 width=32 />";
             x += '<input id=certTrustedCheck type=checkbox>' + "This is a trusted certificate" + '<br>';
             var extKeyUsage = null;
             for (var i in certificate.cert.extensions) { if (certificate.cert.extensions[i].id == '2.5.29.37') { extKeyUsage = certificate.cert.extensions[i]; } }
-            if ((certificate['privateKey']) && (extKeyUsage != null) && (extKeyUsage['2.16.840.1.113741.1.2.1'] == true)) { x += '<div><input id=certMutualAuth type=checkbox>' + "Use for TLS console authentication" + '<br></div>'; }
+            if ((certificate['privateKey']) && (extKeyUsage != null) && (extKeyUsage['2.16.840.1.113741.1.2.1'] == true)) { x += '<div><input id=certMutualAuth type=checkbox>Use for TLS console authentication<br></div>'; }
             x += '<br>';
             // ###BEGIN###{FileSaver}
-            var y = atob(certificate['certbin']).length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=cert_saveCertCer(' + h + ',1)>' + NoBreak("Save .cer") + '</a>';
-            if (certificate['privateKey']) { y += ', <a style=cursor:pointer;color:blue onclick=cert_saveCertP12(' + h + ')>' + NoBreak("Save .p12") + '</a>'; }
-            y += ', <a style=cursor:pointer;color:blue onclick=cert_saveCertCer(' + h + ',2)>' + NoBreak("Save .pem") + '</a>';
+            var y = atob(certificate['certbin']).length + " bytes, <a style=cursor:pointer;color:blue onclick=cert_saveCertCer(" + h + ",1)>Save&nbsp.cer</a>";
+            if (certificate['privateKey']) { y += ", <a style=cursor:pointer;color:blue onclick=cert_saveCertP12(" + h + ")>Save&nbsp.p12</a>"; }
+            y += ", <a style=cursor:pointer;color:blue onclick=cert_saveCertCer(" + h + ",2)>Save&nbsp.pem</a>";
             x += addHtmlValueNoTitle("Certificate", y);
             // ###END###{FileSaver}
             // ###BEGIN###{!FileSaver}
@@ -11474,14 +11603,14 @@
             // Decode certificate usages
             y = [];
             if (extKeyUsage != null) {
-                if (extKeyUsage.clientAuth == true) { y.push(NoBreak("TLS Client")); }
-                if (extKeyUsage.codeSigning == true) { y.push(NoBreak("Code Signing")); }
+                if (extKeyUsage.clientAuth == true) { y.push("TLS&nbsp;Client"); }
+                if (extKeyUsage.codeSigning == true) { y.push("Code&nbsp;Signing"); }
                 if (extKeyUsage.emailProtection == true) { y.push("EMail"); }
-                if (extKeyUsage.serverAuth == true) { y.push(NoBreak("TLS Server")); }
-                if (extKeyUsage['2.16.840.1.113741.1.2.1'] == true) { y.push(NoBreak("Intel&reg; AMT Console")); }
-                if (extKeyUsage['2.16.840.1.113741.1.2.2'] == true) { y.push(NoBreak("Intel&reg; AMT Agent")); }
-                if (extKeyUsage['2.16.840.1.113741.1.2.3'] == true) { y.push(NoBreak("Intel&reg; AMT Activation")); }
-                if (extKeyUsage.timeStamping == true) { y.push(NoBreak("Time Stamping")); }
+                if (extKeyUsage.serverAuth == true) { y.push("TLS&nbsp;Server"); }
+                if (extKeyUsage['2.16.840.1.113741.1.2.1'] == true) { y.push("Intel&reg;&nbsp;AMT Console"); }
+                if (extKeyUsage['2.16.840.1.113741.1.2.2'] == true) { y.push("Intel&reg;&nbsp;AMT Agent"); }
+                if (extKeyUsage['2.16.840.1.113741.1.2.3'] == true) { y.push("Intel&reg;&nbsp;AMT Activation"); }
+                if (extKeyUsage.timeStamping == true) { y.push("Time&nbsp;Stamping"); }
                 if (y.length > 0) { x += addHtmlValueNoTitle("Certificate Usage", y.join(', ') + '.') + '<br clear=all />'; }
             }
             x += '<br><div style=\"border-bottom:1px solid gray\"><i>' + "Certificate Subject" + '</i></div><br>';
@@ -12057,7 +12186,7 @@
             selectedVariable = j;
             var modid = setupbin.records[i].variables[j].moduleid;
             var varid = setupbin.records[i].variables[j].varid;
-            d16type.value = modid + '-' + varid;
+            d16type.value = modid + "-" + varid;
             d16type.disabled = true;
             usb_ond16typechange();
             QV('d16genericvalue', false);
@@ -12300,7 +12429,6 @@
                 else if (p == 2) { p = "MeshCentral Desktop"; }
                 else if (p == 100) { p = "Intel&reg; AMT WSMAN"; }
                 else if (p == 101) { p = "Intel&reg; AMT Redirection"; }
-                else if (p == 200) { p = "Intel&reg; AMT KVM"; }
                 x += addInfoNoEsc("Protocol", p);
             }
             QV('srec_DeskParent', false);
@@ -12342,22 +12470,6 @@
                 amtDesktop.onScreenSizeChange = srec_deskAdjust;
                 amtDesktop.State = 3;
                 amtDesktop.Start();
-                srec_deskAdjust();
-            } else if (recFileMetadata.protocol == 200) {
-                // Intel AMT Midstream KVM
-                recFileProtocol = 200;
-                x += '<br /><br /><span style=color:gray>' + "Press [space] to play/pause." + '</span>';
-                QE('srec_PlayButton', true);
-                QE('srec_PauseButton', false);
-                QE('srec_RestartButton', false);
-                QV('srec_toggleviewmode', true);
-                recFileStartTime = recFileLastTime = time;
-                amtDesktop = CreateAmtRemoteDesktop('srec_Desk');
-                amtDesktop.onScreenSizeChange = srec_deskAdjust;
-                amtDesktop.State = 3;
-                amtDesktop.Start();
-                if (recFileMetadata.bpp) { amtDesktop.bpp = recFileMetadata.bpp; }
-                amtDesktop.state = 3;
                 srec_deskAdjust();
             }
             QV('srec_metadatadiv', true);
@@ -12407,11 +12519,6 @@
                         readState = 1;
                         if (data.length > 8) { amtDesktop.ProcessData(data.substring(8)); }
                     } else if (readState == 1) { amtDesktop.ProcessData(data); }
-                } else if (recFileProtocol == 200) {
-                    // Intel AMT midstream KVM
-                    var view = new Uint8Array(data.length);
-                    for (var i = 0; i < data.length; i++) { view[i] = data.charCodeAt(i); }
-                    amtDesktop.ProcessBinaryData(view.buffer);
                 }
             } else if ((type == 2) && flagBinary && flagUser) {
                 // User --> Device data
@@ -12419,14 +12526,6 @@
                     // Intel AMT KVM
                     if (rstr2hex(data) == '0000000008080001000700070003050200000000') { amtDesktop.bpp = 1; } // Switch to 1 byte per pixel.
                 }
-            }
-
-            // This is a PNG screenshot of the display, load it and render it.
-            if ((type == 3) && (recFileProtocol == 200)) {
-                var tile = new Image();
-                tile.src = 'data:image/png;base64,' + btoa(data);
-                tile.onload = function () { amtDesktop.canvas.drawImage(tile, 0, 0); }
-                tile.error = function () { }
             }
 
             recFileLastTime = time;
@@ -12515,7 +12614,7 @@
             QE('srec_PlayButton', false);
             QE('srec_PauseButton', true);
             QE('srec_RestartButton', false);
-            if ((recFileProtocol == 2) || (recFileProtocol == 101) || (recFileProtocol == 200)) {
+            if ((recFileProtocol == 2) || (recFileProtocol == 101)) {
                 QV('srec_DeskParent', true);
                 QV('srec_TermParent', false);
             } else if ((recFileProtocol == 1) && (agentTerminal == null)) {
@@ -12566,11 +12665,6 @@
                 amtDesktop.onScreenSizeChange = srec_deskAdjust;
                 amtDesktop.State = 3;
                 amtDesktop.Start();
-                if (recFileMetadata.protocol == 200) {
-                    if (recFileMetadata.bpp) { amtDesktop.bpp = recFileMetadata.bpp; }
-                    amtDesktop.state = 3;
-                    srec_deskAdjust();
-                }
             }
             if (agentTerminal) { agentTerminal = null; }
         }
@@ -12620,7 +12714,7 @@
             }
         }
 
-        function pad2(num) { var s = '00' + num; return s.substr(s.length - 2); }
+        function pad2(num) { var s = "00" + num; return s.substr(s.length - 2); }
 
         // ###END###{SessionRecording}
 
@@ -12663,7 +12757,7 @@
         }
 
         function center() {
-            QS('dialog').left = ((((getDocWidth() - 400) / 2)) + 'px');
+            QS('dialog').left = ((((getDocWidth() - 400) / 2)) + "px");
             // ###BEGIN###{Desktop}
             var sh = 0, mh = (Q('id_mainarea').offsetHeight - ((fullscreen == false)?126:53));
             // ###BEGIN###{Scripting}
@@ -12710,7 +12804,7 @@
                 r = {'webappversion':version,'description':desc,'hostname':amtsysstate['AMT_GeneralSettings'].response['HostName'],'localtime':Date(),'utctime':new Date().toUTCString(),'isotime':new Date().toISOString()};
                 if (HardwareInventory) r['systemid'] = guidToStr(HardwareInventory['CIM_ComputerSystemPackage'].response['PlatformGUID'].toLowerCase());
             }
-            n += '-' + d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);;
+            n += '-' + d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + "-" + ("0" + d.getMinutes()).slice(-2);;
             r[name2] = data;
             // ###BEGIN###{!Mode-NodeWebkit}
             saveAs(data2blob(JSON.stringify(r, null, '  ').replace(/\n/g, '\r\n')), name + n + '.json');
@@ -12884,7 +12978,7 @@
         function TableEnd(n) { return '<tr><td colspan=2><p>' + (n?n:'') + '</table>'; }
         function AddButton(v, f) { return '<input type=button value=\'' + v + '\' onclick=\'' + f + '\' style=margin:4px>'; }
         function AddButton2(v, f, s) { return '<input type=button value=\'' + v + '\' onclick=\'' + f + '\' ' + s + '>'; }
-        function AddRefreshButton(f) { return '<input type=button name=refreshbtn value="' + "Refresh" + '" onclick=\'refreshButtons(false);' + f + '\' style=margin:4px ' + (refreshButtonsState==false?'disabled':'') + '>'; }
+        function AddRefreshButton(f) { return '<input type=button name=refreshbtn value=Refresh onclick=\'refreshButtons(false);' + f + '\' style=margin:4px ' + (refreshButtonsState==false?'disabled':'') + '>'; }
         function MoreStart() { return '<a style=cursor:pointer;color:blue id=morexxx1 onclick=QV(\"morexxx1\",false);QV(\"morexxx2\",true)>&#x25BC; More</a><div id=morexxx2 style=display:none><br><hr>'; };
         function MoreEnd() { return '<a style=cursor:pointer;color:blue onclick=QV(\"morexxx2\",false);QV(\"morexxx1\",true)>&#x25B2; Less</a></div>'; };
         function getSelectedOptions(sel) { var opts = [], opt; for (var i = 0, len = sel.options.length; i < len; i++) { opt = sel.options[i]; if (opt.selected) { opts.push(opt.value); } } return opts; }
@@ -12943,11 +13037,9 @@
         window['SaveHardwareLog'] = SaveHardwareLog;
         // ###END###{FileSaver}
         // ###END###{HardwareInfo}
-        // ###BEGIN###{WsmanBrowser}
         // ###BEGIN###{FileSaver}
         window['saveEntireAmtState'] = saveEntireAmtState;
         // ###END###{FileSaver}
-        // ###END###{WsmanBrowser}
         // ###BEGIN###{ContextMenus}
         window['handleContextMenu'] = handleContextMenu;
         window['hideContextMenu'] = hideContextMenu;

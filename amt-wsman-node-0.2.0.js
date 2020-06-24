@@ -50,6 +50,9 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
     // Private method
     //obj.Debug = function (msg) { console.log(msg); }
 
+    //console.log(obj.socket.remoteAddress + ':' + obj.socket.remotePort);
+    //console.log(obj.socket.localAddress + ':' + obj.socket.localPort);
+
     // Private method
     //   pri = priority, if set to 1, the call is high priority and put on top of the stack.
     obj.PerformAjax = function (postdata, callback, tag, pri, url, action) {

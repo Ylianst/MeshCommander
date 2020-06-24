@@ -86,11 +86,6 @@
 <!-- ###BEGIN###{Terminal} -->
     <script type="text/javascript" src="amt-terminal-0.0.2.js"></script>
 <!-- ###END###{Terminal} -->
-<!-- ###BEGIN###{PowerControl-Advanced} -->
-<!-- ###BEGIN###{PowerControl-OneClick} -->
-    <script type="text/javascript" src="webserver-0.0.1.js"></script>
-<!-- ###END###{PowerControl-Advanced} -->
-<!-- ###END###{PowerControl-OneClick} -->
 <!-- ###BEGIN###{Inflate} -->
     <script type="text/javascript" src="zlib.js"></script>
     <script type="text/javascript" src="zlib-inflate.js"></script>
@@ -443,9 +438,6 @@
         <div id="id_lmsData2" style="margin:10px"></div>
     </div>
     <!-- ###END###{Mode-LMS} -->
-    <!-- ###BEGIN###{PowerControl-OneClick} -->
-    <div id=TransferNotification style="display:none;background-color:lightgrey;position:absolute;left:10px;bottom:10px;border-radius:5px;padding:4px;z-index:1000;box-shadow:0px 0px 10px #333"></div>
-    <!-- ###END###{PowerControl-OneClick} -->
     <!-- ###BEGIN###{Mode-NodeWebkit} -->
     <div id=LeftSideToolBar style="position:absolute;left:0px;bottom:0px;width:52px;top:69px;background:#113962;background:linear-gradient(to bottom, #104893 0%,#113962 100%);color:white;display:none">
         <div style="height:23px"></div>
@@ -1741,11 +1733,6 @@
         // ###BEGIN###{MeshServerConnect}
         var meshCentralServer = null;
         // ###END###{MeshServerConnect}
-        // ###BEGIN###{PowerControl-Advanced}
-        // ###BEGIN###{PowerControl-OneClick}
-        var webserver = null;
-        // ###END###{PowerControl-OneClick}
-        // ###END###{PowerControl-Advanced}
 
         function startup() {
             // This is a bit freeky, but all HTML input elements are just going to be accessible directly.
@@ -1828,16 +1815,16 @@
             if (urlvars['kvmclip']) { QV('id_DeskKvmClipButton', true); }
             // ###END###{DesktopClipboard}
 
-            // ###BEGIN###{ContextMenus}
+// ###BEGIN###{ContextMenus}
             document.onclick = function (e) { hideContextMenu(); }
-            // ###END###{ContextMenus}
+// ###END###{ContextMenus}
 
-            // ###BEGIN###{SessionRecording}
+// ###BEGIN###{SessionRecording}
             srec_cleanup();
             Q('srec_PlaySpeed').value = 1;
-            // ###END###{SessionRecording}
+// ###END###{SessionRecording}
 
-            // ###BEGIN###{Mode-LMS}
+// ###BEGIN###{Mode-LMS}
             // Setup LMS
             lms = CreateLmsControl();
             lms.onStateChanged = lmsChangedState;
@@ -1848,14 +1835,14 @@
             QH('id_computername', 'Configuration Console v' + version);
             go(101);
             lmsRefresh();
-            // ###END###{Mode-LMS}
+// ###END###{Mode-LMS}
 
-            // ###BEGIN###{WsmanBrowser}
+// ###BEGIN###{WsmanBrowser}
             // Add all WSMAN objects to WSMAN browser
             for (var w in AllWsman) { var option = document.createElement('option'); option.text = AllWsman[w]; option.id = 'WSB-' + AllWsman[w]; Q('id_QuerySelect').add(option); }
-            // ###END###{WsmanBrowser}
+// ###END###{WsmanBrowser}
 
-            // ###BEGIN###{Desktop}
+// ###BEGIN###{Desktop}
             // Setup the remote desktop
             desktop = CreateAmtRedirect(CreateAmtRemoteDesktop('Desk', Q('id_mainarea')));
             desktop.onStateChanged = onDesktopStateChange;
@@ -1866,9 +1853,9 @@
             var s = '';
             //for (var c = 1; c < 13; c++) s += '<option value="' + (0xffbd + c) + '">F' + c +;
             //QH('specialkeylist', s);
-            // ###END###{Desktop}
+// ###END###{Desktop}
 
-            // ###BEGIN###{Terminal}
+// ###BEGIN###{Terminal}
             // Setup the terminal
             terminal = CreateAmtRedirect(CreateAmtRemoteTerminal('Term'));
             terminal.onStateChanged = onTerminalStateChange;
@@ -1883,41 +1870,41 @@
             Q('p13').addEventListener('dragover', haltEvent, false);
             Q('p13').addEventListener('dragleave', haltEvent, false);
             Q('p13').addEventListener('drop', terminal_FileSelectHandler, false);
-            // ###END###{Terminal}
+// ###END###{Terminal}
 
             // Main drag & drop
             document.addEventListener('dragover', haltEvent, false);
             document.addEventListener('dragleave', haltEvent, false);
             document.addEventListener('drop', documentFileSelectHandler, false);
 
-            // ###BEGIN###{Certificates}
+// ###BEGIN###{Certificates}
             // Setup Terminal drag & drop
             Q('p16').addEventListener('dragover', haltEvent, false);
             Q('p16').addEventListener('dragleave', haltEvent, false);
             Q('p16').addEventListener('drop', cert_FileSelectHandler, false);
-            // ###END###{Certificates}
+// ###END###{Certificates}
 
-            // ###BEGIN###{CertificateManager}
+// ###BEGIN###{CertificateManager}
             // Setup Certificate Manager drag & drop
             Q('id_certManagerPanel').addEventListener('dragover', haltEvent, false);
             Q('id_certManagerPanel').addEventListener('dragleave', haltEvent, false);
             Q('id_certManagerPanel').addEventListener('drop', cert_importCertOk2, false);
-            // ###END###{CertificateManager}
+// ###END###{CertificateManager}
 
-            // ###BEGIN###{CertificateManager}
+// ###BEGIN###{CertificateManager}
             cert_loadCertificates();
             cert_updateCertificateList();
-            // ###END###{CertificateManager}
+// ###END###{CertificateManager}
 
-            // ###BEGIN###{FileSaver}
+// ###BEGIN###{FileSaver}
             // ###BEGIN###{Desktop}
             // ###BEGIN###{!Mode-NodeWebkit}
             if (!Q('Desk')['toBlob']) { QV('idx_deskSaveBtn', false); }// On some browsers like IE, we can't save screen shots. Hide the sceeenshot/capture buttons.
             // ###END###{!Mode-NodeWebkit}
             // ###END###{Desktop}
-            // ###END###{FileSaver}
+// ###END###{FileSaver}
 
-            // ###BEGIN###{ComputerSelector}
+// ###BEGIN###{ComputerSelector}
 
             if (!urlvars['host']) { go(101); }
             QH('id_computername', format("Remote Management Console v{0}", version));
@@ -1957,9 +1944,9 @@
                 updateComputerList();
                 // ###END###{ComputerSelector-Local-ScriptOnly}
             }
-                // ###BEGIN###{!Mode-NodeWebkit}
+            // ###BEGIN###{!Mode-NodeWebkit}
             else if (urlvars['connect']) { loadServerComputer(); }
-                // ###END###{!Mode-NodeWebkit}
+            // ###END###{!Mode-NodeWebkit}
             else {
                 // ###BEGIN###{Mode-NodeWebkit}
                 if (urlvars['list']) {
@@ -2008,10 +1995,10 @@
                 }
                 // ###END###{Mode-NodeWebkit}
                 // ###BEGIN###{!Mode-NodeWebkit}
-                // Setup the computer selector
-                loadComputers();
+                    // Setup the computer selector
+                    loadComputers();
                 // ###END###{!Mode-NodeWebkit}
-            }
+                }
             // ###END###{ComputerSelector-Local}
 
             // ###BEGIN###{ComputerSelector-Remote}
@@ -2019,20 +2006,20 @@
             loadServerComputerList();
             // ###END###{ComputerSelector-Remote}
 
-            // ###END###{ComputerSelector}
+// ###END###{ComputerSelector}
 
-            // ###BEGIN###{Mode-Firmware}
+// ###BEGIN###{Mode-Firmware}
             connect('/wsman');
-            // ###END###{Mode-Firmware}
+// ###END###{Mode-Firmware}
 
-            // ###BEGIN###{USBSetup}
+// ###BEGIN###{USBSetup}
             usb_displaySetupBin();
 
             // Add all possible variable types to dialog 16
             var options = '';
             for (var i in AmtSetupBinVarIds) { for (var j in AmtSetupBinVarIds[i]) { options += '<option value="' + i + '-' + j + '">' + AmtSetupBinVarIds[i][j][1] } }
             QH('d16type', options);
-            // ###END###{USBSetup}
+// ###END###{USBSetup}
 
             document.onkeyup = handleKeyUp;
             document.onkeydown = handleKeyDown;
@@ -2066,24 +2053,6 @@
             Q('p24filetable').addEventListener('dragover', p24fileDragOver, false);
             Q('p24filetable').addEventListener('dragleave', p24fileDragLeave, false);
             // ###END###{DesktopInbandFiles}
-
-            // ###BEGIN###{PowerControl-Advanced}
-            // ###BEGIN###{PowerControl-OneClick}
-            // Create a web server to serve One Client Recovery (OCR) disk image files.
-            webserver = CreateWebServer();
-            webserver.generateCertificate();
-            webserver.start(function () { webserver.setupBootImage('C:\\temp\\ubuntu-18.04-desktop-amd64.iso', '127.0.0.1'); });
-            webserver.onTransfers = function (webserver, transfers) {
-                var x = '';
-                for (var i in transfers) { x += '<div style="width:350px;position:relative;padding:3px"><span style="position:absolute;padding:3px;font-weight:bold">' + transfers[i].xfilename + '</span><div style="height:20px;background-color:#4CAF50;width:' + Math.floor((transfers[i].progress.count * 100) / transfers[i].xsize) + '%;border-radius:4px"></div></div>'; }
-                QV('TransferNotification', transfers.length > 0);
-                QH('TransferNotification', x);
-            }
-
-            //console.log('WebServer Cert Hash RAW', webserver.certHashRaw);
-            //console.log('WebServer Cert Hash HEX', webserver.certHashHex);
-            // ###END###{PowerControl-OneClick}
-            // ###END###{PowerControl-Advanced}
         }
 
         function documentFileSelectHandler(e) {
