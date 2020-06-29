@@ -7779,6 +7779,11 @@
                     // ###BEGIN###{Mode-MeshCentral2}
                     QV('termRecordIcon', false);
                     // ###END###{Mode-MeshCentral2}
+                    if (terminal.disconnectCode == 2) { // BUSY
+                        messagebox("Remote Terminal", "The remote device is busy, a session may already be open.");
+                    } else if (terminal.disconnectCode == 3) { // UNSUPPORTED
+                        messagebox("Remote Terminal", "The device indicated that this type of connection of not supported.");
+                    }
                     break;
                 case 3:
                     // ###BEGIN###{Mode-MeshCentral2}
@@ -8180,6 +8185,13 @@
                     // ###BEGIN###{Mode-MeshCentral2}
                     QV('deskRecordIcon', false);
                     // ###END###{Mode-MeshCentral2}
+                    if (desktop.disconnectCode == 2) { // BUSY
+                        messagebox("Remote Desktop", "The remote device is busy, a session may already be open.");
+                    } else if (desktop.disconnectCode == 3) { // UNSUPPORTED
+                        messagebox("Remote Desktop", "The device indicated that this type of connection of not supported.");
+                    } else if (desktop.disconnectCode == 50000) { // KVM-Disconnect
+                        messagebox("Remote Desktop", "KVM disconnection, they may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
+                    }
                     break;
                 case 3:
                     // ###BEGIN###{DesktopInband}
@@ -8402,11 +8414,21 @@
         // Toggle desktop session recording
         function deskClipboard() {
             if (xxdialogMode || (desktop == null) || (desktop.State != 3)) return;
-            setDialogMode(11, "Clipboard", 3, deskClipboardEx, "Enter text to send to Intel&reg; AMT clipboard." + '<br><textarea id=kvmClipText style=width:100%;height:120px;resize:none;margin-top:8px />');
+            var x = '';
+            x += "Enter text to send to Intel&reg; AMT clipboard." + '<br />';
+            x += '<select id=kvmClipEncoding style=width:100%;margin-top:8px><option value=0>' + "Text Encoding" + '<option value=1>' + "Hex Encoding" + '</select>';
+            x += '<textarea id=kvmClipText style=width:100%;height:120px;resize:none;margin-top:8px />';
+            setDialogMode(11, "Clipboard", 3, deskClipboardEx, x);
             focusTextBox('kvmClipText');
         }
 
-        function deskClipboardEx() { desktop.m.sendClipboardData(Q('kvmClipText').value.split('\\0').join('\0')); }
+        function deskClipboardEx() {
+            if (Q('kvmClipEncoding').value == 0) {
+                desktop.m.sendClipboardData(Q('kvmClipText').value.split('\\0').join('\0')); // Text encoded input
+            } else {
+                desktop.m.sendClipboardData(hex2rstr(Q('kvmClipText').value)); // Hex encoded input
+            }
+        }
         // ###END###{DesktopClipboard}
 
         // ###BEGIN###{FileSaver}
@@ -9878,7 +9900,7 @@
                 addOption('d5actionSelect', "Power on to PXE", 401);
                 // ###BEGIN###{PowerControl-Advanced}
                 // ###BEGIN###{PowerControl-OneClick}
-                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) {
+                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] === true) {
                     addOption('d5actionSelect', "Reset to HTTPS Boot", 600);
                     addOption('d5actionSelect', "Power on to HTTPS Boot", 601);
                 }
@@ -9908,7 +9930,7 @@
                 setDialogMode(11, "HTTPS Boot", 3, function () {
                     var files = Q('ocrfile').files;
                     if (files.length != 1) return;
-                    webserver.setupBootImage(files[0].path, wsstack.comm.socket.localAddress);
+                    webserver.setupBootImage(files[0].path, wsstack.comm.localAddress);
                     powerActionDlg();
                 }, x);
                 QE('idx_dlgOkButton', false);
@@ -10257,6 +10279,7 @@
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
             // ###BEGIN###{PowerControl-Advanced}
+                if (action == 600 || action == 601) { bootSource = 'Force OCR UEFI HTTPS Boot'; }
             }
 
             // Resetting Force boot data in case it was changed so that it won't be used on the next power action

@@ -28,6 +28,7 @@ var CreateAmtRedirect = function (module) {
     obj.authuri = '/RedirectionService';
     obj.digestRealmMatch = null;
     obj.onStateChanged = null;
+    obj.disconnectCode = 0;
 
     function ToIntStr(v) { return String.fromCharCode((v & 0xFF), ((v >> 8) & 0xFF), ((v >> 16) & 0xFF), ((v >> 24) & 0xFF)); }
     function ToShortStr(v) { return String.fromCharCode((v & 0xFF), ((v >> 8) & 0xFF)); }
@@ -95,6 +96,13 @@ var CreateAmtRedirect = function (module) {
 
     obj.xxOnSocketData = function (data) {
         if (!data || obj.connectstate == -1) return;
+
+        // Redirection tracing
+        if (urlvars && urlvars['redirtrace']) {
+            var datastr = arrToStr(new Uint8Array(data));
+            console.log('REDIR-RECV(' + datastr.length + '): ' + rstr2hex(datastr));
+        }
+
         //obj.inDataCount++;
         data = new Uint8Array(data).buffer;
         
@@ -129,6 +137,7 @@ var CreateAmtRedirect = function (module) {
                             cmdsize = (13 + oemlen);
                             break;
                         default:
+                            obj.disconnectCode = statuscode; // 2 = BUSY, 3 = UNSUPPORTED, 0xFF = ERROR.
                             obj.Stop(1);
                             break;
                     }
@@ -142,20 +151,49 @@ var CreateAmtRedirect = function (module) {
                     var authDataBuf = new Uint8Array(obj.acc.slice(9, 9 + authDataLen));
                     cmdsize = 9 + authDataLen;
                     if (authType == 0) {
-                        // Query
-                        if (authData.indexOf(4) >= 0) {
-                            // Good Digest Auth (With cnonce and all)
-                            obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x04) + IntToStrX(obj.user.length + obj.authuri.length + 8) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(0x00, 0x00) + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(0x00, 0x00, 0x00, 0x00));
+                        // ###BEGIN###{Mode-NodeWebkit}
+                        if (obj.user == '*') {
+                            if (authData.indexOf(2) >= 0) {
+                                // Kerberos Auth
+                                var ticket;
+                                if (kerberos && kerberos != null) {
+                                    var ticketReturn = kerberos.getTicket('HTTP' + ((obj.tls == 1)?'S':'') + '/' + ((obj.pass == '') ? (obj.host + ':' + obj.port) : obj.pass));
+                                    if (ticketReturn.returnCode == 0 || ticketReturn.returnCode == 0x90312) {
+                                        ticket = ticketReturn.ticket;
+                                        if (process.platform.indexOf('win') >= 0) {
+                                            // Clear kerberos tickets on both 32 and 64bit Windows platforms
+                                            try { require('child_process').exec('%windir%\\system32\\klist purge', function (error, stdout, stderr) { if (error) { require('child_process').exec('%windir%\\sysnative\\klist purge', function (error, stdout, stderr) { if (error) { console.error('Unable to purge kerberos tickets'); } }); } }); } catch (e) { console.log(e); }
+                                        }
+                                    } else {
+                                        console.error('Unexpected Kerberos error code: ' + ticketReturn.returnCode);
+                                    }
+                                }
+                                if (ticket) {
+                                    obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x02) + IntToStrX(ticket.length) + ticket);
+                                } else {
+                                    obj.Stop(2);
+                                }
+                            }
+                            else obj.Stop(2);
+                        } else {
+                        // ###END###{Mode-NodeWebkit}
+                            // Query
+                            if (authData.indexOf(4) >= 0) {
+                                // Good Digest Auth (With cnonce and all)
+                                obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x04) + IntToStrX(obj.user.length + obj.authuri.length + 8) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(0x00, 0x00) + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(0x00, 0x00, 0x00, 0x00));
+                            }
+                            else if (authData.indexOf(3) >= 0) {
+                                // Bad Digest Auth (Not sure why this is supported, cnonce is not used!)
+                                obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x03) + IntToStrX(obj.user.length + obj.authuri.length + 7) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(0x00, 0x00) + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(0x00, 0x00, 0x00));
+                            }
+                            else if (authData.indexOf(1) >= 0) {
+                                // Basic Auth (Probably a good idea to not support this unless this is an old version of Intel AMT)
+                                obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x01) + IntToStrX(obj.user.length + obj.pass.length + 2) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(obj.pass.length) + obj.pass);
+                            }
+                            else obj.Stop(2);
+                        // ###BEGIN###{Mode-NodeWebkit}
                         }
-                        else if (authData.indexOf(3) >= 0) {
-                            // Bad Digest Auth (Not sure why this is supported, cnonce is not used!)
-                            obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x03) + IntToStrX(obj.user.length + obj.authuri.length + 7) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(0x00, 0x00) + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(0x00, 0x00, 0x00));
-                        }
-                        else if (authData.indexOf(1) >= 0) {
-                            // Basic Auth (Probably a good idea to not support this unless this is an old version of Intel AMT)
-                            obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x01) + IntToStrX(obj.user.length + obj.pass.length + 2) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(obj.pass.length) + obj.pass);
-                        }
-                        else obj.Stop(2);
+                        // ###END###{Mode-NodeWebkit}
                     } else if (((authType == 3) || (authType == 4)) && (status == 1)) {
                         var curptr = 0;
 
@@ -261,7 +299,15 @@ var CreateAmtRedirect = function (module) {
         }
     }
 
-    obj.directSend = function (arr) { try { obj.socket.write(new Buffer(arr)); } catch (ex) { console.log(ex); } }
+    obj.directSend = function (arr) {
+        // Redirection tracing
+        if (urlvars && urlvars['redirtrace']) {
+            var datastr = arrToStr(new Uint8Array(arr));
+            console.log('REDIR-DSEND(' + datastr.length + '): ' + rstr2hex(datastr));
+        }
+
+        try { obj.socket.write(new Buffer(arr)); } catch (ex) { console.log(ex); }
+    }
 
     obj.xxSend = function (x) {
         if (urlvars && urlvars['redirtrace']) { console.log('REDIR-SEND(' + x.length + '): ' + rstr2hex(x)); }

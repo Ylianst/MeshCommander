@@ -206,12 +206,13 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
     }
 
     // Get the certificate of Intel AMT
-    obj.getPeerCertificate = function () { if (obj.xtls == 1) { return obj.socket.getPeerCertificate(); } return null; }
-    obj.getPeerCertificateFingerprint = function () { if (obj.xtls == 1) { return obj.socket.getPeerCertificate().fingerprint.split(':').join('').toLowerCase(); } return null; }
+    obj.getPeerCertificate = function () { if (obj.xtls == 1) { return obj.xtlsCertificate; } return null; }
+    obj.getPeerCertificateFingerprint = function () { if (obj.xtls == 1) { return obj.xtlsCertificate.fingerprint.split(':').join('').toLowerCase(); } return null; }
 
     // NODE.js specific private method
     obj.xxOnSocketConnected = function () {
         if (obj.socket == null) return;
+        obj.localAddress = obj.socket.localAddress; // Store the local address of this socket, useful for UEFI HTTPS boot
         if (obj.xtls == 1) {
             obj.xtlsCertificate = obj.socket.getPeerCertificate();
 

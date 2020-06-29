@@ -114,6 +114,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if (accview.getUint32(0) != 0) { return obj.Stop(); }
                 obj.send(String.fromCharCode(1)); // Send share desktop flag
                 obj.state = 3;
+                if (obj.parent) { obj.parent.disconnectCode = 50000; } // If Intel AMT disconnects at exactly this moment, indicates we need RLE8 or unsupported GPU.
             }
             else if ((obj.state == 3) && (obj.acc.byteLength >= 24)) {
                 // Getting server init
@@ -171,7 +172,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(7) + ShortToStr(7) + ShortToStr(3) + String.fromCharCode(5, 2, 0, 0, 0, 0));            // Setup 8 bit color RGB332
 
                 obj.state = 4;
-                if (obj.parent) { obj.parent.xxStateChange(3); }
+                if (obj.parent) { obj.parent.disconnectCode = 0; obj.parent.xxStateChange(3); }
                 _SendRefresh();
                 //obj.timer = setInterval(obj.xxOnTimer, 50);
 
