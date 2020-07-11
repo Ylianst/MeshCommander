@@ -10302,7 +10302,14 @@
             //if (((action == 104) || (action == 105)) && !r['SecureErase']) { /*console.log("This Intel&reg; AMT does not support Secure Erase");*/ cleanup(); return; }
             //console.log("Boot Action: " + action);
             //console.log("Setting Boot Settings: " + ObjectToString2(r));
-            
+            // Clean up OCR read-only parameters from being PUT back
+            if (r['WinREBootEnabled']!=null) delete r['WinREBootEnabled'];
+            if (r['UEFILocalPBABootEnabled']!=null) delete r['UEFILocalPBABootEnabled'];
+            if (r['UEFIHTTPSBootEnabled']!=null) delete r['UEFIHTTPSBootEnabled'];
+            if (r['SecureBootControlEnabled']!=null) delete r['SecureBootControlEnabled'];
+            if (r['BootguardStatus']!=null) delete r['BootguardStatus'];
+            // remove remnant returned back by OCR leftover
+            if (r['UefiBootNumberOfParams']!=null) r['UefiBootNumberOfParams']=0;
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
             if (amtversion>=ocrminver && (Q('idx_d24ForceBootDevice').value == 5 || Q('idx_d24ForceBootDevice').value == 6)) {//Force UEFI HTTPS Boot                
                 r['UefiBootParametersArray']=btoa(getTLVS().join(''));
@@ -10310,7 +10317,7 @@
                 r['BootMediaIndex']=0;//do not use boot media index for OCR
             }
             statusbox("Power Action", "Setting boot settings...");
-            amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, r, 1);
+            amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
         }
 
         function powerActionResponse2(stack, name, response, status, tag) {
