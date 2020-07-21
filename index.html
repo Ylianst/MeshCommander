@@ -10308,6 +10308,9 @@
             if (r['UEFIHTTPSBootEnabled']!=null) delete r['UEFIHTTPSBootEnabled'];
             if (r['SecureBootControlEnabled']!=null) delete r['SecureBootControlEnabled'];
             if (r['BootguardStatus']!=null) delete r['BootguardStatus'];
+            if (r['OptionsCleared']!=null) delete r['OptionsCleared'];
+            if (r['BIOSLastStatus']!=null) delete r['BIOSLastStatus'];
+            
             // remove remnant returned back by OCR leftover
             if (r['UefiBootNumberOfParams']!=null) r['UefiBootNumberOfParams']=0;
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
@@ -10316,8 +10319,11 @@
                 r['UefiBootNumberOfParams']=getTLVS().length;
                 r['BootMediaIndex']=0;//do not use boot media index for OCR
             }
-            statusbox("Power Action", "Setting boot settings...");
-            amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
+            statusbox("Power Action", "Clear stored boot settings...");
+            amtstack.CIM_BootConfigSetting_ChangeBootOrder(null, function (st, nm, stat, tg) {
+                statusbox("Power Action", "Setting boot settings...");
+				st.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
+			},0,1);            
         }
 
         function powerActionResponse2(stack, name, response, status, tag) {
