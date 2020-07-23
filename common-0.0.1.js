@@ -103,4 +103,5 @@ function random(max) { return Math.floor(Math.random() * max); }
 // Trademarks
 function trademarks(x) { return x.replace(/\(R\)/g, '&reg;').replace(/\(TM\)/g, '&trade;'); }
 
-
+// Format
+function format(format) { var args = Array.prototype.slice.call(arguments, 1); return format.replace(/{(\d+)}/g, function (match, number) { return typeof args[number] != 'undefined' ? args[number] : match; }); };

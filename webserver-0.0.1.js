@@ -18,6 +18,7 @@ var CreateWebServer = function () {
     obj.rootKey = null;              // Root certificate private key in PEM format.
     obj.cert = null;                 // TLS certificate in PEM format.
     obj.key = null;                  // TLS certificate private key in PEM format.
+    obj.certCommonName = null;       // TLS certificate common name.
     obj.certHashRaw = null;          // SHA384 hash of TLS certificate.
     obj.certHashHex = null;          // SHA384 hash of TLS certificate in HEX.
     obj.responses = {};              // Table responses to different url paths.
@@ -35,7 +36,7 @@ var CreateWebServer = function () {
         obj.state = 1;
         if ((obj.cert != null) && (obj.key != null)) { server = tls.createServer({ cert: obj.cert, key: obj.key, minVersion: 'TLSv1' }, onConnection); } else { server = net.createServer(onConnection); }
         server.on('error', function (err) { if (err.code == 'EADDRINUSE') { obj.port = random(33000, 65500); server = null; obj.start(func); } else { console.log('WebServer Listen Error', err.code); } });
-        server.listen({ port: obj.port }, function (x) { obj.state = 2; console.log('WebServer listening on ' + obj.port); if (func != null) { func(); } });
+        server.listen({ port: obj.port }, function (x) { obj.state = 2; console.log('WebServer listening on ' + obj.port + ', CN: ' + obj.certCommonName); if (func != null) { func(); } });
     }
 
     // Called when a new incoming connection is made
@@ -45,13 +46,15 @@ var CreateWebServer = function () {
         socket.xdata = ''; // Accumulator
         socket.on('data', function (data) {
             this.xdata += data.toString('utf8');
-            console.log('WebServer, socket received data', this.xdata);
             var headersize = this.xdata.indexOf('\r\n\r\n');
             if (headersize < 0) { if (this.xdata.length > 4096) { this.close(); } return; }
             var headers = this.xdata.substring(0, headersize).split('\r\n');
             if (headers.length < 1) { this.close(); return; }
+            var headerObj = {};
+            for (var i = 1; i < headers.length; i++) { var j = headers[i].indexOf(': '); if (i > 0) { headerObj[headers[i].substring(0, j).toLowerCase()] = headers[i].substring(j + 2); } }
+            var hostHeader = (headerObj['host'] != null) ? ('Host: ' + headerObj['host'] + '\r\n') : '';
             var directives = headers[0].split(' ');
-            if ((directives.length != 3) || (directives[0] != 'GET')) { this.end(); return; }
+            if ((directives.length != 3) || ((directives[0] != 'GET') && (directives[0] != 'HEAD'))) { this.end(); return; }
             console.log('WebServer, request', directives[0], directives[1]);
             var responseCode = 404, responseType = 'text/html', responseData = 'Invalid request', r = obj.responses[directives[1]];
             if (r != null) {
@@ -64,25 +67,31 @@ var CreateWebServer = function () {
                     if (r.shortfile) { try { responseData = fs.readFileSync(r.shortfile); } catch (ex) { responseCode = 404; responseType = 'text/html'; responseData = 'File not found'; } }
                     if (r.file) {
                         // Send the file header and pipe the rest of the file
-                        socket.xfilepath = r.file;
-                        socket.xfilename = path.basename(r.file);
-                        socket.xsize = fs.statSync(r.file).size;
-                        socket.write('HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ' + socket.xsize + '\r\nConnection: close\r\n\r\n');
-                        var writable = require('stream').Writable;
-                        socket.progress = new writable({ write: function (chunk, encoding, flush) { this.count += chunk.length; flush(); } });
-                        socket.progress.count = 0;
-                        var ws = fs.createReadStream(r.file, { flags: 'r' });
-                        ws.pipe(socket.progress); ws.pipe(socket);
-                        obj.transfers.push(socket);
+                        this.xfilepath = r.file;
+                        this.xfilename = path.basename(r.file);
+                        this.xsize = fs.statSync(r.file).size;
+                        this.write('HTTP/1.1 200 OK\r\n' + hostHeader + 'Content-Type: application/octet-stream\r\nConnection: keep-alive\r\nContent-Length: ' + this.xsize + '\r\n\r\n');
 
-                        // Start the progress bar timer
-                        if (obj.onTransfers != null) { obj.onTransfers(obj, obj.transfers); if (obj.transfersTimer == null) { obj.transfersTimer = setInterval(function () { obj.onTransfers(obj, obj.transfers); }, 500); } }
+                        if (directives[0] == 'GET') {
+                            console.log('WebServer, Streaming File: ' + r.file);
+                            var writable = require('stream').Writable;
+                            this.progress = new writable({ write: function (chunk, encoding, flush) { this.count += chunk.length; flush(); } });
+                            this.progress.count = 0;
+                            var ws = fs.createReadStream(r.file, { flags: 'r' });
+                            ws.pipe(this.progress); ws.pipe(this);
+                            obj.transfers.push(this);
+
+                            // Start the progress bar timer
+                            if (obj.onTransfers != null) { obj.onTransfers(obj, obj.transfers); if (obj.transfersTimer == null) { obj.transfersTimer = setInterval(function () { obj.onTransfers(obj, obj.transfers); }, 500); } }
+                        }
+                        this.xdata = '';
                         return;
                     }
                 }
             }
-            socket.write('HTTP/1.1 ' + responseCode + ' OK\r\nContent-Type: ' + responseType + '\r\nContent-Length: ' + responseData.length + '\r\nConnection: close\r\n\r\n');
+            socket.write('HTTP/1.1 ' + responseCode + ' OK\r\n' + hostHeader + 'Connection: keep-alive\r\nContent-Type: ' + responseType + '\r\nContent-Length: ' + responseData.length + '\r\n\r\n');
             socket.write(responseData);
+            this.xdata = '';
         });
         socket.on('end', function () { cleanupSocket(this); console.log('WebServer, socket closed'); });
         socket.on('error', function (err) { cleanupSocket(this); console.log('WebServer, socket error', err); });
@@ -102,20 +111,20 @@ var CreateWebServer = function () {
     obj.stop = function () { if (server == null) return; server.close(); server = null; }
 
     // Generate a TLS certificate (this is really a root cert)
-    obj.generateCertificate = function () {
-        var attrs1 = [{ name: 'commonName', value: 'MeshCommanderRoot' }, { name: 'countryName', value: 'Unknown' }, { shortName: 'ST', value: 'Unknown' }, { name: 'organizationName', value: 'Unknown' }];
-        var attrs2 = [{ name: 'commonName', value: 'MeshCommander.com' }, { name: 'countryName', value: 'Unknown' }, { shortName: 'ST', value: 'Unknown' }, { name: 'organizationName', value: 'Unknown' }];
+    obj.generateCertificate = function (commonName) {
+        var attrs1 = [{ name: 'commonName', value: 'MeshCommanderRoot' }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
+        var attrs2 = [{ name: 'commonName', value: (commonName ? commonName : 'MeshCommander') }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
 
-        if (fs.existsSync('webroot.pem') && fs.existsSync('webroot.key')) {
+        if (fs.existsSync('webroot.crt') && fs.existsSync('webroot.key')) {
             console.log('Read root from file');
-            obj.rootCert = fs.readFileSync('webroot.pem').toString();
+            obj.rootCert = fs.readFileSync('webroot.crt').toString();
             obj.rootKey = fs.readFileSync('webroot.key').toString();
             var rootcert = forge.pki.certificateFromPem(obj.rootCert);
             var rootkeys = { privateKey: forge.pki.privateKeyFromPem(obj.rootKey) };
         } else {
-            console.log('Generate root');
+            console.log('Generate root...');
             // Generate a root keypair and create an X.509v3 root certificate
-            var rootkeys = forge.pki.rsa.generateKeyPair(1024);
+            var rootkeys = forge.pki.rsa.generateKeyPair(2048);
             var rootcert = forge.pki.createCertificate();
             rootcert.publicKey = rootkeys.publicKey;
             rootcert.serialNumber = '' + Math.floor((Math.random() * 100000) + 1);
@@ -123,24 +132,27 @@ var CreateWebServer = function () {
             rootcert.validity.notAfter = new Date(2049, 11, 31);
             rootcert.setSubject(attrs1);
             rootcert.setIssuer(attrs1);
-            rootcert.setExtensions([{ name: 'basicConstraints', cA: true }, { name: 'nsCertType', sslCA: true, emailCA: true, objCA: true }, { name: 'subjectKeyIdentifier' }]); // Root extensions
-            rootcert.sign(rootkeys.privateKey, forge.md.sha256.create());
+            rootcert.setExtensions([{ name: 'basicConstraints', cA: true }, { name: 'keyUsage', keyCertSign: true }, { name: 'subjectKeyIdentifier' }]); // Root extensions
+            rootcert.sign(rootkeys.privateKey, forge.md.sha384.create());
             obj.rootCert = forge.pki.certificateToPem(rootcert);
             obj.rootKey = forge.pki.privateKeyToPem(rootkeys.privateKey);
-            fs.writeFileSync('webroot.pem', obj.rootCert);
+            fs.writeFileSync('webroot.crt', obj.rootCert);
             fs.writeFileSync('webroot.key', obj.rootKey);
         }
 
-        if (fs.existsSync('webleaf.pem') && fs.existsSync('webleaf.key')) {
+        if (fs.existsSync('webleaf.crt') && fs.existsSync('webleaf.key')) {
             console.log('Read leaf from file');
-            obj.cert = fs.readFileSync('webleaf.pem').toString();
+            obj.cert = fs.readFileSync('webleaf.crt').toString();
             obj.key = fs.readFileSync('webleaf.key').toString();
             var cert = forge.pki.certificateFromPem(obj.cert);
             var keys = { privateKey: forge.pki.privateKeyFromPem(obj.key) };
-        } else {
-            console.log('Generate leaf');
+            obj.certCommonName = forge.pki.certificateFromPem(obj.cert).subject.getField('CN').value;
+        }
+
+        if ((obj.certCommonName == null) || ((commonName != null) && (commonName != obj.certCommonName))) {
+            console.log('Generate leaf...');
             // Generate a keypair and create an X.509v3 certificate
-            var keys = forge.pki.rsa.generateKeyPair(1024);
+            var keys = forge.pki.rsa.generateKeyPair(2048);
             var cert = forge.pki.createCertificate();
             cert.publicKey = keys.publicKey;
             cert.serialNumber = '' + Math.floor((Math.random() * 100000) + 1);
@@ -153,13 +165,15 @@ var CreateWebServer = function () {
             var extKeyUsage = { name: 'extKeyUsage', serverAuth: true }
 
             // Create a leaf certificate
-            cert.setExtensions([{ name: 'basicConstraints' }, { name: 'keyUsage', keyCertSign: true, digitalSignature: true, nonRepudiation: true, keyEncipherment: true, dataEncipherment: true }, extKeyUsage, { name: 'nsCertType', server: true }, { name: 'subjectKeyIdentifier' }]);
+            cert.setExtensions([{ name: 'basicConstraints' }, { name: 'keyUsage', digitalSignature: true, keyEncipherment: true }, extKeyUsage, { name: 'subjectKeyIdentifier' }]);
 
             // Self-sign certificate
-            cert.sign(rootkeys.privateKey, forge.md.sha256.create());
+            cert.sign(rootkeys.privateKey, forge.md.sha384.create());
             obj.cert = forge.pki.certificateToPem(cert);
             obj.key = forge.pki.privateKeyToPem(keys.privateKey);
-            fs.writeFileSync('webleaf.pem', obj.cert);
+            obj.certCommonName = (commonName ? commonName : 'MeshCommander');
+
+            fs.writeFileSync('webleaf.crt', obj.cert);
             fs.writeFileSync('webleaf.key', obj.key);
         }
 
@@ -182,19 +196,6 @@ var CreateWebServer = function () {
         console.log('SHA512', md.digest().toHex());
     }
 
-    // MC 0.8.6
-    // 8680 0100 2c000000 68747470733a2f2f31302e3135312e3133372e3139383a343133352f34343131313435323237343935353831     // https://10.151.137.198:4135/4411145227495581
-    // 8680 1400 01000000 00        // OCR_HTTPS_CERT_SYNC_ROOT_CA
-    // 8680 1700 20000000 ac8adfe3809dc66990040fdaac53765e369c0242f2a789327b57c072d5dd2677
-    // 8680 1e00 02000000 3c00      // OCR_HTTPS_REQUEST_TIMEOUT (60)
-
-    // MC 0.8.3-alpha
-    // 8680 0100 2c000000 68747470733a2f2f31302e3135312e3133372e3139383a343133352f34343131313435323237343935353831     // https://10.151.137.198:4135/4411145227495581
-    // 8680 0300 02000000 2c00      // OCR_EFI_FILE_DEVICE_PATH (44)
-    // 8680 1700 20000000 ac8adfe3809dc66990040fdaac53765e369c0242f2a789327b57c072d5dd2677
-    // 8680 1400 01000000 00        // OCR_HTTPS_CERT_SYNC_ROOT_CA
-    // 8680 1e00 02000000 0000      // OCR_HTTPS_REQUEST_TIMEOUT
-
     // Returns a UEFI boot parameter in binary
     function makeUefiBootParam(type, data, len) {
         if (typeof data == 'number') { if (len == 1) { data = String.fromCharCode(data & 0xFF); } if (len == 2) { data = ShortToStrX(data); } if (len == 4) { data = IntToStrX(data); } }
@@ -204,7 +205,7 @@ var CreateWebServer = function () {
     // Setup UEFI boot image
     obj.setupBootImage = function(filePath, ip) {
         if (fs.existsSync(filePath) == false) return null;
-        var name = ('' + Math.random()).substring(2);
+        var name = ('' + Math.random()).substring(2) + '.iso';
         obj.responses['/' + name] = { type: 'application/octet-stream', file: filePath };
         var url = 'http' + ((obj.cert != null) ? 's' : '') + '://' + ip + ':' + obj.port + '/' + name;
         console.log(url);
@@ -215,7 +216,7 @@ var CreateWebServer = function () {
                 makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
                 makeUefiBootParam(3, url.length, 2) +         // OCR_EFI_DEVICE_PATH_LEN (3)
                 makeUefiBootParam(20, 0, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
-                makeUefiBootParam(21, "MeshCommander.com") +  // OCR_HTTPS_CERT_SERVER_NAME (21)
+                makeUefiBootParam(21, obj.certCommonName) +   // OCR_HTTPS_CERT_SERVER_NAME (21)
                 makeUefiBootParam(22, 1, 2) +                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
                 makeUefiBootParam(23, obj.certHashRaw) +      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
                 makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
@@ -226,19 +227,42 @@ var CreateWebServer = function () {
             args: btoa(
                 makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
                 makeUefiBootParam(20, 0, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
-                makeUefiBootParam(21, "MeshCommander.com") +  // OCR_HTTPS_CERT_SERVER_NAME (21)
+                makeUefiBootParam(21, obj.certCommonName) +   // OCR_HTTPS_CERT_SERVER_NAME (21)
                 makeUefiBootParam(22, 1, 2) +                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
                 makeUefiBootParam(23, obj.certHashRaw)),      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
             argscount: 5
+        };
+
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(20, 1, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(21, obj.certCommonName) +   // OCR_HTTPS_CERT_SERVER_NAME (21)
+                makeUefiBootParam(22, 1, 2)),                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
+            argscount: 4
+        };
+        */
+
+        /*
+        url = 'http' + ((obj.cert != null) ? 's' : '') + '://' + "DESKTOP-NTHM909.jf.intel.com" + ':' + obj.port + '/' + name;
+
+        // This works!
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(23, obj.certHashRaw) +      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
+                makeUefiBootParam(20, 1, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
+            argscount: 4
         };
         */
 
         obj.lastBootImageArgs = {
             args: btoa(
                 makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(23, obj.certHashRaw) +      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
                 makeUefiBootParam(20, 1, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
-                makeUefiBootParam(21, "MeshCommander.com") +  // OCR_HTTPS_CERT_SERVER_NAME (21)
-                makeUefiBootParam(22, 1, 2)),                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
+                makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
             argscount: 4
         };
 

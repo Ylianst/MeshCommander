@@ -679,7 +679,9 @@ var CreateAmtRemoteIder = function () {
         g_lba += len;
         var fr = new FileReader();
         fr.onload = function () {
-            obj.SendDataToHost(g_dev, (g_len == 0), this.result, featureRegister & 1);
+            var result = this.result;
+            if (typeof result == 'object') { result = arrToStr(new Uint8Array(result)); }
+            obj.SendDataToHost(g_dev, (g_len == 0), result, featureRegister & 1);
             if ((g_len > 0) && (g_reset == false)) {
                 sendDiskDataEx(featureRegister);
             } else {
@@ -689,8 +691,10 @@ var CreateAmtRemoteIder = function () {
             }
         };
         //console.log('Read from ' + lba + ' to ' + (lba + len) + ', total of ' + len);
-        fr.readAsBinaryString(g_media.slice(lba, lba + len));
+        if (fr.readAsBinaryString) { fr.readAsBinaryString(g_media.slice(lba, lba + len)); } else { fr.readAsArrayBuffer(g_media.slice(lba, lba + len)); }
     }
+
+    function arrToStr(arr) { return String.fromCharCode.apply(null, arr); }
 
     return obj;
 }

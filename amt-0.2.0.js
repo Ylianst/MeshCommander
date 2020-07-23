@@ -500,13 +500,36 @@ function AmtStackCreateService(wsmanStack) {
     var _SystemEntityTypes = "Unspecified|Other|Unknown|Processor|Disk|Peripheral|System management module|System board|Memory module|Processor module|Power supply|Add in card|Front panel board|Back panel board|Power system board|Drive backplane|System internal expansion board|Other system board|Processor board|Power unit|Power module|Power management board|Chassis back panel board|System chassis|Sub chassis|Other chassis board|Disk drive bay|Peripheral bay|Device bay|Fan cooling|Cooling unit|Cable interconnect|Memory device|System management software|BIOS|Intel(r) ME|System bus|Group|Intel(r) ME|External environment|Battery|Processing blade|Connectivity switch|Processor/memory module|I/O module|Processor I/O module|Management controller firmware|IPMI channel|PCI bus|PCI express bus|SCSI bus|SATA/SAS bus|Processor front side bus".split('|');
     obj.RealmNames = "||Redirection||Hardware Asset|Remote Control|Storage|Event Manager|Storage Admin|Agent Presence Local|Agent Presence Remote|Circuit Breaker|Network Time|General Information|Firmware Update|EIT|LocalUN|Endpoint Access Control|Endpoint Access Control Admin|Event Log Reader|Audit Log|ACL Realm|||Local System".split('|');
     obj.WatchdogCurrentStates = { 1: "Not Started", 2: "Stopped", 4: "Running", 8: "Expired", 16: "Suspended" };
+    var _OCRProgressEvents = ["Boot parameters received from CSME", "CSME Boot Option % added successfully", "HTTPS URI name resolved", "HTTPS connected successfully", "HTTPSBoot download is completed", "Attempt to boot", "Exit boot services"];
+    var _OCRErrorEvents = ['', "No network connection available", "Name resolution of URI failed", "Connect to URI failed", "OEM app not found at local URI", "HTTPS TLS Auth failed", "HTTPS Digest Auth failed", "Verified boot failed (bad image)", "HTTPS Boot File not found"];
+    var _OCRSource = { 1: '', 2: "HTTPS", 4: "Local PBA", 8: "WinRE" };
 
     function _GetEventDetailStr(eventSensorType, eventOffset, eventDataField, entity) {
-
         if (eventSensorType == 15) {
             if (eventDataField[0] == 235) return "Invalid Data";
-            if (eventOffset == 0) return _SystemFirmwareError[eventDataField[1]];
-            return _SystemFirmwareProgress[eventDataField[1]];
+            if (eventOffset == 0) {
+                return _SystemFirmwareError[eventDataField[1]];
+            } else if (eventOffset == 3) {
+                if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
+                    return format("AMT One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
+                } else {
+                    return "OEM Specific Firmware Error event";
+                }
+            } else if (eventOffset == 5) {
+                if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
+                    if (eventDataField[2] == 1) {
+                        return format("AMT One Click Recovery: CSME Boot Option {0}:{1} added successfully", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
+                    } else if (eventDataField[2] < 7) {
+                        return format("AMT One Click Recovery: {0}", _OCRProgressEvents[eventDataField[2]]);
+                    } else {
+                        return format("AMT One Click Recovery: Unknown progress event {0}", eventDataField[2]);
+                    }
+                } else {
+                    return "OEM Specific Firmware Progress event";
+                }
+            } else {
+                return _SystemFirmwareProgress[eventDataField[1]];
+            }
         }
 
         if ((eventSensorType == 18) && (eventDataField[0] == 170)) { // System watchdog event

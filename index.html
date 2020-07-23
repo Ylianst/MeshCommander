@@ -813,7 +813,7 @@
         </div>
         <div id="id_mainarea" class=maincell>
             <!-- ###BEGIN###{IDER} -->
-            <div id="id_iderstatus" style="position:relative;height:21px;background:#8fac8d;padding:5px;margin-bottom:1px;display:none">
+            <div id="id_iderstatus" style="position:relative;height:21px;background:#8fac8d;padding:5px;margin-bottom:1px;display:none;z-index:1000">
                 <div style="float:right">
                     <input id="IDERDiskMapButton" type="button" value="Disk Map" onclick="iderToggleDiskMap()" />
                     <input type="button" value="Stop IDE-R Session" onclick="iderStop()" />
@@ -1680,7 +1680,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.6';
+        var version = '0.8.8';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -1746,6 +1746,10 @@
         var webserver = null;
         // ###END###{PowerControl-OneClick}
         // ###END###{PowerControl-Advanced}
+        // ###BEGIN###{DesktopClipboard}
+        var xxKvmClipEnc = null;
+        var xxKvmClipVal = null;
+        // ###END###{DesktopClipboard}
 
         function startup() {
             // This is a bit freeky, but all HTML input elements are just going to be accessible directly.
@@ -2066,13 +2070,16 @@
             Q('p24filetable').addEventListener('dragover', p24fileDragOver, false);
             Q('p24filetable').addEventListener('dragleave', p24fileDragLeave, false);
             // ###END###{DesktopInbandFiles}
+        }
 
-            // ###BEGIN###{PowerControl-Advanced}
-            // ###BEGIN###{PowerControl-OneClick}
+        // ###BEGIN###{PowerControl-Advanced}
+        // ###BEGIN###{PowerControl-OneClick}
+        function setupWebServer() {
+            if (webserver != null) return;
+
             // Create a web server to serve One Client Recovery (OCR) disk image files.
             webserver = CreateWebServer();
-            webserver.generateCertificate();
-            //webserver.start(function () { webserver.setupBootImage('C:\\temp\\ubuntu-18.04-desktop-amd64.iso', '127.0.0.1'); });
+            webserver.generateCertificate(urlvars['webcn']);
             webserver.start();
             webserver.onTransfers = function (webserver, transfers) {
                 var x = '';
@@ -2083,9 +2090,9 @@
 
             //console.log('WebServer Cert Hash RAW', webserver.certHashRaw);
             //console.log('WebServer Cert Hash HEX', webserver.certHashHex);
-            // ###END###{PowerControl-OneClick}
-            // ###END###{PowerControl-Advanced}
         }
+        // ###END###{PowerControl-OneClick}
+        // ###END###{PowerControl-Advanced}
 
         function documentFileSelectHandler(e) {
             haltEvent(e);
@@ -6178,7 +6185,7 @@
             // ###BEGIN###{CertificateManager}
             if ((!xxDragDropCertFiles) && (certificateStore.length > 0)) { x += '<div style=height:26px;margin-top:4px><select onchange=addCertButtonUpdate() id=certoptype style=float:right;width:260px><option value=0>' + "Add from certificate manager" + '</option><option value=1>' + "Add from certificate file" + '</option></select><div style=padding-top:4px>' + "Operation" + '</div></div>'; }
             x += '<div id=dxcertfileop1>';
-            var input = '<input id=certopen onchange=addCertButtonUpdate() type=file style=float:right;width:260px accept=".cer,.pem">';
+            var input = '<input id=certopen onchange=addCertButtonUpdate() type=file style=float:right;width:260px accept=".crt,.cer,.pem">';
             if (xxDragDropCertFiles) { input = '<input style=float:right;width:260px readonly disabled value="' + xxDragDropCertFiles[0].name + '">'; }
             x += '<div style=height:26px;margin-top:4px>' + input + '<div style=padding-top:4px>' + "Certificate file" + '</div></div></div>';
             if (certificateStore.length > 0) {
@@ -6247,11 +6254,11 @@
         function addCertButtonOk2(file) {
             var data = file.target.result;
             var i = data.indexOf('-----BEGIN CERTIFICATE-----');
-            if (i > 0) {
+            if (i >= 0) {
                 // This is a .PEM file, keep everything between BEGIN/END, clean it up and use as-is. It's already Base64.
                 data = data.substring(i + 27);
                 i = data.indexOf('-----END CERTIFICATE-----');
-                if (i > 0) data = data.substring(0, i)
+                if (i >= 0) data = data.substring(0, i)
                 data = data.replace(/\r\n/g, '');
             } else {
                 // This is a .CER file, just base64 encode it and we should be ok.
@@ -8420,9 +8427,13 @@
             x += '<textarea id=kvmClipText style=width:100%;height:120px;resize:none;margin-top:8px />';
             setDialogMode(11, "Clipboard", 3, deskClipboardEx, x);
             focusTextBox('kvmClipText');
+            if (xxKvmClipEnc != null) { Q('kvmClipEncoding').value = xxKvmClipEnc; }
+            if (xxKvmClipVal != null) { Q('kvmClipText').value = xxKvmClipVal; }
         }
 
         function deskClipboardEx() {
+            xxKvmClipEnc = Q('kvmClipEncoding').value;
+            xxKvmClipVal = Q('kvmClipText').value;
             if (Q('kvmClipEncoding').value == 0) {
                 desktop.m.sendClipboardData(Q('kvmClipText').value.split('\\0').join('\0')); // Text encoded input
             } else {
@@ -9930,7 +9941,8 @@
                 setDialogMode(11, "HTTPS Boot", 3, function () {
                     var files = Q('ocrfile').files;
                     if (files.length != 1) return;
-                    webserver.setupBootImage(files[0].path, wsstack.comm.localAddress);
+                    setupWebServer();
+                    webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
                     powerActionDlg();
                 }, x);
                 QE('idx_dlgOkButton', false);
@@ -10250,7 +10262,7 @@
             console.log("Boot Action: " + action);
             console.log("Setting Boot Settings: " + ObjectToString2(r));
             statusbox("Power Action", "Setting boot settings...");
-            amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, r, 1);
+            amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
         }
 
         function powerActionResponse2(stack, name, response, status, tag) {

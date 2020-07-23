@@ -77,7 +77,7 @@ var CreateAmtRedirect = function (module, authCookie) {
 
         // KVM traffic, forward it directly.
         if ((obj.connectstate == 1) && ((obj.protocol == 2) || (obj.protocol == 3))) {
-            return obj.m.ProcessBinaryData ? obj.m.ProcessBinaryData(e.data) : obj.m.ProcessData(arrToStr(e.data));
+            return obj.m.ProcessBinaryData ? obj.m.ProcessBinaryData(e.data) : obj.m.ProcessData(arrToStr(new Uint8Array(e.data)));
         }
 
         // Append to accumulator

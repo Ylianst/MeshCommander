@@ -763,11 +763,12 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
             if ((d.length >= 16) && (d.substring(0, 15) == '\0KvmDataChannel')) {
                 if (obj.kvmDataSupported == false) { obj.kvmDataSupported = true; console.log('KVM Data Channel Supported.'); }
                 if (((obj.onKvmDataAck == -1) && (d.length == 16)) || (d.charCodeAt(15) != 0)) { obj.onKvmDataAck = true; }
-                //if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-Recv(' + (d.length - 16) + '): ' + d.substring(16)); }
+                if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-DataChannel-Recv(' + (d.length - 16) + '): ' + d.substring(16)); }
                 if (d.length >= 16) { obj.onKvmData(d.substring(16)); } // Event the data and ack
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
             } else {
                 console.log('Got KVM clipboard data:', d);
+                if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + x.length + '): ' + rstr2hex(x) + ', ' + x); }
             }
         }
         // ###END###{DesktopInband}
@@ -779,7 +780,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         if (obj.onKvmDataAck !== true) {
             obj.onKvmDataPending.push(x);
         } else {
-            //if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-Send(' + x.length + '): ' + x); }
+            if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-DataChannel-Send(' + x.length + '): ' + x); }
             x = '\0KvmDataChannel\0' + x;
             obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x);
             obj.onKvmDataAck = false;
@@ -793,7 +794,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     // ###END###{DesktopInband}
 
     // ###BEGIN###{DesktopClipboard}
-    obj.sendClipboardData = function (x) { obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x); }
+    obj.sendClipboardData = function (x) {
+        if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Send(' + x.length + '): ' + rstr2hex(x) + ', ' + x); }
+        obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x);
+    }
     // ###END###{DesktopClipboard}
 
     obj.SendCtrlAltDelMsg = function () { obj.sendcad(); }
