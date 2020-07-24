@@ -119,8 +119,8 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
                 r.Body = _ParseWsmanRec(body.childNodes[0]);
 		    }
             return r;
-        } catch (e) {
-            console.log('Unable to parse XML: ' + xml);
+        } catch (ex) {
+            console.log('Unable to parse XML: ' + xml + ', ' + ex);
             return null;
         }
     }

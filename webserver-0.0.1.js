@@ -112,7 +112,7 @@ var CreateWebServer = function () {
 
     // Generate a TLS certificate (this is really a root cert)
     obj.generateCertificate = function (commonName) {
-        var attrs1 = [{ name: 'commonName', value: 'MeshCommanderRoot' }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
+        var attrs1 = [{ name: 'commonName', value: 'MC-WebServerRoot-' + random(1, 10000000) }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
         var attrs2 = [{ name: 'commonName', value: (commonName ? commonName : 'MeshCommander') }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
 
         if (fs.existsSync('webroot.crt') && fs.existsSync('webroot.key')) {
@@ -139,6 +139,8 @@ var CreateWebServer = function () {
             fs.writeFileSync('webroot.crt', obj.rootCert);
             fs.writeFileSync('webroot.key', obj.rootKey);
         }
+
+        if (commonName === 0) return; // This is used to only generate the root cert and exit.
 
         if (fs.existsSync('webleaf.crt') && fs.existsSync('webleaf.key')) {
             console.log('Read leaf from file');

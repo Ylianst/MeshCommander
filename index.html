@@ -715,7 +715,7 @@
             <div id="tlsNotification1" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="images/lock.gif" /> TLS Secured</div>
             <div id="tlsNotification2" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="images/lock.gif" /> TLS Secured (Pinned)</div>
             <div id="tlsNotification3" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none" onclick="showTlsCert(1)"><img src="images/lock.gif" /> TLS (Untrusted)</div>
-            <div id="tlsNotification4" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none;color:red" onclick="switchToTls(1)"><img src="images/unlock.gif" /> Switch to TLS</div>
+            <div id="tlsNotification4" style="text-align:center;padding-top:8px;color:darkblue;cursor:pointer;display:none;color:red" onclick="switchToTls()"><img src="images/unlock.gif" /> Switch to TLS</div>
             <!-- ###END###{Mode-NodeWebkit} -->
             <!-- ###BEGIN###{ComputerSelector} -->
             <div style='padding:8px'>
@@ -1588,14 +1588,18 @@
                 <div style=height:26px>
                     <select id="idx_d24ForceBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
                         <option value=0>None</option>
-                        <option value=1>Force CD/DVD Boot</option>
-                        <option value=2>Force PXE Boot</option>
-                        <option value=3>Force Hard Disk Boot</option>
-                        <option value=4>Force Diagnostic Boot</option>
+                        <option id="ForceDVDBootOption" value=1>Force CD/DVD Boot</option>
+                        <option id="ForcePXEBootOption" value=2>Force PXE Boot</option>
+                        <option id="ForceHDBootOption" value=3>Force Hard Disk Boot</option>
+                        <option id="ForceDiagBootOption" value=4>Force Diagnostic Boot</option>
+                        <!-- ###BEGIN###{PowerControl-OneClick} -->
+                        <option id="ForceUEFIBootOption" value=5>Force OCR UEFI Boot Option</option>
+                        <option id="ForceHttpBootOption" value=6>Force OCR UEFI HTTPS Boot</option>
+                        <!-- ###END###{PowerControl-OneClick} -->
                     </select>
                     <div>Boot Source</div>
                 </div>
-                <div style=height:26px>
+                <div id="idx_d24bootSource" style=height:26px>
                     <select id="idx_d24BootMediaIndex" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
                         <option value=0>None</option>
                         <option value=1>Index 1</option>
@@ -1605,6 +1609,12 @@
                     </select>
                     <div>Boot Media Index</div>
                 </div>
+                <!-- ###BEGIN###{PowerControl-OneClick} -->
+                <div id="idx_d24diskImage" style=height:26px>
+                    <input id=idx_d24ocrBootFile type=file onchange=showAdvPowerDlgChange() style="float:right;width:200px" accept=".iso">
+                    <div>Boot Image</div>
+                </div>
+                <!-- ###END###{PowerControl-OneClick} -->
                 <div style=height:26px id=idd_d24IDERBootDevice>
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
                         <option value=0>Boot to floppy</option>
@@ -2074,12 +2084,15 @@
 
         // ###BEGIN###{PowerControl-Advanced}
         // ###BEGIN###{PowerControl-OneClick}
-        function setupWebServer() {
-            if (webserver != null) return;
+        function setupWebServer(leafCN) {
+            if ((webserver != null) && (webserver.certCommonName == leafCN)) return;
+
+            // Stop the web server if present
+            if (webserver != null) { webserver.stop(); webserver = null; }
 
             // Create a web server to serve One Client Recovery (OCR) disk image files.
             webserver = CreateWebServer();
-            webserver.generateCertificate(urlvars['webcn']);
+            webserver.generateCertificate(leafCN);
             webserver.start();
             webserver.onTransfers = function (webserver, transfers) {
                 var x = '';
@@ -5000,7 +5013,12 @@
 
             // Sign the key pair using the CA certifiate
             messagebox("TLS Setup", "Creating TLS certificate...");
-            var cert = amtcert_signWithCaKey(DERKey, null, { 'CN': currentcomputer['name'], 'O': "None", 'ST': "None", 'C': "None" }, { 'CN': "Untrusted Root Certificate" }, { name: 'extKeyUsage', serverAuth: true });
+
+            var name = ''
+            try { name = amtsysstate['AMT_GeneralSettings'].response['HostName']; } catch (ex) { }
+            if ((name == null) || (name == '')) { name = currentcomputer['name']; }
+            if ((name == null) || (name == '')) { name = currentcomputer['host']; }
+            var cert = amtcert_signWithCaKey(DERKey, null, { 'CN': name, 'O': "None", 'ST': "None", 'C': "None" }, { 'CN': "Untrusted Root Certificate" }, { name: 'extKeyUsage', serverAuth: true });
             if (cert == null) { messagebox("Issue Certificate", "Unable to sign certificate."); return; }
 
             // Save cert and cert hash in computer list
@@ -6180,10 +6198,16 @@
         var xxDragDropCertFiles = null;
         function addCertButton(files) {
             if (xxdialogMode || !xxAccountAdminName) return;
-            var x = '<div style=height:10px></div>';
+            var x = '<div style=height:10px></div>', op0 = '', op2 = '';
             xxDragDropCertFiles = files;
             // ###BEGIN###{CertificateManager}
-            if ((!xxDragDropCertFiles) && (certificateStore.length > 0)) { x += '<div style=height:26px;margin-top:4px><select onchange=addCertButtonUpdate() id=certoptype style=float:right;width:260px><option value=0>' + "Add from certificate manager" + '</option><option value=1>' + "Add from certificate file" + '</option></select><div style=padding-top:4px>' + "Operation" + '</div></div>'; }
+            // ###BEGIN###{PowerControl-Advanced}
+            // ###BEGIN###{PowerControl-OneClick}
+            if (amtversion > 12) { op2 = '<option value=2>' + "MeshCommander Web Server Root" + '</option>'; }
+            // ###END###{PowerControl-OneClick}
+            // ###END###{PowerControl-Advanced}
+            if (certificateStore.length > 0) { op0 += '<option value=0>' + "Add from certificate manager" + '</option>'; }
+            if ((!xxDragDropCertFiles) && ((op0 != '') || (op2 != ''))) { x += '<div style=height:26px;margin-top:4px><select onchange=addCertButtonUpdate() id=certoptype style=float:right;width:260px>' + op0 + '<option value=1>' + "Add from certificate file" + '</option>' + op2 + '</select><div style=padding-top:4px>' + "Operation" + '</div></div>'; }
             x += '<div id=dxcertfileop1>';
             var input = '<input id=certopen onchange=addCertButtonUpdate() type=file style=float:right;width:260px accept=".crt,.cer,.pem">';
             if (xxDragDropCertFiles) { input = '<input style=float:right;width:260px readonly disabled value="' + xxDragDropCertFiles[0].name + '">'; }
@@ -6202,7 +6226,7 @@
             if (xxDragDropCertFiles) { input = '<input style=float:right;width:260px readonly disabled value="' + xxDragDropCertFiles[0].name + '">'; }
             x += '<div style=height:26px;margin-top:4px>' + input + '<div style=padding-top:4px>' + "Certificate file" + '</div></div>';
             // ###END###{!CertificateManager}
-            x += '<div style=height:26px;margin-top:4px><select id=certtype style=float:right;width:260px><option value=0>' + "Chain Certificate" + '</option><option value=1>' + "Trusted Root Certificate" + '</option></select><div style=padding-top:4px>' + "Certificate type" + '</div></div>';
+            x += '<div style=height:26px;margin-top:4px><select id=certtype style=float:right;width:260px><option value=1>' + "Trusted Root Certificate" + '</option><option value=0>' + "Chain Certificate" + '</option></select><div style=padding-top:4px>' + "Certificate type" + '</div></div>';
             setDialogMode(11, "Add Certificate", 3, addCertButtonOk, x);
             addCertButtonUpdate();
         }
@@ -6216,11 +6240,41 @@
             }
             // ###END###{CertificateManager}
             var certopen = getInputElement('certopen');
-            QE('idx_dlgOkButton', !certopen || certopen.files.length == 1);
+            QE('idx_dlgOkButton', !certopen || (certopen.files.length == 1) || (Q('certoptype').value == 2));
         }
 
         function addCertButtonOk() {
             // ###BEGIN###{CertificateManager}
+            // ###BEGIN###{PowerControl-Advanced}
+            // ###BEGIN###{PowerControl-OneClick}
+            if (Q('certoptype').value == 2) {
+                var certbin = null;
+                if (webserver == null) {
+                    webserver = CreateWebServer();
+                    webserver.generateCertificate(0);
+                    certbin = webserver.rootCert;
+                    webserver = null;
+                } else {
+                    certbin = webserver.rootCert;
+                }
+
+                // This is a .PEM file, keep everything between BEGIN/END, clean it up and use as-is. It's already Base64.
+                var i = certbin.indexOf('-----BEGIN CERTIFICATE-----');
+                if (i >= 0) {
+                    certbin = certbin.substring(i + 27);
+                    i = certbin.indexOf('-----END CERTIFICATE-----');
+                    if (i >= 0) certbin = certbin.substring(0, i)
+                    certbin = certbin.replace(/\r\n/g, '');
+                    if (getSelectElement('certtype').value == 1) {
+                        amtstack.AMT_PublicKeyManagementService_AddTrustedRootCertificate(certbin, certificateAdded);
+                    } else {
+                        amtstack.AMT_PublicKeyManagementService_AddCertificate(certbin, certificateAdded);
+                    }
+                }
+                return;
+            }
+            // ###END###{PowerControl-OneClick}
+            // ###END###{PowerControl-Advanced}
             if ((xxDragDropCertFiles) || (certificateStore.length == 0) || (Q('certoptype').value == 1)) {
                 var certopen = getInputElement('certopen');
                 var files = xxDragDropCertFiles;
@@ -6830,6 +6884,7 @@
                 xxSystemDefense = responses;
                 updateSystemDefense();
                 QV('go18', true); // Show System Defense Panel
+                if (urlvars['norefresh']) { UpdateDefenseStats(); } // If norefresh is set, pull the system defense stats now.
             }
         }
 
@@ -6919,9 +6974,11 @@
             QH('id_TableSystemDefense', x);
 
             if (xxFilterStatisticsTimer == null) {
-                UpdateDefenseStats();
                 xxFilterStatisticsTimerActive = false;
-                if (!urlvars['norefresh']) { xxFilterStatisticsTimer = setInterval(UpdateDefenseStats, 5000); }
+                if (!urlvars['norefresh']) {
+                    UpdateDefenseStats();
+                    xxFilterStatisticsTimer = setInterval(UpdateDefenseStats, 5000);
+                }
             }
         }
 
@@ -9941,7 +9998,7 @@
                 setDialogMode(11, "HTTPS Boot", 3, function () {
                     var files = Q('ocrfile').files;
                     if (files.length != 1) return;
-                    setupWebServer();
+                    setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
                     webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
                     powerActionDlg();
                 }, x);
@@ -10019,11 +10076,16 @@
             QV('d24dBiosSecureBoot', amtPowerBootCapabilities['BIOSSecureBoot'] == true);
             QV('d24dReflashBios', amtPowerBootCapabilities['BIOSReflash'] == true);
             QV('d24dBiosSetup', amtPowerBootCapabilities['BIOSSetup'] == true);
-            // QV('', amtPowerBootCapabilities['ForceCDorDVDBoot'] == true);
-            // QV('', amtPowerBootCapabilities['ForceDiagnosticBoot'] == true);
-            // QV('', amtPowerBootCapabilities['ForceHardDriveBoot'] == true);
-            // QV('', amtPowerBootCapabilities['ForceHardDriveSafeModeBoot'] == true);
-            // QV('', amtPowerBootCapabilities['ForcePXEBoot'] == true);
+            QV('ForceDVDBootOption', amtPowerBootCapabilities['ForceCDorDVDBoot'] == true);
+            QV('ForceDiagBootOption', amtPowerBootCapabilities['ForceDiagnosticBoot'] == true);
+            QV('ForceHDBootOption', amtPowerBootCapabilities['ForceHardDriveBoot'] == true);
+            //QV('', amtPowerBootCapabilities['ForceHardDriveSafeModeBoot'] == true);
+            //QV('', amtPowerBootCapabilities['ForceWinREBoot'] == true);
+            QV('ForcePXEBootOption', amtPowerBootCapabilities['ForcePXEBoot'] == true);
+            // ###BEGIN###{PowerControl-OneClick}
+            QV('ForceUEFIBootOption', amtPowerBootCapabilities['ForceUEFIPBABoot'] == true);
+            QV('ForceHttpBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
+            // ###END###{PowerControl-OneClick}
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
             QV('d24dLockKeyboard', amtPowerBootCapabilities['KeyboardLock'] == true);
@@ -10044,6 +10106,7 @@
         }
 
         function showAdvPowerDlgChange() {
+            var ok = true;
             QV('idd_d24IDERBootDevice', Q('d24UseIDER').checked);
             QV('idd_d24RSEPass', Q('d24SecureErase') ? Q('d24SecureErase').checked : false);
             // ###BEGIN###{Mode-NodeWebkit}
@@ -10059,16 +10122,30 @@
             QE('idd_d24RSEPass', !ospower);
 
             // If the boot source is not "None" (0), disable all boot settings.
-            var bootSettingOpts = ['d24BiosPause', 'd24BiosSecureBoot', 'd24BiosSetup', 'd24ForceProgressEvents', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
-            if (idx_d24ForceBootDevice.value > 0) {
-                for (var i in bootSettingOpts) {
-                    Q(bootSettingOpts[i]).checked = false;
-                }
-            }
-            for (var i in bootSettingOpts) { QE(bootSettingOpts[i], idx_d24ForceBootDevice.value == 0); }
+            //var bootSettingOpts = ['d24BiosPause', 'd24BiosSecureBoot', 'd24BiosSetup', 'd24ForceProgressEvents', 'd24LockPowerButton', 'd24LockResetButton', 'd24LockSleepButton', 'd24LockKeyboard', 'd24UserPasswordBypass', 'd24ReflashBios', 'd24SafeMode', 'd24UseIDER', 'd24SerialOverLan', 'd24SecureErase'];
+            //if ((idx_d24ForceBootDevice.value > 0) && (idx_d24ForceBootDevice.value < 5)) { for (var i in bootSettingOpts) { Q(bootSettingOpts[i]).checked = false; } }
+            //for (var i in bootSettingOpts) { QE(bootSettingOpts[i], idx_d24ForceBootDevice.value == 0); }
+
+            // ###BEGIN###{PowerControl-OneClick}
+            var bootSourceIndex = Q('idx_d24ForceBootDevice').value;
+            QV('idx_d24diskImage', bootSourceIndex == 6);
+            QV('idx_d24bootSource', bootSourceIndex != 6);
+            if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootFile').files.length != 1)) { ok = false; }
+            // ###END###{PowerControl-OneClick}
+
+            QE('idx_dlgOkButton', ok);
         }
 
         function showAdvPowerDlgOk() {
+            // ###BEGIN###{PowerControl-OneClick}
+            if (Q('idx_d24ForceBootDevice').value == 6) {
+                var files = Q('idx_d24ocrBootFile').files;
+                if (files.length != 1) return;
+                setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
+                webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
+            }
+            // ###END###{PowerControl-OneClick}
+
             var action = Q('idx_d24Command').value;
             if ((action == 500) || (action == 501)) {
                 // Perform OS wake from standby or OS sleep (Intel AMT 10+)
@@ -10248,9 +10325,22 @@
                 // ###BEGIN###{PowerControl-Advanced}
             }
 
+            // Remove read-only parameters
+            delete r['WinREBootEnabled'];
+            delete r['UEFILocalPBABootEnabled'];
+            delete r['UEFIHTTPSBootEnabled'];
+            delete r['SecureBootControlEnabled'];
+            delete r['BootguardStatus'];
+            delete r['OptionsCleared'];
+            delete r['BIOSLastStatus'];
+            delete r['UefiBootParametersArray'];
+            if (r['UefiBootNumberOfParams'] != null) r['UefiBootNumberOfParams'] = 0;
+
+            //r['EnforceSecureBoot'] = true;
+
             // ###BEGIN###{PowerControl-OneClick}
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
-            if ((action == 600) || (action == 601)) { // Force UEFI HTTPS Boot
+            if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
                 r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
                 r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
                 r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
@@ -10262,12 +10352,16 @@
             console.log("Boot Action: " + action);
             console.log("Setting Boot Settings: " + ObjectToString2(r));
             statusbox("Power Action", "Setting boot settings...");
-            amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
+
+            // Set the boot order to null, this is needed for some AMT versions that don't clear this automatically.
+            amtstack.CIM_BootConfigSetting_ChangeBootOrder(null, function (stack, name, response, status) {
+                amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
+            }, 0, 1);
         }
 
         function powerActionResponse2(stack, name, response, status, tag) {
             //console.log("powerActionResponse2(" + name + "," + response + "," + status + ")");
-            if (status != 200) { messagebox("Power Action", format("PUT AMT_BootSettingData, Error #{0}", status)); console.log(tag); return; }
+            if (status != 200) { messagebox("Power Action", format("PUT AMT_BootSettingData, Error #{0}", status)); return; }
             //if (status == 408) { messagebox("Power Action", "Access denied."); return; }
             //if (errcheck(status, stack)) return;
             //console.log("Setup next boot...");
