@@ -107,8 +107,8 @@ var CreateAmtRedirect = function (module, authCookie) {
                             obj.directSend(new Uint8Array([0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])); // Query for available authentication
                             // ###END###{!Mode-Firmware}
                             // ###BEGIN###{Mode-Firmware}
-                            // When using websocket, we are already authenticated. Send empty basic auth.
-                            obj.directSend(new Uint8Array([0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00]));
+                            // When using websocket, we are already authenticated. Send empty kerberos auth.
+                            obj.directSend(new Uint8Array([0x13, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00]));
                             // ###END###{Mode-Firmware}
                             cmdsize = (13 + oemlen);
                             break;
