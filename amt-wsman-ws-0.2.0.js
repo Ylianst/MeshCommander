@@ -252,8 +252,8 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
     obj.gotNextMessages = function (data, status, request, callArgs) {
         if (obj.FailAllError == 999) return;
         if (obj.FailAllError != 0) { callArgs[1](null, obj.FailAllError, callArgs[2]); return; }
-        if (request.status != 200) { callArgs[1](null, request.status, callArgs[2]); return; }
-        callArgs[1](data, 200, callArgs[2]);
+        //if (request.status != 200) { callArgs[1](null, request.status, callArgs[2]); return; }
+        callArgs[1](data, request.status, callArgs[2]);
     }
 
     // Private method

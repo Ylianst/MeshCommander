@@ -112,7 +112,7 @@ var CreateWebServer = function () {
 
     // Generate a TLS certificate (this is really a root cert)
     obj.generateCertificate = function (commonName) {
-        var attrs1 = [{ name: 'commonName', value: 'MeshCommanderRoot' }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
+        var attrs1 = [{ name: 'commonName', value: 'MC-WebServerRoot-' + random(1, 10000000) }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
         var attrs2 = [{ name: 'commonName', value: (commonName ? commonName : 'MeshCommander') }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
 
         if (fs.existsSync('webroot.crt') && fs.existsSync('webroot.key')) {
@@ -121,9 +121,12 @@ var CreateWebServer = function () {
             obj.rootKey = fs.readFileSync('webroot.key').toString();
             var rootcert = forge.pki.certificateFromPem(obj.rootCert);
             var rootkeys = { privateKey: forge.pki.privateKeyFromPem(obj.rootKey) };
+            attrs1[0].value = rootcert.subject.getField('CN').value;
+            attrs1[1].value = rootcert.subject.getField('C').value;
+            attrs1[2].value = rootcert.subject.getField('O').value;
         } else {
-            console.log('Generate root...');
             // Generate a root keypair and create an X.509v3 root certificate
+            console.log('Generate root ' + attrs1[0].value + '...');
             var rootkeys = forge.pki.rsa.generateKeyPair(2048);
             var rootcert = forge.pki.createCertificate();
             rootcert.publicKey = rootkeys.publicKey;
@@ -140,6 +143,8 @@ var CreateWebServer = function () {
             fs.writeFileSync('webroot.key', obj.rootKey);
         }
 
+        if (commonName === 0) return; // This is used to only generate the root cert and exit.
+
         if (fs.existsSync('webleaf.crt') && fs.existsSync('webleaf.key')) {
             console.log('Read leaf from file');
             obj.cert = fs.readFileSync('webleaf.crt').toString();
@@ -150,7 +155,7 @@ var CreateWebServer = function () {
         }
 
         if ((obj.certCommonName == null) || ((commonName != null) && (commonName != obj.certCommonName))) {
-            console.log('Generate leaf...');
+            console.log('Generate leaf ' + attrs2[0].value + '...');
             // Generate a keypair and create an X.509v3 certificate
             var keys = forge.pki.rsa.generateKeyPair(2048);
             var cert = forge.pki.createCertificate();
@@ -194,12 +199,6 @@ var CreateWebServer = function () {
         md = forge.md.sha512.create();
         md.start(); md.update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes());
         console.log('SHA512', md.digest().toHex());
-    }
-
-    // Returns a UEFI boot parameter in binary
-    function makeUefiBootParam(type, data, len) {
-        if (typeof data == 'number') { if (len == 1) { data = String.fromCharCode(data & 0xFF); } if (len == 2) { data = ShortToStrX(data); } if (len == 4) { data = IntToStrX(data); } }
-        return ShortToStrX(0x8086) + ShortToStrX(type) + IntToStrX(data.length) + data;
     }
 
     // Setup UEFI boot image
@@ -265,6 +264,15 @@ var CreateWebServer = function () {
                 makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
             argscount: 4
         };
+
+        /*
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(20, 1, 1)),                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+            argscount: 2
+        };
+        */
 
         return obj.lastBootImageArgs;
     }

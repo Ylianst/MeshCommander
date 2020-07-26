@@ -223,6 +223,7 @@ function AmtStackCreateService(wsmanStack) {
     obj.AMT_EnvironmentDetectionSettingData_SetSystemDefensePolicy = function (Policy, callback_func) { obj.Exec('AMT_EnvironmentDetectionSettingData', 'SetSystemDefensePolicy', { 'Policy': Policy }, callback_func); }
     obj.AMT_EnvironmentDetectionSettingData_EnableVpnRouting = function (Enable, callback_func) { obj.Exec('AMT_EnvironmentDetectionSettingData', 'EnableVpnRouting', { 'Enable': Enable }, callback_func); }
     obj.AMT_EthernetPortSettings_SetLinkPreference = function (LinkPreference, Timeout, callback_func) { obj.Exec('AMT_EthernetPortSettings', 'SetLinkPreference', { 'LinkPreference': LinkPreference, 'Timeout': Timeout }, callback_func); }
+    obj.AMT_GeneralSettings_AMTAuthenticate = function (Nonce, callback_func) { obj.Exec('AMT_GeneralSettings', 'AMTAuthenticate', { 'MC_Nonce': Nonce }, callback_func); }
     obj.AMT_HeuristicPacketFilterStatistics_ResetSelectedStats = function (SelectedStatistics, callback_func) { obj.Exec('AMT_HeuristicPacketFilterStatistics', 'ResetSelectedStats', { 'SelectedStatistics': SelectedStatistics }, callback_func); }
     obj.AMT_KerberosSettingData_GetCredentialCacheState = function (callback_func) { obj.Exec('AMT_KerberosSettingData', 'GetCredentialCacheState', {}, callback_func); }
     obj.AMT_KerberosSettingData_SetCredentialCacheState = function (Enable, callback_func) { obj.Exec('AMT_KerberosSettingData', 'SetCredentialCacheState', { 'Enable': Enable }, callback_func); }

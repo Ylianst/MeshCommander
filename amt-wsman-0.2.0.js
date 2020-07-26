@@ -15,9 +15,17 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
     obj.PerformAjax = function (postdata, callback, tag, pri, namespaces) {
         if (namespaces == null) namespaces = '';
         obj.comm.PerformAjax('<?xml version=\"1.0\" encoding=\"utf-8\"?><Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns=\"http://www.w3.org/2003/05/soap-envelope\" ' + namespaces + '><Header><a:Action>' + postdata, function (data, status, tag) {
-            if (status != 200) { callback(obj, null, { Header: { HttpError: status } }, status, tag); return; }
             var wsresponse = obj.ParseWsman(data);
-            if (!wsresponse || wsresponse == null) { callback(obj, null, { Header: { HttpError: status } }, 601, tag); } else { callback(obj, wsresponse.Header['ResourceURI'], wsresponse, 200, tag); }
+            if ((data != null) && (!wsresponse || wsresponse == null)) {
+                callback(obj, null, { Header: { HttpError: status } }, 601, tag);
+            } else {
+                if (status != 200) {
+                    if (wsresponse == null) { wsresponse = { Header: {} }; }
+                    wsresponse.Header.HttpError = status;
+                    try { wsresponse.Header.WsmanError = wsresponse.Body['Reason']['Text']['Value']; } catch (ex) { }
+                }
+                callback(obj, wsresponse.Header['ResourceURI'], wsresponse, status, tag);
+            }
         }, tag, pri);
     }
 
@@ -100,6 +108,7 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
 
     // Private method
     obj.ParseWsman = function (xml) {
+        if (xml == null) return null;
         try {
             if (!xml.childNodes) xml = _turnToXml(xml);
             var r = { Header: {} }, header = xml.getElementsByTagName('Header')[0], t;
@@ -116,11 +125,13 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
                 t = body.childNodes[0].localName;
                 if (t.indexOf('_OUTPUT') == t.length - 7) { t = t.substring(0, t.length - 7); }
                 r.Header['Method'] = t;
-                r.Body = _ParseWsmanRec(body.childNodes[0]);
+                try {
+                    r.Body = _ParseWsmanRec(body.childNodes[0]);
+                } catch (ex) { console.log('_ParseWsmanRec failed', body, ex); return null; }
 		    }
             return r;
-        } catch (e) {
-            console.log('Unable to parse XML: ' + xml);
+        } catch (ex) {
+            console.log('Unable to parse XML: ' + xml + ', ' + ex);
             return null;
         }
     }

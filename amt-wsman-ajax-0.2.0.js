@@ -70,8 +70,8 @@ var CreateWsmanComm = function (url) {
         if (obj.FailAllError == 999) return;
         // console.log('RECV: ' + data); // DEBUG
         if (obj.FailAllError != 0) { callArgs[1](null, obj.FailAllError, callArgs[2]); return; }
-        if (request.status != 200) { callArgs[1](null, request.status, callArgs[2]); obj.PerformNextAjax(); return; }
-        callArgs[1](data, 200, callArgs[2]);
+        //if (request.status != 200) { callArgs[1](data, request.status, callArgs[2]); obj.PerformNextAjax(); return; }
+        callArgs[1](data, request.status, callArgs[2]);
         obj.PerformNextAjax();
     }
 
