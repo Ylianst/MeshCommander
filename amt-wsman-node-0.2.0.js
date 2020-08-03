@@ -381,7 +381,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
         if (obj.FailAllError == 999) return;
         if (obj.FailAllError != 0) { try { callArgs[1](null, obj.FailAllError, callArgs[2]); } catch (ex) { console.error(ex); } return; }
         //if (request.status != 200) { try { callArgs[1](data, request.status, callArgs[2]); } catch (ex) { console.error(ex); } return; }
-        try { callArgs[1](data, request.status, callArgs[2]); } catch (ex) { console.error(ex); }
+        try { callArgs[1](data, request.status, callArgs[2]); } catch (ex) { console.error(data, request.status, callArgs[2], ex); }
     }
 
     // Private method

@@ -2084,6 +2084,10 @@
             Q('p24filetable').addEventListener('dragover', p24fileDragOver, false);
             Q('p24filetable').addEventListener('dragleave', p24fileDragLeave, false);
             // ###END###{DesktopInbandFiles}
+
+            // ###BEGIN###{DesktopRecorder}
+            if (urlvars && urlvars['norecord']) { QV('id_DeskRecorderTools', false); }
+            // ###END###{DesktopRecorder}
         }
 
         // ###BEGIN###{PowerControl-Advanced}
@@ -7013,7 +7017,6 @@
             } else {
                 // No active policy, stop the timer
                 xxFilterStatistics[network] = {};
-                updateSystemDefense();
                 StopDefenseStatsTimer();
             }
         }
@@ -8519,7 +8522,7 @@
         // ###BEGIN###{DesktopRecorder}
         // Toggle desktop session recording
         function deskRecordSession() {
-            if (desktop == null) return;
+            if ((desktop == null) || (urlvars && urlvars['norecord'])) return;
             if (desktop.m.recordedData == null) {
                 // Start recording
                 if ((desktop.State === 3) && (desktop.m.StartRecording())) { Q('DeskRecordButton').classList.remove('videoIcon'); Q('DeskRecordButton').classList.add('videoIconRed'); }
@@ -8537,7 +8540,7 @@
         // ###BEGIN###{FileSaver}
         // Save the desktop image to file
         function deskSaveImage() {
-            if (xxdialogMode || desktop.State != 3) return;
+            if (xxdialogMode || (desktop.State != 3) || (urlvars && urlvars['norecord'])) return;
             var n = 'Desktop', d = new Date();
             if (amtsysstate) { n += '-' + amtsysstate['AMT_GeneralSettings'].response['HostName']; }
             n += '-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '-' + ('0' + d.getHours()).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2);
@@ -9013,7 +9016,12 @@
             } else {
             // ###END###{MeshServerConnect}
                 var ports = portsFromHost(currentcomputer['host'], currentcomputer['tls']);
+                // ###BEGIN###{!Mode-NodeWebkit}
                 ider.Start(ports.host, ports.redir, amtstack.wsman.comm.user, amtstack.wsman.comm.pass, currentcomputer['tls']);
+                // ###END###{!Mode-NodeWebkit}
+                // ###BEGIN###{Mode-NodeWebkit}
+                ider.Start(ports.host, ports.redir, amtstack.wsman.comm.user, amtstack.wsman.comm.pass, currentcomputer['tls'], wsstack.comm.getPeerCertificateFingerprint(), wsstack.comm.xtlsoptions);
+                // ###END###{Mode-NodeWebkit}
             // ###BEGIN###{MeshServerConnect}
             }
             // ###END###{MeshServerConnect}
