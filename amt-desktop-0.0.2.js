@@ -768,7 +768,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
             } else {
                 console.log('Got KVM clipboard data:', d);
-                if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + x.length + '): ' + rstr2hex(x) + ', ' + x); }
+                if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + d.length + '): ' + rstr2hex(d) + ', ' + d); }
             }
         }
         // ###END###{DesktopInband}
