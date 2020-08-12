@@ -554,6 +554,7 @@ th {
     
     
     
+    
     <style>
         .menuitem { cursor: pointer; border: none; padding:5px; }
         .menuitem:hover { background-color: #6b9dc7; }
@@ -703,7 +704,8 @@ th {
                         <span id="id_messageviewstr">Loading...</span>
                         <br><br><input id="id_messageviewbutton" type="button" value="Close" onclick="disconnect()">
                     </div>
-                <div id="LeftSideToolBar" style="position:absolute;left:0px;bottom:0px;width:52px;top:69px;background:#113962;background:linear-gradient(to bottom, #104893 0%,#113962 100%);color:white;display:none">
+            <div id="TransferNotification" style="display:none;background-color:lightgrey;position:absolute;left:10px;bottom:10px;border-radius:5px;padding:4px;z-index:1000;box-shadow:0px 0px 10px #333"></div>
+            <div id="LeftSideToolBar" style="position:absolute;left:0px;bottom:0px;width:52px;top:69px;background:#113962;background:linear-gradient(to bottom, #104893 0%,#113962 100%);color:white;display:none">
         <div style="height:23px"></div>
         <div id="LeftMenuMyDevices" class="lbbutton lbbuttonsel2" title="Computer Management" onclick="go(101)">
             <div class="lb1" style="position:absolute;top:6px;left:6px"></div>
@@ -1497,6 +1499,8 @@ th {
                         <option id="ForcePXEBootOption" value="2">Force PXE Boot
                         <option id="ForceHDBootOption" value="3">Force Hard Disk Boot
                         <option id="ForceDiagBootOption" value="4">Force Diagnostic Boot
+                                                <option id="ForceUEFIBootOption" value="5">Force OCR UEFI Boot Option
+                        <option id="ForceHttpBootOption" value="6">Force OCR UEFI HTTPS Boot
                                             </select>
                     <div>Boot Source</div>
                 </div>
@@ -1509,6 +1513,16 @@ th {
                         <option value="3">Index 4
                     </select>
                     <div>Boot Media</div>
+                </div>
+                                <div id="idx_d24customBootSource" style="height:26px;display:none">
+                    <select id="idx_d24customBootMediaIndex" onchange="showAdvPowerDlgChange()" style="float:right;width:200px"></select>
+                    <div>Boot Media</div>
+                </div>
+                <div id="idx_d24diskImage" style="height:54px">
+                    <input id="idx_d24ocrBootFile" type="file" onchange="showAdvPowerDlgChange()" style="float:right;width:200px" accept=".iso">                    
+                    <div>Boot Image</div><br>
+                    <input id="idx_d24ocrBootUrl" type="text" onchange="showAdvPowerDlgChange()" style="float:right;width:200px">
+                    <div>or HTTPS URL</div>
                 </div>
                                 <div style="height:26px" id="idd_d24IDERBootDevice">
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange="showAdvPowerDlgChange()">
@@ -23493,9 +23507,9 @@ pki.certificateFromAsn1 = function(obj, computeHash) {
 
   // get oid
   var oid = asn1.derToOid(capture.publicKeyOid);
-  if(oid !== pki.oids['rsaEncryption']) {
-    throw new Error('Cannot read public key. OID is not RSA.');
-  }
+  //if(oid !== pki.oids['rsaEncryption']) {
+    //throw new Error('Cannot read public key. OID is not RSA.');
+  //}
 
   // create certificate
   var cert = pki.createCertificate();
@@ -23615,8 +23629,13 @@ pki.certificateFromAsn1 = function(obj, computeHash) {
     cert.extensions = [];
   }
 
+  if (oid === pki.oids.rsaEncryption) {
+      // convert RSA public key from ASN.1
+      cert.publicKey = pki.publicKeyFromAsn1(capture.subjectPublicKeyInfo);
+  }
+
   // convert RSA public key from ASN.1
-  cert.publicKey = pki.publicKeyFromAsn1(capture.subjectPublicKeyInfo);
+  //cert.publicKey = pki.publicKeyFromAsn1(capture.subjectPublicKeyInfo);
 
   return cert;
 };
@@ -35890,7 +35909,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
             } else {
                 console.log('Got KVM clipboard data:', d);
-                if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + x.length + '): ' + rstr2hex(x) + ', ' + x); }
+                if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + d.length + '): ' + rstr2hex(d) + ', ' + d); }
             }
         }
                 return len;
@@ -37703,7 +37722,288 @@ var CreateAmtRemoteTerminal = function (divid, options) {
     //obj.DivElement.style['height'] = '';
     if ((options != null) && (options.width != null) && (options.height != null)) { obj.Init(options.width, options.height); } else { obj.Init(); }
     return obj;
-}/* zlib.js -- JavaScript implementation for the zlib.
+}/** 
+* @description One Client Recovery (OCR) web server
+* @author Ylian Saint-Hilaire
+* @version v0.0.1
+*/
+
+// Construct tiny web server
+var CreateWebServer = function () {
+    const fs = require('fs');
+    const net = require('net');
+    const tls = require('tls');
+    const path = require("path");
+    var obj = {};
+    var server = null;
+    obj.port = random(33000, 65500); // Port used to listen for incoming requests.
+    obj.state = 0;                   // State of the web server, 0 = Disabled, 2 = Listening.
+    obj.rootCert = null;             // Root certificate in PEM format.
+    obj.rootKey = null;              // Root certificate private key in PEM format.
+    obj.cert = null;                 // TLS certificate in PEM format.
+    obj.key = null;                  // TLS certificate private key in PEM format.
+    obj.certCommonName = null;       // TLS certificate common name.
+    obj.certHashRaw = null;          // SHA384 hash of TLS certificate.
+    obj.certHashHex = null;          // SHA384 hash of TLS certificate in HEX.
+    obj.responses = {};              // Table responses to different url paths.
+    obj.transfers = [];              // List of currently active file transfers.
+    obj.transfersTimer = null;       // When file transfers are active, this is a half second timer.
+    obj.onTransfers = null;          // Callback for transfers status.
+    obj.lastBootImageArgs = null;
+
+    // Return a random number between min and max
+    function random(min, max) { return Math.floor(min + Math.random() * (max - min)); }
+
+    // Start the web server
+    obj.start = function (func) {
+        if (server != null) return;
+        obj.state = 1;
+        if ((obj.cert != null) && (obj.key != null)) { server = tls.createServer({ cert: obj.cert, key: obj.key, minVersion: 'TLSv1' }, onConnection); } else { server = net.createServer(onConnection); }
+        server.on('error', function (err) { if (err.code == 'EADDRINUSE') { obj.port = random(33000, 65500); server = null; obj.start(func); } else { console.log('WebServer Listen Error', err.code); } });
+        server.listen({ port: obj.port }, function (x) { obj.state = 2; console.log('WebServer listening on ' + obj.port + ', CN: ' + obj.certCommonName); if (func != null) { func(); } });
+    }
+
+    // Called when a new incoming connection is made
+    function onConnection(socket) {
+        if (socket.remoteAddress.startsWith('::ffff:')) { socket.xremoteAddress = socket.remoteAddress.substring(7); } else { socket.xremoteAddress = socket.remoteAddress; }
+        console.log('WebServer, socket connection from ' + socket.xremoteAddress + ':' + socket.remotePort);
+        socket.xdata = ''; // Accumulator
+        socket.on('data', function (data) {
+            this.xdata += data.toString('utf8');
+            var headersize = this.xdata.indexOf('\r\n\r\n');
+            if (headersize < 0) { if (this.xdata.length > 4096) { this.close(); } return; }
+            var headers = this.xdata.substring(0, headersize).split('\r\n');
+            if (headers.length < 1) { this.close(); return; }
+            var headerObj = {};
+            for (var i = 1; i < headers.length; i++) { var j = headers[i].indexOf(': '); if (i > 0) { headerObj[headers[i].substring(0, j).toLowerCase()] = headers[i].substring(j + 2); } }
+            var hostHeader = (headerObj['host'] != null) ? ('Host: ' + headerObj['host'] + '\r\n') : '';
+            var directives = headers[0].split(' ');
+            if ((directives.length != 3) || ((directives[0] != 'GET') && (directives[0] != 'HEAD'))) { this.end(); return; }
+            console.log('WebServer, request', directives[0], directives[1]);
+            var responseCode = 404, responseType = 'text/html', responseData = 'Invalid request', r = obj.responses[directives[1]];
+            if (r != null) {
+                if (typeof r == 'string') {
+                    responseCode = 200; responseData = obj.responses[directives[1]];
+                } else if (typeof r == 'object') {
+                    responseCode = 200;
+                    if (r.type) { responseType = r.type; }
+                    if (r.data) { responseData = r.data; }
+                    if (r.shortfile) { try { responseData = fs.readFileSync(r.shortfile); } catch (ex) { responseCode = 404; responseType = 'text/html'; responseData = 'File not found'; } }
+                    if (r.file) {
+                        // Send the file header and pipe the rest of the file
+                        this.xfilepath = r.file;
+                        this.xfilename = path.basename(r.file);
+                        this.xsize = fs.statSync(r.file).size;
+                        this.write('HTTP/1.1 200 OK\r\n' + hostHeader + 'Content-Type: application/octet-stream\r\nConnection: keep-alive\r\nContent-Length: ' + this.xsize + '\r\n\r\n');
+
+                        if (directives[0] == 'GET') {
+                            console.log('WebServer, Streaming File: ' + r.file);
+                            var writable = require('stream').Writable;
+                            this.progress = new writable({ write: function (chunk, encoding, flush) { this.count += chunk.length; flush(); } });
+                            this.progress.count = 0;
+                            var ws = fs.createReadStream(r.file, { flags: 'r' });
+                            ws.pipe(this.progress); ws.pipe(this);
+                            obj.transfers.push(this);
+
+                            // Start the progress bar timer
+                            if (obj.onTransfers != null) { obj.onTransfers(obj, obj.transfers); if (obj.transfersTimer == null) { obj.transfersTimer = setInterval(function () { obj.onTransfers(obj, obj.transfers); }, 500); } }
+                        }
+                        this.xdata = '';
+                        return;
+                    }
+                }
+            }
+            socket.write('HTTP/1.1 ' + responseCode + ' OK\r\n' + hostHeader + 'Connection: keep-alive\r\nContent-Type: ' + responseType + '\r\nContent-Length: ' + responseData.length + '\r\n\r\n');
+            socket.write(responseData);
+            this.xdata = '';
+        });
+        socket.on('end', function () { cleanupSocket(this); console.log('WebServer, socket closed'); });
+        socket.on('error', function (err) { cleanupSocket(this); console.log('WebServer, socket error', err); });
+    }
+
+    // Remove the socket from the transfer list and clear the timer if needed
+    function cleanupSocket(socket) {
+        var i = obj.transfers.indexOf(socket);
+        if (i >= 0) {
+            obj.transfers.splice(i, 1);
+            obj.onTransfers(obj, obj.transfers);
+            if (obj.transfers.length == 0) { clearInterval(obj.transfersTimer); obj.transfersTimer = null; }
+        }
+    }
+
+    // Stop the web server
+    obj.stop = function () { if (server == null) return; server.close(); server = null; }
+
+    // Generate a TLS certificate (this is really a root cert)
+    obj.generateCertificate = function (commonName) {
+        var attrs1 = [{ name: 'commonName', value: 'MC-WebServerRoot-' + random(1, 10000000) }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
+        var attrs2 = [{ name: 'commonName', value: (commonName ? commonName : 'MeshCommander') }, { name: 'countryName', value: 'unknown' }, { name: 'organizationName', value: 'unknown' }];
+
+        if (fs.existsSync('webroot.crt') && fs.existsSync('webroot.key')) {
+            console.log('Read root from file');
+            obj.rootCert = fs.readFileSync('webroot.crt').toString();
+            obj.rootKey = fs.readFileSync('webroot.key').toString();
+            var rootcert = forge.pki.certificateFromPem(obj.rootCert);
+            var rootkeys = { privateKey: forge.pki.privateKeyFromPem(obj.rootKey) };
+            attrs1[0].value = rootcert.subject.getField('CN').value;
+            attrs1[1].value = rootcert.subject.getField('C').value;
+            attrs1[2].value = rootcert.subject.getField('O').value;
+        } else {
+            // Generate a root keypair and create an X.509v3 root certificate
+            console.log('Generate root ' + attrs1[0].value + '...');
+            var rootkeys = forge.pki.rsa.generateKeyPair(2048);
+            var rootcert = forge.pki.createCertificate();
+            rootcert.publicKey = rootkeys.publicKey;
+            rootcert.serialNumber = '' + Math.floor((Math.random() * 100000) + 1);
+            rootcert.validity.notBefore = new Date(2018, 0, 1);
+            rootcert.validity.notAfter = new Date(2049, 11, 31);
+            rootcert.setSubject(attrs1);
+            rootcert.setIssuer(attrs1);
+            rootcert.setExtensions([{ name: 'basicConstraints', cA: true }, { name: 'keyUsage', keyCertSign: true }, { name: 'subjectKeyIdentifier' }]); // Root extensions
+            rootcert.sign(rootkeys.privateKey, forge.md.sha384.create());
+            obj.rootCert = forge.pki.certificateToPem(rootcert);
+            obj.rootKey = forge.pki.privateKeyToPem(rootkeys.privateKey);
+            fs.writeFileSync('webroot.crt', obj.rootCert);
+            fs.writeFileSync('webroot.key', obj.rootKey);
+        }
+
+        if (commonName === 0) return; // This is used to only generate the root cert and exit.
+
+        if (fs.existsSync('webleaf.crt') && fs.existsSync('webleaf.key')) {
+            console.log('Read leaf from file');
+            obj.cert = fs.readFileSync('webleaf.crt').toString();
+            obj.key = fs.readFileSync('webleaf.key').toString();
+            var cert = forge.pki.certificateFromPem(obj.cert);
+            var keys = { privateKey: forge.pki.privateKeyFromPem(obj.key) };
+            obj.certCommonName = forge.pki.certificateFromPem(obj.cert).subject.getField('CN').value;
+        }
+
+        if ((obj.certCommonName == null) || ((commonName != null) && (commonName != obj.certCommonName))) {
+            console.log('Generate leaf ' + attrs2[0].value + '...');
+            // Generate a keypair and create an X.509v3 certificate
+            var keys = forge.pki.rsa.generateKeyPair(2048);
+            var cert = forge.pki.createCertificate();
+            cert.publicKey = keys.publicKey;
+            cert.serialNumber = '' + Math.floor((Math.random() * 100000) + 1);
+            cert.validity.notBefore = new Date(2018, 0, 1);
+            cert.validity.notAfter = new Date(2049, 11, 31);
+            cert.setSubject(attrs2);
+            cert.setIssuer(attrs1);
+
+            // Figure out the extended key usages
+            var extKeyUsage = { name: 'extKeyUsage', serverAuth: true }
+
+            // Create a leaf certificate
+            cert.setExtensions([{ name: 'basicConstraints' }, { name: 'keyUsage', digitalSignature: true, keyEncipherment: true }, extKeyUsage, { name: 'subjectKeyIdentifier' }]);
+
+            // Self-sign certificate
+            cert.sign(rootkeys.privateKey, forge.md.sha384.create());
+            obj.cert = forge.pki.certificateToPem(cert);
+            obj.key = forge.pki.privateKeyToPem(keys.privateKey);
+            obj.certCommonName = (commonName ? commonName : 'MeshCommander');
+
+            fs.writeFileSync('webleaf.crt', obj.cert);
+            fs.writeFileSync('webleaf.key', obj.key);
+        }
+
+        // Compute the SHA256 hash of the certificate
+        var md = forge.md.sha256.create();
+        md.start(); md.update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes());
+        var digest = md.digest();
+        obj.certHashRaw = digest.data;
+        obj.certHashHex = digest.toHex();
+        console.log('SHA256', md.digest().toHex());
+
+        // Compute the SHA384 hash of the certificate
+        md = forge.md.sha384.create();
+        md.start(); md.update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes());
+        console.log('SHA384', md.digest().toHex());
+
+        // Compute the SHA512 hash of the certificate
+        md = forge.md.sha512.create();
+        md.start(); md.update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes());
+        console.log('SHA512', md.digest().toHex());
+    }
+
+    // Setup UEFI boot image
+    obj.setupBootImage = function(filePath, ip) {
+        if (fs.existsSync(filePath) == false) return null;
+        var name = ('' + Math.random()).substring(2) + '.iso';
+        obj.responses['/' + name] = { type: 'application/octet-stream', file: filePath };
+        var url = 'http' + ((obj.cert != null) ? 's' : '') + '://' + ip + ':' + obj.port + '/' + name;
+        console.log(url);
+
+        /*
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(3, url.length, 2) +         // OCR_EFI_DEVICE_PATH_LEN (3)
+                makeUefiBootParam(20, 0, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(21, obj.certCommonName) +   // OCR_HTTPS_CERT_SERVER_NAME (21)
+                makeUefiBootParam(22, 1, 2) +                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
+                makeUefiBootParam(23, obj.certHashRaw) +      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
+                makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
+            argscount: 7
+        };
+
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(20, 0, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(21, obj.certCommonName) +   // OCR_HTTPS_CERT_SERVER_NAME (21)
+                makeUefiBootParam(22, 1, 2) +                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
+                makeUefiBootParam(23, obj.certHashRaw)),      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
+            argscount: 5
+        };
+
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(20, 1, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(21, obj.certCommonName) +   // OCR_HTTPS_CERT_SERVER_NAME (21)
+                makeUefiBootParam(22, 1, 2)),                 // OCR_HTTPS_SERVER_NAME_VERIFY_METHOD (22) (1 = FullName)
+            argscount: 4
+        };
+        */
+
+        /*
+        url = 'http' + ((obj.cert != null) ? 's' : '') + '://' + "DESKTOP-NTHM909.jf.intel.com" + ':' + obj.port + '/' + name;
+
+        // This works!
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(23, obj.certHashRaw) +      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
+                makeUefiBootParam(20, 1, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
+            argscount: 4
+        };
+        */
+
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(23, obj.certHashRaw) +      // OCR_HTTPS_SERVER_CERT_HASH_SHA256 (23)
+                makeUefiBootParam(20, 1, 1) +                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+                makeUefiBootParam(30, 0, 2)),                 // OCR_HTTPS_REQUEST_TIMEOUT (30) (0 seconds = default)
+            argscount: 4
+        };
+
+        /*
+        obj.lastBootImageArgs = {
+            args: btoa(
+                makeUefiBootParam(1, url) +                   // OCR_EFI_NETWORK_DEVICE_PATH (1)
+                makeUefiBootParam(20, 1, 1)),                 // OCR_HTTPS_CERT_SYNC_ROOT_CA (20) (0 = false)
+            argscount: 2
+        };
+        */
+
+        return obj.lastBootImageArgs;
+    }
+
+    return obj;
+}
+/* zlib.js -- JavaScript implementation for the zlib.
   Version: 0.2.0
   LastModified: Apr 12 2012
   Copyright (C) 2012 Masanao Izumo <iz@onicos.co.jp>
@@ -41349,7 +41649,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
         var desktop;
         var desktopsettings = { encoding:1, showfocus:false, showmouse:true, showcad:true, limitFrameRate:false, noMouseRotate:false };
-        var webcompilerfeatures = ['AgentPresence','Alarms','AuditLog','CertificateManager','Certificates','ComputerSelector','ComputerSelector-Local','ComputerSelectorScanner','ComputerSelectorToolbar','ContextMenus','Desktop','DesktopFocus','DesktopInband','DesktopInbandFiles','Desktop-Multi','DesktopRotation','Desktop-Settings','DesktopType','EventLog','EventSubscriptions','FileSaver','HardwareInfo','IDER','IDER-IMRSDK','IDERStats','Inflate','Look-Commander','MeshServerConnect','Mode-NodeWebkit','NetworkSettings','PowerControl','PowerControl-Advanced','RemoteAccess','Scripting','Scripting-Editor','SessionRecording','Storage','SystemDefense','Terminal','Terminal-Enumation-All','Terminal-FxEnumation-All','TerminalReplay','TerminalSize','USBSetup','VersionWarning','Wireless','WsmanBrowser'];
+        var webcompilerfeatures = ['AgentPresence','Alarms','AuditLog','CertificateManager','Certificates','ComputerSelector','ComputerSelector-Local','ComputerSelectorScanner','ComputerSelectorToolbar','ContextMenus','Desktop','DesktopFocus','DesktopInband','DesktopInbandFiles','Desktop-Multi','DesktopRotation','Desktop-Settings','DesktopType','EventLog','EventSubscriptions','FileSaver','HardwareInfo','IDER','IDER-IMRSDK','IDERStats','Inflate','Look-Commander','MeshServerConnect','Mode-NodeWebkit','NetworkSettings','PowerControl','PowerControl-Advanced','PowerControl-OneClick','RemoteAccess','Scripting','Scripting-Editor','SessionRecording','Storage','SystemDefense','Terminal','Terminal-Enumation-All','Terminal-FxEnumation-All','TerminalReplay','TerminalSize','USBSetup','VersionWarning','Wireless','WsmanBrowser'];
         var StatusStrs = ["Disconnected", "Connecting...", "Setup...", "Connected"];
 
         var scriptstate;
@@ -41369,6 +41669,8 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
         var meshCentralServer = null;
 
+
+        var webserver = null;
 
         function startup() {
             // This is a bit freeky, but all HTML input elements are just going to be accessible directly.
@@ -41627,6 +41929,27 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         }
 
 
+
+        function setupWebServer(leafCN) {
+            if ((webserver != null) && (webserver.certCommonName == leafCN)) return;
+
+            // Stop the web server if present
+            if (webserver != null) { webserver.stop(); webserver = null; }
+
+            // Create a web server to serve One Client Recovery (OCR) disk image files.
+            webserver = CreateWebServer();
+            webserver.generateCertificate(leafCN);
+            webserver.start();
+            webserver.onTransfers = function (webserver, transfers) {
+                var x = '';
+                for (var i in transfers) { x += '<div style="width:350px;position:relative;padding:3px"><span style="position:absolute;padding:3px;font-weight:bold">' + transfers[i].xfilename + '</span><div style="height:20px;background-color:#4CAF50;width:' + Math.floor((transfers[i].progress.count * 100) / transfers[i].xsize) + '%;border-radius:4px"></div></div>'; }
+                QV('TransferNotification', transfers.length > 0);
+                QH('TransferNotification', x);
+            }
+
+            //console.log('WebServer Cert Hash RAW', webserver.certHashRaw);
+            //console.log('WebServer Cert Hash HEX', webserver.certHashHex);
+        }
 
         function documentFileSelectHandler(e) {
             haltEvent(e);
@@ -43621,14 +43944,27 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
 
                 // Perform Intel ME authentication if available.
-                /*
-                if (amtversion >= 15) {
-                    var nonce = '12345678901234567890'; // TODO: This is a test nonce, we will need to use a random one.
-                    stack.AMT_GeneralSettings_AMTAuthenticate(btoa(nonce), function (stack, name, response, status) {
-                        console.log('Intel AMT Auth', name, response, status);
+                if ((amtversion >= 15) && (wsstack.comm.xtlsCertificate != null)) {
+                    stack.amtauthnonce = require('crypto').randomBytes(10).toString('hex');
+                    stack.AMT_GeneralSettings_AMTAuthenticate(stack.amtauthnonce, function (stack, name, response, status) {
+                        if (status == 200) {
+                            stack.amtauth = response.Body;
+                            stack.amtauth.CertificatesDer = [];
+                            var certs = [], certsbin = atob(stack.amtauth.Certificates), cptr = 0;
+                            for (var i = 0; i < stack.amtauth.LengthOfCertificates.length; i++) {
+                                var bin = certsbin.substring(cptr, cptr + stack.amtauth.LengthOfCertificates[i]);
+                                stack.amtauth.CertificatesDer.push(bin);
+                                certs.push(forge.pki.certificateFromAsn1(forge.asn1.fromDer(bin))); // Node-forge does not support ECC, but we are using a modified Node-forge that can still parse the cert.
+                                cptr += stack.amtauth.LengthOfCertificates[i];
+                            }
+                            stack.amtauth.Certificates = certs;
+                            stack.amtauth.ClientNonce = stack.amtauthnonce;
+                            delete stack.amtauth.LengthOfCertificates;
+                            stack.amtauth.uuidStr = guidToStr(stack.amtauth.UUID).toLowerCase();
+                        }
+                        delete stack.amtauthnonce;
                     });
                 }
-                */
 
 
                 if (stack.wsman.comm.digestRealm && (currentcomputer['digestrealm'] != stack.wsman.comm.digestRealm)) {
@@ -44018,7 +44354,11 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             if (y != null && y.length > 0) host += '.' + y;
             if (host.length == 0) { host = ('<i>' + "None" + '</i>'); } else { host = EscapeHtml(host); }
             x += TableEntry("Name & Domain", addLinkConditional(host, 'showEditNameDlg()', xxAccountAdminName));
-            if (HardwareInventory) x += TableEntry("System ID", guidToStr(HardwareInventory['CIM_ComputerSystemPackage'].response['PlatformGUID'].toLowerCase()));
+            if (amtstack.amtauth && amtstack.amtauth.uuidStr) {
+                x += TableEntry("System ID", amtstack.amtauth.uuidStr);
+            } else if (HardwareInventory) {
+                x += TableEntry("System ID", guidToStr(HardwareInventory['CIM_ComputerSystemPackage'].response['PlatformGUID'].toLowerCase()));
+            }
             if (amtlogicalelements) {
                 var mode = '', scs = getItem(amtlogicalelements, 'CreationClassName', 'AMT_SetupAndConfigurationService');
 
@@ -44151,6 +44491,10 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
             buttons += AddButton("Run Script...", 'script_runScriptDlg()') + ' ';
             x += TableEnd(buttons);
+
+            // Show authentic CSME if present
+            if (amtstack.amtauth) { x += '<div style=position:absolute;top:10px;right:20px;cursor:pointer onclick=showAuthCsme()><img src=authcsme.png width=100 height=100 /></div>'; }
+
             QH('id_TableSysStatus', x);
 
 
@@ -44347,6 +44691,34 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             } else {
                 messagebox("Link Policy", format("Unable to set new link policy, error {0}", status));
             }
+        }
+
+        function showAuthCsme() {
+            if (xxdialogMode) return;
+            var x = '<div style=margin-top:8px>' + "Intel&reg; AMT supports authentic CSME feature, however MeshCommander cannot verify the authenticity yet." + '</div><hr style=margin-top:8px;margin-bottom:8px;height:2px;border-width:0;color:gray;background-color:gray />';
+            x += addHtmlValue("FW Version", amtstack.amtauth.FWVersion);
+            x += addHtmlValue("FQDN", amtstack.amtauth.FQDN ? amtstack.amtauth.FQDN : ('<i>' + "None" + '</i>'));
+            x += '<hr style=margin-top:8px;margin-bottom:8px;height:2px;border-width:0;color:gray;background-color:gray /><table>';
+            for (var i in amtstack.amtauth.Certificates) {
+                var cert = amtstack.amtauth.Certificates[i];
+                x += '<tr><td style=width:32px><img src=images-commander/cert1.png height=32 width=32 />';
+                x += '<td>' + EscapeHtml(cert.subject.getField('CN').value) + '<br />';
+
+                x += amtstack.amtauth.CertificatesDer[i].length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadAuthCert(' + i + ')>' + "Download" + '</a>';
+            }
+            x += '</table>';
+            setDialogMode(11, "Authentic CSME", 1, null, x);
+        }
+
+
+        function downloadAuthCert(h) {
+            h = parseInt(h);
+
+            var chooser = document.createElement('input');
+            chooser.setAttribute('type', 'file');
+            chooser.setAttribute('nwsaveas', amtstack.amtauth.Certificates[h].subject.getField('CN').value + '.cer');
+            chooser.addEventListener('change', function () { require('fs').writeFile(this.value, amtstack.amtauth.CertificatesDer[h], 'binary', function () { }); }, false);
+            chooser.click();
         }
 
 
@@ -44903,6 +45275,8 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             xxDragDropCertFiles = files;
 
 
+
+            if (amtversion > 12) { op2 = '<option value=2>' + "MeshCommander Web Server Root" + '</option>'; }
             if (certificateStore.length > 0) { op0 += '<option value=0>' + "Add from certificate manager" + '</option>'; }
             if ((!xxDragDropCertFiles) && ((op0 != '') || (op2 != ''))) { x += '<div style=height:26px;margin-top:4px><select onchange=addCertButtonUpdate() id=certoptype style=float:right;width:260px>' + op0 + '<option value=1>' + "Add from certificate file" + '</option>' + op2 + '</select><div style=padding-top:4px>' + "Operation" + '</div></div>'; }
             x += '<div id=dxcertfileop1>';
@@ -44912,7 +45286,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             if (certificateStore.length > 0) {
                 x += '<div id=dxcertfileop2><div style=height:26px;margin-top:4px><select id=certhandle style=float:right;width:260px>';
                 for (var i in certificateStore) {
-                    var certificate = certificateStore[i], name = certificate.cert.subject.getField('CN').value
+                    var certificate = certificateStore[i], name = certificate.cert.subject.getField('CN').value;
                     x += '<option value=' + certificate['h'] + '>' + name + '</option>';
                 }
                 x += '</select><div style=padding-top:4px>' + "Certificate" + '</div></div></div>';
@@ -44936,6 +45310,33 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         function addCertButtonOk() {
 
 
+
+            if (Q('certoptype').value == 2) {
+                var certbin = null;
+                if (webserver == null) {
+                    webserver = CreateWebServer();
+                    webserver.generateCertificate(0);
+                    certbin = webserver.rootCert;
+                    webserver = null;
+                } else {
+                    certbin = webserver.rootCert;
+                }
+
+                // This is a .PEM file, keep everything between BEGIN/END, clean it up and use as-is. It's already Base64.
+                var i = certbin.indexOf('-----BEGIN CERTIFICATE-----');
+                if (i >= 0) {
+                    certbin = certbin.substring(i + 27);
+                    i = certbin.indexOf('-----END CERTIFICATE-----');
+                    if (i >= 0) certbin = certbin.substring(0, i)
+                    certbin = certbin.replace(/\r\n/g, '');
+                    if (getSelectElement('certtype').value == 1) {
+                        amtstack.AMT_PublicKeyManagementService_AddTrustedRootCertificate(certbin, certificateAdded);
+                    } else {
+                        amtstack.AMT_PublicKeyManagementService_AddCertificate(certbin, certificateAdded);
+                    }
+                }
+                return;
+            }
             if ((xxDragDropCertFiles) || (certificateStore.length == 0) || (Q('certoptype').value == 1)) {
                 var certopen = getInputElement('certopen');
                 var files = xxDragDropCertFiles;
@@ -48360,6 +48761,11 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 if (powerState & 1) { addOption('d5actionSelect', "Reset to PXE", 400); }
                 if (powerState & 2) { addOption('d5actionSelect', "Power on to PXE", 401); }
 
+
+                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] === true) {
+                    if (powerState & 1) { addOption('d5actionSelect', "Reset to HTTPS Boot", 600); }
+                    if (powerState & 2) { addOption('d5actionSelect', "Power on to HTTPS Boot", 601); }
+                }
                 addOption('d5actionSelect', "Custom action...", 999);
                 if (amtversion > 5) { addOption('d5actionSelect', "User consent...", 998); } // On AMT 5 and higher, offer the option of doing user consent alone.
                 setDialogMode(5, "Power Actions", 3, powerActionDlgCheck);
@@ -48370,12 +48776,30 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
 
 
+        function oneClickFileSelect() { QE('idx_dlgOkButton', Q('ocrfile').files.length == 1); }
+
         function powerActionDlgCheck() {
             AmtOcrPba = null;
             AmtOcrPbaLength = 0;
             var action = d5actionSelect.value;
 
 
+
+            if ((action == 600) || (action == 601)) {
+
+                // If the connection to intel AMT is not TLS, warn and exit now.
+                if (wsstack.comm.xtlsCertificate == null) { messagebox("Power Action", "This feature requires a TLS connection to Intel AMT"); return; }
+                var x = "Select a disk image for remote boot." + '<br /><br /><input id=ocrfile type=file onchange=oneClickFileSelect() accept=".iso">';
+                setDialogMode(11, "HTTPS Boot", 3, function () {
+                    var files = Q('ocrfile').files;
+                    if (files.length != 1) return;
+                    setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
+                    webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
+                    powerActionDlg();
+                }, x);
+                QE('idx_dlgOkButton', false);
+                return;
+            }
 
             if ((action == 500) || (action == 501)) {
                 // Perform OS wake from standby or OS sleep (Intel AMT 10+)
@@ -48392,11 +48816,35 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 if (wsstack.comm.xtlsFingerprint == null) { x += ('<div style=color:red>' + "<b>WARNING:</b> TLS is not used, password will be sent in the clear." + '</div>'); }
                 rsepass = 1;
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
+
+            } else if ((action == 999) && (amtversion >= 15)) {
+                statusbox("Power Actions", "Checking boot sources...");            
+                amtstack.BatchEnum('', ['CIM_BootSourceSetting'], powerActionDlgCheck00, true);
             } else {
                 powerActionDlg();
             }
         }
         
+
+        var AmtOcrPba = null;
+        var AmtOcrPbaLength = 0;
+        function powerActionDlgCheck00(stack, name, response, status) {
+            if (status != 200) { messagebox("Power Action", format("GET CIM_BootSourceSetting, Error #{0}", status) + ((response.Header && response.Header.WsmanError) ? (', ' + response.Header.WsmanError) : '')); return; }
+            var bootSources = response.CIM_BootSourceSetting.responses;
+            AmtOcrPba = {};
+            for (var i = 0; i < bootSources.length; i++) {
+                var instanceid = bootSources[i]['InstanceID'];
+                if ((instanceid != null) && instanceid.toString().startsWith('Intel(r) AMT: Force OCR UEFI Boot')) {
+                    try {
+                        var arr = instanceid.trim().split(' ');
+                        idx = parseInt(arr[arr.length - 1]);
+                        AmtOcrPba[parseInt(idx)] = { instance: bootSources[i]['BIOSBootString'], bootstr: bootSources[i]['BootString'] };
+                        AmtOcrPbaLength++;
+                    } catch (e) { }
+                }
+            }
+            powerActionDlg();
+        }
 
         function powerActionDlg() {
             //if (amtversion == 0) return;
@@ -48449,6 +48897,15 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             //QV('', amtPowerBootCapabilities['ForceHardDriveSafeModeBoot'] == true);
             //QV('', amtPowerBootCapabilities['ForceWinREBoot'] == true);
             QV('ForcePXEBootOption', amtPowerBootCapabilities['ForcePXEBoot'] == true);
+
+            QV('ForceUEFIBootOption', false);
+            if ((AmtOcrPbaLength > 0) && (amtPowerBootCapabilities['ForceUEFIPBABoot'] == true)) {
+                QV('ForceUEFIBootOption', true);
+                var x = '';
+                for (var i in AmtOcrPba) { x += '<option value=' + i + '>' + AmtOcrPba[i].instance + '</option>'; }
+                QH('idx_d24customBootMediaIndex', x);
+            }
+            QV('ForceHttpBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
             QV('d24dLockKeyboard', amtPowerBootCapabilities['KeyboardLock'] == true);
@@ -48489,10 +48946,35 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             //for (var i in bootSettingOpts) { QE(bootSettingOpts[i], idx_d24ForceBootDevice.value == 0); }
 
 
+            var bootSourceIndex = Q('idx_d24ForceBootDevice').value;
+            QV('idx_d24bootSource', bootSourceIndex < 5);
+            QV('idx_d24customBootSource', bootSourceIndex == 5)
+            QV('idx_d24diskImage', bootSourceIndex == 6);
+            if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootFile').files.length != 1)) { ok = false; }
+            // Allow HTTPS url to be passed as argument
+            if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")) { ok = true;}
+            // console.log(AmtOcrPbaLength, AmtOcrPba);
+
             QE('idx_dlgOkButton', ok);
         }
 
         function showAdvPowerDlgOk() {
+
+            var forceBootSelection = Q('idx_d24ForceBootDevice').value;
+
+            if (((forceBootSelection == 5) || (forceBootSelection == 6)) && (wsstack.comm.xtlsCertificate == null)) {
+                messagebox("Power Action", "This feature requires a TLS connection to Intel AMT"); return;
+            }
+            if (forceBootSelection == 6) {
+                var files = Q('idx_d24ocrBootFile').files;
+                //if (files.length != 1) return;
+                if (files.length == 1) {
+                    setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
+                    webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
+                } else if ((Q('idx_d24ocrBootUrl').value.trim()=='') || !Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")) {
+                    return; //invalid HTTPS URL supplied
+                }
+            }
 
             var action = Q('idx_d24Command').value;
             if ((action == 500) || (action == 501)) {
@@ -48685,6 +49167,30 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             //r['EnforceSecureBoot'] = true;
 
 
+            // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
+            if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
+                // check if using built-in webserver or external webserver
+                if (Q('idx_d24ocrBootFile').files.length==1) {
+                    r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
+                    r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
+                } else if ((Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")){
+                    r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
+                    r['UefiBootNumberOfParams'] = 3;
+                    return;
+                } else {
+                    // it should not be here
+                    messagebox("UEFI HTTPS Boot", "HTTPS Boot configuration is invalid!");
+                    return;
+                }
+                r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
+            } else if ((action == 999) && (Q('idx_d24ForceBootDevice').value == 5)) {
+                var bootstr = AmtOcrPba[Q('idx_d24customBootMediaIndex').value].bootstr;
+                console.log('OCR BootStr: ' + bootstr);
+                r['UefiBootParametersArray'] = btoa(makeUefiBootParam(2, bootstr) + makeUefiBootParam(3, bootstr.length, 2)); // EFI_DEVICE_PATH (2) + EFI_DEVICE_PATH-LENGTH (3)
+                r['UefiBootNumberOfParams'] = 2;
+                r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
+            }
+
             //if (((action == 104) || (action == 105)) && !r['SecureErase']) { /*console.log("This Intel&reg; AMT does not support Secure Erase");*/ cleanup(); return; }
             console.log("Boot Action: " + action);
             console.log("Setting Boot Settings: " + ObjectToString2(r));
@@ -48717,7 +49223,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
             if (action == 999) {
 
-                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot'][idx_d24ForceBootDevice.value - 1]; }
+                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force OCR UEFI Boot Option ' + Q('idx_d24customBootMediaIndex').value, 'Force OCR UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
             } else {
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }

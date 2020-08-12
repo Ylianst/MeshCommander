@@ -1614,9 +1614,11 @@
                     <select id="idx_d24customBootMediaIndex" onchange=showAdvPowerDlgChange() style="float:right;width:200px"></select>
                     <div>Boot Media</div>
                 </div>
-                <div id="idx_d24diskImage" style=height:26px>
-                    <input id=idx_d24ocrBootFile type=file onchange=showAdvPowerDlgChange() style="float:right;width:200px" accept=".iso">
-                    <div>Boot Image</div>
+                <div id="idx_d24diskImage" style=height:54px>
+                    <input id=idx_d24ocrBootFile type=file onchange=showAdvPowerDlgChange() style="float:right;width:200px" accept=".iso">                    
+                    <div>Boot Image</div><br/>
+                    <input id=idx_d24ocrBootUrl type=text onchange=showAdvPowerDlgChange() style="float:right;width:200px">
+                    <div>or HTTPS URL</div>
                 </div>
                 <!-- ###END###{PowerControl-OneClick} -->
                 <div style=height:26px id=idd_d24IDERBootDevice>
@@ -10262,6 +10264,8 @@
             QV('idx_d24customBootSource', bootSourceIndex == 5)
             QV('idx_d24diskImage', bootSourceIndex == 6);
             if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootFile').files.length != 1)) { ok = false; }
+            // Allow HTTPS url to be passed as argument
+            if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")) { ok = true;}
             // console.log(AmtOcrPbaLength, AmtOcrPba);
             // ###END###{PowerControl-OneClick}
 
@@ -10278,9 +10282,13 @@
             // ###END###{Mode-NodeWebkit}
             if (forceBootSelection == 6) {
                 var files = Q('idx_d24ocrBootFile').files;
-                if (files.length != 1) return;
-                setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
-                webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
+                //if (files.length != 1) return;
+                if (files.length == 1) {
+                    setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
+                    webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
+                } else if ((Q('idx_d24ocrBootUrl').value.trim()=='') || !Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")) {
+                    return; //invalid HTTPS URL supplied
+                }
             }
             // ###END###{PowerControl-OneClick}
 
@@ -10479,8 +10487,19 @@
             // ###BEGIN###{PowerControl-OneClick}
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
             if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
-                r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
-                r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
+                // check if using built-in webserver or external webserver
+                if (Q('idx_d24ocrBootFile').files.length==1) {
+                    r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
+                    r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
+                } else if ((Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")){
+                    r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
+                    r['UefiBootNumberOfParams'] = 3;
+                    return;
+                } else {
+                    // it should not be here
+                    messagebox("UEFI HTTPS Boot", "HTTPS Boot configuration is invalid!");
+                    return;
+                }
                 r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
             } else if ((action == 999) && (Q('idx_d24ForceBootDevice').value == 5)) {
                 var bootstr = AmtOcrPba[Q('idx_d24customBootMediaIndex').value].bootstr;
