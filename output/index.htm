@@ -49176,7 +49176,6 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 } else if ((Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")){
                     r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
                     r['UefiBootNumberOfParams'] = 3;
-                    return;
                 } else {
                     // it should not be here
                     messagebox("UEFI HTTPS Boot", "HTTPS Boot configuration is invalid!");
