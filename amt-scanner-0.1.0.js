@@ -111,6 +111,7 @@ var CreateAmtScanner = function (func) {
         if (computerlist.length > 0) {
             for (var i in computerlist) {
                 var computer = computerlist[i];
+                if (computer.host == null) continue;// do not scan computer without host/ip, it is relayed.
                 var host = computer.host.toLowerCase();
                 if ((host != '127.0.0.1') && (host != '::1') && (host != 'localhost') && (host.split(':').length == 1)) {
                     var scaninfo = obj.scanTable[computer.h];
