@@ -1500,7 +1500,8 @@ th {
                         <option id="ForceHDBootOption" value="3">Force Hard Disk Boot
                         <option id="ForceDiagBootOption" value="4">Force Diagnostic Boot
                                                 <option id="ForceUEFIBootOption" value="5">Force OCR UEFI Boot Option
-                        <option id="ForceHttpBootOption" value="6">Force OCR UEFI HTTPS Boot
+                        <option id="ForceHttpBootOption" value="6">Force OCR UEFI HTTPS Boot (.iso)
+                        <option id="ForceHttpUrlBootOption" value="7">Force OCR UEFI HTTPS Boot (url)
                                             </select>
                     <div>Boot Source</div>
                 </div>
@@ -1518,11 +1519,13 @@ th {
                     <select id="idx_d24customBootMediaIndex" onchange="showAdvPowerDlgChange()" style="float:right;width:200px"></select>
                     <div>Boot Media</div>
                 </div>
-                <div id="idx_d24diskImage" style="height:54px">
+                <div id="idx_d24diskImage" style="height:26px">
                     <input id="idx_d24ocrBootFile" type="file" onchange="showAdvPowerDlgChange()" style="float:right;width:200px" accept=".iso">                    
-                    <div>Boot Image</div><br>
-                    <input id="idx_d24ocrBootUrl" type="text" onchange="showAdvPowerDlgChange()" style="float:right;width:200px">
-                    <div>or HTTPS URL</div>
+                    <div>Boot Image</div>
+                </div>
+                <div id="idx_d24diskImageUrl" style="height:26px">
+                    <input id="idx_d24ocrBootUrl" type="text" onchange="showAdvPowerDlgChange()" onkeyup="showAdvPowerDlgChange()" placeholder="https://" style="float:right;width:200px">
+                    <div>Boot URL</div>
                 </div>
                                 <div style="height:26px" id="idd_d24IDERBootDevice">
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange="showAdvPowerDlgChange()">
@@ -2551,6 +2554,7 @@ var CreateAmtScanner = function (func) {
         if (computerlist.length > 0) {
             for (var i in computerlist) {
                 var computer = computerlist[i];
+                if (computer.host == null) continue;// do not scan computer without host/ip, it is relayed.
                 var host = computer.host.toLowerCase();
                 if ((host != '127.0.0.1') && (host != '::1') && (host != 'localhost') && (host.split(':').length == 1)) {
                     var scaninfo = obj.scanTable[computer.h];
@@ -48906,6 +48910,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 QH('idx_d24customBootMediaIndex', x);
             }
             QV('ForceHttpBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
+            QV('ForceHttpUrlBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
             QV('d24dLockKeyboard', amtPowerBootCapabilities['KeyboardLock'] == true);
@@ -48950,10 +48955,9 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             QV('idx_d24bootSource', bootSourceIndex < 5);
             QV('idx_d24customBootSource', bootSourceIndex == 5)
             QV('idx_d24diskImage', bootSourceIndex == 6);
+            QV('idx_d24diskImageUrl', bootSourceIndex == 7);
             if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootFile').files.length != 1)) { ok = false; }
-            // Allow HTTPS url to be passed as argument
-            if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")) { ok = true;}
-            // console.log(AmtOcrPbaLength, AmtOcrPba);
+            if ((bootSourceIndex == 7) && (Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith('https://') == false)) { ok = false;}
 
             QE('idx_dlgOkButton', ok);
         }
@@ -48961,18 +48965,16 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         function showAdvPowerDlgOk() {
 
             var forceBootSelection = Q('idx_d24ForceBootDevice').value;
-
-            if (((forceBootSelection == 5) || (forceBootSelection == 6)) && (wsstack.comm.xtlsCertificate == null)) {
+            
+            if (((forceBootSelection == 5) || (forceBootSelection == 6) || (forceBootSelection == 7)) && 
+                ((meshCentralServer==null && wsstack.comm.xtlsCertificate == null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 0))) {
                 messagebox("Power Action", "This feature requires a TLS connection to Intel AMT"); return;
             }
             if (forceBootSelection == 6) {
                 var files = Q('idx_d24ocrBootFile').files;
-                //if (files.length != 1) return;
                 if (files.length == 1) {
                     setupWebServer(urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress);
                     webserver.setupBootImage(files[0].path, (urlvars['webcn'] ? urlvars['webcn'] : wsstack.comm.localAddress));
-                } else if ((Q('idx_d24ocrBootUrl').value.trim()=='') || !Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")) {
-                    return; //invalid HTTPS URL supplied
                 }
             }
 
@@ -49168,19 +49170,14 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
 
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
-            if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
-                // check if using built-in webserver or external webserver
-                if (Q('idx_d24ocrBootFile').files.length==1) {
-                    r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
-                    r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
-                } else if ((Q('idx_d24ocrBootUrl').value.trim()!='') && Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith("https")){
-                    r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
-                    r['UefiBootNumberOfParams'] = 3;
-                } else {
-                    // it should not be here
-                    messagebox("UEFI HTTPS Boot", "HTTPS Boot configuration is invalid!");
-                    return;
-                }
+            if ((action == 999) && (Q('idx_d24ForceBootDevice').value == 7)) { // Force UEFI HTTPS Boot using URL
+                r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
+                r['UefiBootNumberOfParams'] = 3;
+                r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
+            } else if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
+                // Check if using built-in webserver or external webserver
+                r['UefiBootParametersArray'] = webserver.lastBootImageArgs.args;
+                r['UefiBootNumberOfParams'] = webserver.lastBootImageArgs.argscount;
                 r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
             } else if ((action == 999) && (Q('idx_d24ForceBootDevice').value == 5)) {
                 var bootstr = AmtOcrPba[Q('idx_d24customBootMediaIndex').value].bootstr;

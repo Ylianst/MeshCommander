@@ -10278,8 +10278,9 @@
         function showAdvPowerDlgOk() {
             // ###BEGIN###{PowerControl-OneClick}
             var forceBootSelection = Q('idx_d24ForceBootDevice').value;
-            // ###BEGIN###{Mode-NodeWebkit}
-            if (((forceBootSelection == 5) || (forceBootSelection == 6) || (forceBootSelection == 7)) && (wsstack.comm.xtlsCertificate == null)) {
+            // ###BEGIN###{Mode-NodeWebkit}            
+            if (((forceBootSelection == 5) || (forceBootSelection == 6) || (forceBootSelection == 7)) && 
+                ((meshCentralServer==null && wsstack.comm.xtlsCertificate == null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 0))) {
                 messagebox("Power Action", "This feature requires a TLS connection to Intel AMT"); return;
             }
             // ###END###{Mode-NodeWebkit}
