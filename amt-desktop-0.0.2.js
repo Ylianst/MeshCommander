@@ -21,7 +21,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.rwidth = 0;
     obj.rheight = 0;
     obj.bpp = 2; // Bytes per pixel (1 or 2 supported)
-    obj.useZRLE = true;
+    obj.useRLE = true;
     obj.showmouse = true;
     obj.buttonmask = 0;
     obj.localKeyMap = true;
@@ -31,7 +31,6 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.sparew2 = 0;
     obj.spareh2 = 0;
     obj.sparecache = {};
-    obj.ZRLEfirst = 1;
     obj.onScreenSizeChange = null;
     obj.frameRateDelay = 0;
     // ###BEGIN###{DesktopRotation}
@@ -45,6 +44,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.onKvmDataAck = -1;
     obj.holding = false;
     obj.lastKeepAlive = Date.now();
+    obj.kvmExt = {};
+    obj.kvmExtChanged = null;
+    obj.useZLib = false;
+    obj.graymode = false;
     // ###END###{DesktopInband}
 
     obj.mNagleTimer = null; // Mouse motion slowdown timer
@@ -156,10 +159,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 */
 
                 // SetEncodings, with AMT we can't omit RAW, must be specified.
-                // Intel AMT supports encodings: RAW (0), ZRLE (16), Desktop Size (0xFFFFFF21, -223)
+                // Intel AMT supports encodings: RAW (0), RLE (16), Desktop Size (0xFFFFFF21, -223)
 
                 var supportedEncodings = '';
-                if (obj.useZRLE) supportedEncodings += IntToStr(16);
+                if (obj.useRLE) supportedEncodings += IntToStr(16);
                 supportedEncodings += IntToStr(0);
                 // ###BEGIN###{DesktopInband}
                 supportedEncodings += IntToStr(1092);
@@ -173,12 +176,16 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
                 obj.state = 4;
                 if (obj.parent) { obj.parent.disconnectCode = 0; obj.parent.xxStateChange(3); }
-                _SendRefresh();
                 //obj.timer = setInterval(obj.xxOnTimer, 50);
 
                 // ###BEGIN###{DesktopFocus}
                 obj.ox = -1; // Old mouse x position
                 // ###END###{DesktopFocus}
+                // ###BEGIN###{DesktopInband}
+                obj.sendKvmExtCmd(2, obj.graymode?1:0); // Set Decimation State
+                obj.sendKvmExtCmd(4, obj.useZLib?1:0); // Set ZLib state
+                // ###END###{DesktopInband}
+                _SendRefresh();
 
                 if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
             }
@@ -256,7 +263,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     }
                     _putImage(obj.spare, x, y);
                 } else if (encoding == 16) {
-                    // ZRLE encoding
+                    // RLE encoding
                     if (obj.acc.byteLength < 16) return;
                     var datalen = accview.getUint32(12);
                     if (obj.acc.byteLength < (16 + datalen)) return;
@@ -595,7 +602,6 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.Start = function () {
         obj.state = 0;
         obj.acc = null;
-        obj.ZRLEfirst = 1;
         // ###BEGIN###{Inflate}
         obj.inflate.inflateReset();
         // ###END###{Inflate}
@@ -603,6 +609,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         obj.onKvmDataPending = [];
         obj.onKvmDataAck = -1;
         obj.kvmDataSupported = false;
+        obj.kvmExt = {};
         // ###END###{DesktopInband}
         for (var i in obj.sparecache) { delete obj.sparecache[i]; }
     }
@@ -766,6 +773,13 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-DataChannel-Recv(' + (d.length - 16) + '): ' + d.substring(16)); }
                 if (d.length >= 16) { obj.onKvmData(d.substring(16)); } // Event the data and ack
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
+            } else if ((d.length >= 13) && (d.substring(0, 11) == '\0KvmExtCmd\0')) {
+                var cmd = d.charCodeAt(11), val = d.charCodeAt(12);
+                console.log('Received KvmExtCmd', cmd, val);
+                if (cmd == 1) { obj.kvmext.decimation = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, val); } }
+                if (cmd == 2) { obj.sendKvmExtCmd(1); }
+                if (cmd == 3) { obj.kvmext.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, val); } }
+                if (cmd == 4) { obj.sendKvmExtCmd(3); }
             } else {
                 console.log('Got KVM clipboard data:', d);
                 if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + d.length + '): ' + rstr2hex(d) + ', ' + d); }
@@ -776,6 +790,12 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     }
 
     // ###BEGIN###{DesktopInband}
+    obj.sendKvmExtCmd = function (cmd, val) {
+        console.log('Sending KvmExtCmd', cmd, val);
+        var x = '\0KvmExtCmd\0' + String.fromCharCode(cmd) + (val != null ? String.fromCharCode(val) : '');
+        obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x);
+    }
+
     obj.sendKvmData = function (x) {
         if (obj.onKvmDataAck !== true) {
             obj.onKvmDataPending.push(x);

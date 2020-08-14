@@ -1334,12 +1334,21 @@
                 <br>
                 <div style='height:26px'>
                     <select id="idx_d7desktopmode" style="float:right;width:200px">
-                        <option value="1">RLE8, Color Fast</option>
-                        <option value="2">RLE16, Color</option>
-                        <option id="d7gray4" value="5">RLE4G, Gray Fastest</option>
-                        <option id="d7gray8" value="6">RLE8G, Gray Fast</option>
-                        <option value="3">RAW8, Color Slow</option>
-                        <option value="4">RAW16, Color Very Slow</option>
+                        <!-- Flags: 1 = RAW, 2 = 16bit, 4 = Gray, 8 = ZLib -->
+                        <!-- ###BEGIN###{DesktopInband} -->
+                        <option id="d7exm1" value="5">RLE8G, Gray (Fast)</option>
+                        <option id="d7exm2" value="7">RLE16G, Gray</option>
+                        <!-- ###END###{DesktopInband} -->
+                        <option value="1">RLE8, Color</option>
+                        <option value="3">RLE16, Color</option>
+                        <!-- ###BEGIN###{DesktopInband} -->
+                        <option id="d7exm3" value="13">ZRLE8G, Compressed Gray</option>
+                        <option id="d7exm4" value="15">ZRLE16G, Compressed Gray</option>
+                        <option id="d7exm5" value="9">ZRLE8, Compressed Color</option>
+                        <option id="d7exm6" value="11">ZRLE16, Compressed Color</option>
+                        <!-- ###END###{DesktopInband} -->
+                        <option value="0">RAW8, Color</option>
+                        <option value="2">RAW16, Color (Slow)</option>
                     </select>
                     <div>Image Encoding</div>
                 </div>
@@ -1724,7 +1733,7 @@
 // ###END###{NetworkSettings}
 // ###BEGIN###{Desktop}
         var desktop;
-        var desktopsettings = { encoding:1, showfocus:false, showmouse:true, showcad:true, limitFrameRate:false, noMouseRotate:false };
+        var desktopsettings = { encflags: 1, showfocus: false, showmouse: true, showcad: true, limitFrameRate: false, noMouseRotate: false };
 // ###END###{Desktop}
 // ###BEGIN###{Mode-MeshCentral2}
         var currentMeshNode = null;
@@ -1882,6 +1891,9 @@
             // Setup the remote desktop
             desktop = CreateAmtRedirect(CreateAmtRemoteDesktop('Desk', Q('id_mainarea')));
             desktop.onStateChanged = onDesktopStateChange;
+            // ###BEGIN###{DesktopInband}
+            desktop.kvmExtChanged = updateDesktopState;
+            // ###END###{DesktopInband}
             QE('idx_connectbutton1', true);
             try { t = localStorage.getItem('desktopsettings'); } catch (ex) {}
             if (t) { desktopsettings = JSON.parse(t); }
@@ -8111,7 +8123,7 @@
             webRtcDesktop = null;
             // Switch back to hardware KVM
             desktop.m.hold(false);
-            Q('id_deskstatus').textContent = StatusStrs[desktop.State];
+            updateDesktopState();
             // ###BEGIN###{DesktopInbandFiles}
             p24files = null;
             p24downloadFileCancel() // If any downloads are in process, cancel them.
@@ -8137,11 +8149,13 @@
                 if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
-                desktop.m.bpp = (desktopsettings.encoding == 2 || desktopsettings.encoding == 4) ? 2 : 1;
-                desktop.m.graymode = 0;
-                if (desktopsettings.encoding == 6) { desktop.m.graymode = 1; } // 256 grays
-                if (desktopsettings.encoding == 5) { desktop.m.graymode = 2; } // 16 grays
-                desktop.m.useZRLE = (desktopsettings.encoding < 3);
+                // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib
+                desktop.m.useRLE = ((desktopsettings.encflags & 1) != 0);
+                desktop.m.bpp = (desktopsettings.encflags & 2) ? 2 : 1;
+                // ###BEGIN###{DesktopInband}
+                desktop.m.graymode = ((desktopsettings.encflags & 4) != 0);
+                desktop.m.useZLib = ((desktopsettings.encflags & 8) != 0);
+                // ###END###{DesktopInband}
                 desktop.m.showmouse = desktopsettings.showmouse;
                 desktop.m.onScreenSizeChange = center;
                 // ###BEGIN###{ComputerSelector}
@@ -8168,7 +8182,6 @@
                             webRtcDesktop.webchannel.onopen = function () {
                                 // Switch to software KVM
                                 if (urlvars && urlvars['kvmdatatrace']) { console.log('WebRTC Data Channel Open'); }
-                                Q('id_deskstatus').textContent = StatusStrs[desktop.State] + ", Soft-KVM";
                                 desktop.m.hold(true);
                                 webRtcDesktop.webRtcActive = true;
                                 webRtcDesktop.softdesktop = CreateKvmDataChannel(webRtcDesktop.webchannel, CreateAgentRemoteDesktop('Desk', Q('id_mainarea')), desktop.m);
@@ -8176,6 +8189,7 @@
                                 if (desktopsettings.quality) { webRtcDesktop.softdesktop.m.CompressionLevel = desktopsettings.quality; } // Number from 1 to 100. 50 or less is best.
                                 if (desktopsettings.scaling) { webRtcDesktop.softdesktop.m.ScalingLevel = desktopsettings.scaling; }
                                 webRtcDesktop.softdesktop.Start();
+                                updateDesktopState();
 
                                 // Check if we can get remote file access
                                 // ###BEGIN###{DesktopInbandFiles}
@@ -8308,7 +8322,6 @@
         function onDesktopStateChange(desktop, state) {
             //console.log("onDesktopStateChange: " + state);
             idx_connectbutton1.value = (state == 0) ? "Connect" : "Disconnect";
-            Q('id_deskstatus').textContent = StatusStrs[state];
             var input = ((state == 3) && !urlvars['kvmviewonly']);
             QE('id_DeskCAD', input);
             QE('deskkeys', input);
@@ -8352,6 +8365,28 @@
             NW_SetupMainMenu(currentView);
             // ###END###{Mode-NodeWebkit}
             center();
+            updateDesktopState();
+        }
+
+        // Update remote desktop status
+        function updateDesktopState() {
+            // ###BEGIN###{DesktopInband}
+            var x = '';
+            if (desktop.State == 3) {
+                if ((webRtcDesktop) && (webRtcDesktop.webRtcActive == true)) {
+                    x = ", Soft-KVM";
+                } else {
+                    if (desktop.m && desktop.m.kvmExt) {
+                        if (desktop.m.kvmExt.decimation == 2) { x += ", Gray" }
+                        if (desktop.m.kvmExt.compression == 1) { x += ", ZLib" }
+                    }
+                }
+            }
+            Q('id_deskstatus').textContent = StatusStrs[desktop.State] + x;
+            // ###END###{DesktopInband}
+            // ###BEGIN###{!DesktopInband}
+            Q('id_deskstatus').textContent = StatusStrs[desktop.State];
+            // ###END###{!DesktopInband}
         }
 
         function showDesktopSettings() {
@@ -8361,7 +8396,7 @@
         }
 
         function showDesktopSettingsChanged() {
-            desktopsettings.encoding = idx_d7desktopmode.value;
+            desktopsettings.encflags = parseInt(idx_d7desktopmode.value);
             // ###BEGIN###{DesktopFocus}
             desktopsettings.showfocus = d7showfocus.checked;
             // ###END###{DesktopFocus}
@@ -8383,7 +8418,13 @@
         }
 
         function applyDesktopSettings() {
-            idx_d7desktopmode.value = desktopsettings.encoding;
+            // ###BEGIN###{!DesktopInband}
+            desktopsettings.encflags = desktopsettings.encflags & 3; // Remove gray & zlib flags (4 and 8), keep 1 & 2
+            // ###END###{!DesktopInband}
+            // ###BEGIN###{DesktopInband}
+            if (amtversion < 15) { desktopsettings.encflags = desktopsettings.encflags & 3; } // Remove gray & zlib flags (4 and 8), keep 1 & 2
+            // ###END###{DesktopInband}
+            idx_d7desktopmode.value = desktopsettings.encflags;
             // ###BEGIN###{DesktopFocus}
             d7showfocus.checked = desktopsettings.showfocus;
             // ###END###{DesktopFocus}
@@ -8395,13 +8436,17 @@
             if (desktopsettings.quality) { d7bitmapquality.value = desktopsettings.quality; }
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
             QV('d7softkvmsettings', amtversion >= 12);
+            QV('d7exm1', amtversion > 14);
+            QV('d7exm2', amtversion > 14);
+            QV('d7exm3', amtversion > 14);
+            QV('d7exm4', amtversion > 14);
+            QV('d7exm5', amtversion > 14);
+            QV('d7exm6', amtversion > 14);
             // ###END###{DesktopInband}
             // ###BEGIN###{DesktopFocus}
             QV('idx_deskFocusBtn', desktopsettings.showfocus);
             // ###END###{DesktopFocus}
             QV('id_DeskCAD', desktopsettings.showcad);
-            QV('d7gray4', urlvars['kvmgray']);
-            QV('d7gray8', urlvars['kvmgray']);
         }
 
         var fullscreen = false;
