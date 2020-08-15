@@ -179,3 +179,32 @@ function _arrayBufferToString(buffer) {
     for (var i = 0; i < len; i++) { binary += String.fromCharCode(bytes[i]); }
     return binary;
 }
+
+function certCetAsn1Values(node, list) {
+    if ((typeof node === 'string') && (node.indexOf('https://') == 0)) { list.push(node); return; }
+    if (Array.isArray(node)) { for (var i in node) { certCetAsn1Values(node[i], list); } return; }
+    if (node && typeof node === 'object') { certCetAsn1Values(node.value, list) }
+}
+
+function getExtensionUrls(cert, val) {
+    var list = [], ext = cert.getExtension(val);
+    if (ext != null) { certCetAsn1Values(forge.asn1.fromDer(ext.value), list); }
+    return list;
+}
+
+var certUrlCache = null;
+var certUrlCacheFile = null;
+function getCertUrl(url, func) {
+    if (certUrlCacheFile == null) { if (process.env.LOCALAPPDATA != null) { certUrlCacheFile = require('path').join(process.env.LOCALAPPDATA, 'mccache.json'); } else { certUrlCacheFile = 'mccache.json'; } }
+    if (certUrlCache == null) { try { certUrlCache = JSON.parse(require('fs').readFileSync(certUrlCacheFile)); } catch (ex) { certUrlCache = {}; } }
+    if ((certUrlCache[url] != null) && (certUrlCache[url].data != null)) { var timeout = 0; if (url.endsWith('.crl')) { timeout = Date.now() - (14 * 86400000); } if (certUrlCache[url].time > timeout) { func(url, atob(certUrlCache[url].data)); return; } }
+    console.log('Loading: ' + url);
+    var u = require('url').parse(url);
+    var req = require('https').get({ hostname: u.hostname, port: u.port?u.port:443, path: u.path, method: 'GET', rejectUnauthorized: false
+    }, function (resp) {
+        var data = '';
+        resp.on('data', function (chunk) { if (data != null) { data += chunk.toString('binary'); } if (data.length > 500000) { data = null; } });
+        resp.on('end', function () { certUrlCache[url] = { data: btoa(data), time: Date.now() }; try { require('fs').writeFileSync(certUrlCacheFile, JSON.stringify(certUrlCache, null, 2)); } catch (ex) { } func(url, data); });
+    });
+    req.on('error', function (err) { console.log('Error: ' + err.message); func(url, null); });
+}

@@ -109,9 +109,10 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
     // Private method
     obj.ParseWsman = function (xml) {
         if (xml == null) return null;
+        var r = { Header: {} };
         try {
             if (!xml.childNodes) xml = _turnToXml(xml);
-            var r = { Header: {} }, header = xml.getElementsByTagName('Header')[0], t;
+            var header = xml.getElementsByTagName('Header')[0], t;
             if (!header) header = xml.getElementsByTagName('a:Header')[0];
             if (!header) return null;
             for (var i = 0; i < header.childNodes.length; i++) {
@@ -129,11 +130,11 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
                     r.Body = _ParseWsmanRec(body.childNodes[0]);
                 } catch (ex) { console.log('_ParseWsmanRec failed', body, ex); return null; }
 		    }
-            return r;
         } catch (ex) {
             console.log('Unable to parse XML: ' + xml + ', ' + ex);
             return null;
         }
+        return r;
     }
 
     // Private method
