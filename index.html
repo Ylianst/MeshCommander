@@ -1336,8 +1336,8 @@
                     <select id="idx_d7desktopmode" style="float:right;width:200px">
                         <!-- Flags: 1 = RAW, 2 = 16bit, 4 = Gray, 8 = ZLib -->
                         <!-- ###BEGIN###{DesktopInband} -->
-                        <option id="d7exm1" value="5">RLE8G, Gray (Fast)</option>
-                        <option id="d7exm2" value="7">RLE16G, Gray</option>
+                        <option id="d7exm1" value="5">RLE4G, Gray (Fast)</option>
+                        <option id="d7exm2" value="7">RLE8G, Gray</option>
                         <!-- ###END###{DesktopInband} -->
                         <option value="1">RLE8, Color</option>
                         <option value="3">RLE16, Color</option>
@@ -1891,9 +1891,6 @@
             // Setup the remote desktop
             desktop = CreateAmtRedirect(CreateAmtRemoteDesktop('Desk', Q('id_mainarea')));
             desktop.onStateChanged = onDesktopStateChange;
-            // ###BEGIN###{DesktopInband}
-            desktop.kvmExtChanged = updateDesktopState;
-            // ###END###{DesktopInband}
             QE('idx_connectbutton1', true);
             try { t = localStorage.getItem('desktopsettings'); } catch (ex) {}
             if (t) { desktopsettings = JSON.parse(t); }
@@ -8280,6 +8277,7 @@
                         }
                     }
                 };
+                if ((amtversion > 15) || urlvars['kvmext']) { desktop.m.kvmExtChanged = updateDesktopState; } else { desktop.m.kvmExtChanged = null; }
                 // ###END###{DesktopInband}
                 desktop.m.frameRateDelay = ((desktopsettings.limitFrameRate == true)?200:0);
                 desktop.m.noMouseRotate = desktopsettings.noMouseRotate;
@@ -8493,12 +8491,12 @@
             if (desktopsettings.quality) { d7bitmapquality.value = desktopsettings.quality; }
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
             QV('d7softkvmsettings', amtversion >= 12);
-            QV('d7exm1', amtversion > 14);
-            QV('d7exm2', amtversion > 14);
-            QV('d7exm3', amtversion > 14);
-            QV('d7exm4', amtversion > 14);
-            QV('d7exm5', amtversion > 14);
-            QV('d7exm6', amtversion > 14);
+            QV('d7exm1', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm2', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm3', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm4', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm5', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm6', (amtversion > 15) || urlvars['kvmext']);
             // ###END###{DesktopInband}
             // ###BEGIN###{DesktopFocus}
             QV('idx_deskFocusBtn', desktopsettings.showfocus);

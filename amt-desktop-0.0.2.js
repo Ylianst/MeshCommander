@@ -182,8 +182,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 obj.ox = -1; // Old mouse x position
                 // ###END###{DesktopFocus}
                 // ###BEGIN###{DesktopInband}
-                obj.sendKvmExtCmd(2, obj.graymode?1:0); // Set Decimation State
-                obj.sendKvmExtCmd(4, obj.useZLib?1:0); // Set ZLib state
+                if (obj.kvmExtChanged != null) {
+                    obj.sendKvmExtCmd(2, obj.graymode ? 1 : 0); // Set Decimation State
+                    obj.sendKvmExtCmd(4, obj.useZLib ? 1 : 0); // Set ZLib state
+                }
                 // ###END###{DesktopInband}
                 _SendRefresh();
 
@@ -776,9 +778,9 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
             } else if ((d.length >= 13) && (d.substring(0, 11) == '\0KvmExtCmd\0')) {
                 var cmd = d.charCodeAt(11), val = d.charCodeAt(12);
                 console.log('Received KvmExtCmd', cmd, val);
-                if (cmd == 1) { obj.kvmext.decimation = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, val); } }
+                if (cmd == 1) { obj.kvmExt.decimation = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, val); } }
                 if (cmd == 2) { obj.sendKvmExtCmd(1); }
-                if (cmd == 3) { obj.kvmext.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, val); } }
+                if (cmd == 3) { obj.kvmExt.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, val); } }
                 if (cmd == 4) { obj.sendKvmExtCmd(3); }
             } else {
                 console.log('Got KVM clipboard data:', d);
