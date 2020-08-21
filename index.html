@@ -5461,7 +5461,7 @@
             // ###END###{Desktop}
 
             // Intel AMT user Consent
-            if ((amtversion > 5) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined)) {
+            if ((amtversion > 5) && (amtsysstate != null && amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined)) {
                 features = "Unknown state";
                 var optinrequired = amtsysstate['IPS_OptInService'].response['OptInRequired'];
                 if (optinrequired == 0) { features = "Not Required"; }
@@ -8202,7 +8202,7 @@
             connectDesktopConsent = false; // TODO, this is not a good idea when calls are pending.
             if (desktop.State == 0) {
                 // Check if user consent is needed
-                if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
+                if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
                 // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib
