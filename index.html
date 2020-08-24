@@ -1300,7 +1300,7 @@
             <div id="dialog4" style="margin:auto;margin:3px">
                 <br>
                 <div style='height:26px'><input id="d4name" style="float:right;width:200px" onkeyup="updateComputerDialog()"><div>Friendly Name</div></div>
-                <div style='height:26px'><input id="d4tags" style="float:right;width:200px" placeholder="MyGroup"><div>Group Name</div></div>
+                <div style='height:26px'><input id="d4tags" list="d4devGroups" style="float:right;width:200px" placeholder="MyGroup"><div>Group Name</div></div>
                 <div style='height:26px'><input id="d4hostname" style="float:right;width:200px" onkeyup="updateComputerDialog()"><div>Hostname</div></div>
                 <div style='height:26px'><select id="d4security" style="float:right;width:200px" onchange="updateComputerDialog()"><option value="0">Digest / None<option value="1">Digest / TLS<option value="2">Kerberos / None<option value="3">Kerberos / TLS</select><div>Auth / Security</div></div>
                 <div id="d4digest">
@@ -1312,6 +1312,7 @@
                     <div style='height:26px'><input id="d4kerberos" style="float:right;width:200px" onkeyup="updateComputerDialog()" placeholder="computer.domain.com:16992" title="If this field is filled, this value will be used to request the Kerberos token instead of host:port."><div>Optional Token Request*</div></div>
                     <div style="font-size:10px"><br>*Alternate hostname for Kerberos token request</div>
                 </div>
+                <datalist id="d4devGroups"></datalist>
             </div>
             <!-- ###END###{ComputerSelector} -->
             <div id="dialog5" style="margin:auto;margin:3px">
@@ -3406,6 +3407,15 @@
         // ###BEGIN###{ComputerSelector-Local}
         function addComputer() {
             if (xxdialogMode) return;
+
+            // Build the list of groups
+            var groups = [], x = '';
+            for (var y in computerlist) { var computer = computerlist[y]; if ((computer.tags != null) && (computer.tags != '') && (groups.indexOf(computer.tags) == -1) && (computer.tags.indexOf('"') == -1)) { groups.push(computer.tags); } }
+            groups.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+            for (var y in groups) { x += '<option value="' + groups[y] + '">'; }
+            QH('d4devGroups', x);
+
+            // Display the dialog box
             d4name.value = d4tags.value = d4hostname.value = d4password.value = '';
             d4username.value = "admin";
             if (kerberos != null) {
@@ -3679,6 +3689,13 @@
             if (xxdialogMode) return;
             var c = null;
             for (x = 0; x < computerlist.length; x++) { if (computerlist[x]['h'] == h) { c = computerlist[x]; } }
+
+            // Build the list of groups
+            var groups = [], x = '';
+            for (var y in computerlist) { var computer = computerlist[y]; if ((computer.tags != null) && (computer.tags != '') && (groups.indexOf(computer.tags) == -1) && (computer.tags.indexOf('"') == -1)) { groups.push(computer.tags); } }
+            groups.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+            for (var y in groups) { x += '<option value="' + groups[y] + '">'; }
+            QH('d4devGroups', x);
 
             // If connected to a MeshCentral server, only edit the device name
             // ###BEGIN###{MeshServerConnect}
