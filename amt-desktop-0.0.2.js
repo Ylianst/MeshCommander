@@ -190,6 +190,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 _SendRefresh();
 
                 if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
+                if (obj.parent) { obj.parent.disconnectCode = 50001; } // Everything looks good, a disconnection here would be Intel AMT initiated.
             }
             else if (obj.state == 4) {
                 switch (obj.acc[0]) {

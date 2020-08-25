@@ -28,7 +28,7 @@ var CreateAmtRedirect = function (module) {
     obj.authuri = '/RedirectionService';
     obj.digestRealmMatch = null;
     obj.onStateChanged = null;
-    obj.disconnectCode = 0;
+    obj.disconnectCode = 0; // 2 = BUSY, 3 = UNSUPPORTED, 256 = ERROR, 50000 = RLE16 fail, 50001 = AmtDisconnect.
 
     function ToIntStr(v) { return String.fromCharCode((v & 0xFF), ((v >> 8) & 0xFF), ((v >> 16) & 0xFF), ((v >> 24) & 0xFF)); }
     function ToShortStr(v) { return String.fromCharCode((v & 0xFF), ((v >> 8) & 0xFF)); }
@@ -47,6 +47,7 @@ var CreateAmtRedirect = function (module) {
         obj.xtlsoptions = tlsoptions;
         obj.xtlsFingerprint = tlsFingerprint;
         obj.connectstate = 0;
+        obj.disconnectCode = 0;
 
         if (obj.xtlsoptions && obj.xtlsoptions.meshServerConnect) {
             // Use the websocket wrapper to connect to MeshServer server

@@ -1028,7 +1028,7 @@
                                 </div>
                                 <div>
                                     <div id="idx_deskFullBtn2" onclick="deskToggleFull()" style="float:left;cursor:pointer;font-size:15px;display:none">&nbsp;&#x2716;</div>
-                                    &nbsp;<input type="button" id="idx_connectbutton1" value="Connect" onclick="connectDesktop(event)" onkeypress="return false" onkeydown="return false" disabled="disabled">
+                                    &nbsp;<input type="button" id="idx_connectbutton1" value="Connect" onclick="connectDesktopButton(event)" onkeypress="return false" onkeydown="return false" disabled="disabled">
                                     &nbsp;<span id="id_deskstatus">Disconnected.</span>
                                 </div>
                             </td>
@@ -2908,6 +2908,7 @@
             terminal.Stop();
             // ###END###{Terminal}
             // ###BEGIN###{Desktop}
+            desktop.disconnectCode = 0;
             desktop.Stop();
             // ###END###{Desktop}
         }
@@ -8213,6 +8214,8 @@
         */
         // ###END###{DesktopInband}
 
+        function connectDesktopButton(e) { desktop.disconnectCode = 0; connectDesktop(e); }
+
         var connectDesktopConsent = false;
         function connectDesktop(skipConsent) {
             if (!desktop || xxdialogMode) return;
@@ -8394,6 +8397,7 @@
         // ###END###{Desktop-Multi}
 
         function onDesktopStateChange(desktop, state) {
+            var reconnect = false;
             //console.log("onDesktopStateChange: " + state);
             idx_connectbutton1.value = (state == 0) ? "Connect" : "Disconnect";
             var input = ((state == 3) && !urlvars['kvmviewonly']);
@@ -8424,6 +8428,8 @@
                         messagebox("Remote Desktop", "The device indicated that this type of connection of not supported.");
                     } else if (desktop.disconnectCode == 50000) { // KVM-Disconnect
                         messagebox("Remote Desktop", "KVM disconnection, they may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
+                    } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again
+                        reconnect = true;
                     }
                     break;
                 case 3:
@@ -8440,6 +8446,7 @@
             // ###END###{Mode-NodeWebkit}
             center();
             updateDesktopState();
+            if (reconnect) { setTimeout(connectDesktop, 200); }
         }
 
         // Update remote desktop status
@@ -8488,7 +8495,7 @@
             if (desktopsettings.showfocus == false) { desktop.m.focusmode = 0; idx_deskFocusBtn.value = "All Focus"; }
             // ###END###{DesktopFocus}
             desktop.m.frameRateDelay = (desktopsettings.limitFrameRate == true)?200:0;
-            if (desktop.State != 0) { desktop.Stop(); setTimeout(connectDesktop, 50); }
+            if (desktop.State != 0) { desktop.disconnectCode = 0; desktop.Stop(); setTimeout(connectDesktop, 50); }
         }
 
         function applyDesktopSettings() {
@@ -13426,6 +13433,7 @@
         // ###END###{Mode-NodeWebkit}
 
         // ###BEGIN###{Desktop}
+        window['connectDesktopButton'] = connectDesktopButton;
         window['connectDesktop'] = connectDesktop;
         window['deskToggleFull'] = deskToggleFull;
         window['showDesktopSettings'] = showDesktopSettings;
