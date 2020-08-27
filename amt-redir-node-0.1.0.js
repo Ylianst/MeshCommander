@@ -98,6 +98,7 @@ var CreateAmtRedirect = function (module) {
     obj.xxOnSocketData = function (data) {
         if (!data || obj.connectstate == -1) return;
 
+        if (typeof(data)=='string') {data = new Buffer(data,'binary')}
         // Redirection tracing
         if (urlvars && urlvars['redirtrace']) {
             var datastr = arrToStr(new Uint8Array(data));
