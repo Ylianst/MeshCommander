@@ -57,6 +57,7 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
     obj.PerformAjaxEx = function (postdata, callback, tag, url, action) {
         if (obj.FailAllError != 0) { obj.gotNextMessagesError({ status: obj.FailAllError }, 'error', null, [postdata, callback, tag, url, action]); return; }
         if (!postdata) postdata = '';
+        if (urlvars && urlvars['wsmantrace']) { console.log('WSMAN-SEND(' + postdata.length + '): ' + postdata); }
         //console.log('SEND: ' + postdata); // DEBUG
 
         // We are in a websocket relay environment 
@@ -203,11 +204,10 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
     // Websocket relay specific private method
     function _ProcessHttpResponse(header, data) {
         //obj.Debug('_ProcessHttpResponse: ' + header.Directive[1]);
+        if (urlvars && urlvars['wsmantrace']) { console.log('WSMAN-RECV(' + data.length + '): ' + data); }
 
         var s = parseInt(header.Directive[1]);
-        if (isNaN(s)) {
-            s = 602;
-        }
+        if (isNaN(s)) { s = 602; }
         if (s == 401 && ++(obj.authcounter) < 3) {
             obj.challengeParams = obj.parseDigest(header['www-authenticate']); // Set the digest parameters, after this, the socket will close and we will auto-retry
             if (obj.challengeParams['qop'] != null) {

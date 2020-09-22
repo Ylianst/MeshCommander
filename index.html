@@ -10916,10 +10916,10 @@
             if (xxdialogMode) return;
             haltEvent(e);
             // ###BEGIN###{Mode-Firmware}
-            var newWindow = window.open('/amt-storage/' + handle, '_blank');
+            var newWindow = window.open('/amt-storage/' + handle, '_blank', 'noopener,noreferrer');
             // ###END###{Mode-Firmware}
             // ###BEGIN###{!Mode-Firmware}
-            var newWindow = window.open('http://' + wsstack.comm.host + ':' + wsstack.comm.port + '/amt-storage/' + handle, '_blank');
+            var newWindow = window.open('http://' + wsstack.comm.host + ':' + wsstack.comm.port + '/amt-storage/' + handle, '_blank', 'noopener,noreferrer');
             // ###END###{!Mode-Firmware}
             newWindow.opener = null;
             newWindow.focus();
