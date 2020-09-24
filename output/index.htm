@@ -1021,7 +1021,7 @@ th {
                                                                     </div>
                                 <div>
                                     <div id="idx_deskFullBtn2" onclick="deskToggleFull()" style="float:left;cursor:pointer;font-size:15px;display:none">&nbsp;&#x2716;</div>
-                                    &nbsp;<input type="button" id="idx_connectbutton1" value="Connect" onclick="connectDesktop(event)" onkeypress="return false" onkeydown="return false" disabled="disabled">
+                                    &nbsp;<input type="button" id="idx_connectbutton1" value="Connect" onclick="connectDesktopButton(event)" onkeypress="return false" onkeydown="return false" disabled="disabled">
                                     &nbsp;<span id="id_deskstatus">Disconnected.</span>
                                 </div>
                             </td>
@@ -1232,7 +1232,7 @@ th {
                                                 <div id="dialog4" style="margin:auto;margin:3px">
                 <br>
                 <div style='height:26px'><input id="d4name" style="float:right;width:200px" onkeyup="updateComputerDialog()"><div>Friendly Name</div></div>
-                <div style='height:26px'><input id="d4tags" style="float:right;width:200px" placeholder="MyGroup"><div>Group Name</div></div>
+                <div style='height:26px'><input id="d4tags" list="d4devGroups" style="float:right;width:200px" placeholder="MyGroup"><div>Group Name</div></div>
                 <div style='height:26px'><input id="d4hostname" style="float:right;width:200px" onkeyup="updateComputerDialog()"><div>Hostname</div></div>
                 <div style='height:26px'><select id="d4security" style="float:right;width:200px" onchange="updateComputerDialog()"><option value="0">Digest / None<option value="1">Digest / TLS<option value="2">Kerberos / None<option value="3">Kerberos / TLS</select><div>Auth / Security</div></div>
                 <div id="d4digest">
@@ -1244,6 +1244,7 @@ th {
                     <div style='height:26px'><input id="d4kerberos" style="float:right;width:200px" onkeyup="updateComputerDialog()" placeholder="computer.domain.com:16992" title="If this field is filled, this value will be used to request the Kerberos token instead of host:port."><div>Optional Token Request*</div></div>
                     <div style="font-size:10px"><br>*Alternate hostname for Kerberos token request</div>
                 </div>
+                <datalist id="d4devGroups"></datalist>
             </div>
                         <div id="dialog5" style="margin:auto;margin:3px">
                 <br>
@@ -1264,12 +1265,17 @@ th {
                 <br>
                 <div style='height:26px'>
                     <select id="idx_d7desktopmode" style="float:right;width:200px">
-                        <option value="1">RLE8, Color Fast
-                        <option value="2">RLE16, Color
-                        <option id="d7gray4" value="5">RLE4G, Gray Fastest
-                        <option id="d7gray8" value="6">RLE8G, Gray Fast
-                        <option value="3">RAW8, Color Slow
-                        <option value="4">RAW16, Color Very Slow
+                        <!-- Flags: 1 = RAW, 2 = 16bit, 4 = Gray, 8 = ZLib -->
+                                                <option id="d7exm1" value="5">RLE4G, Gray (Fast)
+                        <option id="d7exm2" value="7">RLE8G, Gray
+                                                <option value="1">RLE8, Color
+                        <option value="3">RLE16, Color
+                                                <option id="d7exm3" value="13">ZRLE8G, Compressed Gray
+                        <option id="d7exm4" value="15">ZRLE16G, Compressed Gray
+                        <option id="d7exm5" value="9">ZRLE8, Compressed Color
+                        <option id="d7exm6" value="11">ZRLE16, Compressed Color
+                                                <option value="0">RAW8, Color
+                        <option value="2">RAW16, Color (Slow)
                     </select>
                     <div>Image Encoding</div>
                 </div>
@@ -2121,7 +2127,7 @@ var CreateAmtRedirect = function (module) {
     obj.authuri = '/RedirectionService';
     obj.digestRealmMatch = null;
     obj.onStateChanged = null;
-    obj.disconnectCode = 0;
+    obj.disconnectCode = 0; // 2 = BUSY, 3 = UNSUPPORTED, 256 = ERROR, 50000 = RLE16 fail, 50001 = AmtDisconnect.
 
     function ToIntStr(v) { return String.fromCharCode((v & 0xFF), ((v >> 8) & 0xFF), ((v >> 16) & 0xFF), ((v >> 24) & 0xFF)); }
     function ToShortStr(v) { return String.fromCharCode((v & 0xFF), ((v >> 8) & 0xFF)); }
@@ -2140,6 +2146,7 @@ var CreateAmtRedirect = function (module) {
         obj.xtlsoptions = tlsoptions;
         obj.xtlsFingerprint = tlsFingerprint;
         obj.connectstate = 0;
+        obj.disconnectCode = 0;
 
         if (obj.xtlsoptions && obj.xtlsoptions.meshServerConnect) {
             // Use the websocket wrapper to connect to MeshServer server
@@ -2190,6 +2197,7 @@ var CreateAmtRedirect = function (module) {
     obj.xxOnSocketData = function (data) {
         if (!data || obj.connectstate == -1) return;
 
+        if (typeof(data)=='string') {data = new Buffer(data,'binary')}
         // Redirection tracing
         if (urlvars && urlvars['redirtrace']) {
             var datastr = arrToStr(new Uint8Array(data));
@@ -3853,9 +3861,10 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
     // Private method
     obj.ParseWsman = function (xml) {
         if (xml == null) return null;
+        var r = { Header: {} };
         try {
             if (!xml.childNodes) xml = _turnToXml(xml);
-            var r = { Header: {} }, header = xml.getElementsByTagName('Header')[0], t;
+            var header = xml.getElementsByTagName('Header')[0], t;
             if (!header) header = xml.getElementsByTagName('a:Header')[0];
             if (!header) return null;
             for (var i = 0; i < header.childNodes.length; i++) {
@@ -3867,17 +3876,18 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
             if (!body) return null;
             if (body.childNodes.length > 0) {
                 t = body.childNodes[0].localName;
-                if (t.indexOf('_OUTPUT') == t.length - 7) { t = t.substring(0, t.length - 7); }
+                var x = t.indexOf('_OUTPUT');
+                if ((x != -1) && (x == (t.length - 7))) { t = t.substring(0, t.length - 7); }
                 r.Header['Method'] = t;
                 try {
                     r.Body = _ParseWsmanRec(body.childNodes[0]);
                 } catch (ex) { console.log('_ParseWsmanRec failed', body, ex); return null; }
 		    }
-            return r;
         } catch (ex) {
             console.log('Unable to parse XML: ' + xml + ', ' + ex);
             return null;
         }
+        return r;
     }
 
     // Private method
@@ -34768,7 +34778,35 @@ function _arrayBufferToString(buffer) {
     for (var i = 0; i < len; i++) { binary += String.fromCharCode(bytes[i]); }
     return binary;
 }
-/**
+
+function certCetAsn1Values(node, list) {
+    if ((typeof node === 'string') && (node.indexOf('https://') == 0)) { list.push(node); return; }
+    if (Array.isArray(node)) { for (var i in node) { certCetAsn1Values(node[i], list); } return; }
+    if (node && typeof node === 'object') { certCetAsn1Values(node.value, list) }
+}
+
+function getExtensionUrls(cert, val) {
+    var list = [], ext = cert.getExtension(val);
+    if (ext != null) { certCetAsn1Values(forge.asn1.fromDer(ext.value), list); }
+    return list;
+}
+
+var certUrlCache = null;
+var certUrlCacheFile = null;
+function getCertUrl(url, func) {
+    if (certUrlCacheFile == null) { if (process.env.LOCALAPPDATA != null) { certUrlCacheFile = require('path').join(process.env.LOCALAPPDATA, 'mccache.json'); } else { certUrlCacheFile = 'mccache.json'; } }
+    if (certUrlCache == null) { try { certUrlCache = JSON.parse(require('fs').readFileSync(certUrlCacheFile)); } catch (ex) { certUrlCache = {}; } }
+    if ((certUrlCache[url] != null) && (certUrlCache[url].data != null)) { var timeout = 0; if (url.endsWith('.crl')) { timeout = Date.now() - (14 * 86400000); } if (certUrlCache[url].time > timeout) { func(url, atob(certUrlCache[url].data)); return; } }
+    console.log('Loading: ' + url);
+    var u = require('url').parse(url);
+    var req = require('https').get({ hostname: u.hostname, port: u.port?u.port:443, path: u.path, method: 'GET', rejectUnauthorized: false
+    }, function (resp) {
+        var data = '';
+        resp.on('data', function (chunk) { if (data != null) { data += chunk.toString('binary'); } if (data.length > 500000) { data = null; } });
+        resp.on('end', function () { certUrlCache[url] = { data: btoa(data), time: Date.now() }; try { require('fs').writeFileSync(certUrlCacheFile, JSON.stringify(certUrlCache, null, 2)); } catch (ex) { } func(url, data); });
+    });
+    req.on('error', function (err) { console.log('Error: ' + err.message); func(url, null); });
+}/**
 * @fileoverview Script Compiler / Decompiler / Runner
 * @author Ylian Saint-Hilaire
 * @version v0.1.0e
@@ -35199,7 +35237,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.rwidth = 0;
     obj.rheight = 0;
     obj.bpp = 2; // Bytes per pixel (1 or 2 supported)
-    obj.useZRLE = true;
+    obj.useRLE = true;
     obj.showmouse = true;
     obj.buttonmask = 0;
     obj.localKeyMap = true;
@@ -35209,7 +35247,6 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.sparew2 = 0;
     obj.spareh2 = 0;
     obj.sparecache = {};
-    obj.ZRLEfirst = 1;
     obj.onScreenSizeChange = null;
     obj.frameRateDelay = 0;
     
@@ -35222,6 +35259,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.onKvmDataAck = -1;
     obj.holding = false;
     obj.lastKeepAlive = Date.now();
+    obj.kvmExt = {};
+    obj.kvmExtChanged = null;
+    obj.useZLib = false;
+    obj.graymode = false;
     
     obj.mNagleTimer = null; // Mouse motion slowdown timer
     obj.mx = 0; // Last mouse x position
@@ -35322,10 +35363,10 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 */
 
                 // SetEncodings, with AMT we can't omit RAW, must be specified.
-                // Intel AMT supports encodings: RAW (0), ZRLE (16), Desktop Size (0xFFFFFF21, -223)
+                // Intel AMT supports encodings: RAW (0), RLE (16), Desktop Size (0xFFFFFF21, -223)
 
                 var supportedEncodings = '';
-                if (obj.useZRLE) supportedEncodings += IntToStr(16);
+                if (obj.useRLE) supportedEncodings += IntToStr(16);
                 supportedEncodings += IntToStr(0);
                 
                 supportedEncodings += IntToStr(1092);
@@ -35338,13 +35379,19 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
                 obj.state = 4;
                 if (obj.parent) { obj.parent.disconnectCode = 0; obj.parent.xxStateChange(3); }
-                _SendRefresh();
                 //obj.timer = setInterval(obj.xxOnTimer, 50);
 
                 
                 obj.ox = -1; // Old mouse x position
-                
+                                
+                if (obj.kvmExtChanged != null) {
+                    obj.sendKvmExtCmd(2, obj.graymode ? 1 : 0); // Set Decimation State
+                    obj.sendKvmExtCmd(4, obj.useZLib ? 1 : 0); // Set ZLib state
+                }
+                                _SendRefresh();
+
                 if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
+                if (obj.parent) { obj.parent.disconnectCode = 50001; } // Everything looks good, a disconnection here would be Intel AMT initiated.
             }
             else if (obj.state == 4) {
                 switch (obj.acc[0]) {
@@ -35415,7 +35462,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     }
                     _putImage(obj.spare, x, y);
                 } else if (encoding == 16) {
-                    // ZRLE encoding
+                    // RLE encoding
                     if (obj.acc.byteLength < 16) return;
                     var datalen = accview.getUint32(12);
                     if (obj.acc.byteLength < (16 + datalen)) return;
@@ -35742,13 +35789,13 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.Start = function () {
         obj.state = 0;
         obj.acc = null;
-        obj.ZRLEfirst = 1;
         
         obj.inflate.inflateReset();
                 
         obj.onKvmDataPending = [];
         obj.onKvmDataAck = -1;
         obj.kvmDataSupported = false;
+        obj.kvmExt = {};
                 for (var i in obj.sparecache) { delete obj.sparecache[i]; }
     }
 
@@ -35911,6 +35958,13 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-DataChannel-Recv(' + (d.length - 16) + '): ' + d.substring(16)); }
                 if (d.length >= 16) { obj.onKvmData(d.substring(16)); } // Event the data and ack
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
+            } else if ((d.length >= 13) && (d.substring(0, 11) == '\0KvmExtCmd\0')) {
+                var cmd = d.charCodeAt(11), val = d.charCodeAt(12);
+                console.log('Received KvmExtCmd', cmd, val);
+                if (cmd == 1) { obj.kvmExt.decimation = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, val); } }
+                if (cmd == 2) { obj.sendKvmExtCmd(1); }
+                if (cmd == 3) { obj.kvmExt.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, val); } }
+                if (cmd == 4) { obj.sendKvmExtCmd(3); }
             } else {
                 console.log('Got KVM clipboard data:', d);
                 if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-ClipBoard-Recv(' + d.length + '): ' + rstr2hex(d) + ', ' + d); }
@@ -35920,6 +35974,12 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     }
 
     
+    obj.sendKvmExtCmd = function (cmd, val) {
+        console.log('Sending KvmExtCmd', cmd, val);
+        var x = '\0KvmExtCmd\0' + String.fromCharCode(cmd) + (val != null ? String.fromCharCode(val) : '');
+        obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x);
+    }
+
     obj.sendKvmData = function (x) {
         if (obj.onKvmDataAck !== true) {
             obj.onKvmDataPending.push(x);
@@ -41652,7 +41712,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         var amtwirelessif = -1; // Set to the interface index for the wireless interface, -1 if no wireless.
 
         var desktop;
-        var desktopsettings = { encoding:1, showfocus:false, showmouse:true, showcad:true, limitFrameRate:false, noMouseRotate:false };
+        var desktopsettings = { encflags: 1, showfocus: false, showmouse: true, showcad: true, limitFrameRate: false, noMouseRotate: false };
         var webcompilerfeatures = ['AgentPresence','Alarms','AuditLog','CertificateManager','Certificates','ComputerSelector','ComputerSelector-Local','ComputerSelectorScanner','ComputerSelectorToolbar','ContextMenus','Desktop','DesktopFocus','DesktopInband','DesktopInbandFiles','Desktop-Multi','DesktopRotation','Desktop-Settings','DesktopType','EventLog','EventSubscriptions','FileSaver','HardwareInfo','IDER','IDER-IMRSDK','IDERStats','Inflate','Look-Commander','MeshServerConnect','Mode-NodeWebkit','NetworkSettings','PowerControl','PowerControl-Advanced','PowerControl-OneClick','RemoteAccess','Scripting','Scripting-Editor','SessionRecording','Storage','SystemDefense','Terminal','Terminal-Enumation-All','Terminal-FxEnumation-All','TerminalReplay','TerminalSize','USBSetup','VersionWarning','Wireless','WsmanBrowser'];
         var StatusStrs = ["Disconnected", "Connecting...", "Setup...", "Connected"];
 
@@ -42340,6 +42400,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             if (terminal.m.capture) delete terminal.m.capture;
             terminal.Stop();
 
+            desktop.disconnectCode = 0;
             desktop.Stop();
         }
 
@@ -42706,6 +42767,15 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
         function addComputer() {
             if (xxdialogMode) return;
+
+            // Build the list of groups
+            var groups = [], x = '';
+            for (var y in computerlist) { var computer = computerlist[y]; if ((computer.tags != null) && (computer.tags != '') && (groups.indexOf(computer.tags) == -1) && (computer.tags.indexOf('"') == -1)) { groups.push(computer.tags); } }
+            groups.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+            for (var y in groups) { x += '<option value="' + groups[y] + '">'; }
+            QH('d4devGroups', x);
+
+            // Display the dialog box
             d4name.value = d4tags.value = d4hostname.value = d4password.value = '';
             d4username.value = "admin";
             if (kerberos != null) {
@@ -42953,6 +43023,13 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             if (xxdialogMode) return;
             var c = null;
             for (x = 0; x < computerlist.length; x++) { if (computerlist[x]['h'] == h) { c = computerlist[x]; } }
+
+            // Build the list of groups
+            var groups = [], x = '';
+            for (var y in computerlist) { var computer = computerlist[y]; if ((computer.tags != null) && (computer.tags != '') && (groups.indexOf(computer.tags) == -1) && (computer.tags.indexOf('"') == -1)) { groups.push(computer.tags); } }
+            groups.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+            for (var y in groups) { x += '<option value="' + groups[y] + '">'; }
+            QH('d4devGroups', x);
 
             // If connected to a MeshCentral server, only edit the device name
 
@@ -43951,20 +44028,62 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 if ((amtversion >= 15) && (wsstack.comm.xtlsCertificate != null)) {
                     stack.amtauthnonce = require('crypto').randomBytes(10).toString('hex');
                     stack.AMT_GeneralSettings_AMTAuthenticate(stack.amtauthnonce, function (stack, name, response, status) {
+                        //status = 200;
+                        //response = JSON.parse('{"Header":{"To":"http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous","RelatesTo":"15","Action":"http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings/AMTAuthenticateResponse","MessageID":"uuid:00000000-8086-8086-8086-00000000008E","ResourceURI":"http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings","Method":"AMTAuthenticate"},"Body":{"Nonce":"s5PzXOyJqlPwnE/FJ1Imk2tLc2s=","UUID":"465A544C39335830B0304A51465A544C","FQDN":"","FWVersion":"15.0.10.7000","AMTSVN":1,"Signature":"cT4DpT2VpDi0jq+3tIswntXIIitCQV6QxMbXMZryob7RYRyazW9YFKrX5nfu0tPpTqLEP9P+C8pVT4ZngU1TIrn2ptVw/xCKmOn56Y62U0Gv+fQSG1+AJFRej+W7Clv4","LengthOfCertificates":[602,638,631,708],"Certificates":"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","ReturnValue":0,"ReturnValueStr":"SUCCESS"}}'); // Sample Response 1
+                        //response = JSON.parse('{"Header":{"To":"http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous","RelatesTo":"15","Action":"http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings/AMTAuthenticateResponse","MessageID":"uuid:00000000-8086-8086-8086-0000000000F8","ResourceURI":"http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings","Method":"AMTAuthenticate"},"Body":{"Nonce":"NlfyHfo322EtefP1q5s92K+szBw=","UUID":"465A544C39335830B0304A51465A544C","FQDN":"","FWVersion":"15.0.10.7000","AMTSVN":1,"Signature":"9jBx0HfvNECPrMrg16px2RGDu/qdgrUyguOamlJ5hpiYgt9ZPrMz6/WgYY5nbnT6zBxSTUP+AqEzcmA6oWunYHZQJprY9iDdew4PPIHWqGZGgqh/10m3aYHwy+TKk/Ab","LengthOfCertificates":[603,638,631,708],"Certificates":"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","ReturnValue":0,"ReturnValueStr":"SUCCESS"}}'); // Sample Response 2
+
                         if (status == 200) {
                             stack.amtauth = response.Body;
                             stack.amtauth.CertificatesDer = [];
-                            var certs = [], certsbin = atob(stack.amtauth.Certificates), cptr = 0;
+                            var certs = [], urlList = [], certsbin = atob(stack.amtauth.Certificates), cptr = 0;
                             for (var i = 0; i < stack.amtauth.LengthOfCertificates.length; i++) {
                                 var bin = certsbin.substring(cptr, cptr + stack.amtauth.LengthOfCertificates[i]);
                                 stack.amtauth.CertificatesDer.push(bin);
-                                certs.push(forge.pki.certificateFromAsn1(forge.asn1.fromDer(bin))); // Node-forge does not support ECC, but we are using a modified Node-forge that can still parse the cert.
+                                var cert = forge.pki.certificateFromAsn1(forge.asn1.fromDer(bin)); // Node-forge does not support ECC, but we are using a modified Node-forge that can still parse the cert.
+                                cert.xCrlUrls = getExtensionUrls(cert, 'cRLDistributionPoints');
+                                cert.xParentUrls = getExtensionUrls(cert, { id: '1.3.6.1.5.5.7.1.1' });
+                                cert.xFingerprint = forge.md.sha256.create().update(bin).digest().toHex().toUpperCase();
                                 cptr += stack.amtauth.LengthOfCertificates[i];
+                                certs.push(cert);
+                                if ((cert.xCrlUrls.length > 0) && (urlList.indexOf(cert.xCrlUrls[0]) == -1)) { urlList.push(cert.xCrlUrls[0]); }
                             }
+
+                            // If the top certificate has a parent URL, add it to the list of URL's to fetch.
+                            if ((certs.length > 0) && (certs[certs.length - 1].xParentUrls.length > 0) && (urlList.indexOf(certs[certs.length - 1].xParentUrls[0]) == -1)) {
+                                urlList.push(certs[certs.length - 1].xParentUrls[0]);
+                            }
+
                             stack.amtauth.Certificates = certs;
                             stack.amtauth.ClientNonce = stack.amtauthnonce;
                             delete stack.amtauth.LengthOfCertificates;
                             stack.amtauth.uuidStr = guidToStr(stack.amtauth.UUID).toLowerCase();
+
+                            var trustedCsmeRoots = [
+                                '3BA13766B1889DCB1E2D55BACCC9EC087452F78783E2EBAFD918FF4ED6ACC840', // www.intel.com / OnDie CA DEBUG Root Cert Signing CA
+                                'C001DF02B31A60A2B37130365956400A2AFCFD147E8552FD7EA3F17F2AB0D457', // www.intel.com / ODCA CA2 CSME Intermediate CA
+                                '5E3EEE5748AC13E0B3D1227FCDC4751AA1402DDE8031D21F63CB4ECF43F02440'  // www.intel.com / OnDie CA CSME Intermediate CA
+                            ];
+
+                            // Load the entire certificate chain and CRL's
+                            var urlLoad = function (url, data) {
+                                if (data == null) return;
+                                for (var j in certs) {
+                                    if ((certs[j].xCrlUrls.length > 0) && (certs[j].xCrlUrls[0] == url)) { certs[j].xCrl = data; }
+                                    if ((j == (certs.length - 1)) && (certs[j].xParentUrls.length > 0) && (certs[j].xParentUrls[0] == url)) {
+                                        var xcert = forge.pki.certificateFromAsn1(forge.asn1.fromDer(data)); // Node-forge does not support ECC, but we are using a modified Node-forge that can still parse the cert.
+                                        xcert.xCrlUrls = getExtensionUrls(xcert, 'cRLDistributionPoints');
+                                        xcert.xParentUrls = getExtensionUrls(xcert, { id: '1.3.6.1.5.5.7.1.1' });
+                                        xcert.xFingerprint = forge.md.sha256.create().update(data).digest().toHex().toUpperCase();
+                                        if (trustedCsmeRoots.indexOf(xcert.xFingerprint) >= 0) { xcert.xTrusted = true; }
+                                        certs.push(xcert);
+                                        stack.amtauth.CertificatesDer.push(data);
+                                        if ((xcert.xCrlUrls.length > 0) && (urlList.indexOf(xcert.xCrlUrls[0]) == -1)) { getCertUrl(xcert.xCrlUrls[0], urlLoad); }
+                                        if ((xcert.xParentUrls.length > 0) && (urlList.indexOf(xcert.xParentUrls[0]) == -1)) { urlList.push(xcert.xParentUrls[0]); getCertUrl(xcert.xParentUrls[0], urlLoad); }
+                                        return;
+                                    }
+                                }
+                            }
+                            for (var i in urlList) { getCertUrl(urlList[i], urlLoad); }
                         }
                         delete stack.amtauthnonce;
                     });
@@ -44457,7 +44576,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             QV('id_p14warninga', xxAccountAdminName); // If we are not administrator, we can't activate KVM.
 
             // Intel AMT user Consent
-            if ((amtversion > 5) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined)) {
+            if ((amtversion > 5) && (amtsysstate != null && amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined)) {
                 features = "Unknown state";
                 var optinrequired = amtsysstate['IPS_OptInService'].response['OptInRequired'];
                 if (optinrequired == 0) { features = "Not Required"; }
@@ -44702,18 +44821,30 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             var x = '<div style=margin-top:8px>' + "Intel&reg; AMT supports authentic CSME feature, however MeshCommander cannot verify the authenticity yet." + '</div><hr style=margin-top:8px;margin-bottom:8px;height:2px;border-width:0;color:gray;background-color:gray />';
             x += addHtmlValue("FW Version", amtstack.amtauth.FWVersion);
             x += addHtmlValue("FQDN", amtstack.amtauth.FQDN ? amtstack.amtauth.FQDN : ('<i>' + "None" + '</i>'));
-            x += '<hr style=margin-top:8px;margin-bottom:8px;height:2px;border-width:0;color:gray;background-color:gray /><table>';
+            x += '<hr style=margin-top:8px;margin-bottom:8px;height:2px;border-width:0;color:gray;background-color:gray /><div style=max-height:200px;overflow-y:auto><table>';
             for (var i in amtstack.amtauth.Certificates) {
                 var cert = amtstack.amtauth.Certificates[i];
-                x += '<tr><td style=width:32px><img src=images-commander/cert1.png height=32 width=32 />';
-                x += '<td>' + EscapeHtml(cert.subject.getField('CN').value) + '<br />';
+                x += '<tr><td style=width:32px;vertical-align:top><img src=images-commander/cert1.png height=32 width=32 />';
+                x += '<td style=padding-bottom:6px><b>' + EscapeHtml(cert.subject.getField('CN').value) + ((cert.xTrusted === true) ? ', <span style=color:#080>' + "Trusted" + '</span>' : '') + '</b><br />';
+                if (cert.subject.getField('OU')) { x += EscapeHtml(cert.subject.getField('OU').value) + '<br />'; }
 
                 x += amtstack.amtauth.CertificatesDer[i].length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadAuthCert(' + i + ')>' + "Download" + '</a>';
+                if (cert.xCrl) { x += '<br />' + "CRL " + cert.xCrl.length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadCertCrl(' + i + ')>' + "Download" + '</a>'; }
             }
-            x += '</table>';
+            x += '</table><div>';
             setDialogMode(11, "Authentic CSME", 1, null, x);
         }
 
+
+        function downloadCertCrl(h) {
+            h = parseInt(h);
+
+            var chooser = document.createElement('input');
+            chooser.setAttribute('type', 'file');
+            chooser.setAttribute('nwsaveas', amtstack.amtauth.Certificates[h].subject.getField('CN').value + '.crl');
+            chooser.addEventListener('change', function () { require('fs').writeFile(this.value, amtstack.amtauth.Certificates[h].xCrl, 'binary', function () { }); }, false);
+            chooser.click();
+        }
 
         function downloadAuthCert(h) {
             h = parseInt(h);
@@ -47000,7 +47131,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             webRtcDesktop = null;
             // Switch back to hardware KVM
             desktop.m.hold(false);
-            Q('id_deskstatus').textContent = StatusStrs[desktop.State];
+            updateDesktopState();
 
             p24files = null;
             p24downloadFileCancel() // If any downloads are in process, cancel them.
@@ -47015,20 +47146,23 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         }
         */
 
+        function connectDesktopButton(e) { desktop.disconnectCode = 0; connectDesktop(e); }
+
         var connectDesktopConsent = false;
         function connectDesktop(skipConsent) {
             if (!desktop || xxdialogMode) return;
             connectDesktopConsent = false; // TODO, this is not a good idea when calls are pending.
             if (desktop.State == 0) {
                 // Check if user consent is needed
-                if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
+                if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
-                desktop.m.bpp = (desktopsettings.encoding == 2 || desktopsettings.encoding == 4) ? 2 : 1;
-                desktop.m.graymode = 0;
-                if (desktopsettings.encoding == 6) { desktop.m.graymode = 1; } // 256 grays
-                if (desktopsettings.encoding == 5) { desktop.m.graymode = 2; } // 16 grays
-                desktop.m.useZRLE = (desktopsettings.encoding < 3);
+                // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib
+                desktop.m.useRLE = ((desktopsettings.encflags & 1) != 0);
+                desktop.m.bpp = (desktopsettings.encflags & 2) ? 2 : 1;
+
+                desktop.m.graymode = ((desktopsettings.encflags & 4) != 0);
+                desktop.m.useZLib = ((desktopsettings.encflags & 8) != 0);
                 desktop.m.showmouse = desktopsettings.showmouse;
                 desktop.m.onScreenSizeChange = center;
 
@@ -47054,7 +47188,6 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                             webRtcDesktop.webchannel.onopen = function () {
                                 // Switch to software KVM
                                 if (urlvars && urlvars['kvmdatatrace']) { console.log('WebRTC Data Channel Open'); }
-                                Q('id_deskstatus').textContent = StatusStrs[desktop.State] + ", Soft-KVM";
                                 desktop.m.hold(true);
                                 webRtcDesktop.webRtcActive = true;
                                 webRtcDesktop.softdesktop = CreateKvmDataChannel(webRtcDesktop.webchannel, CreateAgentRemoteDesktop('Desk', Q('id_mainarea')), desktop.m);
@@ -47062,6 +47195,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                                 if (desktopsettings.quality) { webRtcDesktop.softdesktop.m.CompressionLevel = desktopsettings.quality; } // Number from 1 to 100. 50 or less is best.
                                 if (desktopsettings.scaling) { webRtcDesktop.softdesktop.m.ScalingLevel = desktopsettings.scaling; }
                                 webRtcDesktop.softdesktop.Start();
+                                updateDesktopState();
 
                                 // Check if we can get remote file access
 
@@ -47094,6 +47228,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                         }
                     }
                 };
+                if ((amtversion > 15) || urlvars['kvmext']) { desktop.m.kvmExtChanged = updateDesktopState; } else { desktop.m.kvmExtChanged = null; }
                 desktop.m.frameRateDelay = ((desktopsettings.limitFrameRate == true)?200:0);
                 desktop.m.noMouseRotate = desktopsettings.noMouseRotate;
 
@@ -47163,9 +47298,9 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         }
 
         function onDesktopStateChange(desktop, state) {
+            var reconnect = false;
             //console.log("onDesktopStateChange: " + state);
             idx_connectbutton1.value = (state == 0) ? "Connect" : "Disconnect";
-            Q('id_deskstatus').textContent = StatusStrs[state];
             var input = ((state == 3) && !urlvars['kvmviewonly']);
             QE('id_DeskCAD', input);
             QE('deskkeys', input);
@@ -47183,6 +47318,8 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                         messagebox("Remote Desktop", "The device indicated that this type of connection of not supported.");
                     } else if (desktop.disconnectCode == 50000) { // KVM-Disconnect
                         messagebox("Remote Desktop", "KVM disconnection, they may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
+                    } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again
+                        reconnect = true;
                     }
                     break;
                 case 3:
@@ -47193,6 +47330,25 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
             NW_SetupMainMenu(currentView);
             center();
+            updateDesktopState();
+            if (reconnect) { setTimeout(connectDesktop, 200); }
+        }
+
+        // Update remote desktop status
+        function updateDesktopState() {
+
+            var x = '';
+            if (desktop.State == 3) {
+                if ((webRtcDesktop) && (webRtcDesktop.webRtcActive == true)) {
+                    x = ", Soft-KVM";
+                } else {
+                    if (desktop.m && desktop.m.kvmExt) {
+                        if (desktop.m.kvmExt.decimation == 2) { x += ", Gray" }
+                        if (desktop.m.kvmExt.compression == 1) { x += ", ZLib" }
+                    }
+                }
+            }
+            Q('id_deskstatus').textContent = StatusStrs[desktop.State] + x;
         }
 
         function showDesktopSettings() {
@@ -47202,7 +47358,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         }
 
         function showDesktopSettingsChanged() {
-            desktopsettings.encoding = idx_d7desktopmode.value;
+            desktopsettings.encflags = parseInt(idx_d7desktopmode.value);
 
             desktopsettings.showfocus = d7showfocus.checked;
             desktopsettings.showmouse = d7showcursor.checked;
@@ -47217,11 +47373,13 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
             if (desktopsettings.showfocus == false) { desktop.m.focusmode = 0; idx_deskFocusBtn.value = "All Focus"; }
             desktop.m.frameRateDelay = (desktopsettings.limitFrameRate == true)?200:0;
-            if (desktop.State != 0) { desktop.Stop(); setTimeout(connectDesktop, 50); }
+            if (desktop.State != 0) { desktop.disconnectCode = 0; desktop.Stop(); setTimeout(connectDesktop, 50); }
         }
 
         function applyDesktopSettings() {
-            idx_d7desktopmode.value = desktopsettings.encoding;
+
+            if (amtversion < 15) { desktopsettings.encflags = desktopsettings.encflags & 3; } // Remove gray & zlib flags (4 and 8), keep 1 & 2
+            idx_d7desktopmode.value = desktopsettings.encflags;
 
             d7showfocus.checked = desktopsettings.showfocus;
             d7showcursor.checked = desktopsettings.showmouse;
@@ -47232,11 +47390,15 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             if (desktopsettings.quality) { d7bitmapquality.value = desktopsettings.quality; }
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
             QV('d7softkvmsettings', amtversion >= 12);
+            QV('d7exm1', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm2', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm3', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm4', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm5', (amtversion > 15) || urlvars['kvmext']);
+            QV('d7exm6', (amtversion > 15) || urlvars['kvmext']);
 
             QV('idx_deskFocusBtn', desktopsettings.showfocus);
             QV('id_DeskCAD', desktopsettings.showcad);
-            QV('d7gray4', urlvars['kvmgray']);
-            QV('d7gray8', urlvars['kvmgray']);
         }
 
         var fullscreen = false;
@@ -48909,8 +49071,10 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 for (var i in AmtOcrPba) { x += '<option value=' + i + '>' + AmtOcrPba[i].instance + '</option>'; }
                 QH('idx_d24customBootMediaIndex', x);
             }
-            QV('ForceHttpBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
-            QV('ForceHttpUrlBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
+            var httpsBootPossible = (meshCentralServer==null && wsstack.comm.xtlsCertificate != null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
+
+            QV('ForceHttpBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
+            QV('ForceHttpUrlBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
             QV('d24dLockKeyboard', amtPowerBootCapabilities['KeyboardLock'] == true);
@@ -49219,7 +49383,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
             if (action == 999) {
 
-                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force OCR UEFI Boot Option ' + Q('idx_d24customBootMediaIndex').value, 'Force OCR UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
+                if (idx_d24ForceBootDevice.value > 0) { bootSource = ['Force CD/DVD Boot', 'Force PXE Boot', 'Force Hard-drive Boot', 'Force Diagnostic Boot', 'Force OCR UEFI Boot Option ' + Q('idx_d24customBootMediaIndex').value, 'Force OCR UEFI HTTPS Boot', 'Force OCR UEFI HTTPS Boot'][idx_d24ForceBootDevice.value - 1]; }
             } else {
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
@@ -49444,7 +49608,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             if (xxdialogMode) return;
             haltEvent(e);
 
-            var newWindow = window.open('http://' + wsstack.comm.host + ':' + wsstack.comm.port + '/amt-storage/' + handle, '_blank');
+            var newWindow = window.open('http://' + wsstack.comm.host + ':' + wsstack.comm.port + '/amt-storage/' + handle, '_blank', 'noopener,noreferrer');
             newWindow.opener = null;
             newWindow.focus();
         }
