@@ -10345,8 +10345,10 @@
                 for (var i in AmtOcrPba) { x += '<option value=' + i + '>' + AmtOcrPba[i].instance + '</option>'; }
                 QH('idx_d24customBootMediaIndex', x);
             }
-            QV('ForceHttpBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
-            QV('ForceHttpUrlBootOption', amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true);
+            var httpsBootPossible = (meshCentralServer==null && wsstack.comm.xtlsCertificate != null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
+
+            QV('ForceHttpBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
+            QV('ForceHttpUrlBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
             // ###END###{PowerControl-OneClick}
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
