@@ -169,7 +169,9 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
 
         if (obj.xtlsoptions && obj.xtlsoptions.meshServerConnect) {
             // Use the websocket wrapper to connect to MeshServer server
-            obj.socket = CreateWebSocketWrapper(obj.xtlsoptions.host, obj.xtlsoptions.port, '/webrelay.ashx?user=' + encodeURIComponent(obj.xtlsoptions.username) + '&pass=' + encodeURIComponent(obj.xtlsoptions.password) + '&host=' + encodeURIComponent(obj.host) + '&p=1&tls1only=' + obj.xtlsMethod, obj.xtlsoptions.xtlsFingerprint);
+            var http_proxy = null;
+            if (obj.xtlsoptions.useproxy == true) { http_proxy = obj.xtlsoptions.proxy + ':' + obj.xtlsoptions.proxyPort}
+            obj.socket = CreateWebSocketWrapper(obj.xtlsoptions.host, obj.xtlsoptions.port, '/webrelay.ashx?user=' + encodeURIComponent(obj.xtlsoptions.username) + '&pass=' + encodeURIComponent(obj.xtlsoptions.password) + '&host=' + encodeURIComponent(obj.host) + '&p=1&tls1only=' + obj.xtlsMethod, obj.xtlsoptions.xtlsFingerprint, http_proxy);
             obj.socket.setEncoding('binary');
             obj.socket.setTimeout(6000); // Set socket idle timeout
             obj.socket.ondata = obj.xxOnSocketData;

@@ -1881,7 +1881,9 @@ var CreateWsmanComm = function (host, port, user, pass, tls, tlsoptions) {
 
         if (obj.xtlsoptions && obj.xtlsoptions.meshServerConnect) {
             // Use the websocket wrapper to connect to MeshServer server
-            obj.socket = CreateWebSocketWrapper(obj.xtlsoptions.host, obj.xtlsoptions.port, '/webrelay.ashx?user=' + encodeURIComponent(obj.xtlsoptions.username) + '&pass=' + encodeURIComponent(obj.xtlsoptions.password) + '&host=' + encodeURIComponent(obj.host) + '&p=1&tls1only=' + obj.xtlsMethod, obj.xtlsoptions.xtlsFingerprint);
+            var http_proxy = null;
+            if (obj.xtlsoptions.useproxy == true) { http_proxy = obj.xtlsoptions.proxy + ':' + obj.xtlsoptions.proxyPort}
+            obj.socket = CreateWebSocketWrapper(obj.xtlsoptions.host, obj.xtlsoptions.port, '/webrelay.ashx?user=' + encodeURIComponent(obj.xtlsoptions.username) + '&pass=' + encodeURIComponent(obj.xtlsoptions.password) + '&host=' + encodeURIComponent(obj.host) + '&p=1&tls1only=' + obj.xtlsMethod, obj.xtlsoptions.xtlsFingerprint, http_proxy);
             obj.socket.setEncoding('binary');
             obj.socket.setTimeout(6000); // Set socket idle timeout
             obj.socket.ondata = obj.xxOnSocketData;
@@ -41207,7 +41209,7 @@ if (typeof module !== 'undefined' && module.exports) {
 */
 
 // Construct a MeshCentral2 communication object
-var CreateMeshCentralServer = function (host, port, path, username, password, token, certhash) {
+var CreateMeshCentralServer = function (host, port, path, username, password, token, certhash, http_proxy) {
     var obj = {};
     obj.host = host;
     obj.port = port;
@@ -41216,8 +41218,8 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
     obj.password = password;
     obj.token = token;
     obj.certhash = certhash;
-    //obj.proxy = proxy;
-    //obj.proxyPort = 80;
+    obj.proxy = null;
+    obj.proxyPort = 0;
     obj.socket = null;
     obj.socketState = 0;
     obj.net = require('net');
@@ -41240,16 +41242,19 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
     obj.onStateChange = null;
     obj.onNodeChange = null;
 
-    /*
-    // Parse the proxy
-    if (obj.proxy == '') { proxy = null; }
-    if (obj.proxy.indexOf(':') > 0) {
-        obj.proxyPort = parseInt(obj.proxy.substring(obj.proxy.indexOf(':') + 1));
-        obj.proxy = obj.proxy.substring(0, obj.proxy.indexOf(':'));
-        if (isNaN(obj.proxyPort)) { obj.proxy = null; obj.proxyPort = 0; }
-    }
-    */
+    // proxy connection state tracking
+    obj.proxysocket=null;
+    obj.useproxy = false;
+    obj.proxy_connected = false;
 
+    // Parse the proxy
+    if (http_proxy !=null && http_proxy!= '' && http_proxy.indexOf(':') > 0) {
+        obj.proxyPort = parseInt(http_proxy.substring(http_proxy.indexOf(':') + 1));
+        obj.proxy = http_proxy.substring(0, http_proxy.indexOf(':'));
+        if (isNaN(obj.proxyPort)) { obj.proxy = null; obj.proxyPort = 0; obj.useproxy = false;} else { obj.useproxy = true;}
+    }
+
+    
     // Called to initiate a websocket connection to the server
     obj.connect = function () {
         obj.socketState = 1;
@@ -41259,18 +41264,27 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
         obj.acclen = -1;
         obj.accmask = false;
         obj.xtlsFingerprint = null;
-        if (obj.certhash == null) {
-            obj.socket = new obj.net.Socket();
-            obj.socket.setEncoding('binary');
-            obj.socket.connect(obj.port, obj.host, obj.xxOnSocketConnected);
+        if (obj.useproxy) {
+            obj.proxysocket = new obj.net.Socket();
+            obj.proxysocket.setEncoding('binary');
+            obj.proxysocket.connect(obj.proxyPort, obj.proxy, _OnSocketConnected);
+            obj.proxysocket.on('data', _OnSocketData);
+            obj.proxysocket.on('close', _OnSocketClosed);
+            obj.proxysocket.on('error', _OnSocketClosed);
         } else {
-            //console.log('Connecting to wss://' + obj.host + ':' + obj.port + obj.path);
-            obj.socket = obj.tls.connect(obj.port, obj.host, { rejectUnauthorized: false }, _OnSocketConnected);
-            obj.socket.setEncoding('binary');
+            if (obj.certhash == null) {
+                obj.socket = new obj.net.Socket();
+                obj.socket.setEncoding('binary');
+                obj.socket.connect(obj.port, obj.host, _OnSocketConnected);
+            } else {
+                //console.log('Connecting to wss://' + obj.host + ':' + obj.port + obj.path);
+                obj.socket = obj.tls.connect(obj.port, obj.host, { rejectUnauthorized: false }, _OnSocketConnected);
+                obj.socket.setEncoding('binary');
+            }
+            obj.socket.on('data', _OnSocketData);
+            obj.socket.on('close', _OnSocketClosed);
+            obj.socket.on('error', _OnSocketClosed);
         }
-        obj.socket.on('data', _OnSocketData);
-        obj.socket.on('close', _OnSocketClosed);
-        obj.socket.on('error', _OnSocketClosed);
     }
 
     obj.disconnect = function () { _OnSocketClosed('UserDisconnect'); }
@@ -41278,11 +41292,22 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
 
     // Called when the socket is connected, we still need to do work to get the websocket connected
     function _OnSocketConnected() {
+        // Check if we are using proxy
+        if (obj.useproxy == true && obj.proxysocket!=null && obj.proxy_connected == false) {
+            // send HTTP connect command
+            var proxy_req = 'CONNECT '+obj.host+':'+obj.port+' HTTP/1.1\r\nHost: '+obj.host+'\r\nProxy-Connection: Kepp-Alive\r\n\r\n';
+            obj.proxysocket.write(proxy_req);
+            return;
+        }
+
         if (obj.socket == null) return;
-        // Check if this is really the MeshServer we want to connect to
-        obj.xtlsCertificate = obj.socket.getPeerCertificate();
-        obj.xtlsFingerprint = obj.xtlsCertificate.fingerprint.split(':').join('').toLowerCase();
-        if (obj.xtlsFingerprint != obj.certhash.split(':').join('').toLowerCase()) { _OnSocketClosed('HashMatchFail'); return; }
+        // Do this only on TLSSocket
+        if (obj.socket.encrypted) {
+            // Check if this is really the MeshServer we want to connect to
+            obj.xtlsCertificate = obj.socket.getPeerCertificate();
+            obj.xtlsFingerprint = obj.xtlsCertificate.fingerprint.split(':').join('').toLowerCase();
+            if (obj.xtlsFingerprint != obj.certhash.split(':').join('').toLowerCase()) { _OnSocketClosed('HashMatchFail'); return; }
+        }
 
         // If a authentication token is provided, place it in the login URL
         var urlExtras = '';
@@ -41294,6 +41319,29 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
 
     // Called when socket data is received from the server
     function _OnSocketData(e) {
+        // check if we are using proxy and is not conected yet
+        if (obj.useproxy == true && obj.proxy_connected == false) {
+            if (e.toString().startsWith("HTTP/1.1 200")) {
+                // it is connected
+                obj.proxy_connected = true;
+                // handle based on TLS status
+                if (obj.certhash == null ) {
+                    obj.socket=obj.proxysocket;// just reuse this proxysocket for subsequent call
+                    _OnSocketConnected();
+                } else {
+                    // establish TLS over proxysock
+                    obj.socket = obj.tls.connect({ rejectUnauthorized: false, socket: obj.proxysocket }, _OnSocketConnected);
+                    obj.socket.setEncoding('binary');
+                    obj.socket.on('data', _OnSocketData);
+                    obj.socket.on('close', _OnSocketClosed);
+                    obj.socket.on('error', _OnSocketClosed);        
+                }
+            } else {
+                console.log("Proxy connection failed: "+ e.toString());
+                obj.proxysocket.end();
+            }
+            return;
+        }
         obj.accumulator += e;
         if (obj.socketState == 1) {
             // Look for the HTTP header response
@@ -41455,6 +41503,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
         obj.meshes = {};
         obj.userinfo = null;
         obj.computerlist = [];
+        obj.proxy_connected = false;
         //console.log('closed');
     }
 
@@ -41493,7 +41542,7 @@ var CreateMeshCentralServer = function (host, port, path, username, password, to
 */
 
 // Construct a MeshCentral2 communication object
-var CreateWebSocketWrapper = function (host, port, path, certhash) {
+var CreateWebSocketWrapper = function (host, port, path, certhash, http_proxy) {
     //console.log('CreateWebSocketWrapper', host, port, path, certhash);
     var obj = {};
     obj.host = host;
@@ -41525,6 +41574,20 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         if (ev == 'error') { }
     }
 
+    // proxy connection state tracking
+    obj.proxy = null;
+    obj.proxyPort = 0;
+    obj.proxysocket=null;
+    obj.useproxy = false;
+    obj.proxy_connected = false;
+
+    // Parse the proxy
+    if (http_proxy !=null && http_proxy!= '' && http_proxy.indexOf(':') > 0) {
+        obj.proxyPort = parseInt(http_proxy.substring(http_proxy.indexOf(':') + 1));
+        obj.proxy = http_proxy.substring(0, http_proxy.indexOf(':'));
+        if (isNaN(obj.proxyPort)) { obj.proxy = null; obj.proxyPort = 0; obj.useproxy = false;} else { obj.useproxy = true;}
+    }
+
     // Called to initiate a websocket connection to the server
     obj.connect = function (onconnect) {
         obj.onconnect = onconnect;
@@ -41534,19 +41597,28 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         obj.acclen = -1;
         obj.accmask = false;
         obj.xtlsFingerprint = null;
-        if (obj.certhash == null) {
-            //console.log('Connecting to ws://' + obj.host + ':' + obj.port + obj.path);
-            obj.socket = new obj.net.Socket();
-            obj.socket.setEncoding('binary');
-            obj.socket.connect(obj.port, obj.host, _OnSocketConnected);
+        if (obj.useproxy) {
+            obj.proxysocket = new obj.net.Socket();
+            obj.proxysocket.setEncoding('binary');
+            obj.proxysocket.connect(obj.proxyPort, obj.proxy, _OnSocketConnected);
+            obj.proxysocket.on('data', _OnSocketData);
+            obj.proxysocket.on('close', _OnSocketClosed);
+            obj.proxysocket.on('error', _OnSocketClosed);
         } else {
-            //console.log('Connecting to wss://' + obj.host + ':' + obj.port + obj.path);
-            obj.socket = obj.tls.connect(obj.port, obj.host, { rejectUnauthorized: false }, _OnSocketConnected);
-            obj.socket.setEncoding('binary');
+            if (obj.certhash == null) {
+                //console.log('Connecting to ws://' + obj.host + ':' + obj.port + obj.path);
+                obj.socket = new obj.net.Socket();
+                obj.socket.setEncoding('binary');
+                obj.socket.connect(obj.port, obj.host, _OnSocketConnected);
+            } else {
+                //console.log('Connecting to wss://' + obj.host + ':' + obj.port + obj.path);
+                obj.socket = obj.tls.connect(obj.port, obj.host, { rejectUnauthorized: false }, _OnSocketConnected);
+                obj.socket.setEncoding('binary');
+            }
+            obj.socket.on('data', _OnSocketData);
+            obj.socket.on('close', _OnSocketClosed);
+            obj.socket.on('error', _OnSocketClosed);
         }
-        obj.socket.on('data', _OnSocketData);
-        obj.socket.on('close', _OnSocketClosed);
-        obj.socket.on('error', _OnSocketClosed);
     }
 
     obj.disconnect = function () { _OnSocketClosed('UserDisconnect'); }
@@ -41560,13 +41632,23 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
     // Called when the socket is connected, we still need to do work to get the websocket connected
     function _OnSocketConnected() {
+        // Check if we are using proxy
+        if (obj.useproxy == true && obj.proxysocket!=null && obj.proxy_connected == false) {
+            // send HTTP connect command
+            var proxy_req = 'CONNECT '+obj.host+':'+obj.port+' HTTP/1.1\r\nHost: '+obj.host+'\r\nProxy-Connection: Kepp-Alive\r\n\r\n';
+            obj.proxysocket.write(proxy_req);
+            return;
+        }
+        
         if (obj.socket == null) return;
         //console.log('Websocket connected');
-        // Check if this is really the MeshServer we want to connect to
-        obj.xtlsCertificate = obj.socket.getPeerCertificate();
-        obj.xtlsFingerprint = obj.xtlsCertificate.fingerprint.split(':').join('').toLowerCase();
-        if (obj.xtlsFingerprint != obj.certhash.split(':').join('').toLowerCase()) { console.error('Hash match fail', obj.xtlsFingerprint, obj.certhash.split(':').join('').toLowerCase()); _OnSocketClosed('HashMatchFail'); return; }
-
+        // Do this only on TLSSocket
+        if (obj.socket.encrypted) {
+            // Check if this is really the MeshServer we want to connect to
+            obj.xtlsCertificate = obj.socket.getPeerCertificate();
+            obj.xtlsFingerprint = obj.xtlsCertificate.fingerprint.split(':').join('').toLowerCase();
+            if (obj.xtlsFingerprint != obj.certhash.split(':').join('').toLowerCase()) { console.error('Hash match fail', obj.xtlsFingerprint, obj.certhash.split(':').join('').toLowerCase()); _OnSocketClosed('HashMatchFail'); return; }
+        }
         // Send the websocket switching header
         obj.socket.write(new Buffer('GET ' + obj.path + ' HTTP/1.1\r\nHost: ' + obj.host + '\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n', 'binary'));
     }
@@ -41574,6 +41656,29 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
     // Called when socket data is received from the server
     function _OnSocketData(e) {
         //console.log('_OnSocketData', typeof e, e.length);
+        // check if we are using proxy and is not conected yet
+        if (obj.useproxy == true && obj.proxy_connected == false) {
+            if (e.toString().startsWith("HTTP/1.1 200")) {
+                // it is connected
+                obj.proxy_connected = true;
+                // handle based on TLS status
+                if (obj.certhash == null ) {
+                    obj.socket=obj.proxysocket;// just reuse this proxysocket for subsequent call
+                    _OnSocketConnected();
+                } else {
+                    // establish TLS over proxysock
+                    obj.socket = obj.tls.connect({ rejectUnauthorized: false, socket: obj.proxysocket }, _OnSocketConnected);
+                    obj.socket.setEncoding('binary');
+                    obj.socket.on('data', _OnSocketData);
+                    obj.socket.on('close', _OnSocketClosed);
+                    obj.socket.on('error', _OnSocketClosed);        
+                }
+            } else {
+                console.log("Proxy connection failed: "+ e.toString());
+                obj.proxysocket.end();
+            }
+            return;
+        }        
         obj.accumulator += e;
         if (obj.socketState == 1) {
             // Look for the HTTP header response
@@ -41651,6 +41756,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         obj.socketState = 0;
         if (obj.onclose != null) { obj.onclose(); }
         if (obj.socket != null) { try { obj.socket.end(); } catch (ex) { } obj.socket = null; }
+        obj.proxy_connected = false;
     }
 
     // Called to send websocket data to the server
@@ -41694,7 +41800,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
 
 
 
-        var version = '0.8.8';
+        var version = '0.8.9';
         var urlvars = {};
         var amtstack;
         var wsstack = null;
@@ -43737,6 +43843,55 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
         // MeshCentral Connection
         //
 
+        function getProxyFromOS() {
+            var proxy = null;
+            var child_process = require('child_process');
+            
+            if (require('os').platform() == 'win32') {
+                var cmd = 'reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\"';
+                var reg = null;
+                try {
+                    reg = child_process.execSync(cmd, { stdio: [ 'pipe', 'pipe', 'pipe']});
+                } catch (e) {}
+                if (reg!=null) {                        
+                    var lines = reg.toString().trim().split("\r\n");
+                    var proxyenable = '0x0';
+                    for (var i = 0; i < lines.length; i++) {
+                        if (lines[i].trim().startsWith('ProxyEnable')) { proxyenable = lines[i].trim().split(/\s+/)[2];}
+                        if (lines[i].trim().startsWith('ProxyServer')) { proxy = lines[i].trim().split(/\s+/)[2];}
+                    }
+                    if (proxyenable == '0x1') {
+                        // multiple proxy config
+                        if (proxy.indexOf(';')>0) {
+                            proxies = proxy.split(';');
+                            var https_proxy = null;
+                            var http_proxy = null;
+                            for (var i = 0; i < proxies.length; i++) {                            
+                                if (proxies[i].startsWith('http=')) { http_proxy = proxies[i].substring(5).trim();
+                                } else if (proxies[i].startsWith('https=')) { https_proxy = proxies[i].substring(6).trim();}
+                            }
+                            // find if it has https then use it
+                            if (https_proxy!=null) { proxy = https_proxy;} else { proxy = http_proxy; }
+                        }
+                    } else {
+                        // proxy is disabled,return blank
+                        proxy ='';
+                    }
+                }
+            } else if (require('os').platform() == 'linux') {
+                var https_proxy = null;
+                var http_proxy = null;
+                for (var key in process.env) {
+                    if (key.toLowerCase() == 'http_proxy') { http_proxy = new URL(process.env[key]).host;}                    
+                    if (key.toLowerCase() == 'https_proxy') { https_proxy = new URL(process.env[key]).host;}
+                }
+                if (https_proxy != null) { proxy = https_proxy } 
+                else if (http_proxy != null) { proxy = http_proxy } 
+                else { proxy = ''}
+            }            
+            return proxy;
+        }
+
         function showMeshCentralConnectDialog(showtoken) {
             if (xxdialogMode || meshCentralServer) return;
             var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "Connect to a MeshCentral<sup>2</sup> server and manage Intel&reg; AMT computers on that account. Note that MeshCentral.com is not version 2 yet and does not support this feature." + '<div><br />';
@@ -43745,13 +43900,20 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             x += '<div style=height:26px><input id=meshserveruser value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Username" + '</div></div>';
             x += '<div style=height:26px><input id=meshserverpass value="" type=password style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Password" + '</div></div>';
             if (showtoken) { x += '<div style=height:26px><input id=meshservertoken value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Login Token" + '</div></div>'; }
-            //x += '<div style=height:26px><input id=meshserverproxy value="" placeholder="proxy.com:123" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Proxy" + '</div></div>';
+            x += '<div style=height:26px><input id=meshserverproxy value="" placeholder="proxy.com:123" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Proxy" + '</div></div>';
             setDialogMode(11, "MeshCentral Connect", 3, showMeshCentralConnectDialogOk, x);
             try {
                 if (localStorage.getItem('meshserverurl')) { Q('meshserverurl').value = localStorage.getItem('meshserverurl'); }
                 if (localStorage.getItem('meshserverhash')) { Q('meshserverhash').value = localStorage.getItem('meshserverhash'); }
                 if (localStorage.getItem('meshserveruser')) { Q('meshserveruser').value = localStorage.getItem('meshserveruser'); }
-                //if (localStorage.getItem('meshserverproxy')) { Q('meshserverproxy').value = localStorage.getItem('meshserverproxy'); }
+                var proxy = getProxyFromOS();
+                if (proxy!=null) {
+                    // use auto detected value
+                    Q('meshserverproxy').value = proxy;
+                } else {
+                    // use local storage if there is any
+                    if (localStorage.getItem('meshserverproxy')) { Q('meshserverproxy').value = localStorage.getItem('meshserverproxy'); }
+                }
             } catch (ex) { }
             showMeshCentralConnectDialogUpdate();
         }
@@ -43770,6 +43932,7 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
                 localStorage.setItem('meshserverurl', Q('meshserverurl').value);
                 localStorage.setItem('meshserverhash', Q('meshserverhash').value);
                 localStorage.setItem('meshserveruser', Q('meshserveruser').value);
+                if (Q('meshserverproxy').value.trim() != "") { localStorage.setItem('meshserverproxy', Q('meshserverproxy').value) };
             } catch (ex) { }
             var pass = Q('meshserverpass').value;
             var token = null;
@@ -43780,7 +43943,9 @@ var CreateWebSocketWrapper = function (host, port, path, certhash) {
             serverUrl = new URL(serverUrl);
             var serverPort = parseInt(serverUrl.port);
             if (isNaN(serverPort) || serverPort == 0) { serverPort = 443; }
-            meshCentralServer = CreateMeshCentralServer(serverUrl.hostname, serverPort, '/control.ashx', Q('meshserveruser').value, Q('meshserverpass').value, token, Q('meshserverhash').value);
+            var http_proxy = null;
+            if (Q('meshserverproxy').value.trim() != "") { http_proxy  = Q('meshserverproxy').value.trim();}
+            meshCentralServer = CreateMeshCentralServer(serverUrl.hostname, serverPort, '/control.ashx', Q('meshserveruser').value, Q('meshserverpass').value, token, Q('meshserverhash').value, http_proxy);
             meshCentralServer.onStateChange = function (sender, state, cause, msg) {
                 var askForToken = false;
                 if (state == 0) {
