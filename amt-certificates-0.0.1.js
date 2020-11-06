@@ -9,7 +9,7 @@ function amtcert_linkCertPrivateKey(certs, keys) {
     for (var i in certs) {
         var cert = certs[i];
         try {
-            if (xxCertPrivateKeys.length == 0) return;
+            if (keys.length == 0) return;
             var publicKeyPEM = forge.pki.publicKeyToPem(forge.pki.certificateFromAsn1(forge.asn1.fromDer(cert.X509Certificate)).publicKey).substring(28 + 32).replace(/(\r\n|\n|\r)/gm, "");
             for (var j = 0; j < keys.length; j++) {
                 if (publicKeyPEM === (keys[j]['DERKey'] + '-----END PUBLIC KEY-----')) {
@@ -102,7 +102,7 @@ function amtcert_createCertificate(certAttributes, caPrivateKey, DERKey, issuerA
         cert.setIssuer(attrs);
     }
 
-    if (caPrivateKey == undefined) {
+    if (caPrivateKey == null) {
         // Create a root certificate
         cert.setExtensions([{
             name: 'basicConstraints',

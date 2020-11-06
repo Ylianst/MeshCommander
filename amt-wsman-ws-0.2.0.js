@@ -22,7 +22,6 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
     obj.pass = pass;
     obj.tls = tls;
     obj.tlsv1only = 0;
-    obj.cnonce = Math.random().toString(36).substring(7); // Generate a random client nonce
     obj.inDataCount = 0;
     obj.amtVersion = null;
     obj.digestRealmMatch = null;
@@ -98,8 +97,9 @@ var CreateWsmanComm = function (host, port, user, pass, tls) {
                 obj.CancelAllQueries(997);
                 return;
             }
-            var response = hex_md5(hex_md5(obj.user + ':' + obj.challengeParams['realm'] + ':' + obj.pass) + ':' + obj.challengeParams['nonce'] + ':' + obj.noncecounter + ':' + obj.cnonce + ':' + obj.challengeParams['qop'] + ':' + hex_md5(action + ':' + url + ((obj.challengeParams['qop'] == 'auth-int') ? (':' + hex_md5(postdata)) : '')));
-            h += 'Authorization: ' + obj.renderDigest({ 'username': obj.user, 'realm': obj.challengeParams['realm'], 'nonce': obj.challengeParams['nonce'], 'uri': url, 'qop': obj.challengeParams['qop'], 'response': response, 'nc': obj.noncecounter++, 'cnonce': obj.cnonce }) + '\r\n';
+            var cnonce = Math.random().toString(36).substring(7); // Generate a random client nonce
+            var response = hex_md5(hex_md5(obj.user + ':' + obj.challengeParams['realm'] + ':' + obj.pass) + ':' + obj.challengeParams['nonce'] + ':' + obj.noncecounter + ':' + cnonce + ':' + obj.challengeParams['qop'] + ':' + hex_md5(action + ':' + url + ((obj.challengeParams['qop'] == 'auth-int') ? (':' + hex_md5(postdata)) : '')));
+            h += 'Authorization: ' + obj.renderDigest({ 'username': obj.user, 'realm': obj.challengeParams['realm'], 'nonce': obj.challengeParams['nonce'], 'uri': url, 'qop': obj.challengeParams['qop'], 'response': response, 'nc': obj.noncecounter++, 'cnonce': cnonce }) + '\r\n';
         }
         h += 'Host: ' + obj.host + ':' + obj.port + '\r\nContent-Length: ' + postdata.length + '\r\n\r\n' + postdata; // Use Content-Length
         //h += 'Host: ' + obj.host + ':' + obj.port + '\r\nTransfer-Encoding: chunked\r\n\r\n' + postdata.length.toString(16).toUpperCase() + '\r\n' + postdata + '\r\n0\r\n\r\n'; // Use Chunked-Encoding

@@ -1709,7 +1709,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.8.8';
+        var version = '0.9.0';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -5260,7 +5260,8 @@
             if (status == 200) {
                 // Convert ms to time and adjust for the timezone
                 var t = new Date(), t2 = new Date();
-                t.setTime(responses.Body['Ta0'] * 1000 + (t.getTimezoneOffset() * 60 * 1000));
+                //t.setTime(responses.Body['Ta0'] * 1000 + (t.getTimezoneOffset() * 60 * 1000));
+                t.setTime(responses.Body['Ta0'] * 1000);
                 amtdeltatime = t - t2;
                 updateSystemStatus();
             }
@@ -5301,7 +5302,8 @@
             amtstack.AMT_TimeSynchronizationService_GetLowAccuracyTimeSynch(function (stack, name, response, status) {
                 if (status != 200) { messagebox('', "Failed to set time, status = " + status); return; }
                 if (response.Body['ReturnValue'] != 0) { messagebox('', "Failed to set time, error: " + response.Body['ReturnValueStr']); return; }
-                var now = new Date(), Tm1 = Math.round((now.getTime() - (now.getTimezoneOffset() * 60000)) / 1000);
+                //var now = new Date(), Tm1 = Math.round((now.getTime() - (now.getTimezoneOffset() * 60000)) / 1000);
+                var now = new Date(), Tm1 = Math.round(now.getTime() / 1000);
                 amtstack.AMT_TimeSynchronizationService_SetHighAccuracyTimeSynch(response.Body['Ta0'], Tm1, Tm1, function () { amtstack.AMT_TimeSynchronizationService_GetLowAccuracyTimeSynch(processSystemTime); });
             });
         }
@@ -5688,7 +5690,7 @@
                 // ###END###{SystemDefense}
 
                 // ###BEGIN###{Storage}
-                if (((amtFirstPull & 8) == 0) && (amtversion > 11 || (amtversion == 11 && amtversionmin > 5))) { PullStorage(); }
+                if (((amtFirstPull & 8) == 0) && (amtversion > 11 || ((amtversion == 11) && (amtversionmin > 5)))) { PullStorage(); }
                 // ###END###{Storage}
             }
 
@@ -6751,7 +6753,8 @@
                 amtstack.AMT_TimeSynchronizationService_GetLowAccuracyTimeSynch(function (stack, name, response, status) {
                     if (status != 200) { messagebox('', "Failed to set time, status = " + status); return; }
                     if (response.Body['ReturnValue'] != 0) { messagebox('', "Failed to set time, error: " + response.Body['ReturnValueStr']); return; }
-                    var now = new Date(), Tm1 = Math.round((now.getTime() - (now.getTimezoneOffset() * 60000)) / 1000);
+                    //var now = new Date(), Tm1 = Math.round((now.getTime() - (now.getTimezoneOffset() * 60000)) / 1000);
+                    var now = new Date(), Tm1 = Math.round(now.getTime() / 1000);
                     amtstack.AMT_TimeSynchronizationService_SetHighAccuracyTimeSynch(response.Body['Ta0'], Tm1, Tm1, function () { setTlsSecurityResponse(); });
                 });
             }
@@ -9498,7 +9501,7 @@
 
         var xxEditMpsPolicyType;
         function editMpsPolicy(type) {
-            var x = '', cilaSupport = ((amtversion > 11) || ((amtversion == 11) && (amtversion >= 6)));
+            var x = '', cilaSupport = ((amtversion > 11) || ((amtversion == 11) && (amtversionmin >= 6)));
             xxEditMpsPolicyType = type;
             var name = xxEditMpsPolicyType;
             if (name == 'User') name = "User Initiated";
@@ -9541,7 +9544,7 @@
         }
 
         function editMpsPolicyUpdate() {
-            var cilaSupport = ((amtversion > 11) || ((amtversion == 11) && (amtversion >= 6)));
+            var cilaSupport = ((amtversion > 11) || ((amtversion == 11) && (amtversionmin >= 6)));
             var ok = (xxCiraServers.length <= 1 || ((Q('d2server1').value == -1) || (Q('d2server1').value != Q('d2server2').value)));
             if (ok == true && xxEditMpsPolicyType == 'Periodic' && Q('d2ttype').value == 1) { var hhmm = Q('d2timer').value.split(':'); if (hhmm.length != 2) ok = false; else { var hh = parseInt(hhmm[0]); var mm = parseInt(hhmm[1]); if (hh < 0 || hh > 23 || mm < 0 || mm > 59) ok = false; } }
             QE('idx_dlgOkButton', ok);
@@ -9562,9 +9565,9 @@
 
         function editMpsPolicyOk() {
             var name = xxEditMpsPolicyType;
-            if (name == 'User') { name = "User Initiated"; }
+            if (name == 'User') { name = 'User Initiated'; }
 
-            if (getItem(xxRemoteAccess['AMT_RemoteAccessPolicyRule'].responses, "PolicyRuleName", name)) {
+            if (getItem(xxRemoteAccess['AMT_RemoteAccessPolicyRule'].responses, 'PolicyRuleName', name)) {
                 // Remove old policy
                 amtstack.Delete('AMT_RemoteAccessPolicyRule', { 'PolicyRuleName': name }, editMpsPolicyOk2);
             } else {
@@ -9574,7 +9577,7 @@
         }
 
         function editMpsPolicyOk2(stack, name, responses, status) {
-            var cilaSupport = ((amtversion > 11) || ((amtversion == 11) && (amtversion >= 6)));
+            var cilaSupport = ((amtversion > 11) || ((amtversion == 11) && (amtversionmin >= 6)));
             if (Q('d2server1').value == -1) { PullRemoteAccess(); return; }
 
             var trigger = 0;
@@ -10016,32 +10019,36 @@
             idx_d21gateway.value = isIpAddress(zz['DefaultRouter'],'');
             idx_d21dns1.value = isIpAddress(zz['PrimaryDNS'],'');
             idx_d21dns2.value = isIpAddress(zz['SecondaryDNS'],'');
-            updateIPSetupDlg();
             setDialogMode(21, (netifid == 0 ? "IPv6 support for wired interface" : "IPv6 support for wireless interface"), 3, function () { showIPv6StateDlgOk(netifid) })
+            updateIPSetupDlg();
         }
 
         function showIPv6StateDlgOk(netifid) {
+            var selector = '<w:SelectorSet><w:Selector Name="InstanceID">Intel(r) IPS IPv6 Settings ' + netifid + '</w:Selector></w:SelectorSet>';
             var zz = amtsysstate['IPS_IPv6PortSettings'].responses[netifid];
             if (netifid == 0) { // We can only set IPv6 manual address for wired interface
                 if (d21o1.checked) { // Fully automatic, clear all addresses
                     zz['IPv6Address'] = zz['DefaultRouter'] = zz['PrimaryDNS'] = zz['SecondaryDNS'] = '::';
-                    amtstack.Put('IPS_IPv6PortSettings', zz, showIPv6StateDlgDone);
+                    amtstack.Put('IPS_IPv6PortSettings', zz, showIPv6StateDlgDone, null, 0, selector);
                 }
                 if (d21o2.checked) { // Manual, set addresses
-                    zz['IPv6Address'] = idx_d21address.value;
-                    zz['DefaultRouter'] = idx_d21gateway.value;
-                    zz['PrimaryDNS'] = idx_d21dns1.value;
-                    zz['SecondaryDNS'] = idx_d21dns2.value;
-                    amtstack.Put('IPS_IPv6PortSettings', zz, showIPv6StateDlgDone);
+                    zz['IPv6Address'] = (idx_d21address.value == '') ? '::' : idx_d21address.value.toLocaleLowerCase();
+                    zz['DefaultRouter'] = (idx_d21gateway.value == '') ? '::' : idx_d21gateway.value.toLocaleLowerCase();
+                    zz['PrimaryDNS'] = (idx_d21dns1.value == '') ? '::' : idx_d21dns1.value.toLocaleLowerCase();
+                    zz['SecondaryDNS'] = (idx_d21dns2.value == '') ? '::' : idx_d21dns2.value.toLocaleLowerCase();
+                    amtstack.Put('IPS_IPv6PortSettings', zz, showIPv6StateDlgDone, null, 0, selector);
                 }
             }
             // This code enables/disables IPv6 for a given interface.
             var elementSettings = amtsysstate['CIM_ElementSettingData'].responses;
             for (var i = 0; i < elementSettings.length; i++) {
                 if (elementSettings[i]['SettingData'] && elementSettings[i]['SettingData']['ReferenceParameters']['SelectorSet']['Selector']['Value'] == ('Intel(r) IPS IPv6 Settings ' + netifid)) {
+                    var CreationClassName = getItem(elementSettings[i]['ManagedElement']['ReferenceParameters']['SelectorSet']['Selector'], '@Name', 'CreationClassName').Value;
+                    var DeviceID = getItem(elementSettings[i]['ManagedElement']['ReferenceParameters']['SelectorSet']['Selector'], '@Name', 'DeviceID').Value;
+                    var selector2 = '<w:SelectorSet><w:Selector Name="ManagedElement"><a:EndpointReference xmlns:b="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:c="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/' + CreationClassName + '</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">' + CreationClassName + '</w:Selector><w:Selector Name="DeviceID">' + DeviceID + '</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></a:EndpointReference></w:Selector><w:Selector Name="SettingData"><a:EndpointReference xmlns:b="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:c="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IPv6PortSettings</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) IPS IPv6 Settings ' + netifid + '</w:Selector></w:SelectorSet></a:ReferenceParameters></a:EndpointReference></w:Selector></w:SelectorSet>';
                     var clone = Clone(elementSettings[i]);
-                    clone['IsCurrent'] = ((d21o0.checked)?2:1);
-                    amtstack.Put('CIM_ElementSettingData', clone, showIPv6StateDlgDone);
+                    clone['IsCurrent'] = ((d21o0.checked) ? 2 : 1);
+                    amtstack.Put('CIM_ElementSettingData', clone, showIPv6StateDlgDone, null, 0, selector2);
                 }
             }
         }
@@ -10075,7 +10082,7 @@
         }
 
         function showIPSetupDlg() {
-            if (xxdialogMode) return;
+            if ((xxdialogMode) || (amtsysstate == null)) return;
             var x = amtsysstate['AMT_EthernetPortSettings'].responses[0];
             QV('id_d21ipaddrsync', amtversion > 6);
             if (amtversion > 6) { Q('d21ipsync').checked = x['IpSyncEnabled']; };
@@ -10097,6 +10104,9 @@
         }
 
         function updateIPSetupDlg() {
+            var ok = true;
+            if (d21o2.checked && (Q('d21l2').innerHTML == "IPv6 enabled, automatic + manual addresse") && (idx_d21address.value.split(':').length < 2)) { ok = false; }
+            QE('idx_dlgOkButton', ok);
             idx_d21address.disabled = idx_d21subnet.disabled = idx_d21gateway.disabled = idx_d21dns1.disabled = idx_d21dns2.disabled = !(d21o2.checked && ((amtversion < 7) || (Q('d21ipsync').checked == false)));
         }
 
@@ -10109,7 +10119,7 @@
             delete x['PrimaryDNS'];
             delete x['SecondaryDNS'];
             if (amtversion > 6) { x['IpSyncEnabled'] = Q('d21ipsync').checked; }
-            if ((d21o1.checked == false) || (amtversion < 7) || (Q('d21ipsync').checked == false)) {
+            if ((d21o1.checked == false) && (Q('d21ipsync').checked == false)) { // || (amtversion < 7)
                 x['IPAddress'] = idx_d21address.value;
                 x['SubnetMask'] = idx_d21subnet.value;
                 x['DefaultGateway'] = idx_d21gateway.value;
@@ -11077,11 +11087,6 @@
             return str;
         }
 
-        function convertAmtDataStr(str) {
-            var timeArray = str.split('Z').join('').split('T').join('-').split(':').join('-').split('-');
-            return new Date(timeArray[0], timeArray[1]-1, timeArray[2], timeArray[3], timeArray[4], timeArray[5]);
-        }
-
         var xxAlarms = null;
 
         function PullAlarms() {
@@ -11092,7 +11097,7 @@
                     if (response.length > 0) {
                         xxAlarms = response;
                         for (var i = 0; i < response.length; i++) {
-                            var waketime = convertAmtDataStr(response[i]['StartTime']['Datetime']);
+                            var waketime = new Date(response[i]['StartTime']['Datetime']);
                             var details = '<b>' + response[i]['ElementName'] + '</b>, ' + "wake on" + ' ' + waketime.toLocaleString().replace(', ', " at ");
                             if (response[i]['Interval'] != undefined) { details += " and each" + _fmtinterval(response[i]['Interval']['Interval']); }
                             if (response[i]['DeleteOnCompletion'] == true) { details += ", delete when done"; }
@@ -11129,7 +11134,7 @@
             if (xxdialogMode) return;
             QE('d25alarm_name', !alrm);
             if (alrm != undefined) {
-                var alarm = xxAlarms[alrm], waketime = convertAmtDataStr(alarm['StartTime']['Datetime']);
+                var alarm = xxAlarms[alrm], waketime = new Date(alarm['StartTime']['Datetime']);
                 Q('d25alarm_name').value = alarm['ElementName'];
                 Q('d25alarm_sdate').value = waketime.getFullYear() + '-' + _fmttimepad(waketime.getMonth() + 1) + '-' + _fmttimepad(waketime.getDate());
                 Q('d25alarm_stime').value = waketime.getHours() + ':' + _fmttimepad(waketime.getMinutes()) + ':' + _fmttimepad(waketime.getSeconds());
@@ -11170,8 +11175,8 @@
             var alarm_name = Q('d25alarm_name').value;
             var x1 = Q('d25alarm_sdate').value.split('-');
             var x2 = Q('d25alarm_stime').value.split(':');
-            var t = new Date(x1[0], x1[1] - 1, x1[2], x2[0], x2[1], x2[2], 0); // Not sure why, but month is 0 = JAN, 11 = DEC
-            var alarm_starttime = _fmttimepad(t.getFullYear()) + '-' + _fmttimepad(t.getMonth() + 1) + '-' + _fmttimepad(t.getDate()) + 'T' + _fmttimepad(t.getHours()) + ':' + _fmttimepad(t.getMinutes()) + ':' + _fmttimepad(t.getSeconds()) + 'Z';
+            var t = new Date(x1[0], x1[1] - 1, x1[2], x2[0], x2[1], x2[2], 0); // Month is 0 = JAN, 11 = DEC
+            var alarm_starttime = _fmttimepad(t.getUTCFullYear()) + '-' + _fmttimepad(t.getUTCMonth() + 1) + '-' + _fmttimepad(t.getUTCDate()) + 'T' + _fmttimepad(t.getUTCHours()) + ':' + _fmttimepad(t.getUTCMinutes()) + ':' + _fmttimepad(t.getUTCSeconds()) + 'Z';
             var x = Q('d25alarm_interval').value.split('-');
             if (x.length != 3) { x = [0, 0, 0]; }
             var alarm_interval = 'P' + x[0] + 'DT' + x[1] + 'H' + x[2] + 'M';
@@ -11199,7 +11204,7 @@
 
         function showAlertDetails(i) {
             if (xxdialogMode) return;
-            var alarm = xxAlarms[i], waketime = convertAmtDataStr(alarm['StartTime']['Datetime']);
+            var alarm = xxAlarms[i], waketime = new Date(alarm['StartTime']['Datetime']);
             var x = '<div style=text-align:left>' + addHtmlValue("Name", alarm['ElementName']) + addHtmlValue("Wake time", waketime.toLocaleString().replace(', ', ' at '));
             if (alarm['Interval'] != undefined) { x += addHtmlValue("Internal", _fmtinterval(alarm['Interval']['Interval'])); }
             x += addHtmlValue("After wake", (alarm['DeleteOnCompletion'] == true)?"Delete Alarm":"Keep Alarm") + '</div>';
@@ -13346,7 +13351,19 @@
             // ###END###{Desktop}
         }
 
-        function portsFromHost(host, tls) { var x = decodeURIComponent(host).split(':'), hp = ((tls == 0) ? 16992 : 16993), rp = ((tls == 0) ? 16994 : 16995); if (x.length > 1) { hp = parseInt(x[1]); } if (x.length > 2) { rp = parseInt(x[2]); } return { host: x[0], http: hp, redir: rp } }
+        function portsFromHost(host, tls) {
+            host = decodeURIComponent(host);
+            var x = host.split(':'), hp = ((tls == 0) ? 16992 : 16993), rp = ((tls == 0) ? 16994 : 16995);
+            if (x[0].indexOf('[') == 0) { // IPv6 address
+                x = host.split(']:');
+                if (x.length == 1) { return { host: host.substring(1, host.length - 1), http: hp, redir: rp } }
+                if (x.length > 1) { var y = x[1].split(':'); if (y.length > 0) { hp = parseInt(y[0]); } if (y.length > 1) { rp = parseInt(y[1]); } }
+                return { host: x[0].substring(1), http: hp, redir: rp }
+            }
+            if (x.length > 1) { hp = parseInt(x[1]); }
+            if (x.length > 2) { rp = parseInt(x[2]); }
+            return { host: x[0], http: hp, redir: rp }
+        }
         function addLink(x, f) { return '<a style=cursor:pointer;color:blue onclick=\'' + f + '\'>&diams; ' + x + '</a>'; }
         function addLinkConditional(x, f, c) { if (c) return addLink(x, f); return x; }
         function haltEvent(e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); return false; }

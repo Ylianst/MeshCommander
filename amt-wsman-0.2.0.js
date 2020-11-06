@@ -16,7 +16,7 @@ var WsmanStackCreateService = function (host, port, user, pass, tls, extra) {
         if (namespaces == null) namespaces = '';
         obj.comm.PerformAjax('<?xml version=\"1.0\" encoding=\"utf-8\"?><Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns=\"http://www.w3.org/2003/05/soap-envelope\" ' + namespaces + '><Header><a:Action>' + postdata, function (data, status, tag) {
             var wsresponse = obj.ParseWsman(data);
-            if ((data != null) && (!wsresponse || wsresponse == null)) {
+            if ((data != null) && (!wsresponse || wsresponse == null) && (status == 200)) {
                 callback(obj, null, { Header: { HttpError: status } }, 601, tag);
             } else {
                 if (status != 200) {
