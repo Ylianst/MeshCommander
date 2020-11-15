@@ -17,11 +17,11 @@ var minifyLib = 2; // 0 = None, 1 = minify-js, 2 = HTMLMinifier
 var minify = null;
 
 var meshCentralSourceFiles = [
-    "../commander.htm"
+    "../index.html"
 ];
 
 var minifyMeshCentralSourceFiles = [
-    "../commander.htm"
+    "../index.html"
 ];
 
 // True is this module is run directly using NodeJS
@@ -697,6 +697,7 @@ function translateFromHtml(lang, file, createSubDir) {
     }
     fs.writeFileSync(outname, out, { flag: 'w+' });
 
+    /*
     // Minify the file
     if (minifyLib == 1) {
         minify.file({
@@ -731,6 +732,7 @@ function translateFromHtml(lang, file, createSubDir) {
         if (outnamemin.endsWith('.handlebars') >= 0) { minifiedOut = minifiedOut.split('"{{{pluginHandler}}}"').join('{{{pluginHandler}}}'); }
         fs.writeFileSync(outnamemin, minifiedOut, { flag: 'w+' });
     }
+    */
 }
 
 function minifyDone() { log('Completed minification.'); }
