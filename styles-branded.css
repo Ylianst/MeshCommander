@@ -22,20 +22,6 @@ li {
     padding: 0;
 }
 
-label {
-    display: block;
-    color: windowtext;
-    background-color: window;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-}
-
-    label:hover {
-        background-color: highlight;
-        color: highlighttext;
-    }
-
 a:visited {
     text-decoration: none;
     color: #04f;
@@ -232,21 +218,21 @@ th {
     width: 14px;
     height: 15px;
     background-repeat: no-repeat;
-    background-image: url("images-intel/info.gif");
+    background-image: url("images-branded/info.gif");
 }
 
 .icon2 {
     width: 14px;
     height: 15px;
     background-repeat: no-repeat;
-    background-image: url("images-intel/caution.gif");
+    background-image: url("images-branded/caution.gif");
 }
 
 .icon3 {
     width: 14px;
     height: 15px;
     background-repeat: no-repeat;
-    background-image: url("images-intel/warning.gif");
+    background-image: url("images-branded/warning.gif");
 }
 
 .itemBar {
