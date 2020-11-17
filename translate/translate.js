@@ -17,11 +17,13 @@ var minifyLib = 2; // 0 = None, 1 = minify-js, 2 = HTMLMinifier
 var minify = null;
 
 var meshCentralSourceFiles = [
-    "../index.html"
+    "../index.html",
+    "../amt-0.2.0.js"
 ];
 
 var minifyMeshCentralSourceFiles = [
-    "../index.html"
+    "../index.html",
+    "../amt-0.2.0.js"
 ];
 
 // True is this module is run directly using NodeJS
@@ -517,7 +519,7 @@ function translateEx(lang, langFileData, sources, createSubDir) {
     }
     // Translate the files
     for (var i = 0; i < sources.length; i++) {
-        if (sources[i].endsWith('.html') || sources[i].endsWith('.htm') || sources[i].endsWith('.handlebars')) { translateFromHtml(lang, sources[i], createSubDir); }
+        if (sources[i].endsWith('.html') || sources[i].endsWith('.htm') || sources[i].endsWith('.handlebars') || sources[i].endsWith('.js')) { translateFromHtml(lang, sources[i], createSubDir); }
         else if (sources[i].endsWith('.txt')) { translateFromTxt(lang, sources[i], createSubDir); }
     }
 }
@@ -666,6 +668,7 @@ function translateFromTxt(lang, file, createSubDir) {
 
 function translateFromHtml(lang, file, createSubDir) {
     var data = fs.readFileSync(file);
+    if (file.endsWith('.js')) { data = '<html><head></head><body><script>' + data + '</script></body></html>'; }
     var { JSDOM } = jsdom;
     const dom = new JSDOM(data, { includeNodeLocations: true });
     log("Translating HTML (" + lang + "): " + path.basename(file));
@@ -682,6 +685,7 @@ function translateFromHtml(lang, file, createSubDir) {
         if (fs.existsSync(outfolder) == false) { fs.mkdirSync(outfolder); }
         outname = path.join(path.dirname(file), createSubDir, path.basename(file));
     }
+
     if (outname.endsWith('.handlebars')) {
         outnamemin = (outname.substring(0, outname.length - 11) + '-min_' + lang + '.handlebars');
         outname = (outname.substring(0, outname.length - 11) + '_' + lang + '.handlebars');
@@ -691,6 +695,11 @@ function translateFromHtml(lang, file, createSubDir) {
     } else if (outname.endsWith('.htm')) {
         outnamemin = (outname.substring(0, outname.length - 4) + '-min_' + lang + '.htm');
         outname = (outname.substring(0, outname.length - 4) + '_' + lang + '.htm');
+    } else if (outname.endsWith('.js')) {
+        if (out.startsWith('<html><head></head><body><script>')) { out = out.substring(33); }
+        if (out.endsWith('</script></body></html>')) { out = out.substring(0, out.length - 23); }
+        outnamemin = (outname.substring(0, outname.length - 3) + '-min_' + lang + '.js');
+        outname = (outname.substring(0, outname.length - 3) + '_' + lang + '.js');
     } else {
         outnamemin = (outname + '_' + lang + '.min');
         outname = (outname + '_' + lang);
