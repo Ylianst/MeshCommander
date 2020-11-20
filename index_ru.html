@@ -4,7 +4,12 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo="> <!-- Stop favicon.ico from loading -->
 <!-- ###BEGIN###{Look-Commander} -->
+    <!-- ###BEGIN###{Mode-NodeWebkit} -->
+    <link type="text/css" href="styles-commander-node.css" media="screen" rel="stylesheet" title="CSS">
+    <!-- ###END###{Mode-NodeWebkit} -->
+    <!-- ###BEGIN###{!Mode-NodeWebkit} -->
     <link type="text/css" href="styles-commander.css" media="screen" rel="stylesheet" title="CSS">
+    <!-- ###END###{!Mode-NodeWebkit} -->
 <!-- ###END###{Look-Commander} -->
 <!-- ###BEGIN###{Look-Branded} -->
     <link type="text/css" href="styles-branded.css" media="screen" rel="stylesheet" title="CSS">
@@ -773,7 +778,7 @@
             <!-- ###END###{WsmanBrowser} -->
             <!-- ###BEGIN###{Storage} -->
             <!-- ###BEGIN###{Mode-Firmware} -->
-            <div id="storagelinks" style="margin-top:4px"></div>
+            <!-- <div id=storagelinks style=margin-top:4px></div> -->
             <!-- ###END###{Mode-Firmware} -->
             <!-- ###END###{Storage} -->
             <!-- ###BEGIN###{Look-ISDU} -->
@@ -3101,7 +3106,7 @@
 
             // ###BEGIN###{Storage}
             // ###BEGIN###{Mode-Firmware}
-            QH('storagelinks', '');
+            //QH('storagelinks', '');
             // ###END###{Mode-Firmware}
             // ###END###{Storage}
 
@@ -10640,10 +10645,7 @@
             // Set the boot order to null, this is needed for some AMT versions that don't clear this automatically.
             amtstack.CIM_BootConfigSetting_ChangeBootOrder(null, function (stack, name, response, status) {
                 if (status != 200) { messagebox("Действие силы", format("PUT CIM_BootConfigSetting_ChangeBootOrder, Error #{0}", status) + ((response.Header && response.Header.WsmanError) ? (', ' + response.Header.WsmanError) : '')); return; }
-                if  (response.Body.ReturnValue!=0) {
-                    messagebox("Change Boot Order", "Change Boot Order returns "+ response.Body.ReturnValueStr);
-                    return;
-                }
+                if (response.Body['ReturnValue'] != 0) { messagebox("Change Boot Order", "(1) Change Boot Order returns "+ response.Body.ReturnValueStr); return; }
                 amtstack.Put('AMT_BootSettingData', r, powerActionResponse2, 0, 1);
             }, 0, 1);
         }
@@ -10692,10 +10694,7 @@
         function powerActionResponse3(stack, name, response, status) {
             console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
             if (errcheck(status, stack)) return;
-            if  (response.Body.ReturnValue!=0) {
-                messagebox("Change Boot Order", "Change Boot Order returns "+ response.Body.ReturnValueStr);
-                return;
-            }
+            if (response.Body['ReturnValue'] != 0) { messagebox("Change Boot Order", "(2) Change Boot Order returns "+ response.Body.ReturnValueStr); return; }
 
             //console.log("Performing Power State Change...");
             statusbox("Действие силы", "Выполнение силового действия ...");
@@ -10862,13 +10861,15 @@
                 }
                 if (xx != '') x += xx;
                 if (count == 0) { x += '<div style=padding-left:15px><br><i>' + "Файлы не найдены." + '</i></div><br>'; }
-                x += '<br><td class=r1>' + TableEnd(AddRefreshButton('PullStorage()') + AddButton("Загрузить ...", 'UploadToStorage()')
+                var uploadSupport = false;
+                try { var reader = new FileReader(); uploadSupport = ((reader != null) && (reader.readAsBinaryString != null)); } catch (ex) { console.log(ex); }
+                x += '<br><td class=r1>' + TableEnd(AddRefreshButton('PullStorage()') + (uploadSupport ? AddButton("Загрузить ...", 'UploadToStorage()') : '')
                 // ###BEGIN###{Mode-NodeWebkit}
                     + AddButton("Загрузить приложение ...", 'UploadAppToStorage()')
                 // ###END###{Mode-NodeWebkit}
                 );
                 // ###BEGIN###{Mode-Firmware}
-                QH('storagelinks', links);
+                //QH('storagelinks', links);
                 // ###END###{Mode-Firmware}
                 QH('id_TableSystemStorage', x);
             } else {

@@ -731,6 +731,18 @@
       "zh-chs": "和手册"
     },
     {
+      "en": "(1) Change Boot Order returns ",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->21->1368"
+      ]
+    },
+    {
+      "en": "(2) Change Boot Order returns ",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->21->1374"
+      ]
+    },
+    {
       "de": "(Leeren)",
       "en": "(Empty)",
       "es": "(Vacío)",
@@ -4650,11 +4662,7 @@
       ]
     },
     {
-      "en": "Change Boot Order returns ",
-      "xloc": [
-        "index.html->id_computerSelector->dialog->21->1368",
-        "index.html->id_computerSelector->dialog->21->1374"
-      ]
+      "en": "Change Boot Order returns "
     },
     {
       "de": "Ändern Sie den Energiezustand des Remote-Computers",

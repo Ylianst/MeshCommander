@@ -1,0 +1,523 @@
+body {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 9pt;
+    color: black;
+    background: white;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+li {
+    margin: 0;
+    padding: 0;
+}
+
+/*
+label {
+    display: block;
+    color: windowtext;
+    background-color: window;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+    label:hover {
+        background-color: highlight;
+        color: highlighttext;
+    }
+    */
+a:visited {
+    text-decoration: none;
+    color: #04f;
+}
+
+a:link {
+    text-decoration: none;
+    color: #04f;
+}
+
+a:hover {
+    color: #555;
+}
+
+h1 {
+    font-size: 11pt;
+    font-weight: bold;
+    color: black;
+    margin-left: 5px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+h2 {
+    font-size: 9pt;
+    font-weight: bold;
+    color: black;
+    margin-left: 6px;
+    margin-top: 6px;
+    margin-bottom: 0;
+}
+
+p {
+    margin-left: 6px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    margin-right: 2px;
+}
+
+td {
+    font-size: 9pt;
+}
+
+th {
+    font-size: 9pt;
+}
+
+    th:hover {
+        cursor: pointer;
+        background: #aaa;
+    }
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 67px;
+    background: #036;
+    /* background: linear-gradient(135deg, #6a6960 0%,#42413c 100%); */
+}
+
+.progressbar {
+    position: fixed;
+    top: 67px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #036;
+}
+
+.in {
+    margin-left: 40px;
+}
+
+.log {
+    background: #bbbab5;
+}
+
+.log1 {
+    background: #bbbab5;
+}
+
+.log tbody tr:nth-child(odd) {
+    background: #e8eefe;
+}
+
+.fullcell {
+    position: fixed;
+    top: 69px;
+    right: 0;
+    bottom: 0;
+    left: 0px;
+    overflow: hidden;
+}
+
+.maincell {
+    position: fixed;
+    top: 69px;
+    right: 0;
+    bottom: 0;
+    left: 156px;
+    overflow: hidden;
+    padding-left: 2px;
+    vertical-align: top;
+}
+
+.navbar {
+    position: fixed;
+    top: 69px;
+    left: 0;
+    bottom: 0;
+    width: 156px;
+    border-right: 2px solid #B0C6FC;
+    vertical-align: top;
+    background: #036;
+    background: linear-gradient(to bottom, #bfd1fc 0%,#e8eefe 100%);
+}
+
+.nav1 {
+    padding: 1px 0px 1px 8px;
+    margin: 0px;
+    font-weight: bold;
+    color: black;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.nav2 {
+    margin-left: 32px;
+    margin-top: 0;
+    color: black;
+    cursor: pointer;
+}
+
+.r {
+    font-size: 11pt;
+}
+
+.r0 {
+    background: white;
+}
+
+.r1 {
+    border-bottom: 1px solid gray;
+    text-align: left;
+}
+
+.r2 {
+    text-align: left;
+}
+
+.r3 {
+    border-bottom: 1px solid gray;
+    text-align: left;
+}
+
+    .r3:hover {
+        background-color: #83827b;
+        cursor: pointer;
+    }
+
+.spread {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+
+.timer {
+    border: 1px solid #abcae1;
+    background-color: #abcae1;
+}
+
+.tm {
+    font-size: 7pt;
+}
+
+.top1 {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #C8C8C8;
+    margin-top: 6px;
+    margin-left: 10px;
+}
+
+.top2 {
+    color: #C8C8C8;
+    margin-left: 10px;
+}
+
+.warn {
+    font-weight: bold;
+    color: #c00000;
+}
+
+.icon1 {
+    width: 14px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-image: url("images-commander/info.gif");
+}
+
+.icon2 {
+    width: 14px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-image: url("images-commander/warn.gif");
+}
+
+.icon3 {
+    width: 14px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-image: url("images-commander/error.gif");
+}
+
+.itemBar {
+    padding: 7px;
+    min-height: 20px;
+    margin-top: 4px;
+    margin-right: 8px;
+    width: auto;
+    border-radius: 8px;
+    background-color: #8c8b81;
+    cursor: pointer;
+}
+
+.computeritemcir {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    background: gray;
+    margin-right:4px;
+}
+
+.computeritem {
+    cursor: pointer;
+    width: auto;
+    /*
+    border-radius: 5px;
+    background-color: #a6a5a0;
+    */
+    height: 28px;
+    margin: 4px;
+    padding: 2px;
+}
+
+    .computeritem:hover {
+        background-color: #83827b;
+    }
+
+.us {
+    -webkit-touch-callout: initial;
+    -webkit-user-select: auto;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+
+/* Styles below are only used in NodeJS, WebSite compiler should remove these in the future */
+
+.topCell {
+    background-image:url('images-commander/logoback.png');
+    background-repeat:no-repeat;
+}
+
+.i1 {
+    background: url(images-commander/icons50.png) 0px 0px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+}
+
+.i2 {
+    background: url(images-commander/icons50.png) -50px 0px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+}
+
+.i3 {
+    background: url(images-commander/icons50.png) -100px 0px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+}
+
+.i4 {
+    background: url(images-commander/icons50.png) -150px 0px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+}
+
+.i5 {
+    background: url(images-commander/icons50.png) -200px 0px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+}
+
+.i6 {
+    background: url(images-commander/icons50.png) -250px 0px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+}
+
+.j1 {
+    background: url(images-commander/icons26.png) 0px 0px;
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+    border: none;
+}
+
+.j2 {
+    background: url(images-commander/icons26.png) -26px 0px;
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+    border: none;
+}
+
+.j3 {
+    background: url(images-commander/icons26.png) -52px 0px;
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+    border: none;
+}
+
+.j4 {
+    background: url(images-commander/icons26.png) -78px 0px;
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+    border: none;
+}
+
+.j5 {
+    background: url(images-commander/icons26.png) -104px 0px;
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+    border: none;
+}
+
+.j6 {
+    background: url(images-commander/icons26.png) -130px 0px;
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+    border: none;
+}
+
+.gray {
+    /*filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale");*/ /* Firefox 10+, Firefox on Android */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%) opacity(60%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+.g1 {
+    background-position: 0% 0%;
+    width: 14px;
+    height: 100%;
+    float: left;
+    /* fallback (Opera) */
+    /* Mozilla: */
+    /* Chrome, Safari:*/
+    background-image: linear-gradient(to right, #ffffff 0%, #c9c9c9 100%);
+    background-color: #c9c9c9;
+    background-repeat: repeat;
+    background-attachment: scroll;
+}
+
+.g2 {
+    background-position: 0% 0%;
+    width: 14px;
+    height: 100%;
+    float: right;
+    /* fallback (Opera) */
+    /* Mozilla: */
+    /* Chrome, Safari:*/
+    background-image: linear-gradient(to right, #c9c9c9 0%, #ffffff 100%);
+    background-color: #c9c9c9;
+    background-repeat: repeat;
+    background-attachment: scroll;
+}
+
+.g1s {
+    background-position: 0% 0%;
+    width: 14px;
+    height: 100%;
+    float: left;
+    /* fallback (Opera) */
+    /* Mozilla: */
+    /* Chrome, Safari:*/
+    background-image: linear-gradient(to right, #ffffff 0%, #a0a0a0 100%);
+    background-color: #a0a0a0;
+    background-repeat: repeat;
+    background-attachment: scroll;
+}
+
+.g2s {
+    background-position: 0% 0%;
+    width: 14px;
+    height: 100%;
+    float: right;
+    /* fallback (Opera) */
+    /* Mozilla: */
+    /* Chrome, Safari:*/
+    background-image: linear-gradient(to right, #a0a0a0 0%, #ffffff 100%);
+    background-color: #a0a0a0;
+    background-repeat: repeat;
+    background-attachment: scroll;
+}
+
+
+.lbbutton {
+    width:44px;
+    height:44px;
+    border-radius:5px;
+    background-color:white;
+    margin-left:4px;
+    margin-top:4px;
+    position:relative;
+    cursor:pointer;
+    opacity:0.5;
+}
+
+.lbbutton:hover {
+    opacity:1;
+}
+
+.lbbuttonsel {
+    opacity:0.9;
+}
+
+.lbbuttonsel2 {
+    width:82px;
+    border-radius:5px 0px 0px 5px;
+    opacity:1;
+}
+
+.lb1 {
+    background: url(images-commander/leftbar-32.png) -0px 0px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    border: none;
+}
+
+.lb2 {
+    background: url(images-commander/leftbar-32.png) -32px 0px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    border: none;
+}
+
+.lb3 {
+    background: url(images-commander/leftbar-32.png) -64px 0px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    border: none;
+}
+
+.lb4 {
+    background: url(images-commander/leftbar-32.png) -96px 0px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    border: none;
+}
