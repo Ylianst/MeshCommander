@@ -16,12 +16,12 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo="> <!-- Stop favicon.ico from loading -->
 <!-- ###BEGIN###{Look-Commander} -->
-    <!-- ###BEGIN###{Mode-NodeWebkit} -->
+    <!-- ###BEGIN###{ComputerSelector} -->
     <link type="text/css" href="styles-commander-node.css" media="screen" rel="stylesheet" title="CSS" />
-    <!-- ###END###{Mode-NodeWebkit} -->
-    <!-- ###BEGIN###{!Mode-NodeWebkit} -->
+    <!-- ###END###{ComputerSelector} -->
+    <!-- ###BEGIN###{!ComputerSelector} -->
     <link type="text/css" href="styles-commander.css" media="screen" rel="stylesheet" title="CSS" />
-    <!-- ###END###{!Mode-NodeWebkit} -->
+    <!-- ###END###{!ComputerSelector} -->
 <!-- ###END###{Look-Commander} -->
 <!-- ###BEGIN###{Look-Branded} -->
     <link type="text/css" href="styles-branded.css" media="screen" rel="stylesheet" title="CSS" />
@@ -978,11 +978,36 @@
                                     <!-- ###END###{Terminal-Enumation-All} -->
                                 </div>
                                 <div>
-                                    &nbsp;
+                                    <!-- ###BEGIN###{Mode-NodeWebkit} -->
                                     <input id="id_toolbtncc" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-C" onclick="termSendKey(3);Q('id_toolbtncc').blur()">
                                     <input id="id_toolbtncx" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Ctl-X" onclick="termSendKey(24);Q('id_toolbtncx').blur()">
                                     <input id="id_toolbtnes" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="ESC" onclick="termSendKey(27);Q('id_toolbtnes').blur()">
                                     <input id="id_toolbtnbs" type="button" onkeypress="return false" onkeydown="if (event.keyCode == 13) handleKeyPress(event); return false" class="bottombutton" value="Backspace" onclick="termSendKey(8);Q('id_toolbtnbs').blur()">
+                                    <!-- ###END###{Mode-NodeWebkit} -->
+                                    <!-- ###BEGIN###{!Mode-NodeWebkit} -->
+                                    <span id="termkeysspan">
+                                        <select style="margin-left:6px" id="termkeys">
+                                            <option value=3>Ctrl-C</option>
+                                            <option value=24>Ctrl-X</option>
+                                            <option value=27>ESC</option>
+                                            <option value=8>Backspace</option>
+                                            <option value=1001>F1</option>
+                                            <option value=1002>F2</option>
+                                            <option value=1003>F3</option>
+                                            <option value=1004>F4</option>
+                                            <option value=1005>F5</option>
+                                            <option value=1006>F6</option>
+                                            <option value=1007>F7</option>
+                                            <option value=1008>F8</option>
+                                            <option value=1009>F9</option>
+                                            <option value=1010>F10</option>
+                                            <option value=1011>F11</option>
+                                            <option value=1012>F12</option>
+                                        </select>
+                                        <input id=TermWD type=button value="Send" onkeypress="return false" onkeydown="return false" onclick="termSendKeys()">
+                                        &nbsp;
+                                    </span>
+                                    <!-- ###END###{!Mode-NodeWebkit} -->
                                     <input id="id_tpastebutton" type="button" onkeypress="return false" onkeydown="return false" class="cadbutton" value="Paste" disabled="disabled" onclick="setDialogMode(3,'Paste',3,termPaste)">
                                 </div>
                             </td>
@@ -3098,6 +3123,9 @@
             QV('go8', true); // Network Settings
             // ###BEGIN###{Terminal}
             QV('go13', false); // Terminal
+            // ###BEGIN###{!Mode-NodeWebkit}
+            QE('TermWD', false);
+            // ###END###{!Mode-NodeWebkit}
             // ###END###{Terminal}
             // ###BEGIN###{Desktop}
             //QV('go14', false); // Desktop
@@ -8011,6 +8039,9 @@
             idx_connectbutton2.value = (state == 0) ? "Connect" : "Disconnect";
             Q('id_termstatus').textContent = StatusStrs[state];
             QE('id_tpastebutton', state == 3);
+            // ###BEGIN###{!Mode-NodeWebkit}
+            QE('TermWD', state == 3);
+            // ###END###{!Mode-NodeWebkit}
             switch (state) {
                 case 0:
                     terminal.m.TermResetScreen();
@@ -8038,6 +8069,7 @@
 
         function termPaste() { terminal.m.TermSendKeys(d3pastetextarea.value); return false; }
         function termSendKey(k) { terminal.m.TermSendKey(k); return false; }
+        function termSendKeys() { var k = Q('termkeys').value; if (k < 1000) { termSendKey(k); } else { terminal.m.TermHandleKeyDown({ which: k - 889, repeat: false }); } }
 
         // ###BEGIN###{TerminalSize}
         function termToggleSize() {
@@ -10307,7 +10339,7 @@
             if (action == 998) { amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; }
 
             // Some actions will not work if KVM/SOL/IDER are connected. If we perform these, disconnect now.
-            if ((action < 10) && (action > 2)) {
+            if ((action < 10) && (action > 2) && (urlvars['noredirdisconnect'] == null)) {
                 // ###BEGIN###{Desktop}
                 if (desktop.State == 3) connectDesktop();
                 // ###END###{Desktop}
