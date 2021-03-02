@@ -1387,6 +1387,7 @@
                     <div style="float:right;border:1px solid #666;width:200px;height:80px;overflow-y:scroll;background-color:white">
                         <!-- ###BEGIN###{DesktopFocus} -->
                         <label><input type="checkbox" id='d7showfocus'>Show Focus Tool</label><br>
+                        <span id="d7decimationspan"><label><input type="checkbox" id='d7decimation'>Prefer Downscale</label><br></span>
                         <!-- ###END###{DesktopFocus} -->
                         <label><input type="checkbox" id='d7showcursor'>Show Local Mouse Cursor</label><br>
                         <label><input type="checkbox" id='d7showcad'>Show Ctrl-Alt-Del</label><br>
@@ -1622,6 +1623,7 @@
                         <div id=d24dUseIDER><label><input type=checkbox id=d24UseIDER onchange=showAdvPowerDlgChange()>Use IDER</label><br></div>
                         <div id=d24dSerialOverLan><label><input type=checkbox id=d24SerialOverLan onchange=showAdvPowerDlgChange()>Serial-over-LAN</label><br></div>
                         <div id=d24dSecureErase><label><input type=checkbox id=d24SecureErase onchange=showAdvPowerDlgChange()>Intel&reg; Remote Secure Erase</label><br></div>
+                        <div id=d24dPlatformErase><label><input type=checkbox id=d24PlatformErase onchange=showAdvPowerDlgChange()>Remote Platform Erase</label><br></div>
                     </div>
                     <div>Boot Settings</div>
                 </div>
@@ -1764,7 +1766,7 @@
 // ###END###{NetworkSettings}
 // ###BEGIN###{Desktop}
         var desktop;
-        var desktopsettings = { encflags: 1, showfocus: false, showmouse: true, showcad: true, limitFrameRate: false, noMouseRotate: false };
+        var desktopsettings = { encflags: 1, showfocus: false, showmouse: true, showcad: true, limitFrameRate: false, noMouseRotate: false, decimation: false };
 // ###END###{Desktop}
 // ###BEGIN###{Mode-MeshCentral2}
         var currentMeshNode = null;
@@ -2133,6 +2135,11 @@
             // ###BEGIN###{DesktopRecorder}
             if (urlvars && urlvars['norecord']) { QV('id_DeskRecorderTools', false); }
             // ###END###{DesktopRecorder}
+
+            // ###BEGIN###{Mode-NodeWebkit}
+            // Check input arguments
+            if (urlvars['webcn'] == 1) { delete urlvars['webcn']; setTimeout(function() { alert('Invalid webcn argument, use -webcn:domain.com.'); }, 100); }
+            // ###END###{Mode-NodeWebkit}
         }
 
         // ###BEGIN###{PowerControl-Advanced}
@@ -8265,12 +8272,13 @@
                 if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
-                // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib
+                // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = Decimation
                 desktop.m.useRLE = ((desktopsettings.encflags & 1) != 0);
                 desktop.m.bpp = (desktopsettings.encflags & 2) ? 2 : 1;
                 // ###BEGIN###{DesktopInband}
                 desktop.m.graymode = ((desktopsettings.encflags & 4) != 0);
                 desktop.m.useZLib = ((desktopsettings.encflags & 8) != 0);
+                desktop.m.decimation = desktopsettings.decimation;
                 // ###END###{DesktopInband}
                 desktop.m.showmouse = desktopsettings.showmouse;
                 desktop.m.onScreenSizeChange = center;
@@ -8520,6 +8528,7 @@
             desktopsettings.encflags = parseInt(idx_d7desktopmode.value);
             // ###BEGIN###{DesktopFocus}
             desktopsettings.showfocus = d7showfocus.checked;
+            if ((amtversion > 15) || (urlvars['kvmext'] != null)) { desktopsettings.decimation = d7decimation.checked; }
             // ###END###{DesktopFocus}
             desktopsettings.showmouse = d7showcursor.checked;
             desktopsettings.showcad = d7showcad.checked;
@@ -8548,6 +8557,8 @@
             idx_d7desktopmode.value = desktopsettings.encflags;
             // ###BEGIN###{DesktopFocus}
             d7showfocus.checked = desktopsettings.showfocus;
+            d7decimation.checked = desktopsettings.decimation;
+            QV('d7decimationspan', (amtversion > 15) || (urlvars['kvmext'] != null))
             // ###END###{DesktopFocus}
             d7showcursor.checked = desktopsettings.showmouse;
             d7showcad.checked = desktopsettings.showcad;
@@ -10225,6 +10236,10 @@
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Secure Erase", 104); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Secure Erase", 105); }
                 }
+                if (amtPowerBootCapabilities['PlatformErase'] != null) {
+                    if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
+                    if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
+                }
                 // ###BEGIN###{IDER}
                 if (powerState & 1) { addOption('d5actionSelect', "Reset to IDE-R Floppy", 200); }
                 if (powerState & 2) { addOption('d5actionSelect', "Power on to IDE-R Floppy", 201); }
@@ -10296,6 +10311,10 @@
                 if (wsstack.comm.xtlsFingerprint == null) { x += ('<div style=color:red>' + "<b>WARNING:</b> TLS is not used, password will be sent in the clear." + '</div>'); }
                 // ###END###{Mode-NodeWebkit}
                 rsepass = 1;
+                setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
+            } else if ((action == 106) || (action == 107)) {
+                var x = ("Confirm execution of Intel&reg; Remote Platform Erase?" + '<br>');
+                x += ('<br><div style=color:red>' + "<b>WARNING:</b> This will wipe data on the remote system." + '</div>');
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
             // ###BEGIN###{PowerControl-OneClick}
             } else if ((action == 999) && (amtversion >= 15)) {
@@ -10404,6 +10423,7 @@
             QV('d24dLockResetButton', amtPowerBootCapabilities['ResetButtonLock'] == true);
             QV('d24dSerialOverLan', amtPowerBootCapabilities['SOL'] == true);
             QV('d24dSecureErase', amtPowerBootCapabilities['SecureErase'] == true);
+            QV('d24dPlatformErase', amtPowerBootCapabilities['PlatformErase'] != null);
             QV('d24dLockSleepButton', amtPowerBootCapabilities['SleepButtonLock'] == true);
             QV('d24dUserPasswordBypass', amtPowerBootCapabilities['UserPasswordBypass'] == true);
             QV('idx_d24Verbocity1', amtPowerBootCapabilities['VerbosityQuiet'] == true);
@@ -10497,6 +10517,7 @@
                 AvdPowerDlg.UseSafeMode = Q('d24SafeMode').checked;
                 AvdPowerDlg.UserPasswordBypass = Q('d24UserPasswordBypass').checked;
                 AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;
+                AvdPowerDlg.PlatformErase = Q('d24PlatformErase').checked;
                 if ((AvdPowerDlg.SecureErase === true) && (Q('d24rsepass').value.length > 0)) { AvdPowerDlg.RSEPassword = Q('d24rsepass').value; }
 
                 // Attempt user consent
@@ -10620,6 +10641,9 @@
                     r['SecureErase'] = ((AvdPowerDlg.SecureErase) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] == true) && (AvdPowerDlg.RSEPassword)) { r['RSEPassword'] = AvdPowerDlg.RSEPassword; }
                 }
+                if (r['PlatformErase'] != null) {
+                    r['PlatformErase'] = ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null));
+                }
             } else {
                 // ###END###{PowerControl-Advanced}
                 r['BIOSPause'] = false;
@@ -10642,6 +10666,9 @@
                 if (r['SecureErase'] != null) {
                     r['SecureErase'] = (((action == 104) || (action == 105)) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
+                }
+                if (r['PlatformErase'] != null) {
+                    r['PlatformErase'] = (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null));
                 }
                 rsepass = null;
                 // ###BEGIN###{PowerControl-Advanced}
@@ -10747,6 +10774,8 @@
             if (action == 101 || action == 200 || action == 202 || action == 301 || action == 400 || action == 600) action = 10; // Reset
             if (action == 104) action = 2; // Power on with Remote Secure Erase
             if (action == 105) action = 10; // Reset with Remote Secure Erase
+            if (action == 106) action = 2; // Power on with Remote Platfrom Erase
+            if (action == 107) action = 10; // Reset with Remote Platfrom Erase
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) action = AvdPowerDlg.Action;
             targetPowerAction = action;

@@ -47,6 +47,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.kvmExt = {};
     obj.kvmExtChanged = null;
     obj.useZLib = false;
+    obj.decimation = false;
     obj.graymode = false;
     // ###END###{DesktopInband}
 
@@ -170,9 +171,15 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
                 obj.send(String.fromCharCode(2, 0) + ShortToStr((supportedEncodings.length / 4) + 1) + supportedEncodings + IntToStr(-223));          // Supported Encodings + Desktop Size
 
-                // Set the pixel encoding to something much smaller
-                // obj.send(String.fromCharCode(0, 0, 0, 0, 16, 16, 0, 1) + ShortToStr(31) + ShortToStr(63) + ShortToStr(31) + String.fromCharCode(11, 5, 0, 0, 0, 0));                     // Setup 16 bit color RGB565 (This is the default, so we don't need to set it)
-                if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(7) + ShortToStr(7) + ShortToStr(3) + String.fromCharCode(5, 2, 0, 0, 0, 0));            // Setup 8 bit color RGB332
+                if (obj.graymode == false) {
+                    // Set the pixel encoding to something much smaller
+                    // obj.send(String.fromCharCode(0, 0, 0, 0, 16, 16, 0, 1) + ShortToStr(31) + ShortToStr(63) + ShortToStr(31) + String.fromCharCode(11, 5, 0, 0, 0, 0));                     // Setup 16 bit color RGB565 (This is the default, so we don't need to set it)
+                    if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(7) + ShortToStr(7) + ShortToStr(3) + String.fromCharCode(5, 2, 0, 0, 0, 0));            // Setup 8 bit color RGB332
+                } else {
+                    // Gray scale modes
+                    if (obj.bpp == 2) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(255) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));          // Setup 8 bit black and white RGB800
+                    if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(15) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));           // Setup 4 bit black and white RGB400
+                }
 
                 obj.state = 4;
                 if (obj.parent) { obj.parent.disconnectCode = 0; obj.parent.xxStateChange(3); }
@@ -183,8 +190,8 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 // ###END###{DesktopFocus}
                 // ###BEGIN###{DesktopInband}
                 if (obj.kvmExtChanged != null) {
-                    obj.sendKvmExtCmd(2, obj.graymode ? 1 : 0); // Set Decimation State
-                    obj.sendKvmExtCmd(4, obj.useZLib ? 1 : 0); // Set ZLib state
+                    obj.sendKvmExtCmd(2, (obj.decimation === true) ? 1 : 0); // Set Decimation State
+                    obj.sendKvmExtCmd(4, (obj.useZLib === true) ? 1 : 0); // Set ZLib state
                 }
                 // ###END###{DesktopInband}
                 _SendRefresh();
