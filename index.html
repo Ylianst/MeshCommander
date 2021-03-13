@@ -12537,8 +12537,11 @@
                             var hash = rstr2hex(val.substring(1, hashsize + 1));
                             var hashnamesize = val.charCodeAt(1 + hashsize);
                             var hashname = val.substring(2 + hashsize, 2 + hashsize + hashnamesize)
-                            val = ["SHA1", "SHA256", "SHA384"][hashtype - 1] + ', ' + hashname + ', ' + hash;
+                            val = ['SHA1', 'SHA256', 'SHA384'][hashtype - 1] + ', ' + hashname + ', ' + hash;
                         }
+                    }
+                    if (v.moduleid == 2 && v.varid == 17) {
+                        val = val.charCodeAt(3) + '.' + val.charCodeAt(2) + '.' + val.charCodeAt(1) + '.' + val.charCodeAt(0);
                     }
                     x += '<div style=margin-right:12px><table onclick=\'usb_editvariable(event,' + i + ',' + j + ')\' class=\'itemBar us\' cellpadding=0 cellspacing=0 style=width:100%;border-radius:4px;margin-top:2px;margin-bottom:2px;padding:0><tr><td><p style=float:right;margin-right:8px><b>' + val + '</b><p>' + v['desc'] + '<tr style=height:4px></table></div>';
                 }
@@ -12636,6 +12639,10 @@
                     Q('idx_d16valc3').value = hashname;
                 }
                 usb_ond16checkhash();
+            } else if (modid == 2 && varid == 17) {  // Provisioning server address
+                QV('d16genericvalue', true);
+                var ip = setupbin.records[i].variables[j].value;
+                idx_d16value1.value = idx_d16value2.value = ip.charCodeAt(3) + '.' + ip.charCodeAt(2) + '.' + ip.charCodeAt(1) + '.' + ip.charCodeAt(0);
             } else {
                 QV('d16genericvalue', true);
                 idx_d16value1.value = idx_d16value2.value = setupbin.records[i].variables[j].value;
@@ -12651,10 +12658,15 @@
                 var varid = +ids[1];
                 var value = '';
                 var vardescription = AmtSetupBinVarIds[modid][varid];
-                if (modid == 2 && varid == 8) {
+                if ((modid == 2) && (varid == 8)) {
                     value = String.fromCharCode(Q('idx_d16valc1').value) + hex2rstr(Q('idx_d16valc2').value) + String.fromCharCode(Q('idx_d16valc3').value.length) + Q('idx_d16valc3').value;
                 } else {
                     if (vardescription[2]) { value = idx_d16value1.value; } else { value = idx_d16value2.value; }
+                }
+                if ((modid == 2) && (varid == 17)) {  // Provisioning server address
+                    var ipSplit = value.split('.');
+                    if (ipSplit.length != 4) return;
+                    value = String.fromCharCode(parseInt(ipSplit[3]), parseInt(ipSplit[2]), parseInt(ipSplit[1]), parseInt(ipSplit[0]));
                 }
                 setupbin.records[selectedRecord].variables[selectedVariable].value = value;
             }
@@ -12679,10 +12691,15 @@
             var varid = +ids[1];
             var value = '';
             var vardescription = AmtSetupBinVarIds[modid][varid];
-            if (modid == 2 && varid == 8) {
+            if ((modid == 2) && (varid == 8)) {
                 value = String.fromCharCode(Q('idx_d16valc1').value) + hex2rstr(Q('idx_d16valc2').value) + String.fromCharCode(Q('idx_d16valc3').value.length) + Q('idx_d16valc3').value;
             } else {
                 if (vardescription[2]) { value = idx_d16value1.value; } else { value = idx_d16value2.value; }
+            }
+            if ((modid == 2) && (varid == 17)) { // Provisioning server address
+                var ipSplit = value.split('.');
+                if (ipSplit.length != 4) return;
+                value = String.fromCharCode(parseInt(ipSplit[3]), parseInt(ipSplit[2]), parseInt(ipSplit[1]), parseInt(ipSplit[0]));
             }
 
             // Create a new variable
