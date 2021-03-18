@@ -5146,6 +5146,7 @@
         }
 
         function switchToTls2(stack, serviceName, response, status) {
+            console.log(response);
             if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
             if (response.Body['ReturnValue'] != 0) { messagebox("Issue Certificate", "Failed to generate key pair, " + response.Body['ReturnValueStr']); return; }
 
@@ -5155,6 +5156,7 @@
         }
 
         function switchToTls3(stack, serviceName, response, status, tag) {
+            console.log(response);
             if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
             var DERKey = null;
             for (var i in response) { if (response[i]['InstanceID'] == tag) DERKey = response[i]['DERKey']; }
@@ -5182,6 +5184,7 @@
         }
 
         function switchToTls4(stack, serviceName, response, status) {
+            console.log(response);
             if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
 
             messagebox("TLS Setup", "Setting TLS certificate...");
@@ -6653,6 +6656,7 @@
         }
 
         function GenerateKeyPairResponse(stack, serviceName, response, status) {
+            console.log(response);
             if (status != 200) { messagebox("Issue Certificate", "Failed to generate key pair. Status: " + status); return; }
             if (response.Body['ReturnValue'] != 0) { messagebox("Issue Certificate", "Failed to generate key pair, " + response.Body['ReturnValueStr']); return; }
 
@@ -10323,8 +10327,7 @@
                 if (platfromEraseSupport & (1 << 25)) { actionTaken.push("Clear BIOS NVM Variables"); }
                 if (platfromEraseSupport & (1 << 26)) { actionTaken.push("BIOS Reload of Golden Configuration"); }
                 if (platfromEraseSupport & (1 << 31)) { actionTaken.push("CSME Unconfigure"); }
-                if (actionTaken.length == 1) { x += ('<br>' + format("The following action will be taken:" + '<ul><li>{0}</li></ul>', actionTaken.join('</li><li>'))); }
-                else if (actionTaken.length > 1) { x += ('<br>' + format("The following actions will be taken:" + '<ul><li>{0}</li></ul>', actionTaken.join('</li><li>'))); }
+                if (actionTaken.length > 0) { x += ('<br>' + format("The following actions will be taken:" + '<ul><li>{0}</li></ul>', actionTaken.join('</li><li>'))); }
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
             // ###BEGIN###{PowerControl-OneClick}
             } else if ((action == 999) && (amtversion >= 15)) {
@@ -10652,7 +10655,7 @@
                     if ((r['SecureErase'] == true) && (AvdPowerDlg.RSEPassword)) { r['RSEPassword'] = AvdPowerDlg.RSEPassword; }
                 }
                 if (r['PlatformErase'] != null) {
-                    r['PlatformErase'] = ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0));
+                    r['PlatformErase'] = ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) /*&& ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0)*/);
                 }
             } else {
                 // ###END###{PowerControl-Advanced}
