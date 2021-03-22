@@ -5655,7 +5655,12 @@
 
                     // Current radio state
                     s = xxWireless['CIM_WiFiEndpoint'].response['LANID'];
-                    x += TableEntry("Radio State", xxRadioState[xxWireless['CIM_WiFiEndpoint'].response['EnabledState']] + ", SSID: " + (s?s:('<i>' + "None" + '</i>')));
+                    x += TableEntry("Radio State", xxRadioState[xxWireless['CIM_WiFiEndpoint'].response['EnabledState']] + ", SSID: " + (s ? s : ('<i>' + "None" + '</i>')));
+
+                    // Current local profile synchronization
+                    if (xxWireless['AMT_WiFiPortConfigurationService'] && xxWireless['AMT_WiFiPortConfigurationService'].response && (typeof xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 'number')) {
+                        x += TableEntry("Local WIFI Profile Sync", addLinkConditional(((xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 1) ? "Enabled" : "Disabled"), 'showWifiSyncDlg(' + y + ')', xxAccountAdminName));
+                    }
                 }
                 // ###END###{Wireless}
 
@@ -7512,7 +7517,7 @@
         function PullWireless() {
             amtFirstPull |= 2;
             try { if (amtwirelessif == -1) return; } catch (e) {} // If the wireless adapter has no MAC, don't show this.
-            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings'], processWireless);
+            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService'], processWireless);
         }
 
         function wifiRefresh() { if (!xxdialogMode) PullWireless(); }
@@ -7565,6 +7570,20 @@
         }
 
         function wifiStateDlg() { amtstack.CIM_WiFiPort_RequestStateChange( document.querySelector('input[name=d11]:checked').value, null, function() { amtstack.Get('CIM_WiFiPort', function(stack, name, response, status) { if (status == 200) { xxWireless['CIM_WiFiPort'].response = response.Body; showWirelessInfo(); } } ); } ); }
+
+        function showWifiSyncDlg() {
+            if (xxdialogMode) return;
+            var s = '';
+            s += '<label><input type=radio name=d11 id=wl0 value=0 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 0) ? 'checked' : '') + '>' + "Disabled" + '</label><br>';
+            s += '<label><input type=radio name=d11 id=wl0 value=1 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 1) ? 'checked' : '') + '>' + "Enabled" + '</label><br>';
+            setDialogMode(11, "Local Profile Sync", 3, showWifiSyncDlgEx, s);
+        }
+
+        function showWifiSyncDlgEx() {
+            var k = Clone(xxWireless['AMT_WiFiPortConfigurationService'].response);
+            k['localProfileSynchronizationEnabled'] = document.querySelector('input[name=d11]:checked').value;
+            amtstack.Put('AMT_WiFiPortConfigurationService', k, function () { amtstack.Get('AMT_WiFiPortConfigurationService', function (stack, name, response, status) { if (status == 200) { xxWireless['AMT_WiFiPortConfigurationService'].response = response.Body; showWirelessInfo(); } }); });
+        }
 
         function showWifiDetails(h) {
             if (xxdialogMode) return;
