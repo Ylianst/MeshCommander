@@ -10333,18 +10333,7 @@
                 rsepass = 1;
                 setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
             } else if ((action == 106) || (action == 107)) {
-                var x = ("Confirm execution of Intel&reg; Remote Platform Erase?" + '<br>');
-                x += ('<br><div style=color:red>' + "<b>WARNING:</b> This will wipe data on the remote system." + '</div>');
-                var actionTaken = [], platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'];
-                if (platfromEraseSupport & (1 << 1)) { actionTaken.push("Pyrite Revert"); }
-                if (platfromEraseSupport & (1 << 2)) { actionTaken.push("Secure Erase All SSDs"); }
-                if (platfromEraseSupport & (1 << 6)) { actionTaken.push("TPM Clear"); }
-                if (platfromEraseSupport & (1 << 25)) { actionTaken.push("Clear BIOS NVM Variables"); }
-                if (platfromEraseSupport & (1 << 26)) { actionTaken.push("BIOS Reload of Golden Configuration"); }
-                if (platfromEraseSupport & (1 << 31)) { actionTaken.push("CSME Unconfigure"); }
-                if (actionTaken.length == 1) { x += ('<br>' + format("The following action will be taken:" + '<ul><li>{0}</li></ul>', actionTaken.join('</li><li>'))); }
-                else if (actionTaken.length > 1) { x += ('<br>' + format("The following actions will be taken:" + '<ul><li>{0}</li></ul>', actionTaken.join('</li><li>'))); }
-                setDialogMode(11, "Power Actions", 3, powerActionDlg, x);
+                powerActionDlgRPE();
             // ###BEGIN###{PowerControl-OneClick}
             } else if ((action == 999) && (amtversion >= 15)) {
                 statusbox("Power Actions", "Checking boot sources...");            
@@ -10355,6 +10344,48 @@
             }
         }
         
+        function powerActionDlgRPE(advanced) {
+            var x = ("Confirm execution of Intel&reg; Remote Platform Erase?" + '<br>');
+            x += ('<br><div style=color:red>' + "<b>WARNING:</b> This will wipe data on the remote system." + '</div>');
+            var actionTaken = [], platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'];
+            if (platfromEraseSupport & (1 << 1)) { actionTaken.push('<label><input id=rpef1 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Pyrite Revert" + '</label>'); }
+            if (platfromEraseSupport & (1 << 2)) { actionTaken.push('<label><input id=rpef2 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Secure Erase All SSDs" + '</label>'); }
+            if (platfromEraseSupport & (1 << 6)) { actionTaken.push('<label><input id=rpef6 type=checkbox onchange=powerActionDlgRPEValidate()>' + "TPM Clear" + '</label>'); }
+            if (platfromEraseSupport & (1 << 25)) { actionTaken.push('<label><input id=rpef25 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Clear BIOS NVM Variables" + '</label>'); }
+            if (platfromEraseSupport & (1 << 26)) { actionTaken.push('<label><input id=rpef26 type=checkbox onchange=powerActionDlgRPEValidate()>' + "BIOS Reload of Golden Configuration" + '</label>'); }
+            if (platfromEraseSupport & (1 << 31)) { actionTaken.push('<label><input id=rpef31 type=checkbox onchange=powerActionDlgRPEValidate()>' + "CSME Unconfigure" + '</label>'); }
+            if (actionTaken.length > 1) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
+            x += '<div id=rpepsid style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("Pyrite PSID", '<input id=rpepsidx style=width:210px maxlength=64 type=input>') + '</div>';
+            x += '<div id=rpessdpass style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("SSD Master Password", '<input id=rpessdpassx style=width:210px maxlength=64 type=input>') + '</div>';
+            setDialogMode(11, "Power Actions", 3, powerActionDlgRPEEx, x, advanced);
+            QE('idx_dlgOkButton', false);
+        }
+
+        function powerActionDlgRPEValidate() {
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1,2,6,25,26,31];
+            for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
+            QV('rpepsid', rpeFlags & 2);
+            QV('rpessdpass', rpeFlags & 4);
+            QE('idx_dlgOkButton', rpeFlags);
+        }
+
+        var platfromEraseTLV = null;
+        function powerActionDlgRPEEx(b, advanced) {
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 6, 25, 26, 31];
+            for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
+            var tlv = makeUefiBootParam(1, rpeFlags, 4), tlvlen = 1;
+            if (rpeFlags & 2) { tlv += makeUefiBootParam(10, Q('rpepsidx').value); tlvlen++; }
+            if (rpeFlags & 4) { tlv += makeUefiBootParam(20, Q('rpessdpassx').value); tlvlen++; }
+            platfromEraseTLV = { tlv: btoa(tlv), tlvlen: tlvlen };
+            if (advanced) {
+                // Attempt user consent
+                statusbox("Power Action", "Checking state...");
+                amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1);
+            } else {
+                powerActionDlg();
+            }
+        }
+
         // ###BEGIN###{PowerControl-OneClick}
         var AmtOcrPba = null;
         var AmtOcrPbaLength = 0;
@@ -10549,9 +10580,14 @@
                 AvdPowerDlg.PlatformErase = Q('d24PlatformErase').checked;
                 if ((AvdPowerDlg.SecureErase === true) && (Q('d24rsepass').value.length > 0)) { AvdPowerDlg.RSEPassword = Q('d24rsepass').value; }
 
-                // Attempt user consent
-                statusbox("Power Action", "Checking state...");
-                amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1);
+                if (AvdPowerDlg.PlatformErase === true) {
+                    // Ask additional information about RPE
+                    powerActionDlgRPE(true);
+                } else {
+                    // Attempt user consent
+                    statusbox("Power Action", "Checking state...");
+                    amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1);
+                }
             }
         }
         // ###END###{PowerControl-Advanced}
@@ -10648,6 +10684,19 @@
             var action = d5actionSelect.value;
             var r = response.Body;
             r['ConfigurationDataReset'] = false;
+
+            // Clean up parameters
+            delete r['WinREBootEnabled'];
+            delete r['UEFILocalPBABootEnabled'];
+            delete r['UEFIHTTPSBootEnabled'];
+            delete r['SecureBootControlEnabled'];
+            delete r['BootguardStatus'];
+            delete r['OptionsCleared'];
+            delete r['BIOSLastStatus'];
+            delete r['UefiBootParametersArray'];
+            delete r['RPEEnabled'];
+            if (r['UefiBootNumberOfParams'] != null) r['UefiBootNumberOfParams'] = 0;
+
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) {
                 r['BIOSPause'] = AvdPowerDlg.BIOSPause;
@@ -10670,8 +10719,10 @@
                     r['SecureErase'] = ((AvdPowerDlg.SecureErase) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] == true) && (AvdPowerDlg.RSEPassword)) { r['RSEPassword'] = AvdPowerDlg.RSEPassword; }
                 }
-                if (r['PlatformErase'] != null) {
-                    r['PlatformErase'] = ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0));
+                if ((r['PlatformErase'] != null) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
+                    r['PlatformErase'] = true;
+                    r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
+                    r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
                 }
             } else {
                 // ###END###{PowerControl-Advanced}
@@ -10696,25 +10747,14 @@
                     r['SecureErase'] = (((action == 104) || (action == 105)) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
-                if (r['PlatformErase'] != null) {
-                    r['PlatformErase'] = (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0));
+                if ((r['PlatformErase'] != null) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
+                    r['PlatformErase'] = true;
+                    r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
+                    r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
                 }
                 rsepass = null;
                 // ###BEGIN###{PowerControl-Advanced}
             }
-
-            // Remove read-only parameters
-            delete r['WinREBootEnabled'];
-            delete r['UEFILocalPBABootEnabled'];
-            delete r['UEFIHTTPSBootEnabled'];
-            delete r['SecureBootControlEnabled'];
-            delete r['BootguardStatus'];
-            delete r['OptionsCleared'];
-            delete r['BIOSLastStatus'];
-            delete r['UefiBootParametersArray'];
-            if (r['UefiBootNumberOfParams'] != null) r['UefiBootNumberOfParams'] = 0;
-
-            //r['EnforceSecureBoot'] = true;
 
             // ###BEGIN###{PowerControl-OneClick}
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
