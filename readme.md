@@ -21,7 +21,7 @@ On Windows, Linux and MacOS, you can install MeshCommander from the Node Package
 	mkdir meshcommander
 	cd meshcommander
 	npm install meshcommander
-	node meshcommander
+	node node_modules\meshcommander
 ```
 
 This will start a small web server on port 3000 that you can access using a browser to use MeshCommander at http://127.0.0.1:3000.

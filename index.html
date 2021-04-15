@@ -1725,6 +1725,11 @@
                 </div>
             </div>
             <!-- ###END###{Alarms} -->
+            <div id="dialog26" style="margin:auto;margin:3px">
+                <label><input type="radio" name="d26" id='idx_d26all' value=32769>All boot options are enabled<br></label>
+                <label><input type="radio" name="d26" id='idx_d26ocr' value=32768>Remote Platform Erase is disabled<br></label>
+                <label><input type="radio" name="d26" id='idx_d26off' value=32770>Remote Platform Erase and One Click Recovery are disabled<br></label>
+            </div>
         </div>
         <div style="padding:10px;margin-bottom:4px">
             <input id="idx_dlgCancelButton" type="button" value="Cancel" style="float:right;width:80px;margin-left:5px" onclick="dialogclose(0)">
@@ -5289,6 +5294,7 @@
             var query = ['CIM_ServiceAvailableToElement', '*AMT_GeneralSettings', 'AMT_EthernetPortSettings', '*AMT_RedirectionService', 'CIM_ElementSettingData'];
             if (amtversion > 5) query.push('IPS_IPv6PortSettings', '*CIM_KVMRedirectionSAP', '*IPS_OptInService','*IPS_KVMRedirectionSettingData');
             if (amtversion > 9) query.push('*IPS_ScreenConfigurationService', '*IPS_PowerManagementService');
+            if ((amtversion > 15) && (amtstack.wsman.comm.xtls == 1)) query.push('*CIM_BootService');
             amtstack.BatchEnum('', query, processSystemStatus, true);
             // ###END###{!Look-Intel-SBT}
             // ###BEGIN###{Wireless}
@@ -5354,7 +5360,7 @@
         // ###END###{PowerControl}
         function updateSystemStatus() {
             if ((!amtsysstate) || (currentView > 99)) return;
-            
+
             // System Status Table
             var systemdefense = 0, host, y, x = TableStart(), features = '', gs = amtsysstate['AMT_GeneralSettings'].response;
             // ###BEGIN###{PowerControl}
@@ -5530,6 +5536,13 @@
                 if (optinrequired == 0xFFFFFFFF) { features = "Always Required"; }
                 if (amtsysstate['IPS_OptInService'].response['CanModifyOptInPolicy'] == true) features = addLinkConditional(features, 'showConsentDlg()', xxAccountAdminName); // If we can modify user consent settings, add the link to do it.
                 x += TableEntry("User Consent", features);
+            }
+
+            // Power Options
+            if ((amtstack.wsman.comm.xtls == 1) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] != null)) {
+                var enabledBootStateStr = { 0: "Unknown", 1: "Other", 2: "Enabled", 3: "Disabled", 4: "Shutting Down", 5: "Not Applicable", 6: "Enabled but Offline", 7: "In Test", 8: "Deferred", 9: "Quiesce", 10: "Starting", 32768: "RPE Disabled", 32769: "All Enabled", 32770: "RPE & OCR Disabled" };
+                var t = enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]?enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]:"Unknown";
+                x += TableEntry("Boot Features", addLinkConditional(t, 'showEnableBootServiceDlg()', xxAccountAdminName));
             }
 
             // Intel AMT Power policy
@@ -10012,6 +10025,37 @@
         }
 
         //
+        // Intel AMT Boot Features
+        //
+
+        function showEnableBootServiceDlg() {
+            if (xxdialogMode) return;
+            if (amtsysstate['CIM_BootService'].response['EnabledState'] != null) {
+                idx_d26all.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] == 32769);
+                idx_d26ocr.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] == 32768);
+                idx_d26off.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] == 32770);
+            }
+            setDialogMode(26, "Boot Features", 3, showEnableBootServiceDlgOk)
+        }
+
+        function showEnableBootServiceDlgOk() {
+            amtstack.CIM_BootService_RequestStateChange(document.querySelector('input[name=d26]:checked').value, null, showEnableBootServiceDlgResponse);
+        }
+
+        function showEnableBootServiceDlgResponse(stack, name, response, status) {
+            if (status == 200) {
+                if (response.Body['ReturnValueStr'] != 'SUCCESS') { messagebox("Boot Features Error", response.Body['ReturnValueStr']); }
+                PullSystemStatus();
+            } else {
+                if (response.Header['WsmanError']) {
+                    messagebox("Boot Features Error", response.Header['WsmanError'].replace(/_/g, ' '));
+                } else {
+                    messagebox("Boot Features Error", "Error, Status = " + status);
+                }
+            }
+        }
+
+        //
         // Intel AMT User Consent
         //
 
@@ -10256,7 +10300,7 @@
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Secure Erase", 104); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Secure Erase", 105); }
                 }
-                if ((amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0)) {
+                if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] == 32769) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0)) {
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
                 }
@@ -10483,7 +10527,7 @@
             QV('d24dLockResetButton', amtPowerBootCapabilities['ResetButtonLock'] == true);
             QV('d24dSerialOverLan', amtPowerBootCapabilities['SOL'] == true);
             QV('d24dSecureErase', amtPowerBootCapabilities['SecureErase'] == true);
-            QV('d24dPlatformErase', (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0));
+            QV('d24dPlatformErase', (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] == 32769) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0));
             QV('d24dLockSleepButton', amtPowerBootCapabilities['SleepButtonLock'] == true);
             QV('d24dUserPasswordBypass', amtPowerBootCapabilities['UserPasswordBypass'] == true);
             QV('idx_d24Verbocity1', amtPowerBootCapabilities['VerbosityQuiet'] == true);
@@ -10747,7 +10791,7 @@
                     r['SecureErase'] = (((action == 104) || (action == 105)) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
-                if ((r['PlatformErase'] != null) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
+                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] == 32769) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
                     r['PlatformErase'] = true;
                     r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
                     r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
@@ -13277,7 +13321,7 @@
             QV('id_dialogclose', b & 2);
             QV('idx_dlgDeleteButton', b & 4);
             if (y) QH('id_dialogtitle', y);
-            for (var i = 1; i < 26; i++) { QV('dialog' + i, i == x); } // Edit this line when more dialogs are added
+            for (var i = 1; i < 27; i++) { QV('dialog' + i, i == x); } // Edit this line when more dialogs are added
             QV('dialog', x);
             if (c) { if (x == 11) { QH('id_dialogOptions', c); } else { QH('id_dialogMessage', c); } }
 
