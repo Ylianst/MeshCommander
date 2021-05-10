@@ -5674,6 +5674,13 @@
                     if (xxWireless['AMT_WiFiPortConfigurationService'] && xxWireless['AMT_WiFiPortConfigurationService'].response && (typeof xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 'number')) {
                         x += TableEntry("Local WIFI Profile Sync", addLinkConditional(((xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 1) ? "Enabled" : "Disabled"), 'showWifiSyncDlg(' + y + ')', xxAccountAdminName));
                     }
+                    // CSME UEFI Wifi profile sharing, check if it is enabled in boot setting and it is not null at AMT_WiFiPortConfigrationService
+                    if (xxWireless['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare']!=null && xxWireless['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare']!=1 
+                        && xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiCoExistenceAndProfileShare']!=null) {
+                            x += TableEntry("UEFI WiFi CoEx Profile sharing", addLinkConditional(xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiCoExistenceAndProfileShare']==1? "Enabled":"Disabled", 'showUefiWifiCoExDlg()', xxAccountAdminName));
+                     } else {
+                        x += TableEntry("UEFI WiFi CoEx Profile sharing", "Unavailable");
+                     }
                 }
                 // ###END###{Wireless}
 
@@ -7530,7 +7537,7 @@
         function PullWireless() {
             amtFirstPull |= 2;
             try { if (amtwirelessif == -1) return; } catch (e) {} // If the wireless adapter has no MAC, don't show this.
-            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService'], processWireless);
+            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService', '*AMT_BootCapabilities'], processWireless);
         }
 
         function wifiRefresh() { if (!xxdialogMode) PullWireless(); }
@@ -7596,6 +7603,20 @@
             var k = Clone(xxWireless['AMT_WiFiPortConfigurationService'].response);
             k['localProfileSynchronizationEnabled'] = document.querySelector('input[name=d11]:checked').value;
             amtstack.Put('AMT_WiFiPortConfigurationService', k, function () { amtstack.Get('AMT_WiFiPortConfigurationService', function (stack, name, response, status) { if (status == 200) { xxWireless['AMT_WiFiPortConfigurationService'].response = response.Body; showWirelessInfo(); } }); });
+        }
+        
+        function showUefiWifiCoExDlg() {
+            if (xxdialogMode) return;
+            var s = '';
+            s += '<label><input type=radio name=d12 value=0 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled'] == 0)?'checked':'') + '>Disabled</label><br>'; 
+            s += '<label><input type=radio name=d12 value=1 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled'] == 1)?'checked':'') + '>Enabled</label><br>'; 
+            setDialogMode(11, "UEFI Wifi CoEx Profile Sharing", 3, UefiWifiCoExDlg, s);
+        }
+        
+        function UefiWifiCoExDlg() {
+            var wifiportcfgsvc = xxWireless['AMT_WiFiPortConfigurationService'].response;
+            wifiportcfgsvc["UEFIWiFiProfileShareEnabled"]=document.querySelector('input[name=d12]:checked').value;
+            amtstack.Put('AMT_WiFiPortConfigurationService', wifiportcfgsvc, function(stack, name, responses, status) {if (status == 200) {PullWireless()}})
         }
 
         function showWifiDetails(h) {
