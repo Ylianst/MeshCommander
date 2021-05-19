@@ -514,6 +514,10 @@ function AmtStackCreateService(wsmanStack) {
             } else if (eventOffset == 3) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
                     return format("AMT One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
+                } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
+                    if (eventDataField[2] == 1) return "Got an error erasing Device SSD";
+                    if (eventDataField[2] == 2) return "Erasing Device TPM is not supported";
+                    if (eventDataField[2] == 3) return "Reached Max Counter";
                 } else {
                     return "OEM Specific Firmware Error event";
                 }
@@ -526,6 +530,20 @@ function AmtStackCreateService(wsmanStack) {
                     } else {
                         return format("AMT One Click Recovery: Unknown progress event {0}", eventDataField[2]);
                     }
+                } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
+                    if (eventDataField[2] == 1) {
+                        if (eventDataField[3] == 2) return "Started erasing Device SSD";
+                        if (eventDataField[3] == 3) return "Started erasing Device TPM";
+                        if (eventDataField[3] == 5) return "Started erasing Device BIOS Reload of Golden Config";
+                    }
+                    if (eventDataField[2] == 2) {
+                        if (eventDataField[3] == 2) return "Erasing Device SSD ended successfully";
+                        if (eventDataField[3] == 3) return "Erasing Device TPM ended successfully";
+                        if (eventDataField[3] == 5) return "Erasing Device BIOS Reload of Golden Config ended successfully";
+                    }
+                    if (eventDataField[2] == 3) return "Beginning Platform Erase";
+                    if (eventDataField[2] == 4) return "Clear Reserved Parameters";
+                    if (eventDataField[2] == 5) return "All setting decremented";
                 } else {
                     return "OEM Specific Firmware Progress event";
                 }
