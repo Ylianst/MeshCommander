@@ -4898,6 +4898,9 @@
                 amtversion = parseInt(v.split('.')[0]);
                 amtversionmin = parseInt(v.split('.')[1]);
 
+                // If this is Intel AMT 16 or higher, boost the stack speed by allowing HTTP pipelining.
+                if (amtversion > 15) { stack.wsman.comm.MaxActiveAjaxCount = 8; }
+
                 // ###BEGIN###{Mode-NodeWebkit}
                 // Perform Intel ME authentication if available.
                 if ((amtversion >= 15) && (wsstack.comm.xtlsCertificate != null)) {
