@@ -62,16 +62,21 @@ function AmtStackCreateService(wsmanStack) {
     // Perform a WSMAN "ENUMERATE" operation.
     obj.Enum = function (name, callback, tag, pri) {
         if (obj.ActiveEnumsCount < obj.MaxActiveEnumsCount) {
+            //console.log('ENUM-DO', obj.ActiveEnumsCount, obj.MaxActiveEnumsCount, obj.PendingEnums.length);
             obj.ActiveEnumsCount++; obj.wsman.ExecEnum(obj.CompleteName(name), function (ws, resuri, response, xstatus, tag0) { _up(); _EnumStartSink(name, response, callback, resuri, xstatus, tag0); }, tag, pri);
         } else {
             obj.PendingEnums.push([name, callback, tag, pri]);
+            //console.log('ENUM-PENDING', obj.ActiveEnumsCount, obj.MaxActiveEnumsCount, obj.PendingEnums.length);
         }
         _up();
     }
 
     // Private method
     function _EnumStartSink(name, response, callback, resuri, status, tag, pri) {
-        if (status != 200) { callback(obj, name, null, status, tag); _EnumDoNext(1); return; }
+        if (status != 200) {
+            //console.log('Got ' + status + ' on _EnumStartSink for ' + name);
+            callback(obj, name, null, status, tag); _EnumDoNext(1); return;
+        }
         if (response == null || response.Header['Method'] != 'EnumerateResponse' || !response.Body['EnumerationContext']) { callback(obj, name, null, 603, tag); _EnumDoNext(1); return; }
         var enumctx = response.Body['EnumerationContext'];
         obj.wsman.ExecPull(resuri, enumctx, function (ws, resuri, response, xstatus) { _EnumContinueSink(name, response, callback, resuri, [], xstatus, tag, pri); });
@@ -79,7 +84,10 @@ function AmtStackCreateService(wsmanStack) {
 
     // Private method
     function _EnumContinueSink(name, response, callback, resuri, items, status, tag, pri) {
-        if (status != 200) { callback(obj, name, null, status, tag); _EnumDoNext(1); return; }
+        if (status != 200) {
+            //console.log('Got ' + status + ' on _EnumContinueSink for ' + name);
+            callback(obj, name, null, status, tag); _EnumDoNext(1); return;
+        }
         if (response == null || response.Header['Method'] != 'PullResponse') { callback(obj, name, null, 604, tag); _EnumDoNext(1); return; }
         for (var i in response.Body['Items']) {
             if (response.Body['Items'][i] instanceof Array) {
@@ -92,6 +100,7 @@ function AmtStackCreateService(wsmanStack) {
             var enumctx = response.Body['EnumerationContext'];
             obj.wsman.ExecPull(resuri, enumctx, function (ws, resuri, response, xstatus) { _EnumContinueSink(name, response, callback, resuri, items, xstatus, tag, 1); });
         } else {
+            //console.log('ENUM-DONE');
             _EnumDoNext(1);
             callback(obj, name, items, status, tag);
             _up();
@@ -101,12 +110,37 @@ function AmtStackCreateService(wsmanStack) {
     // Private method
     function _EnumDoNext(dec) {
         obj.ActiveEnumsCount -= dec;
-        if (obj.ActiveEnumsCount >= obj.MaxActiveEnumsCount || obj.PendingEnums.length == 0) { _up(); return; }
+        if ((obj.ActiveEnumsCount >= obj.MaxActiveEnumsCount) || (obj.PendingEnums.length == 0)) { _up(); return; }
         var x = obj.PendingEnums.shift();
         obj.Enum(x[0], x[1], x[2]);
         _EnumDoNext(0);
     }
 
+    // Perform a batch of WSMAN "ENUM" or "GET" operations.
+    // Since we are pipelining, continueOnError is no longer supported
+    obj.BatchEnum = function (batchname, names, callback, tag, continueOnError, pri) {
+        var results = { _pending: names.length };
+        obj.PendingBatchOperations += names.length;
+        //console.log('obj.PendingBatchOperations', obj.PendingBatchOperations);
+        for (var i in names) {
+            var n = names[i], f = obj.Enum;
+            if (n[0] == '*') { f = obj.Get; n = n.substring(1); } // If the name starts with a star, do a GET instead of an ENUM. This will reduce round trips.
+            //console.log((f == obj.Get ? 'Get ' : 'Enum ') + n);
+            f(n, function (stack, name, responses, status, tag0) {
+                //if (status != 200) { console.log('Got ' + status + ' on BatchEnum for ' + name + ', ' + tag0[3]); }
+                obj.PendingBatchOperations--;
+                //console.log('obj.PendingBatchOperations', obj.PendingBatchOperations);
+                _up();
+                tag0[2][name] = { response: (responses == null ? null : responses.Body), responses: responses, status: status };
+                if ((--tag0[2]._pending) == 0) {
+                    delete tag0[2]._pending;
+                    callback.call(obj, obj, batchname, tag0[2], status, tag);
+                }
+            }, [batchname, names, results, (f == obj.Get ? 'Get' : 'Enum')], pri);
+        }
+    }
+
+    /*
     // Perform a batch of WSMAN "ENUM" operations.
     obj.BatchEnum = function (batchname, names, callback, tag, continueOnError, pri) {
         obj.PendingBatchOperations += (names.length * 2);
@@ -127,6 +161,7 @@ function AmtStackCreateService(wsmanStack) {
         }, [batchname, names, results], pri);
         _up();
     }
+    */
 
     // Perform a batch of WSMAN "GET" operations.
     obj.BatchGet = function (batchname, names, callback, tag, pri) {
