@@ -1727,9 +1727,15 @@
             </div>
             <!-- ###END###{Alarms} -->
             <div id="dialog26" style="margin:auto;margin:3px">
-                <label><input type="radio" name="d26" id='idx_d26all' value=32771>All boot options are enabled<br></label>
-                <label><input type="radio" name="d26" id='idx_d26ocr' value=32769>Remote Platform Erase is disabled<br></label>
-                <label><input type="radio" name="d26" id='idx_d26off' value=32768>Remote Platform Erase and One Click Recovery are disabled<br></label>
+                <div id="d26rpediv">
+                    <div>Remote Platform Erase (RPE)</div>
+                    <label><input type="radio" name="d26b" id='idx_d26rpe1' value=2>Enabled<br></label>
+                    <label><input type="radio" name="d26b" id='idx_d26rpe0' value=0>Disabled<br></label>
+                    <hr />
+                </div>
+                <div>One One Click Recovery (OCR)</div>
+                <label><input type="radio" name="d26a" id='idx_d26ocr1' value=1>Enabled<br></label>
+                <label><input type="radio" name="d26a" id='idx_d26ocr0' value=0>Disabled<br></label>
             </div>
         </div>
         <div style="padding:10px;margin-bottom:4px">
@@ -5547,7 +5553,8 @@
 
             // Power Options
             if ((amtstack.wsman.comm.xtls == 1) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] != null)) {
-                var enabledBootStateStr = { 0: "Unknown", 1: "Other", 2: "Enabled", 3: "Disabled", 4: "Shutting Down", 5: "Not Applicable", 6: "Enabled but Offline", 7: "In Test", 8: "Deferred", 9: "Quiesce", 10: "Starting", 32768: "RPE & OCR Disabled", 32769: "RPE Disabled", 32771: "All Enabled" };
+                var enabledBootStateStr = { 0: "Unknown", 1: "Other", 2: "Enabled", 3: "Disabled", 4: "Shutting Down", 5: "Not Applicable", 6: "Enabled but Offline", 7: "In Test", 8: "Deferred", 9: "Quiesce", 10: "Starting", 32768: "OCR Disabled", 32769: "OCR Enabled", 32770: "OCR Disabled, RPE Enabled", 32771: "RPE & OCR Enabled" };
+                if (amtversion > 15) { enabledBootStateStr[32768] = "OCR & RPE Disabled"; enabledBootStateStr[32769] = "OCR Enabled, RPE Disabled"; }
                 var t = enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]?enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]:"Unknown";
                 x += TableEntry("Boot Features", addLinkConditional(t, 'showEnableBootServiceDlg()', xxAccountAdminName));
             }
@@ -7723,7 +7730,7 @@
         //
 
         function PullHardware() {
-            amtstack.BatchEnum('', ['*CIM_ComputerSystemPackage', 'CIM_SystemPackaging', '*CIM_Chassis', 'CIM_Chip', '*CIM_Card', '*CIM_BIOSElement', 'CIM_Processor', 'CIM_PhysicalMemory', 'CIM_MediaAccessDevice', 'CIM_PhysicalPackage'], processHardware);
+            amtstack.BatchEnum('', ['*CIM_ComputerSystemPackage', 'CIM_SystemPackaging', '*CIM_Chassis', 'CIM_Chip', '*CIM_Card', '*CIM_BIOSElement', 'CIM_Processor', 'CIM_PhysicalMemory', 'CIM_MediaAccessDevice', 'CIM_PhysicalPackage', '*CIM_Battery'], processHardware);
             amtFirstPull |= 1; // Set the hardware info bit on, indicates we are pulling this information.
         }
 
@@ -7791,6 +7798,20 @@
                 var n = responses['CIM_PhysicalPackage'].responses[+i + 1]; // This is a shortcut, we assume CIM_PhysicalPackage is the same as CIM_MediaAccessDevice except for the first entry.
                 x += '<h2>' + "Storage Media" + ' ' + (parseInt(i) + 1) + '</h2>';
                 x += FullTable({"Model":n['Model'],"Serial number":(n['SerialNumber']==''?'Unknown':n['SerialNumber']), "Size":parseInt(Math.round(m['MaxMediaSize'] * 1000 / 0x100000)) + " MB"},'');
+            }
+            x += '<br>';
+
+            if (responses['CIM_Battery'].response != null) {
+                var battInfo = null;
+                for (i in responses['CIM_PhysicalPackage'].responses) { if (responses['CIM_PhysicalPackage'].responses[i].PackageType == 11) { battInfo = responses['CIM_PhysicalPackage'].responses[i]; } }
+                if (battInfo != null) {
+                    x += '<h2>' + "Battery" + '</h2>';
+                    var battdate = new Date(battInfo['ManufactureDate']['Datetime']).toDateString()
+                    var batttype = ["Other", "Unknown", "Lead Acid", "Nickel Cadmium", "Nickel Metal Hydride", "Lithium-ion", "Zinc air", "Lithium Polymer"][responses['CIM_Battery'].response['Chemistry']];
+                    var batt = { "Device name": responses['CIM_Battery'].response['DeviceID'], "Manufacturer": battInfo['Manufacturer'], "Manufacture date": battdate, "Serial number": battInfo['SerialNumber'], "Type": batttype, "Design capacity": responses['CIM_Battery'].response['DesignCapacity'] + ' ' + "mWatt-hours", "Design voltage": responses['CIM_Battery'].response['DesignVoltage'] + ' ' + "mVolts" };
+                    if (battInfo['OtherIdentifyingInfo']) { batt["Other Info"] = battInfo['OtherIdentifyingInfo']; }
+                    x += FullTable(batt, '');
+                }
             }
             x += '<br>';
 
@@ -10061,20 +10082,27 @@
         function showEnableBootServiceDlg() {
             if (xxdialogMode) return;
             if (amtsysstate['CIM_BootService'].response['EnabledState'] != null) {
-                idx_d26all.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] == 32771);
-                idx_d26ocr.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] == 32769);
-                idx_d26off.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] == 32768);
+                QV('d26rpediv', amtversion > 15);
+                if (amtversion > 15) {
+                    idx_d26rpe1.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] & 2)
+                    idx_d26rpe0.checked = !idx_d26rpe1.checked;
+                }
+                idx_d26ocr1.checked = (amtsysstate['CIM_BootService'].response['EnabledState'] & 1)
+                idx_d26ocr0.checked = !idx_d26ocr1.checked;
             }
             setDialogMode(26, "Boot Features", 3, showEnableBootServiceDlgOk)
         }
 
         function showEnableBootServiceDlgOk() {
-            amtstack.CIM_BootService_RequestStateChange(document.querySelector('input[name=d26]:checked').value, null, showEnableBootServiceDlgResponse);
+            var v = 32768 + parseInt(document.querySelector('input[name=d26a]:checked').value);
+            if (amtversion > 15) { v += parseInt(document.querySelector('input[name=d26b]:checked').value); }
+            amtstack.CIM_BootService_RequestStateChange(v, null, showEnableBootServiceDlgResponse, v);
         }
 
-        function showEnableBootServiceDlgResponse(stack, name, response, status) {
+        function showEnableBootServiceDlgResponse(stack, name, response, status, tag) {
             if (status == 200) {
                 if (response.Body['ReturnValueStr'] != 'SUCCESS') { messagebox("Boot Features Error", response.Body['ReturnValueStr']); }
+                amtstack.Get('CIM_BootService', showEnableBootServiceDlgResponse2, tag);
                 PullSystemStatus();
             } else {
                 if (response.Header['WsmanError']) {
@@ -10083,6 +10111,10 @@
                     messagebox("Boot Features Error", "Error, Status = " + status);
                 }
             }
+        }
+
+        function showEnableBootServiceDlgResponse2(stack, name, response, status, tag) {
+            if ((status == 200) && (response.Body['EnabledState'] != tag)) { messagebox("Boot Features Error", "Unable to set OCR/RPE, check that these features are enabled in BIOS."); }
         }
 
         //
@@ -10330,7 +10362,7 @@
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Secure Erase", 104); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Secure Erase", 105); }
                 }
-                if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] == 32771) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0)) {
+                if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0)) {
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
                 }
@@ -10793,7 +10825,7 @@
                     r['SecureErase'] = ((AvdPowerDlg.SecureErase) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] == true) && (AvdPowerDlg.RSEPassword)) { r['RSEPassword'] = AvdPowerDlg.RSEPassword; }
                 }
-                if ((r['PlatformErase'] != null) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
+                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
                     r['PlatformErase'] = true;
                     r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
                     r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
@@ -10821,7 +10853,7 @@
                     r['SecureErase'] = (((action == 104) || (action == 105)) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
-                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] == 32771) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
+                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
                     r['PlatformErase'] = true;
                     r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
                     r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
