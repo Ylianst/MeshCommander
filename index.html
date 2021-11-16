@@ -4906,10 +4906,10 @@
                 amtversionmin = parseInt(v.split('.')[1]);
 
                 // If this is Intel AMT 16 or higher, boost the stack speed by allowing HTTP pipelining.
-                if (amtversion > 15) {
-                    stack.MaxActiveEnumsCount = 2;
-                    stack.wsman.comm.MaxActiveAjaxCount = 2;
-                }
+                //if (amtversion > 15) {
+                    //stack.MaxActiveEnumsCount = 2;
+                    //stack.wsman.comm.MaxActiveAjaxCount = 2;
+                //}
 
                 // ###BEGIN###{Mode-NodeWebkit}
                 // Perform Intel ME authentication if available.
@@ -4973,6 +4973,8 @@
                                 }
                             }
                             for (var i in urlList) { getCertUrl(urlList[i], urlLoad); }
+                        } else {
+                            console.log('AMTAuthenticate', status, response);
                         }
                         delete stack.amtauthnonce;
                     });
@@ -10362,7 +10364,7 @@
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Secure Erase", 104); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Secure Erase", 105); }
                 }
-                if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0)) {
+                if ((amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2)) {
                     if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
                     if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
                 }
@@ -10589,7 +10591,7 @@
             QV('d24dLockResetButton', amtPowerBootCapabilities['ResetButtonLock'] == true);
             QV('d24dSerialOverLan', amtPowerBootCapabilities['SOL'] == true);
             QV('d24dSecureErase', amtPowerBootCapabilities['SecureErase'] == true);
-            QV('d24dPlatformErase', (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] == 32771) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0));
+            QV('d24dPlatformErase', (amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && ((amtsysstate['CIM_BootService'].response['EnabledState'] & 2) != 0));
             QV('d24dLockSleepButton', amtPowerBootCapabilities['SleepButtonLock'] == true);
             QV('d24dUserPasswordBypass', amtPowerBootCapabilities['UserPasswordBypass'] == true);
             QV('idx_d24Verbocity1', amtPowerBootCapabilities['VerbosityQuiet'] == true);
@@ -10801,7 +10803,7 @@
             delete r['BIOSLastStatus'];
             delete r['UefiBootParametersArray'];
             delete r['RPEEnabled'];
-            if (r['UefiBootNumberOfParams'] != null) r['UefiBootNumberOfParams'] = 0;
+            if (r['UefiBootNumberOfParams'] != null) { r['UefiBootNumberOfParams'] = 0; r['UefiBootParametersArray'] = ''; }
 
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) {
