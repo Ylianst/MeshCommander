@@ -1625,6 +1625,7 @@
                         <div id=d24dSerialOverLan><label><input type=checkbox id=d24SerialOverLan onchange=showAdvPowerDlgChange()>Serial-over-LAN</label><br></div>
                         <div id=d24dSecureErase><label><input type=checkbox id=d24SecureErase onchange=showAdvPowerDlgChange()>Intel&reg; Remote Secure Erase</label><br></div>
                         <div id=d24dPlatformErase><label><input type=checkbox id=d24PlatformErase onchange=showAdvPowerDlgChange()>Remote Platform Erase</label><br></div>
+                        <div id=d24dFirmwareReset><label><input type=checkbox id=d24FirmwareReset onchange=showAdvPowerDlgChange()>Firmware Reset</label><br></div>
                     </div>
                     <div>Boot Settings</div>
                 </div>
@@ -10592,6 +10593,7 @@
             QV('d24dSerialOverLan', amtPowerBootCapabilities['SOL'] == true);
             QV('d24dSecureErase', amtPowerBootCapabilities['SecureErase'] == true);
             QV('d24dPlatformErase', (amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && ((amtsysstate['CIM_BootService'].response['EnabledState'] & 2) != 0));
+            QV('d24dFirmwareReset', amtPowerBootCapabilities['ConfigurationDataReset'] == true);
             QV('d24dLockSleepButton', amtPowerBootCapabilities['SleepButtonLock'] == true);
             QV('d24dUserPasswordBypass', amtPowerBootCapabilities['UserPasswordBypass'] == true);
             QV('idx_d24Verbocity1', amtPowerBootCapabilities['VerbosityQuiet'] == true);
@@ -10685,7 +10687,8 @@
                 AvdPowerDlg.UseSafeMode = Q('d24SafeMode').checked;
                 AvdPowerDlg.UserPasswordBypass = Q('d24UserPasswordBypass').checked;
                 AvdPowerDlg.SecureErase = Q('d24SecureErase').checked;
-                AvdPowerDlg.PlatformErase = Q('d24PlatformErase').checked;
+                AvdPowerDlg.PlatformErase = Q('d24PlatformErase').checked
+                AvdPowerDlg.FirmwareReset = Q('d24FirmwareReset').checked;
                 if ((AvdPowerDlg.SecureErase === true) && (Q('d24rsepass').value.length > 0)) { AvdPowerDlg.RSEPassword = Q('d24rsepass').value; }
 
                 if (AvdPowerDlg.PlatformErase === true) {
@@ -10803,7 +10806,6 @@
             delete r['BIOSLastStatus'];
             delete r['UefiBootParametersArray'];
             delete r['RPEEnabled'];
-            if (r['UefiBootNumberOfParams'] != null) { r['UefiBootNumberOfParams'] = 0; r['UefiBootParametersArray'] = ''; }
 
             // ###BEGIN###{PowerControl-Advanced}
             if (action == 999) {
@@ -10832,6 +10834,7 @@
                     r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
                     r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
                 }
+                if (r['ConfigurationDataReset'] != null) { r['ConfigurationDataReset'] = AvdPowerDlg.FirmwareReset; }
             } else {
                 // ###END###{PowerControl-Advanced}
                 r['BIOSPause'] = false;
@@ -10859,6 +10862,9 @@
                     r['PlatformErase'] = true;
                     r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
                     r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                }
+                if (r['ConfigurationDataReset'] != null) {
+                    r['ConfigurationDataReset'] = false;
                 }
                 rsepass = null;
                 // ###BEGIN###{PowerControl-Advanced}
