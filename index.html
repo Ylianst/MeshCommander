@@ -1365,21 +1365,15 @@
                 <br>
                 <div style='height:26px'>
                     <select id="idx_d7desktopmode" style="float:right;width:200px">
-                        <!-- Flags: 1 = RAW, 2 = 16bit, 4 = Gray, 8 = ZLib -->
-                        <!-- ###BEGIN###{DesktopInband} -->
-                        <option id="d7exm1" value="5">RLE4G, Gray (Fast)</option>
-                        <option id="d7exm2" value="7">RLE8G, Gray</option>
-                        <!-- ###END###{DesktopInband} -->
+                        <!-- Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib -->
+                        <option id="d7exm1" value="5">RLE8G, Gray</option>
                         <option value="1">RLE8, Color</option>
                         <option value="3">RLE16, Color</option>
-                        <!-- ###BEGIN###{DesktopInband} -->
-                        <option id="d7exm3" value="13">ZRLE8G, Compressed Gray</option>
-                        <option id="d7exm4" value="15">ZRLE16G, Compressed Gray</option>
-                        <option id="d7exm5" value="9">ZRLE8, Compressed Color</option>
-                        <option id="d7exm6" value="11">ZRLE16, Compressed Color</option>
-                        <!-- ###END###{DesktopInband} -->
+                        <option id="d7exm2" value="13">ZRLE8G, Compressed Gray</option>
+                        <option id="d7exm3" value="9">ZRLE8, Compressed Color</option>
+                        <option id="d7exm4" value="11">ZRLE16, Compressed Color</option>
                         <option value="0">RAW8, Color</option>
-                        <option value="2">RAW16, Color (Slow)</option>
+                        <option value="2">RAW16, Color</option>
                     </select>
                     <div>Image Encoding</div>
                 </div>
@@ -1387,8 +1381,8 @@
                     <div style="float:right;border:1px solid #666;width:200px;height:80px;overflow-y:scroll;background-color:white">
                         <!-- ###BEGIN###{DesktopFocus} -->
                         <label><input type="checkbox" id='d7showfocus'>Show Focus Tool</label><br>
-                        <span id="d7decimationspan"><label><input type="checkbox" id='d7decimation'>Prefer Downscale</label><br></span>
                         <!-- ###END###{DesktopFocus} -->
+                        <span id="d7decimationspan"><label><input type="checkbox" id='d7decimation'>Prefer Downscale</label><br></span>
                         <label><input type="checkbox" id='d7showcursor'>Show Local Mouse Cursor</label><br>
                         <label><input type="checkbox" id='d7showcad'>Show Ctrl-Alt-Del</label><br>
                         <label><input type="checkbox" id='d7limitFrameRate'>Limit Frame Rate</label><br>
@@ -1625,7 +1619,7 @@
                         <div id=d24dSerialOverLan><label><input type=checkbox id=d24SerialOverLan onchange=showAdvPowerDlgChange()>Serial-over-LAN</label><br></div>
                         <div id=d24dSecureErase><label><input type=checkbox id=d24SecureErase onchange=showAdvPowerDlgChange()>Intel&reg; Remote Secure Erase</label><br></div>
                         <div id=d24dPlatformErase><label><input type=checkbox id=d24PlatformErase onchange=showAdvPowerDlgChange()>Remote Platform Erase</label><br></div>
-                        <div id=d24dFirmwareReset><label><input type=checkbox id=d24FirmwareReset onchange=showAdvPowerDlgChange()>Firmware Reset</label><br></div>
+                        <div id=d24dFirmwareReset><label><input type=checkbox id=d24FirmwareReset onchange=showAdvPowerDlgChange()>Clear Intel&reg; ME Settings</label><br></div>
                     </div>
                     <div>Boot Settings</div>
                 </div>
@@ -5344,13 +5338,14 @@
             if ((responses['CIM_KVMRedirectionSAP'] == undefined) || (responses['CIM_KVMRedirectionSAP'].status == 400)) { responses['CIM_KVMRedirectionSAP'] = null; }
             if ((responses['IPS_OptInService'] == undefined) || (responses['IPS_OptInService'].status == 400)) { responses['IPS_OptInService'] = null; }
             if ((responses['AMT_RedirectionService'] != undefined) && (responses['AMT_RedirectionService'].status == 200)) { QV('go13', true); } // Show the terminal
-
+            
             // Reset the status after possible KVM removal
             status = 0;
             for (var i in responses) { if ((responses[i] != null) && (responses[i].status > status)) { status = responses[i].status; } }
 
             if ((status != 400) && errcheck(status, stack)) return;
             amtsysstate = responses;
+            applyDesktopSettings();
             updateSystemStatus();
         }
 
@@ -8362,11 +8357,15 @@
                 // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = Decimation
                 desktop.m.useRLE = ((desktopsettings.encflags & 1) != 0);
                 desktop.m.bpp = (desktopsettings.encflags & 2) ? 2 : 1;
-                // ###BEGIN###{DesktopInband}
-                desktop.m.graymode = ((desktopsettings.encflags & 4) != 0);
-                desktop.m.useZLib = ((desktopsettings.encflags & 8) != 0);
-                desktop.m.decimation = desktopsettings.decimation;
-                // ###END###{DesktopInband}
+                if ((amtversion > 15) && (amtsysstate != null) && (amtsysstate['IPS_KVMRedirectionSettingData'] != null) && (amtsysstate['IPS_KVMRedirectionSettingData'].response)) {
+                    desktop.m.graymode = amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && ((desktopsettings.encflags & 4) != 0);
+                    desktop.m.useZLib = amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported'] && ((desktopsettings.encflags & 8) != 0);
+                    desktop.m.decimation = amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] && desktopsettings.decimation;
+                } else {
+                    desktop.m.graymode = false;
+                    desktop.m.useZLib = false;
+                    desktop.m.decimation = false;
+                }
                 desktop.m.showmouse = desktopsettings.showmouse;
                 desktop.m.onScreenSizeChange = center;
                 // ###BEGIN###{ComputerSelector}
@@ -8593,8 +8592,8 @@
                     x = ", Soft-KVM";
                 } else {
                     if (desktop.m && desktop.m.kvmExt) {
-                        if (desktop.m.kvmExt.decimation == 2) { x += ", Gray" }
-                        if (desktop.m.kvmExt.compression == 1) { x += ", ZLib" }
+                        //if (desktop.m.kvmExt.decimation == 2) { x += ", Downscaled" }
+                        if (desktop.m.kvmExt.compression == 1) { x += ", Compressed" }
                     }
                 }
             }
@@ -8631,21 +8630,13 @@
             if (desktopsettings.showfocus == false) { desktop.m.focusmode = 0; idx_deskFocusBtn.value = "All Focus"; }
             // ###END###{DesktopFocus}
             desktop.m.frameRateDelay = (desktopsettings.limitFrameRate == true)?200:0;
-            if (desktop.State != 0) { desktop.disconnectCode = 0; desktop.Stop(); setTimeout(connectDesktop, 50); }
+            if (desktop.State != 0) { desktop.disconnectCode = 0; desktop.Stop(); setTimeout(connectDesktop, 800); }
         }
 
         function applyDesktopSettings() {
-            // ###BEGIN###{!DesktopInband}
-            desktopsettings.encflags = desktopsettings.encflags & 3; // Remove gray & zlib flags (4 and 8), keep 1 & 2
-            // ###END###{!DesktopInband}
-            // ###BEGIN###{DesktopInband}
-            if (amtversion < 15) { desktopsettings.encflags = desktopsettings.encflags & 3; } // Remove gray & zlib flags (4 and 8), keep 1 & 2
-            // ###END###{DesktopInband}
-            idx_d7desktopmode.value = desktopsettings.encflags;
             // ###BEGIN###{DesktopFocus}
             d7showfocus.checked = desktopsettings.showfocus;
             d7decimation.checked = desktopsettings.decimation;
-            QV('d7decimationspan', (amtversion > 15) || (urlvars['kvmext'] != null))
             // ###END###{DesktopFocus}
             d7showcursor.checked = desktopsettings.showmouse;
             d7showcad.checked = desktopsettings.showcad;
@@ -8655,13 +8646,25 @@
             if (desktopsettings.quality) { d7bitmapquality.value = desktopsettings.quality; }
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
             QV('d7softkvmsettings', amtversion >= 12);
-            QV('d7exm1', (amtversion > 15) || urlvars['kvmext']);
-            QV('d7exm2', (amtversion > 15) || urlvars['kvmext']);
-            QV('d7exm3', (amtversion > 15) || urlvars['kvmext']);
-            QV('d7exm4', (amtversion > 15) || urlvars['kvmext']);
-            QV('d7exm5', (amtversion > 15) || urlvars['kvmext']);
-            QV('d7exm6', (amtversion > 15) || urlvars['kvmext']);
             // ###END###{DesktopInband}
+            var encflags = desktopsettings.encflags; // Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib
+            if ((amtversion > 15) && (amtsysstate != null) && (amtsysstate['IPS_KVMRedirectionSettingData'] != null) && (amtsysstate['IPS_KVMRedirectionSettingData'].response)) {
+                if (!amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']) { encflags = encflags & 11; } // Remove grayscale
+                if (!amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']) { encflags = encflags & 7; } // Remove zlib
+                QV('d7exm1', amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']);
+                QV('d7exm2', amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']);
+                QV('d7exm3', amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']);
+                QV('d7exm4', amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']);
+                QV('d7decimationspan', amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] > 0);
+            } else {
+                encflags = encflags & 3; // Remove gray & zlib flags (4 and 8), keep 1 & 2
+                QV('d7exm1', false);
+                QV('d7exm2', false);
+                QV('d7exm3', false);
+                QV('d7exm4', false);
+                QV('d7decimationspan', false)
+            }
+            idx_d7desktopmode.value = encflags;
             // ###BEGIN###{DesktopFocus}
             QV('idx_deskFocusBtn', desktopsettings.showfocus);
             // ###END###{DesktopFocus}

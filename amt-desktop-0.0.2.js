@@ -177,8 +177,9 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(7) + ShortToStr(7) + ShortToStr(3) + String.fromCharCode(5, 2, 0, 0, 0, 0));            // Setup 8 bit color RGB332
                 } else {
                     // Gray scale modes
-                    if (obj.bpp == 2) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(255) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));          // Setup 8 bit black and white RGB800
-                    if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(15) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));           // Setup 4 bit black and white RGB400
+                    if (obj.bpp == 2) { obj.bpp = 1; }
+                    if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(255) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));          // Setup 8 bit black and white RGB800
+                    //if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(15) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));           // Setup 4 bit black and white RGB400
                 }
 
                 obj.state = 4;
@@ -190,8 +191,8 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 // ###END###{DesktopFocus}
                 // ###BEGIN###{DesktopInband}
                 if (obj.kvmExtChanged != null) {
-                    obj.sendKvmExtCmd(2, (obj.decimation === true) ? 1 : 0); // Set Decimation State
-                    obj.sendKvmExtCmd(4, (obj.useZLib === true) ? 1 : 0); // Set ZLib state
+                    obj.sendKvmExtCmd(2, (obj.decimation === true) ? 3 : 2); // Set Decimation State (1 = Disable, 2 = Auto, 3 = Always)
+                    obj.sendKvmExtCmd(4, (obj.useZLib === true) ? 1 : 0); // Set ZLib state (0 = Disabled, 1 = Enabled)
                 }
                 // ###END###{DesktopInband}
                 _SendRefresh();
@@ -258,7 +259,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     obj.send(String.fromCharCode(3, 0, 0, 0, 0, 0) + ShortToStr(obj.width) + ShortToStr(obj.height)); // FramebufferUpdateRequest
                     cmdsize = 12;
                     if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
-                    //console.log('New desktop width: ' + obj.width + ', height: ' + obj.height);
+                    //console.log('Desktop width: ' + obj.width + ', height: ' + obj.height);
                 } else if (encoding == 0) {
                     // RAW encoding
                     var ptr = 12, cs = 12 + (s * obj.bpp);
@@ -324,8 +325,13 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         }
         else if (subencoding == 1) {
             // Solid color tile
-            v = data[ptr++] + ((obj.bpp == 2) ? (data[ptr++] << 8) : 0);
-            obj.canvas.fillStyle = 'rgb(' + ((obj.bpp == 1) ? ((v & 224) + ',' + ((v & 28) << 3) + ',' + _fixColor((v & 3) << 6)) : (((v >> 8) & 248) + ',' + ((v >> 3) & 252) + ',' + ((v & 31) << 3))) + ')';
+            if (obj.graymode) {
+                v = data[ptr++];
+                obj.canvas.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')';
+            } else {
+                v = data[ptr++] + ((obj.bpp == 2) ? (data[ptr++] << 8) : 0);
+                obj.canvas.fillStyle = 'rgb(' + ((obj.bpp == 1) ? ((v & 224) + ',' + ((v & 28) << 3) + ',' + _fixColor((v & 3) << 6)) : (((v >> 8) & 248) + ',' + ((v >> 3) & 252) + ',' + ((v & 31) << 3))) + ')';
+            }
 
             // ###BEGIN###{DesktopRotation}
             var xx = _rotX(x, y);
@@ -463,9 +469,13 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         }
         // ###END###{DesktopRotation}
 
-        obj.spare.data[pp] = v & 224;
-        obj.spare.data[pp + 1] = (v & 28) << 3;
-        obj.spare.data[pp + 2] = _fixColor((v & 3) << 6);
+        if (obj.graymode) {
+            obj.spare.data[pp] = obj.spare.data[pp + 1] = obj.spare.data[pp + 2] = v;
+        } else {
+            obj.spare.data[pp] = v & 224;
+            obj.spare.data[pp + 1] = (v & 28) << 3;
+            obj.spare.data[pp + 2] = _fixColor((v & 3) << 6);
+        }
     }
 
     // Set 16bit color RGB565
@@ -487,8 +497,13 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
     // Set a run of 8bit color RGB332
     function _setPixel8run(v, p, run) {
-        var pp = (p << 2), r = (v & 224), g = ((v & 28) << 3), b = (_fixColor((v & 3) << 6));
-        while (--run >= 0) { obj.spare.data[pp] = r; obj.spare.data[pp + 1] = g; obj.spare.data[pp + 2] = b; pp += 4; }
+        if (obj.graymode) {
+            var pp = (p << 2);
+            while (--run >= 0) { obj.spare.data[pp] = obj.spare.data[pp + 1] = obj.spare.data[pp + 2] = v; pp += 4; }
+        } else {
+            var pp = (p << 2), r = (v & 224), g = ((v & 28) << 3), b = (_fixColor((v & 3) << 6));
+            while (--run >= 0) { obj.spare.data[pp] = r; obj.spare.data[pp + 1] = g; obj.spare.data[pp + 2] = b; pp += 4; }
+        }
     }
 
     // Set a run of 16bit color RGB565
@@ -778,14 +793,14 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         if (obj.onKvmData != null) {
             var d = arrToStr(new Uint8Array(acc.buffer.slice(8, len)));
             if ((d.length >= 16) && (d.substring(0, 15) == '\0KvmDataChannel')) {
-                if (obj.kvmDataSupported == false) { obj.kvmDataSupported = true; console.log('KVM Data Channel Supported.'); }
+                if (obj.kvmDataSupported == false) { obj.kvmDataSupported = true; /*console.log('KVM Data Channel Supported.');*/ }
                 if (((obj.onKvmDataAck == -1) && (d.length == 16)) || (d.charCodeAt(15) != 0)) { obj.onKvmDataAck = true; }
                 if (urlvars && urlvars['kvmdatatrace']) { console.log('KVM-DataChannel-Recv(' + (d.length - 16) + '): ' + d.substring(16)); }
                 if (d.length >= 16) { obj.onKvmData(d.substring(16)); } // Event the data and ack
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
             } else if ((d.length >= 13) && (d.substring(0, 11) == '\0KvmExtCmd\0')) {
                 var cmd = d.charCodeAt(11), val = d.charCodeAt(12);
-                console.log('Received KvmExtCmd', cmd, val);
+                //console.log('Received KvmExtCmd', cmd, val);
                 if (cmd == 1) { obj.kvmExt.decimation = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, val); } }
                 if (cmd == 2) { obj.sendKvmExtCmd(1); }
                 if (cmd == 3) { obj.kvmExt.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, val); } }
@@ -801,7 +816,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
     // ###BEGIN###{DesktopInband}
     obj.sendKvmExtCmd = function (cmd, val) {
-        console.log('Sending KvmExtCmd', cmd, val);
+        //console.log('Sending KvmExtCmd', cmd, val);
         var x = '\0KvmExtCmd\0' + String.fromCharCode(cmd) + (val != null ? String.fromCharCode(val) : '');
         obj.send(String.fromCharCode(6, 0, 0, 0) + IntToStr(x.length) + x);
     }
