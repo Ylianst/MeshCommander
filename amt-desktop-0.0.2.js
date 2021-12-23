@@ -49,7 +49,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.useZLib = false;
     obj.decimation = false;
     obj.graymode = false;
-    obj.lowcolor = true;
+    obj.lowcolor = false;
     // ###END###{DesktopInband}
 
     obj.mNagleTimer = null; // Mouse motion slowdown timer
