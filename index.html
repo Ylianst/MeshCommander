@@ -1364,17 +1364,7 @@
             <div id="dialog7" style="margin:auto;margin:3px">
                 <br>
                 <div style='height:26px'>
-                    <select id="idx_d7desktopmode" style="float:right;width:200px">
-                        <!-- Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib -->
-                        <option id="d7exm1" value="5">RLE8G, Gray</option>
-                        <option value="1">RLE8, Color</option>
-                        <option value="3">RLE16, Color</option>
-                        <option id="d7exm2" value="13">ZRLE8G, Compressed Gray</option>
-                        <option id="d7exm3" value="9">ZRLE8, Compressed Color</option>
-                        <option id="d7exm4" value="11">ZRLE16, Compressed Color</option>
-                        <option value="0">RAW8, Color</option>
-                        <option value="2">RAW16, Color</option>
-                    </select>
+                    <select id="idx_d7desktopmode" style="float:right;width:200px"></select>
                     <div>Image Encoding</div>
                 </div>
                 <div style="height:80px">
@@ -8354,14 +8344,16 @@
                 if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
-                // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = Decimation
+                // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = 4bit Color
                 desktop.m.useRLE = ((desktopsettings.encflags & 1) != 0);
                 desktop.m.bpp = (desktopsettings.encflags & 2) ? 2 : 1;
                 if ((amtversion > 15) && (amtsysstate != null) && (amtsysstate['IPS_KVMRedirectionSettingData'] != null) && (amtsysstate['IPS_KVMRedirectionSettingData'].response)) {
+                    desktop.m.lowcolor = amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && ((desktopsettings.encflags & 16) != 0);
                     desktop.m.graymode = amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && ((desktopsettings.encflags & 4) != 0);
                     desktop.m.useZLib = amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported'] && ((desktopsettings.encflags & 8) != 0);
                     desktop.m.decimation = amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] && desktopsettings.decimation;
                 } else {
+                    desktop.m.lowcolor = false;
                     desktop.m.graymode = false;
                     desktop.m.useZLib = false;
                     desktop.m.decimation = false;
@@ -8647,23 +8639,36 @@
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
             QV('d7softkvmsettings', amtversion >= 12);
             // ###END###{DesktopInband}
-            var encflags = desktopsettings.encflags; // Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib
+            var encflags = desktopsettings.encflags; // Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = 4bit Color
+
+            var x = '';
             if ((amtversion > 15) && (amtsysstate != null) && (amtsysstate['IPS_KVMRedirectionSettingData'] != null) && (amtsysstate['IPS_KVMRedirectionSettingData'].response)) {
-                if (!amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']) { encflags = encflags & 11; } // Remove grayscale
-                if (!amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']) { encflags = encflags & 7; } // Remove zlib
-                QV('d7exm1', amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']);
-                QV('d7exm2', amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']);
-                QV('d7exm3', amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']);
-                QV('d7exm4', amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']);
+                if (!amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']) { encflags = encflags & 11; } // Remove grayscale and lowcolor
+                if (!amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']) { encflags = encflags & 23; } // Remove zlib
+                if (amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']) {
+                    x += '<option id="d7exm1" value=21>' + "RLE4G, 16 Grays" + '</option>';
+                    x += '<option id="d7exm2" value=5>' + "RLE8G, 256 Grays" + '</option>';
+                }
+                x += '<option value=1>' + "RLE8, 256 Colors" + '</option>';
+                x += '<option value=3>' + "RLE16, 64k Colors" + '</option>';
+                if (amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported']) {
+                    if (amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported']) {
+                        x += '<option id="d7exm3" value=29>' + "ZRLE4G, Compressed Gray" + '</option>';
+                        x += '<option id="d7exm4" value=13>' + "ZRLE8G, Compressed Gray" + '</option>';
+                    }
+                    x += '<option id="d7exm5" value=9>' + "ZRLE8, Compressed Color" + '</option>';
+                    x += '<option id="d7exm6" value=11>' + "ZRLE16, Compressed Color" + '</option>';
+                }
                 QV('d7decimationspan', amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] > 0);
             } else {
                 encflags = encflags & 3; // Remove gray & zlib flags (4 and 8), keep 1 & 2
-                QV('d7exm1', false);
-                QV('d7exm2', false);
-                QV('d7exm3', false);
-                QV('d7exm4', false);
-                QV('d7decimationspan', false)
+                x += '<option value=1>' + "RLE8, 256 Colors" + '</option>';
+                x += '<option value=3>' + "RLE16, 64k Colors" + '</option>';
+                QV('d7decimationspan', false);
             }
+            x += '<option value=0>' + "RAW8, 256 Colors" + '</option>';
+            x += '<option value=2>' + "RAW16, 16k Colors" + '</option>';
+            QH('idx_d7desktopmode', x);
             idx_d7desktopmode.value = encflags;
             // ###BEGIN###{DesktopFocus}
             QV('idx_deskFocusBtn', desktopsettings.showfocus);

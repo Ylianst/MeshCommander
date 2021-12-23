@@ -49,6 +49,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.useZLib = false;
     obj.decimation = false;
     obj.graymode = false;
+    obj.lowcolor = true;
     // ###END###{DesktopInband}
 
     obj.mNagleTimer = null; // Mouse motion slowdown timer
@@ -178,8 +179,11 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 } else {
                     // Gray scale modes
                     if (obj.bpp == 2) { obj.bpp = 1; }
-                    if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(255) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));          // Setup 8 bit black and white RGB800
-                    //if (obj.bpp == 1) obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(15) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));           // Setup 4 bit black and white RGB400
+                    if (obj.lowcolor == false) {
+                        obj.send(String.fromCharCode(0, 0, 0, 0, 8, 8, 0, 1) + ShortToStr(255) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));          // Setup 8 bit black and white RGB800
+                    } else {
+                        obj.send(String.fromCharCode(0, 0, 0, 0, 8, 4, 0, 1) + ShortToStr(15) + ShortToStr(0) + ShortToStr(0) + String.fromCharCode(0, 0, 0, 0, 0, 0));           // Setup 4 bit black and white RGB400
+                    }
                 }
 
                 obj.state = 4;
@@ -327,6 +331,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
             // Solid color tile
             if (obj.graymode) {
                 v = data[ptr++];
+                if (obj.lowcolor) { v = v << 4; }
                 obj.canvas.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')';
             } else {
                 v = data[ptr++] + ((obj.bpp == 2) ? (data[ptr++] << 8) : 0);
@@ -470,6 +475,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         // ###END###{DesktopRotation}
 
         if (obj.graymode) {
+            if (obj.lowcolor) { v = v << 4; }
             obj.spare.data[pp] = obj.spare.data[pp + 1] = obj.spare.data[pp + 2] = v;
         } else {
             obj.spare.data[pp] = v & 224;
@@ -499,6 +505,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     function _setPixel8run(v, p, run) {
         if (obj.graymode) {
             var pp = (p << 2);
+            if (obj.lowcolor) { v = v << 4; }
             while (--run >= 0) { obj.spare.data[pp] = obj.spare.data[pp + 1] = obj.spare.data[pp + 2] = v; pp += 4; }
         } else {
             var pp = (p << 2), r = (v & 224), g = ((v & 28) << 3), b = (_fixColor((v & 3) << 6));
