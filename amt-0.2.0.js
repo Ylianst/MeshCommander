@@ -546,6 +546,12 @@ function AmtStackCreateService(wsmanStack) {
             if (eventDataField[0] == 235) return "Invalid Data";
             if (eventOffset == 0) {
                 return _SystemFirmwareError[eventDataField[1]];
+            } else if (eventOffset == 2) {
+                if (eventDataField[1] == 0x05) {
+                    return "Entering BIOS setup";
+                } else {
+                    return "Unknown event";
+                }
             } else if (eventOffset == 3) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
                     return format("AMT One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
