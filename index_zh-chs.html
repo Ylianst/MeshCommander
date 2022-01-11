@@ -4585,7 +4585,7 @@
         // ###BEGIN###{MeshServerConnect}
         function showMeshCentralConnectDialog(showtoken) {
             if (xxdialogMode || meshCentralServer) return;
-            var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "连接到MeshCentral <sup> 2 </ sup>服务器并管理该帐户上的Intel&reg;AMT计算机。请注意，MeshCentral.com尚不是版本2，并且不支持此功能。" + '<div><br />';
+            var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "Connect to a MeshCentral server and manage Intel&reg; AMT computers on that account." + '<div><br style=clear:both />';
             x += '<div style=height:26px><input id=meshserverurl value="" placeholder="sample.server.com:443" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "服务器名称" + '</div></div>';
             x += '<div style=height:26px><input id=meshserverhash value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "证书哈希" + '</div></div>';
             x += '<div style=height:26px><input id=meshserveruser value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "用户名" + '</div></div>';

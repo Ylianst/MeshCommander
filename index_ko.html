@@ -4585,7 +4585,7 @@
         // ###BEGIN###{MeshServerConnect}
         function showMeshCentralConnectDialog(showtoken) {
             if (xxdialogMode || meshCentralServer) return;
-            var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "MeshCentral <sup> 2 </ sup> 서버에 연결하고 해당 계정에서 Intel&reg; AMT 컴퓨터를 관리하십시오. MeshCentral.com은 아직 버전 2가 아니며이 기능을 지원하지 않습니다." + '<div><br />';
+            var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "Connect to a MeshCentral server and manage Intel&reg; AMT computers on that account." + '<div><br style=clear:both />';
             x += '<div style=height:26px><input id=meshserverurl value="" placeholder="sample.server.com:443" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "서버 이름" + '</div></div>';
             x += '<div style=height:26px><input id=meshserverhash value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "인증서 해시" + '</div></div>';
             x += '<div style=height:26px><input id=meshserveruser value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "사용자 이름" + '</div></div>';

@@ -4585,7 +4585,7 @@
         // ###BEGIN###{MeshServerConnect}
         function showMeshCentralConnectDialog(showtoken) {
             if (xxdialogMode || meshCentralServer) return;
-            var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "Conéctese a un servidor MeshCentral <sup> 2 </sup> y administre computadoras Intel&reg; AMT en esa cuenta. Tenga en cuenta que MeshCentral.com aún no es la versión 2 y no es compatible con esta función." + '<div><br />';
+            var x = '<img src=\'images-commander/meshcentral50.png\' style=width:50px;height:50px;float:right></img><div>' + "Connect to a MeshCentral server and manage Intel&reg; AMT computers on that account." + '<div><br style=clear:both />';
             x += '<div style=height:26px><input id=meshserverurl value="" placeholder="sample.server.com:443" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Nombre del servidor" + '</div></div>';
             x += '<div style=height:26px><input id=meshserverhash value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Hash de certificado" + '</div></div>';
             x += '<div style=height:26px><input id=meshserveruser value="" style=float:right;width:250px onkeyup=showMeshCentralConnectDialogUpdate()><div>' + "Nombre de usuario" + '</div></div>';

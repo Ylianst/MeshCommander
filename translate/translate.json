@@ -5277,6 +5277,12 @@
       "en": "Connect to URI failed"
     },
     {
+      "en": "Connect to a MeshCentral server and manage Intel&reg; AMT computers on that account.",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->21->273"
+      ]
+    },
+    {
       "de": "Stellen Sie eine Verbindung zu einem MeshCentral <sup> 2 </ sup> -Server her und verwalten Sie Intel&reg; AMT-Computer in diesem Konto. Beachten Sie, dass MeshCentral.com noch nicht Version 2 ist und diese Funktion nicht unterstützt.",
       "en": "Connect to a MeshCentral<sup>2</sup> server and manage Intel&reg; AMT computers on that account. Note that MeshCentral.com is not version 2 yet and does not support this feature.",
       "es": "Conéctese a un servidor MeshCentral <sup> 2 </sup> y administre computadoras Intel&reg; AMT en esa cuenta. Tenga en cuenta que MeshCentral.com aún no es la versión 2 y no es compatible con esta función.",
@@ -5287,10 +5293,7 @@
       "nl": "Maak verbinding met een MeshCentral <sup> 2 </sup> -server en beheer Intel&reg; AMT-computers op dat account. Merk op dat MeshCentral.com nog geen versie 2 is en deze functie niet ondersteunt.",
       "pt": "Conecte-se a um servidor MeshCentral <sup> 2 </sup> e gerencie os computadores Intel&reg; AMT nessa conta. Observe que o MeshCentral.com ainda não é a versão 2 e não suporta esse recurso.",
       "ru": "Подключитесь к серверу MeshCentral <sup> 2 </ sup> и управляйте компьютерами Intel&reg; AMT с этой учетной записью. Обратите внимание, что MeshCentral.com еще не является версией 2 и не поддерживает эту функцию.",
-      "zh-chs": "连接到MeshCentral <sup> 2 </ sup>服务器并管理该帐户上的Intel&reg;AMT计算机。请注意，MeshCentral.com尚不是版本2，并且不支持此功能。",
-      "xloc": [
-        "index.html->id_computerSelector->dialog->21->273"
-      ]
+      "zh-chs": "连接到MeshCentral <sup> 2 </ sup>服务器并管理该帐户上的Intel&reg;AMT计算机。请注意，MeshCentral.com尚不是版本2，并且不支持此功能。"
     },
     {
       "de": "Stellen Sie eine Verbindung mit TLS-Sicherheit her",
