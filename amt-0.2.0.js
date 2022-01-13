@@ -686,6 +686,11 @@ function AmtStackCreateService(wsmanStack) {
         1702: "Performed Power Cycle",
         1703: "Performed Reset",
         1704: "Set Boot Options",
+        1705: "Remote graceful power down initiated",
+        1706: "Remote graceful reset initiated",
+        1707: "Remote Standby initiated",
+        1708: "Remote Hiberate initiated",
+        1709: "Remote NMI initiated",
         1800: "IDER Session Opened",
         1801: "IDER Session Closed",
         1802: "IDER Enabled",
@@ -735,6 +740,9 @@ function AmtStackCreateService(wsmanStack) {
         2700: "Wireless Profile Added",
         2701: "Wireless Profile Removed",
         2702: "Wireless Profile Updated",
+        2703: "An existing profile sync was modified",
+        2704: "An existing profile link preference was changed",
+        2705: "Wireless profile share with UEFI enabled setting was changed",
         2800: "EAC Posture Signer SET",
         2801: "EAC Enabled",
         2802: "EAC Disabled",
@@ -747,7 +755,9 @@ function AmtStackCreateService(wsmanStack) {
         2904: "KVM Consent Failed",
         3000: "Opt-In Policy Change",
         3001: "Send Consent Code Event",
-        3002: "Start Opt-In Blocked Event"
+        3002: "Start Opt-In Blocked Event",
+        3301: "A user has modified the Watchdog Action settings",
+        3302: "A user has modified a Watchdog to add, remove, or alter the Watchdog Action connected to it"
     }
 
     // Return human readable extended audit log data
