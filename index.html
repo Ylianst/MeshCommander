@@ -8553,10 +8553,12 @@
                     } else if (desktop.disconnectCode == 3) { // UNSUPPORTED
                         messagebox("Remote Desktop", "The device indicated that this type of connection of not supported.");
                     } else if (desktop.disconnectCode == 50000) { // KVM-Disconnect
-                        messagebox("Remote Desktop", "KVM disconnection, they may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
+                        messagebox("Remote Desktop", "KVM disconnection, this may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
                     } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again if connection was more than 5 seconds long.
                         reconnect = (desktop.connectTime != null) && ((desktop.connectTime + 5000) < Date.now());
                         console.log(desktop.disconnectCode, reconnect);
+                    } else if (desktop.disconnectCode == 50002) { // KVM-BufferOverflow
+                        messagebox("Remote Desktop", "KVM disconnection that may be due to the display size and resolution being too large for the Intel AMT KVM buffer. Try RLE8 encoding or reducing the display resolution.");
                     }
                     break;
                 case 3:
@@ -13164,13 +13166,11 @@
                             var view = new Uint8Array(data.length - 8);
                             for (var i = 8; i < data.length; i++) { view[i] = data.charCodeAt(i); }
                             amtDesktop.ProcessBinaryData(view.buffer);
-                            //amtDesktop.ProcessData(data.substring(8));
                         }
                     } else if (readState == 1) {
                         var view = new Uint8Array(data.length);
                         for (var i = 0; i < data.length; i++) { view[i] = data.charCodeAt(i); }
                         amtDesktop.ProcessBinaryData(view.buffer);
-                        //amtDesktop.ProcessData(data);
                     }
                 } else if (recFileProtocol == 200) {
                     // Intel AMT midstream KVM

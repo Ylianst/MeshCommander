@@ -269,6 +269,11 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     cmdsize = 12;
                     if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
                     //console.log('Desktop width: ' + obj.width + ', height: ' + obj.height);
+
+                    // Check if the screen size is larger than Intel AMT should be able to handle
+                    if ((obj.parent) && ((obj.bpp * obj.width * obj.height) > 8388608)) {
+                        obj.parent.disconnectCode = 50002; // Display buffer too large, more than 8MB.
+                    }
                 } else if (encoding == 0) {
                     // RAW encoding
                     var ptr = 12, cs = 12 + (s * obj.bpp);
