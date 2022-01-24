@@ -13160,8 +13160,18 @@
                     if ((readState == 0) && (rstr2hex(data).startsWith('4100000000000000'))) {
                         // We are not authenticated, KVM data starts here.
                         readState = 1;
-                        if (data.length > 8) { amtDesktop.ProcessData(data.substring(8)); }
-                    } else if (readState == 1) { amtDesktop.ProcessData(data); }
+                        if (data.length > 8) {
+                            var view = new Uint8Array(data.length - 8);
+                            for (var i = 8; i < data.length; i++) { view[i] = data.charCodeAt(i); }
+                            amtDesktop.ProcessBinaryData(view.buffer);
+                            //amtDesktop.ProcessData(data.substring(8));
+                        }
+                    } else if (readState == 1) {
+                        var view = new Uint8Array(data.length);
+                        for (var i = 0; i < data.length; i++) { view[i] = data.charCodeAt(i); }
+                        amtDesktop.ProcessBinaryData(view.buffer);
+                        //amtDesktop.ProcessData(data);
+                    }
                 } else if (recFileProtocol == 200) {
                     // Intel AMT midstream KVM
                     var view = new Uint8Array(data.length);

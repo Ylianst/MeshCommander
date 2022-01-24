@@ -105,7 +105,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 //var version = parseFloat(obj.acc.substring(4, 11));
                 //console.log('KVersion: ' + version);
                 obj.state = 1;
-                delete obj.parent.connectTime;
+                if (obj.parent) { delete obj.parent.connectTime; }
                 obj.send('RFB 003.008\n');
             }
             else if ((obj.state == 1) && (obj.acc.byteLength >= 1)) {
@@ -188,8 +188,11 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 }
 
                 obj.state = 4;
-                obj.parent.connectTime = Date.now();
-                if (obj.parent) { obj.parent.disconnectCode = 0; obj.parent.xxStateChange(3); }
+                if (obj.parent) {
+                    obj.parent.connectTime = Date.now();
+                    obj.parent.disconnectCode = 0;
+                    obj.parent.xxStateChange(3);
+                }
                 //obj.timer = setInterval(obj.xxOnTimer, 50);
 
                 // ###BEGIN###{DesktopFocus}
