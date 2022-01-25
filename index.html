@@ -1367,12 +1367,15 @@
                     <select id="idx_d7desktopmode" style="float:right;width:200px"></select>
                     <div>Image Encoding</div>
                 </div>
+                <div id="d7decimationspan" style='height:26px'>
+                    <select id="d7decimation" style="float:right;width:200px"><option value=0>Don't set</option><option value=1>Disabled</option><option value=2>Automatic</option><option value=3>Enabled</option></select>
+                    <div>Downscaling</div>
+                </div>
                 <div style="height:80px">
                     <div style="float:right;border:1px solid #666;width:200px;height:80px;overflow-y:scroll;background-color:white">
                         <!-- ###BEGIN###{DesktopFocus} -->
                         <label><input type="checkbox" id='d7showfocus'>Show Focus Tool</label><br>
                         <!-- ###END###{DesktopFocus} -->
-                        <span id="d7decimationspan"><label><input type="checkbox" id='d7decimation'>Prefer Downscale</label><br></span>
                         <label><input type="checkbox" id='d7showcursor'>Show Local Mouse Cursor</label><br>
                         <label><input type="checkbox" id='d7showcad'>Show Ctrl-Alt-Del</label><br>
                         <label><input type="checkbox" id='d7limitFrameRate'>Limit Frame Rate</label><br>
@@ -1763,7 +1766,7 @@
 // ###END###{NetworkSettings}
 // ###BEGIN###{Desktop}
         var desktop;
-        var desktopsettings = { encflags: 1, showfocus: false, showmouse: true, showcad: true, limitFrameRate: false, noMouseRotate: false, decimation: false };
+        var desktopsettings = { encflags: 1, showfocus: false, showmouse: true, showcad: true, limitFrameRate: false, noMouseRotate: false, decimationMode: 2 };
 // ###END###{Desktop}
 // ###BEGIN###{Mode-MeshCentral2}
         var currentMeshNode = null;
@@ -8351,12 +8354,12 @@
                     desktop.m.lowcolor = amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && ((desktopsettings.encflags & 16) != 0);
                     desktop.m.graymode = amtsysstate['IPS_KVMRedirectionSettingData'].response['GrayscalePixelFormatSupported'] && ((desktopsettings.encflags & 4) != 0);
                     desktop.m.useZLib = amtsysstate['IPS_KVMRedirectionSettingData'].response['ZlibControlSupported'] && ((desktopsettings.encflags & 8) != 0);
-                    desktop.m.decimation = amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] && desktopsettings.decimation;
+                    desktop.m.decimationMode = ((amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] > 0) ? desktopsettings.decimationMode : 0);
                 } else {
                     desktop.m.lowcolor = false;
                     desktop.m.graymode = false;
                     desktop.m.useZLib = false;
-                    desktop.m.decimation = false;
+                    desktop.m.decimationMode = 0;
                 }
                 desktop.m.showmouse = desktopsettings.showmouse;
                 desktop.m.onScreenSizeChange = center;
@@ -8587,7 +8590,7 @@
                     x = ", Soft-KVM";
                 } else {
                     if (desktop.m && desktop.m.kvmExt) {
-                        //if (desktop.m.kvmExt.decimation == 2) { x += ", Downscaled" }
+                        if (desktop.m.kvmExt.decimationState == 1) { x += ", Downscaled" }
                         if (desktop.m.kvmExt.compression == 1) { x += ", Compressed" }
                     }
                 }
@@ -8609,7 +8612,7 @@
             desktopsettings.encflags = parseInt(idx_d7desktopmode.value);
             // ###BEGIN###{DesktopFocus}
             desktopsettings.showfocus = d7showfocus.checked;
-            if ((amtversion > 15) || (urlvars['kvmext'] != null)) { desktopsettings.decimation = d7decimation.checked; }
+            if ((amtversion > 15) && (amtsysstate['IPS_KVMRedirectionSettingData'].response['InitialDecimationModeForLowRes'] > 0)) { desktopsettings.decimationMode = parseInt(d7decimation.value); }
             // ###END###{DesktopFocus}
             desktopsettings.showmouse = d7showcursor.checked;
             desktopsettings.showcad = d7showcad.checked;
@@ -8631,8 +8634,8 @@
         function applyDesktopSettings() {
             // ###BEGIN###{DesktopFocus}
             d7showfocus.checked = desktopsettings.showfocus;
-            d7decimation.checked = desktopsettings.decimation;
             // ###END###{DesktopFocus}
+            d7decimation.value = desktopsettings.decimationMode;
             d7showcursor.checked = desktopsettings.showmouse;
             d7showcad.checked = desktopsettings.showcad;
             d7limitFrameRate.checked = desktopsettings.limitFrameRate;

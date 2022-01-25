@@ -47,7 +47,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.kvmExt = {};
     obj.kvmExtChanged = null;
     obj.useZLib = false;
-    obj.decimation = false;
+    obj.decimationMode = 0; // 0 = Don't set, 1 = Disable, 2 = Automatic, 3 = Enabled
     obj.graymode = false;
     obj.lowcolor = false;
     // ###END###{DesktopInband}
@@ -200,14 +200,20 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 // ###END###{DesktopFocus}
                 // ###BEGIN###{DesktopInband}
                 if (obj.kvmExtChanged != null) {
-                    obj.sendKvmExtCmd(2, (obj.decimation === true) ? 3 : 2); // Set Decimation State (1 = Disable, 2 = Auto, 3 = Always)
+                    if (obj.decimationMode > 0) { obj.sendKvmExtCmd(2, obj.decimationMode); } // Set Decimation Mode (0 = Do not set, 1 = Disable, 2 = Auto, 3 = Enable)
                     obj.sendKvmExtCmd(4, (obj.useZLib === true) ? 1 : 0); // Set ZLib state (0 = Disabled, 1 = Enabled)
                 }
                 // ###END###{DesktopInband}
                 _SendRefresh();
 
                 if (obj.onScreenSizeChange != null) { obj.onScreenSizeChange(obj, obj.ScreenWidth, obj.ScreenHeight); }
-                if (obj.parent) { obj.parent.disconnectCode = 50001; } // Everything looks good, a disconnection here would be Intel AMT initiated.
+                if (obj.parent) {
+                    obj.parent.disconnectCode = 50001; // Everything looks good, a disconnection here would be Intel AMT initiated.
+
+                    // Check if the screen size is larger than Intel AMT should be able to handle
+                    //console.log('KVM Buffer Size: ' + (obj.bpp * obj.width * obj.height));
+                    if ((obj.bpp * obj.width * obj.height) > 8388608) { obj.parent.disconnectCode = 50002; } // Display buffer too large, more than 8MB.
+                }
             }
             else if (obj.state == 4) {
                 switch (obj.acc[0]) {
@@ -271,9 +277,8 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                     //console.log('Desktop width: ' + obj.width + ', height: ' + obj.height);
 
                     // Check if the screen size is larger than Intel AMT should be able to handle
-                    if ((obj.parent) && ((obj.bpp * obj.width * obj.height) > 8388608)) {
-                        obj.parent.disconnectCode = 50002; // Display buffer too large, more than 8MB.
-                    }
+                    //console.log('KVM Buffer Size: ' + (obj.bpp * obj.width * obj.height));
+                    if ((obj.parent) && ((obj.bpp * obj.width * obj.height) > 8388608)) { obj.parent.disconnectCode = 50002; } // Display buffer too large, more than 8MB.
                 } else if (encoding == 0) {
                     // RAW encoding
                     var ptr = 12, cs = 12 + (s * obj.bpp);
@@ -817,10 +822,14 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 if ((obj.onKvmDataAck == true) && (obj.onKvmDataPending.length > 0)) { obj.sendKvmData(obj.onKvmDataPending.shift()); } // Send pending data
             } else if ((d.length >= 13) && (d.substring(0, 11) == '\0KvmExtCmd\0')) {
                 var cmd = d.charCodeAt(11), val = d.charCodeAt(12);
-                //console.log('Received KvmExtCmd', cmd, val);
-                if (cmd == 1) { obj.kvmExt.decimation = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, val); } }
+                //console.log('Received KvmExtCmd', cmd, val, d.length);
+                if (cmd == 1) {
+                    obj.kvmExt.decimationMode = val;
+                    if (d.length > 13) { obj.kvmExt.decimationState = d.charCodeAt(13); }
+                    if (obj.kvmExtChanged != null) { obj.kvmExtChanged(1, obj.kvmExt, obj.kvmExt); }
+                }
                 if (cmd == 2) { obj.sendKvmExtCmd(1); }
-                if (cmd == 3) { obj.kvmExt.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, val); } }
+                if (cmd == 3) { obj.kvmExt.compression = val; if (obj.kvmExtChanged != null) { obj.kvmExtChanged(3, obj.kvmExt); } }
                 if (cmd == 4) { obj.sendKvmExtCmd(3); }
             } else {
                 console.log('Got KVM clipboard data:', d);
