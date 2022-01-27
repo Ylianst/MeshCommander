@@ -13117,6 +13117,8 @@
                 amtDesktop.State = 3;
                 amtDesktop.Start();
                 if (recFileMetadata.bpp) { amtDesktop.bpp = recFileMetadata.bpp; }
+                if (recFileMetadata.graymode) { amtDesktop.graymode = recFileMetadata.graymode; }
+                if (recFileMetadata.lowcolor) { amtDesktop.lowcolor = recFileMetadata.lowcolor; }
                 amtDesktop.state = 3;
                 srec_deskAdjust();
             }
@@ -13185,7 +13187,9 @@
                 // User --> Device data
                 if (recFileProtocol == 101) {
                     // Intel AMT KVM
-                    if (rstr2hex(data) == '0000000008080001000700070003050200000000') { amtDesktop.bpp = 1; } // Switch to 1 byte per pixel.
+                    if (rstr2hex(data) == '0000000008080001000700070003050200000000') { console.log('RGB8'); amtDesktop.bpp = 1; } // Switch to 1 byte per pixel, 256 colors
+                    if (rstr2hex(data) == '000000000808000100FF00000000000000000000') { console.log('GRAY8'); amtDesktop.bpp = 1; obj.graymode = true; } // Switch to 1 byte per pixel, 256 grays
+                    if (rstr2hex(data) == '0000000008040001000F00000000000000000000') { console.log('GRAY4'); amtDesktop.bpp = 1; obj.graymode = true; obj.lowcolor = true; } // Switch to 1 byte per pixel, 16 grays
                 }
             }
 
@@ -13336,6 +13340,8 @@
                 amtDesktop.Start();
                 if (recFileMetadata.protocol == 200) {
                     if (recFileMetadata.bpp) { amtDesktop.bpp = recFileMetadata.bpp; }
+                    if (recFileMetadata.graymode) { amtDesktop.graymode = recFileMetadata.graymode; }
+                    if (recFileMetadata.lowcolor) { amtDesktop.lowcolor = recFileMetadata.lowcolor; }
                     amtDesktop.state = 3;
                     srec_deskAdjust();
                 }

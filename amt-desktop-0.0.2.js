@@ -132,6 +132,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
                 cmdsize = 24 + namelen;
                 obj.canvas.canvas.width = obj.rwidth = obj.width = obj.ScreenWidth = accview.getUint16(0);
                 obj.canvas.canvas.height = obj.rheight = obj.height = obj.ScreenHeight = accview.getUint16(2);
+                //console.log('Initial Desktop width: ' + obj.width + ', height: ' + obj.height);
 
                 // ###BEGIN###{DesktopRecorder}
                 obj.DeskRecordServerInit = String.fromCharCode.apply(null, new Uint8Array(obj.acc.buffer.slice(0, 24 + namelen)));
@@ -212,7 +213,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
                     // Check if the screen size is larger than Intel AMT should be able to handle
                     //console.log('KVM Buffer Size: ' + (obj.bpp * obj.width * obj.height));
-                    if ((obj.bpp * obj.width * obj.height) > 8388608) { obj.parent.disconnectCode = 50002; } // Display buffer too large, more than 8MB.
+                    if ((obj.bpp * obj.width * obj.height) > 9216000) { obj.parent.disconnectCode = 50002; } // Display buffer too large.
                 }
             }
             else if (obj.state == 4) {
@@ -278,7 +279,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
 
                     // Check if the screen size is larger than Intel AMT should be able to handle
                     //console.log('KVM Buffer Size: ' + (obj.bpp * obj.width * obj.height));
-                    if ((obj.parent) && ((obj.bpp * obj.width * obj.height) > 8388608)) { obj.parent.disconnectCode = 50002; } // Display buffer too large, more than 8MB.
+                    if ((obj.parent) && ((obj.bpp * obj.width * obj.height) > 9216000)) { obj.parent.disconnectCode = 50002; } // Display buffer too large.
                 } else if (encoding == 0) {
                     // RAW encoding
                     var ptr = 12, cs = 12 + (s * obj.bpp);
@@ -997,7 +998,8 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
         obj.recordedData = [];
         obj.recordedStart = Date.now();
         obj.recordedSize = 0;
-        obj.recordedData.push(recordingEntry(1, 0, JSON.stringify({ magic: 'MeshCentralRelaySession', ver: 1, time: new Date().toLocaleString(), protocol: 200, bpp: obj.bpp, screenSize: [obj.width, obj.height] }))); // Metadata, 200 = Midstream Intel AMT KVM
+        obj.recordedData.push(recordingEntry(1, 0, JSON.stringify({ magic: 'MeshCentralRelaySession', ver: 1, time: new Date().toLocaleString(), protocol: 200, bpp: obj.bpp, graymode: obj.graymode, lowcolor: obj.lowcolor, screenSize: [obj.width, obj.height] }))); // Metadata, 200 = Midstream Intel AMT KVM
+        obj.DeskRecordServerInit = String.fromCharCode((obj.width >> 8), (obj.width & 0xFF), (obj.height >> 8), (obj.height & 0xFF)) + obj.DeskRecordServerInit.substring(4);
         obj.recordedData.push(recordingEntry(2, 1, obj.DeskRecordServerInit)); // This is the server init command
         obj.recordedData.push(recordingEntry(3, 0, atob(obj.CanvasId.toDataURL('image/png').split(',')[1]))); // Take a screen shot
         return true;
