@@ -10471,23 +10471,20 @@
             var x = ("Confirm execution of Intel&reg; Remote Platform Erase?" + '<br>');
             x += ('<br><div style=color:red>' + "<b>WARNING:</b> This will wipe data on the remote system." + '</div>');
             var actionTaken = [], platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'];
-            if (platfromEraseSupport & (1 << 1)) { actionTaken.push('<label><input id=rpef1 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Pyrite Revert" + '</label>'); }
             if (platfromEraseSupport & (1 << 2)) { actionTaken.push('<label><input id=rpef2 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Secure Erase All SSDs" + '</label>'); }
             if (platfromEraseSupport & (1 << 6)) { actionTaken.push('<label><input id=rpef6 type=checkbox onchange=powerActionDlgRPEValidate()>' + "TPM Clear" + '</label>'); }
             if (platfromEraseSupport & (1 << 25)) { actionTaken.push('<label><input id=rpef25 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Clear BIOS NVM Variables" + '</label>'); }
             if (platfromEraseSupport & (1 << 26)) { actionTaken.push('<label><input id=rpef26 type=checkbox onchange=powerActionDlgRPEValidate()>' + "BIOS Reload of Golden Configuration" + '</label>'); }
             if (platfromEraseSupport & (1 << 31)) { actionTaken.push('<label><input id=rpef31 type=checkbox onchange=powerActionDlgRPEValidate()>' + "CSME Unconfigure" + '</label>'); }
             if (actionTaken.length > 1) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
-            x += '<div id=rpepsid style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("Pyrite PSID", '<input id=rpepsidx style=width:210px maxlength=64 type=input>') + '</div>';
             x += '<div id=rpessdpass style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("SSD Master Password", '<input id=rpessdpassx style=width:210px maxlength=64 type=input>') + '</div>';
             setDialogMode(11, "Power Actions", 3, powerActionDlgRPEEx, x, advanced);
             QE('idx_dlgOkButton', false);
         }
 
         function powerActionDlgRPEValidate() {
-            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1,2,6,25,26,31];
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [2,6,25,26,31];
             for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
-            QV('rpepsid', rpeFlags & 2);
             QV('rpessdpass', rpeFlags & 4);
             QE('idx_dlgOkButton', rpeFlags);
         }
