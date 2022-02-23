@@ -8906,12 +8906,13 @@
         function dmousedown(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) desktop.m.mousedown(e); }
         function dmouseup(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) desktop.m.mouseup(e); }
         function dmousemove(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) desktop.m.mousemove(e); }
+        function dmousewheel(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) desktop.m.mousewheel(e); }
         // ###END###{!DesktopInband}
         // ###BEGIN###{DesktopInband}
         function dmousedown(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) { if ((webRtcDesktop != null) && (webRtcDesktop.softdesktop != null)) { webRtcDesktop.softdesktop.m.mousedown(e); desktop.m.sendKeepAlive(); } else { desktop.m.mousedown(e); } } }
         function dmouseup(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) { if ((webRtcDesktop != null) && (webRtcDesktop.softdesktop != null)) { webRtcDesktop.softdesktop.m.mouseup(e); desktop.m.sendKeepAlive(); } else { desktop.m.mouseup(e); } } }
         function dmousemove(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) { if ((webRtcDesktop != null) && (webRtcDesktop.softdesktop != null)) { webRtcDesktop.softdesktop.m.mousemove(e); desktop.m.sendKeepAlive(); } else { desktop.m.mousemove(e); } } }
-        function dmousewheel(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) { if ((webRtcDesktop != null) && (webRtcDesktop.softdesktop != null)) { webRtcDesktop.softdesktop.m.mousewheel(e); desktop.m.sendKeepAlive(); } } }
+        function dmousewheel(e) { if (!xxdialogMode && (!Q('id_DeskVO').checked)) { if ((webRtcDesktop != null) && (webRtcDesktop.softdesktop != null)) { webRtcDesktop.softdesktop.m.mousewheel(e); desktop.m.sendKeepAlive(); } else { desktop.m.mousewheel(e); } } }
         // ###END###{DesktopInband}
 
         function drotate(x) {
