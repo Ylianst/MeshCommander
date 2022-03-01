@@ -13,7 +13,7 @@
       "ru": " 1 день",
       "zh-chs": " 1天",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1504"
+        "index.html->id_computerSelector->dialog->21->1505"
       ]
     },
     {
@@ -29,7 +29,7 @@
       "ru": " 1 дней",
       "zh-chs": " 1天",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1503"
+        "index.html->id_computerSelector->dialog->21->1504"
       ]
     },
     {
@@ -45,7 +45,7 @@
       "ru": " 1 час",
       "zh-chs": " 1小时",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1506"
+        "index.html->id_computerSelector->dialog->21->1507"
       ]
     },
     {
@@ -61,7 +61,7 @@
       "ru": " 1 час",
       "zh-chs": " 1小时",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1505"
+        "index.html->id_computerSelector->dialog->21->1506"
       ]
     },
     {
@@ -77,7 +77,7 @@
       "ru": " 1 минута ",
       "zh-chs": " 1分钟 ",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1508"
+        "index.html->id_computerSelector->dialog->21->1509"
       ]
     },
     {
@@ -93,7 +93,7 @@
       "ru": " 1 минута ",
       "zh-chs": " 1分钟 ",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1507"
+        "index.html->id_computerSelector->dialog->21->1508"
       ]
     },
     {
@@ -274,7 +274,7 @@
       "ru": " и каждый",
       "zh-chs": " 和每个",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1512"
+        "index.html->id_computerSelector->dialog->21->1513"
       ]
     },
     {
@@ -306,7 +306,7 @@
       "ru": " в",
       "zh-chs": " 在",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1511",
+        "index.html->id_computerSelector->dialog->21->1512",
         "index.html->id_computerSelector->dialog->21->821",
         "index.html->id_computerSelector->dialog->21->825"
       ]
@@ -324,8 +324,8 @@
       "ru": " байтов",
       "zh-chs": " 个字节",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1473",
-        "index.html->id_computerSelector->dialog->21->1544",
+        "index.html->id_computerSelector->dialog->21->1474",
+        "index.html->id_computerSelector->dialog->21->1545",
         "index.html->id_computerSelector->dialog->21->297",
         "index.html->id_computerSelector->dialog->21->519",
         "index.html->id_computerSelector->dialog->21->521",
@@ -345,7 +345,7 @@
       "ru": " байт,",
       "zh-chs": " 字节",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1573",
+        "index.html->id_computerSelector->dialog->21->1574",
         "index.html->id_computerSelector->dialog->21->294",
         "index.html->id_computerSelector->dialog->21->514",
         "index.html->id_computerSelector->dialog->21->517",
@@ -378,7 +378,7 @@
       "ru": " дней",
       "zh-chs": " 天",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1500"
+        "index.html->id_computerSelector->dialog->21->1501"
       ]
     },
     {
@@ -394,7 +394,7 @@
       "ru": " часов",
       "zh-chs": " 小时",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1501"
+        "index.html->id_computerSelector->dialog->21->1502"
       ]
     },
     {
@@ -410,7 +410,7 @@
       "ru": " в,",
       "zh-chs": " 在，",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1194"
+        "index.html->id_computerSelector->dialog->21->1197"
       ]
     },
     {
@@ -471,7 +471,7 @@
       "ru": " минут",
       "zh-chs": " 分钟",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1502"
+        "index.html->id_computerSelector->dialog->21->1503"
       ]
     },
     {
@@ -516,7 +516,7 @@
       "ru": " вне.",
       "zh-chs": " 出来。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1195"
+        "index.html->id_computerSelector->dialog->21->1198"
       ]
     },
     {
@@ -733,13 +733,13 @@
     {
       "en": "(1) Change Boot Order returns ",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1455"
+        "index.html->id_computerSelector->dialog->21->1456"
       ]
     },
     {
       "en": "(2) Change Boot Order returns ",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1461"
+        "index.html->id_computerSelector->dialog->21->1462"
       ]
     },
     {
@@ -771,8 +771,8 @@
       "ru": "(Никто)",
       "zh-chs": "（没有）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1228",
-        "index.html->id_computerSelector->dialog->21->1233"
+        "index.html->id_computerSelector->dialog->21->1231",
+        "index.html->id_computerSelector->dialog->21->1236"
       ]
     },
     {
@@ -837,7 +837,7 @@
       "zh-chs": "，",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1100",
-        "index.html->id_computerSelector->dialog->21->1334",
+        "index.html->id_computerSelector->dialog->21->1337",
         "index.html->id_computerSelector->dialog->21->407",
         "index.html->id_computerSelector->dialog->21->410",
         "index.html->id_computerSelector->dialog->21->500",
@@ -903,7 +903,7 @@
     {
       "en": ", Compressed",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1136"
+        "index.html->id_computerSelector->dialog->21->1139"
       ]
     },
     {
@@ -926,6 +926,12 @@
       "en": ", Default",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->146"
+      ]
+    },
+    {
+      "en": ", Downscaled",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->21->1138"
       ]
     },
     {
@@ -1166,7 +1172,7 @@
       "ru": ", Взбитый",
       "zh-chs": "，加扰",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1644"
+        "index.html->id_computerSelector->dialog->21->1645"
       ]
     },
     {
@@ -1214,7 +1220,7 @@
       "ru": ", Софт-КВМ",
       "zh-chs": "，软KVM",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1135"
+        "index.html->id_computerSelector->dialog->21->1137"
       ]
     },
     {
@@ -1282,7 +1288,7 @@
       "ru": "удалите когда закончите",
       "zh-chs": "，完成后删除",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1513"
+        "index.html->id_computerSelector->dialog->21->1514"
       ]
     },
     {
@@ -1314,7 +1320,7 @@
       "ru": "каждые {0} секунд",
       "zh-chs": "，每{0}秒",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1217"
+        "index.html->id_computerSelector->dialog->21->1220"
       ]
     },
     {
@@ -1371,8 +1377,8 @@
       "ru": "...",
       "zh-chs": "...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1161",
-        "index.html->id_computerSelector->dialog->21->1555"
+        "index.html->id_computerSelector->dialog->21->1164",
+        "index.html->id_computerSelector->dialog->21->1556"
       ]
     },
     {
@@ -1430,7 +1436,7 @@
       "ru": "1 байт",
       "zh-chs": "1个字节",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1173"
+        "index.html->id_computerSelector->dialog->21->1176"
       ]
     },
     {
@@ -1462,7 +1468,7 @@
       "ru": "1 секунда",
       "zh-chs": "1秒",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1668"
+        "index.html->id_computerSelector->dialog->21->1669"
       ]
     },
     {
@@ -1629,8 +1635,8 @@
       "en": "3",
       "ko": "",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1165",
-        "index.html->id_computerSelector->dialog->21->1170"
+        "index.html->id_computerSelector->dialog->21->1168",
+        "index.html->id_computerSelector->dialog->21->1173"
       ]
     },
     {
@@ -1848,7 +1854,7 @@
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1085",
         "index.html->id_computerSelector->dialog->21->1086",
-        "index.html->id_computerSelector->dialog->21->1218"
+        "index.html->id_computerSelector->dialog->21->1221"
       ]
     },
     {
@@ -1864,7 +1870,7 @@
       "ru": "<b> CDROM </ b>, блоки - {0} байтов.",
       "zh-chs": "<b> CDROM </ b>，块为{0}字节。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1196"
+        "index.html->id_computerSelector->dialog->21->1199"
       ]
     },
     {
@@ -1880,7 +1886,7 @@
       "ru": "<b> Флоппи-диск </ b>, блоки имеют размер {0}.",
       "zh-chs": "<b>软盘</ b>，块为{0}字节。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1197"
+        "index.html->id_computerSelector->dialog->21->1200"
       ]
     },
     {
@@ -1896,7 +1902,7 @@
       "ru": "<b> ВНИМАНИЕ: </ b> TLS не используется, пароль будет отправлен в открытом виде.",
       "zh-chs": "<b>警告：</ b>不使用TLS，密码将以明文形式发送。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1395"
+        "index.html->id_computerSelector->dialog->21->1398"
       ]
     },
     {
@@ -1912,8 +1918,8 @@
       "ru": "<b> ПРЕДУПРЕЖДЕНИЕ. </ b> Это приведет к удалению данных на удаленной системе.",
       "zh-chs": "<b>警告</ b>：这将擦除远程系统上的数据。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1394",
-        "index.html->id_computerSelector->dialog->21->1400"
+        "index.html->id_computerSelector->dialog->21->1397",
+        "index.html->id_computerSelector->dialog->21->1403"
       ]
     },
     {
@@ -2069,7 +2075,7 @@
       "ru": "Имя доступа",
       "zh-chs": "访问名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1253"
+        "index.html->id_computerSelector->dialog->21->1256"
       ]
     },
     {
@@ -2085,7 +2091,7 @@
       "ru": "Имя доступа",
       "zh-chs": "访问名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1265"
+        "index.html->id_computerSelector->dialog->21->1268"
       ]
     },
     {
@@ -2211,7 +2217,7 @@
       "ru": "Добавить",
       "zh-chs": "加",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1517"
+        "index.html->id_computerSelector->dialog->21->1518"
       ]
     },
     {
@@ -2227,7 +2233,7 @@
       "ru": "Добавить",
       "zh-chs": "加",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1537"
+        "index.html->id_computerSelector->dialog->21->1538"
       ]
     },
     {
@@ -2372,7 +2378,7 @@
       "ru": "Добавить HTTP прокси",
       "zh-chs": "添加HTTP代理",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1277"
+        "index.html->id_computerSelector->dialog->21->1280"
       ]
     },
     {
@@ -2404,8 +2410,8 @@
       "ru": "Добавить интернет-сервер",
       "zh-chs": "添加Internet服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1296",
-        "index.html->id_computerSelector->dialog->21->1298"
+        "index.html->id_computerSelector->dialog->21->1299",
+        "index.html->id_computerSelector->dialog->21->1301"
       ]
     },
     {
@@ -2437,8 +2443,8 @@
       "ru": "Добавить прокси-сервер",
       "zh-chs": "添加代理服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1281",
-        "index.html->id_computerSelector->dialog->21->1283"
+        "index.html->id_computerSelector->dialog->21->1284",
+        "index.html->id_computerSelector->dialog->21->1286"
       ]
     },
     {
@@ -2454,7 +2460,7 @@
       "ru": "Добавить прокси ...",
       "zh-chs": "添加代理...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1225"
+        "index.html->id_computerSelector->dialog->21->1228"
       ]
     },
     {
@@ -2470,7 +2476,7 @@
       "ru": "Добавить запись",
       "zh-chs": "添加记录",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1635"
+        "index.html->id_computerSelector->dialog->21->1636"
       ]
     },
     {
@@ -2486,7 +2492,7 @@
       "ru": "Добавить удаленный сервер",
       "zh-chs": "添加远程服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1295"
+        "index.html->id_computerSelector->dialog->21->1298"
       ]
     },
     {
@@ -2502,7 +2508,7 @@
       "ru": "Добавить сервер...",
       "zh-chs": "添加服务器...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1224"
+        "index.html->id_computerSelector->dialog->21->1227"
       ]
     },
     {
@@ -2552,7 +2558,7 @@
       "ru": "Добавить переменную",
       "zh-chs": "添加变量",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1639"
+        "index.html->id_computerSelector->dialog->21->1640"
       ]
     },
     {
@@ -2568,7 +2574,7 @@
       "ru": "Добавить переменную к записи № {0}",
       "zh-chs": "将变量添加到记录＃{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1657"
+        "index.html->id_computerSelector->dialog->21->1658"
       ]
     },
     {
@@ -2648,7 +2654,7 @@
       "ru": "Добавить новую запись",
       "zh-chs": "添加新记录",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1634"
+        "index.html->id_computerSelector->dialog->21->1635"
       ]
     },
     {
@@ -2664,7 +2670,7 @@
       "ru": "Добавить новую переменную",
       "zh-chs": "添加一个新变量",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1638"
+        "index.html->id_computerSelector->dialog->21->1639"
       ]
     },
     {
@@ -2680,8 +2686,8 @@
       "ru": "Добавить будильник",
       "zh-chs": "添加闹钟",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1521",
-        "index.html->id_computerSelector->dialog->21->1523"
+        "index.html->id_computerSelector->dialog->21->1522",
+        "index.html->id_computerSelector->dialog->21->1524"
       ]
     },
     {
@@ -2729,7 +2735,7 @@
       "ru": "Добавить новый будильник",
       "zh-chs": "新增警报",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1520"
+        "index.html->id_computerSelector->dialog->21->1521"
       ]
     },
     {
@@ -2761,7 +2767,7 @@
       "ru": "Адреса",
       "zh-chs": "地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1672"
+        "index.html->id_computerSelector->dialog->21->1673"
       ]
     },
     {
@@ -2797,7 +2803,7 @@
       "ru": "После пробуждения",
       "zh-chs": "醒后",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1529",
+        "index.html->id_computerSelector->dialog->21->1530",
         "index.html->id_computerSelector->dialog->dialog->5->dialog25->1->9->3"
       ]
     },
@@ -2896,7 +2902,7 @@
       "ru": "Аварийная сигнализация",
       "zh-chs": "报警",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1533"
+        "index.html->id_computerSelector->dialog->21->1534"
       ]
     },
     {
@@ -2928,7 +2934,7 @@
       "ru": "Тревога {0}",
       "zh-chs": "警报{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1532"
+        "index.html->id_computerSelector->dialog->21->1533"
       ]
     },
     {
@@ -2970,7 +2976,7 @@
       "ru": "Оповещение инициировано соединение",
       "zh-chs": "警报启动的连接",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1213"
+        "index.html->id_computerSelector->dialog->21->1216"
       ]
     },
     {
@@ -3049,8 +3055,8 @@
       "ru": "Весь Фокус",
       "zh-chs": "全部聚焦",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1138",
-        "index.html->id_computerSelector->dialog->21->1151"
+        "index.html->id_computerSelector->dialog->21->1141",
+        "index.html->id_computerSelector->dialog->21->1154"
       ]
     },
     {
@@ -3320,7 +3326,7 @@
       "ru": "Приложение",
       "zh-chs": "应用程式",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1492"
+        "index.html->id_computerSelector->dialog->21->1493"
       ]
     },
     {
@@ -3336,7 +3342,7 @@
       "ru": "заявка",
       "zh-chs": "应用",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1479",
+        "index.html->id_computerSelector->dialog->21->1480",
         "index.html->id_computerSelector->dialog->21->638",
         "index.html->id_computerSelector->dialog->21->760"
       ]
@@ -3354,7 +3360,7 @@
       "ru": "Имя приложения",
       "zh-chs": "应用名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1493"
+        "index.html->id_computerSelector->dialog->21->1494"
       ]
     },
     {
@@ -3419,7 +3425,7 @@
       "ru": "Необходимо выбрать хотя бы один файл образа диска.",
       "zh-chs": "必须至少选择一个磁盘映像文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1187"
+        "index.html->id_computerSelector->dialog->21->1190"
       ]
     },
     {
@@ -3561,8 +3567,8 @@
       "ru": "Ошибка аутентификации",
       "zh-chs": "授权错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1689",
-        "index.html->id_computerSelector->dialog->21->1698"
+        "index.html->id_computerSelector->dialog->21->1690",
+        "index.html->id_computerSelector->dialog->21->1699"
       ]
     },
     {
@@ -3578,8 +3584,8 @@
       "ru": "Тип аутентификации",
       "zh-chs": "认证类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1256",
-        "index.html->id_computerSelector->dialog->21->1259"
+        "index.html->id_computerSelector->dialog->21->1259",
+        "index.html->id_computerSelector->dialog->21->1262"
       ]
     },
     {
@@ -3608,7 +3614,7 @@
       "ru": "Тип аутентификации",
       "zh-chs": "认证方式",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1291"
+        "index.html->id_computerSelector->dialog->21->1294"
       ]
     },
     {
@@ -3625,6 +3631,12 @@
       "zh-chs": "自动化的"
     },
     {
+      "en": "Automatic",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->d7decimationspan->d7decimation->2"
+      ]
+    },
+    {
       "de": "Automatische Konfiguration über den DHCP-Server",
       "en": "Automatic configuration using DHCP server",
       "es": "Configuración automática con servidor DHCP",
@@ -3637,7 +3649,7 @@
       "ru": "Автоматическая настройка с использованием DHCP-сервера",
       "zh-chs": "使用DHCP服务器自动配置",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1345"
+        "index.html->id_computerSelector->dialog->21->1348"
       ]
     },
     {
@@ -3701,7 +3713,7 @@
       "ru": "BIOS и ОС включены",
       "zh-chs": "启用BIOS和操作系统",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1205"
+        "index.html->id_computerSelector->dialog->21->1208"
       ]
     },
     {
@@ -3739,7 +3751,7 @@
     {
       "en": "BIOS Reload of Golden Configuration",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1405"
+        "index.html->id_computerSelector->dialog->21->1407"
       ]
     },
     {
@@ -3771,7 +3783,7 @@
       "ru": "BIOS включен",
       "zh-chs": "启用BIOS",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1203"
+        "index.html->id_computerSelector->dialog->21->1206"
       ]
     },
     {
@@ -3874,7 +3886,7 @@
       "ru": "Бинарный файл,",
       "zh-chs": "二进制文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1543"
+        "index.html->id_computerSelector->dialog->21->1544"
       ]
     },
     {
@@ -3907,23 +3919,23 @@
       "ru": "Действие загрузки: ",
       "zh-chs": "开机动作：",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1448"
+        "index.html->id_computerSelector->dialog->21->1449"
       ]
     },
     {
       "en": "Boot Features",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1314",
+        "index.html->id_computerSelector->dialog->21->1317",
         "index.html->id_computerSelector->dialog->21->439"
       ]
     },
     {
       "en": "Boot Features Error",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1315",
-        "index.html->id_computerSelector->dialog->21->1316",
-        "index.html->id_computerSelector->dialog->21->1317",
-        "index.html->id_computerSelector->dialog->21->1319"
+        "index.html->id_computerSelector->dialog->21->1318",
+        "index.html->id_computerSelector->dialog->21->1319",
+        "index.html->id_computerSelector->dialog->21->1320",
+        "index.html->id_computerSelector->dialog->21->1322"
       ]
     },
     {
@@ -4210,7 +4222,7 @@
       "ru": "CDROM (.iso)",
       "zh-chs": "光盘（.iso）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1180"
+        "index.html->id_computerSelector->dialog->21->1183"
       ]
     },
     {
@@ -4242,8 +4254,8 @@
       "ru": "CILA - Внутренний",
       "zh-chs": "CILA-内部",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1231",
-        "index.html->id_computerSelector->dialog->21->1236"
+        "index.html->id_computerSelector->dialog->21->1234",
+        "index.html->id_computerSelector->dialog->21->1239"
       ]
     },
     {
@@ -4275,8 +4287,8 @@
       "ru": "CIRA - Внешний",
       "zh-chs": "CIRA-外部",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1230",
-        "index.html->id_computerSelector->dialog->21->1235"
+        "index.html->id_computerSelector->dialog->21->1233",
+        "index.html->id_computerSelector->dialog->21->1238"
       ]
     },
     {
@@ -4327,7 +4339,7 @@
     {
       "en": "CSME Unconfigure",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1406"
+        "index.html->id_computerSelector->dialog->21->1408"
       ]
     },
     {
@@ -4359,7 +4371,7 @@
       "ru": "Ошибка вызова",
       "zh-chs": "通话错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1701"
+        "index.html->id_computerSelector->dialog->21->1702"
       ]
     },
     {
@@ -4404,9 +4416,9 @@
       "ru": "сертификат",
       "zh-chs": "证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1289",
-        "index.html->id_computerSelector->dialog->21->1294",
-        "index.html->id_computerSelector->dialog->21->1577",
+        "index.html->id_computerSelector->dialog->21->1292",
+        "index.html->id_computerSelector->dialog->21->1297",
+        "index.html->id_computerSelector->dialog->21->1578",
         "index.html->id_computerSelector->dialog->21->293",
         "index.html->id_computerSelector->dialog->21->296",
         "index.html->id_computerSelector->dialog->21->670",
@@ -4429,7 +4441,7 @@
       "ru": "Сертификат -",
       "zh-chs": "证书 -",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1590",
+        "index.html->id_computerSelector->dialog->21->1591",
         "index.html->id_computerSelector->dialog->21->258",
         "index.html->id_computerSelector->dialog->21->682"
       ]
@@ -4447,7 +4459,7 @@
       "ru": "Сертификат / Mutual-Auth TLS",
       "zh-chs": "证书/相互认证TLS",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1260"
+        "index.html->id_computerSelector->dialog->21->1263"
       ]
     },
     {
@@ -4463,10 +4475,10 @@
       "ru": "Файл сертификата",
       "zh-chs": "证书文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1620",
-        "index.html->id_computerSelector->dialog->21->1622",
-        "index.html->id_computerSelector->dialog->21->1624",
-        "index.html->id_computerSelector->dialog->21->1626"
+        "index.html->id_computerSelector->dialog->21->1621",
+        "index.html->id_computerSelector->dialog->21->1623",
+        "index.html->id_computerSelector->dialog->21->1625",
+        "index.html->id_computerSelector->dialog->21->1627"
       ]
     },
     {
@@ -4518,7 +4530,7 @@
       "ru": "Название сертификата",
       "zh-chs": "证书名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1261"
+        "index.html->id_computerSelector->dialog->21->1264"
       ]
     },
     {
@@ -4534,8 +4546,8 @@
       "ru": "Пароль сертификата",
       "zh-chs": "证书密码",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1594",
-        "index.html->id_computerSelector->dialog->21->1619"
+        "index.html->id_computerSelector->dialog->21->1595",
+        "index.html->id_computerSelector->dialog->21->1620"
       ]
     },
     {
@@ -4567,7 +4579,7 @@
       "ru": "Сертификат Тема",
       "zh-chs": "证书科目",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1587",
+        "index.html->id_computerSelector->dialog->21->1588",
         "index.html->id_computerSelector->dialog->21->255",
         "index.html->id_computerSelector->dialog->21->307",
         "index.html->id_computerSelector->dialog->21->680"
@@ -4586,7 +4598,7 @@
       "ru": "Использование сертификата",
       "zh-chs": "证书用法",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1586",
+        "index.html->id_computerSelector->dialog->21->1587",
         "index.html->id_computerSelector->dialog->21->306"
       ]
     },
@@ -4693,8 +4705,8 @@
     {
       "en": "Change Boot Order",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1454",
-        "index.html->id_computerSelector->dialog->21->1460"
+        "index.html->id_computerSelector->dialog->21->1455",
+        "index.html->id_computerSelector->dialog->21->1461"
       ]
     },
     {
@@ -4736,7 +4748,7 @@
     {
       "en": "Checking boot sources...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1398"
+        "index.html->id_computerSelector->dialog->21->1401"
       ]
     },
     {
@@ -4752,7 +4764,7 @@
       "ru": "Проверка возможностей ...",
       "zh-chs": "正在检查功能...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1352"
+        "index.html->id_computerSelector->dialog->21->1355"
       ]
     },
     {
@@ -4768,10 +4780,10 @@
       "ru": "Проверка состояния ...",
       "zh-chs": "正在检查状态...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1412",
-        "index.html->id_computerSelector->dialog->21->1416",
-        "index.html->id_computerSelector->dialog->21->1424",
-        "index.html->id_computerSelector->dialog->21->1445"
+        "index.html->id_computerSelector->dialog->21->1413",
+        "index.html->id_computerSelector->dialog->21->1417",
+        "index.html->id_computerSelector->dialog->21->1425",
+        "index.html->id_computerSelector->dialog->21->1446"
       ]
     },
     {
@@ -4838,7 +4850,7 @@
     {
       "en": "Clear BIOS NVM Variables",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1404"
+        "index.html->id_computerSelector->dialog->21->1406"
       ]
     },
     {
@@ -4939,7 +4951,7 @@
       "ru": "буфер обмена",
       "zh-chs": "剪贴板",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1159",
+        "index.html->id_computerSelector->dialog->21->1162",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p14->11->1->4->1"
       ]
     },
@@ -4973,8 +4985,8 @@
       "ru": "Подписание кода",
       "zh-chs": "代码签名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1579",
-        "index.html->id_computerSelector->dialog->21->1614",
+        "index.html->id_computerSelector->dialog->21->1580",
+        "index.html->id_computerSelector->dialog->21->1615",
         "index.html->id_computerSelector->dialog->21->299",
         "index.html->id_computerSelector->dialog->21->709"
       ]
@@ -5025,9 +5037,9 @@
       "ru": "Распространенное имя",
       "zh-chs": "通用名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1255",
-        "index.html->id_computerSelector->dialog->21->1599",
-        "index.html->id_computerSelector->dialog->21->1604",
+        "index.html->id_computerSelector->dialog->21->1258",
+        "index.html->id_computerSelector->dialog->21->1600",
+        "index.html->id_computerSelector->dialog->21->1605",
         "index.html->id_computerSelector->dialog->21->661",
         "index.html->id_computerSelector->dialog->21->701"
       ]
@@ -5117,7 +5129,7 @@
       "ru": "Имя компьютера",
       "zh-chs": "电脑名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1305"
+        "index.html->id_computerSelector->dialog->21->1308"
       ]
     },
     {
@@ -5194,7 +5206,7 @@
     {
       "en": "Confirm execution of Intel&reg; Remote Platform Erase?",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1399"
+        "index.html->id_computerSelector->dialog->21->1402"
       ]
     },
     {
@@ -5210,7 +5222,7 @@
       "ru": "Подтвердить выполнение Intel&reg; Remote Secure Erase?",
       "zh-chs": "确认执行Intel&reg;远程安全擦除？",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1391"
+        "index.html->id_computerSelector->dialog->21->1394"
       ]
     },
     {
@@ -5226,7 +5238,7 @@
       "ru": "Подтвердить удаление всех будильников?",
       "zh-chs": "确认删除所有唤醒警报？",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1519"
+        "index.html->id_computerSelector->dialog->21->1520"
       ]
     },
     {
@@ -5373,8 +5385,8 @@
       "ru": "Тип соединения",
       "zh-chs": "连接类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1274",
-        "index.html->id_computerSelector->dialog->21->1286"
+        "index.html->id_computerSelector->dialog->21->1277",
+        "index.html->id_computerSelector->dialog->21->1289"
       ]
     },
     {
@@ -5454,7 +5466,7 @@
       "ru": "Потребляемый",
       "zh-chs": "已消耗",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1643"
+        "index.html->id_computerSelector->dialog->21->1644"
       ]
     },
     {
@@ -5502,8 +5514,8 @@
       "ru": "Страна",
       "zh-chs": "国家",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1602",
-        "index.html->id_computerSelector->dialog->21->1607",
+        "index.html->id_computerSelector->dialog->21->1603",
+        "index.html->id_computerSelector->dialog->21->1608",
         "index.html->id_computerSelector->dialog->21->667",
         "index.html->id_computerSelector->dialog->21->704"
       ]
@@ -5521,7 +5533,7 @@
       "ru": "Создать корневой сертификат",
       "zh-chs": "创建根证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1603"
+        "index.html->id_computerSelector->dialog->21->1604"
       ]
     },
     {
@@ -5553,7 +5565,7 @@
       "ru": "Создать новый файл Setup.bin",
       "zh-chs": "创建新的Setup.bin文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1628"
+        "index.html->id_computerSelector->dialog->21->1629"
       ]
     },
     {
@@ -5696,7 +5708,7 @@
       "ru": "Custom Power Action",
       "zh-chs": "自定义电源动作",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1417"
+        "index.html->id_computerSelector->dialog->21->1418"
       ]
     },
     {
@@ -5712,7 +5724,7 @@
       "ru": "Пользовательское действие ...",
       "zh-chs": "自定义动作...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1379"
+        "index.html->id_computerSelector->dialog->21->1382"
       ]
     },
     {
@@ -5744,7 +5756,7 @@
       "ru": "Папа в процессе",
       "zh-chs": "DAD正在进行中",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1327"
+        "index.html->id_computerSelector->dialog->21->1330"
       ]
     },
     {
@@ -5869,7 +5881,7 @@
       "ru": "DNS suffex",
       "zh-chs": "DNS后缀",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1266"
+        "index.html->id_computerSelector->dialog->21->1269"
       ]
     },
     {
@@ -5885,7 +5897,7 @@
       "ru": "DNS-суффикс",
       "zh-chs": "DNS后缀",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1276"
+        "index.html->id_computerSelector->dialog->21->1279"
       ]
     },
     {
@@ -6022,7 +6034,7 @@
       "ru": "Выделенный, отличается от ОС",
       "zh-chs": "专用，不同于OS",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1303"
+        "index.html->id_computerSelector->dialog->21->1306"
       ]
     },
     {
@@ -6233,8 +6245,8 @@
       "ru": "удалять",
       "zh-chs": "删除",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1167",
-        "index.html->id_computerSelector->dialog->21->1542",
+        "index.html->id_computerSelector->dialog->21->1170",
+        "index.html->id_computerSelector->dialog->21->1543",
         "index.html->id_computerSelector->dialog->dialog->7->5",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3"
       ]
@@ -6252,7 +6264,7 @@
       "ru": "Удалить 1 сертификат?",
       "zh-chs": "删除1个证书？",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1596"
+        "index.html->id_computerSelector->dialog->21->1597"
       ]
     },
     {
@@ -6284,7 +6296,7 @@
       "ru": "Удалить будильник",
       "zh-chs": "删除警报",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1530"
+        "index.html->id_computerSelector->dialog->21->1531"
       ]
     },
     {
@@ -6300,8 +6312,8 @@
       "ru": "Удалить сертификаты",
       "zh-chs": "删除证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1595",
-        "index.html->id_computerSelector->dialog->21->1597"
+        "index.html->id_computerSelector->dialog->21->1596",
+        "index.html->id_computerSelector->dialog->21->1598"
       ]
     },
     {
@@ -6398,7 +6410,7 @@
       "ru": "Удалить {0} сертификатов?",
       "zh-chs": "删除{0}个证书？",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1598"
+        "index.html->id_computerSelector->dialog->21->1599"
       ]
     },
     {
@@ -6814,8 +6826,8 @@
       "zh-chs": "残障人士",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1094",
-        "index.html->id_computerSelector->dialog->21->1202",
-        "index.html->id_computerSelector->dialog->21->1206",
+        "index.html->id_computerSelector->dialog->21->1205",
+        "index.html->id_computerSelector->dialog->21->1209",
         "index.html->id_computerSelector->dialog->21->424",
         "index.html->id_computerSelector->dialog->21->452",
         "index.html->id_computerSelector->dialog->21->477",
@@ -6832,7 +6844,8 @@
         "index.html->id_computerSelector->dialog->dialog->5->dialog20",
         "index.html->id_computerSelector->dialog->dialog->5->dialog23->3->idx_d23ddns->1",
         "index.html->id_computerSelector->dialog->dialog->5->dialog26->7",
-        "index.html->id_computerSelector->dialog->dialog->5->dialog26->d26rpediv->5"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog26->d26rpediv->5",
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->d7decimationspan->d7decimation->1"
       ]
     },
     {
@@ -7061,7 +7074,7 @@
       "ru": "Не вращайте мышь",
       "zh-chs": "不要旋转鼠标",
       "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->1->19"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->7->1->17"
       ]
     },
     {
@@ -7082,6 +7095,12 @@
       ]
     },
     {
+      "en": "Don't set",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->d7decimationspan->d7decimation->0"
+      ]
+    },
+    {
       "de": "Herunterladen",
       "en": "Download",
       "es": "Descargar",
@@ -7094,7 +7113,7 @@
       "ru": "Скачать",
       "zh-chs": "下载",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1472",
+        "index.html->id_computerSelector->dialog->21->1473",
         "index.html->id_computerSelector->dialog->21->295",
         "index.html->id_computerSelector->dialog->21->515",
         "index.html->id_computerSelector->dialog->21->518",
@@ -7114,7 +7133,13 @@
       "ru": "Загрузить файл",
       "zh-chs": "下载文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1175"
+        "index.html->id_computerSelector->dialog->21->1178"
+      ]
+    },
+    {
+      "en": "Downscaling",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->d7decimationspan->3"
       ]
     },
     {
@@ -7130,7 +7155,7 @@
       "ru": "Перетащите файл .mcrec или нажмите \\\"Открыть файл ... \\\"",
       "zh-chs": "拖放.mcrec文件或单击\\“打开文件... \\”",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1686"
+        "index.html->id_computerSelector->dialog->21->1687"
       ]
     },
     {
@@ -7233,8 +7258,8 @@
       "ru": "продолжительность",
       "zh-chs": "持续时间",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1665",
-        "index.html->id_computerSelector->dialog->21->1667"
+        "index.html->id_computerSelector->dialog->21->1666",
+        "index.html->id_computerSelector->dialog->21->1668"
       ]
     },
     {
@@ -7295,7 +7320,7 @@
       "ru": "Динамический DNS-клиент",
       "zh-chs": "动态DNS客户端",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1306",
+        "index.html->id_computerSelector->dialog->21->1309",
         "index.html->id_computerSelector->dialog->dialog->5->dialog23->3->3"
       ]
     },
@@ -7451,7 +7476,7 @@
       "ru": "Электронное письмо",
       "zh-chs": "电子邮件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1580",
+        "index.html->id_computerSelector->dialog->21->1581",
         "index.html->id_computerSelector->dialog->21->300"
       ]
     },
@@ -7534,7 +7559,7 @@
       "ru": "Редактировать заголовок",
       "zh-chs": "编辑标题",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1646"
+        "index.html->id_computerSelector->dialog->21->1647"
       ]
     },
     {
@@ -7550,7 +7575,7 @@
       "ru": "Редактировать запись № {0}",
       "zh-chs": "编辑记录＃{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1647"
+        "index.html->id_computerSelector->dialog->21->1648"
       ]
     },
     {
@@ -7566,7 +7591,7 @@
       "ru": "Изменить запись # {0}, переменная # {1}",
       "zh-chs": "编辑记录＃{0}，变量＃{1}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1656"
+        "index.html->id_computerSelector->dialog->21->1657"
       ]
     },
     {
@@ -7582,7 +7607,7 @@
       "ru": "Изменить будильник",
       "zh-chs": "编辑闹钟",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1525"
+        "index.html->id_computerSelector->dialog->21->1526"
       ]
     },
     {
@@ -7614,7 +7639,7 @@
       "ru": "Редактировать {0}",
       "zh-chs": "编辑{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1539"
+        "index.html->id_computerSelector->dialog->21->1540"
       ]
     },
     {
@@ -7631,9 +7656,9 @@
       "zh-chs": "编辑...",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1078",
-        "index.html->id_computerSelector->dialog->21->1514",
-        "index.html->id_computerSelector->dialog->21->1538",
-        "index.html->id_computerSelector->dialog->21->1541",
+        "index.html->id_computerSelector->dialog->21->1515",
+        "index.html->id_computerSelector->dialog->21->1539",
+        "index.html->id_computerSelector->dialog->21->1542",
         "index.html->id_computerSelector->dialog->21->210",
         "index.html->id_computerSelector->dialog->21->216",
         "index.html->id_computerSelector->dialog->21->218"
@@ -7652,7 +7677,7 @@
       "ru": "Защита электронной почты",
       "zh-chs": "邮件保护",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1613",
+        "index.html->id_computerSelector->dialog->21->1614",
         "index.html->id_computerSelector->dialog->21->708"
       ]
     },
@@ -7681,7 +7706,8 @@
         "index.html->id_computerSelector->dialog->21->947",
         "index.html->id_computerSelector->dialog->dialog->5->dialog23->3->idx_d23ddns->5",
         "index.html->id_computerSelector->dialog->dialog->5->dialog26->5",
-        "index.html->id_computerSelector->dialog->dialog->5->dialog26->d26rpediv->3"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog26->d26rpediv->3",
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->d7decimationspan->d7decimation->3"
       ]
     },
     {
@@ -7779,7 +7805,7 @@
       "ru": "Включено,",
       "zh-chs": "已启用",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1207"
+        "index.html->id_computerSelector->dialog->21->1210"
       ]
     },
     {
@@ -7905,7 +7931,7 @@
       "ru": "Введите пароль безопасного стирания, если требуется.",
       "zh-chs": "如果需要，输入安全擦除密码。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1392"
+        "index.html->id_computerSelector->dialog->21->1395"
       ]
     },
     {
@@ -7921,7 +7947,7 @@
       "ru": "Введите сертификат, закрытый пароль, пароль.",
       "zh-chs": "输入证书私钥密码。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1591"
+        "index.html->id_computerSelector->dialog->21->1592"
       ]
     },
     {
@@ -7953,7 +7979,7 @@
       "ru": "Введите текст и нажмите OK, чтобы удаленно набрать его с помощью английской клавиатуры США. Перед продолжением убедитесь, что дистанционный курсор установлен в правильное положение.",
       "zh-chs": "输入文本，然后单击“确定”以使用美式英语键盘远程输入文本。在继续操作之前，请确保将远程光标放置在正确的位置。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1154"
+        "index.html->id_computerSelector->dialog->21->1157"
       ]
     },
     {
@@ -7969,7 +7995,7 @@
       "ru": "Введите текст для отправки в буфер обмена Intel&reg; AMT.",
       "zh-chs": "输入文本以发送到英特尔&reg;AMT剪贴板。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1156"
+        "index.html->id_computerSelector->dialog->21->1159"
       ]
     },
     {
@@ -7985,7 +8011,7 @@
       "ru": "Введите до 5 суффиксов домена интрасети. Если компьютер находится за пределами этих доменов, локальные порты Intel&reg; AMT будут закрыты и подключения к удаленному серверу будут активны.",
       "zh-chs": "输入最多5个Intranet域后缀。如果计算机不在这些域中，则英特尔&reg;AMT本地端口将关闭，并且远程服务器连接将处于活动状态。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1245"
+        "index.html->id_computerSelector->dialog->21->1248"
       ]
     },
     {
@@ -8052,9 +8078,9 @@
       "ru": "Обнаружение окружающей среды",
       "zh-chs": "环境检测",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1248",
-        "index.html->id_computerSelector->dialog->21->1249",
-        "index.html->id_computerSelector->dialog->21->1251"
+        "index.html->id_computerSelector->dialog->21->1251",
+        "index.html->id_computerSelector->dialog->21->1252",
+        "index.html->id_computerSelector->dialog->21->1254"
       ]
     },
     {
@@ -8070,7 +8096,7 @@
       "ru": "Обнаружение окружающей среды",
       "zh-chs": "环境检测",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1208"
+        "index.html->id_computerSelector->dialog->21->1211"
       ]
     },
     {
@@ -8086,9 +8112,9 @@
       "ru": "ошибка",
       "zh-chs": "错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1308",
-        "index.html->id_computerSelector->dialog->21->1310",
-        "index.html->id_computerSelector->dialog->21->1312",
+        "index.html->id_computerSelector->dialog->21->1311",
+        "index.html->id_computerSelector->dialog->21->1313",
+        "index.html->id_computerSelector->dialog->21->1315",
         "index.html->id_computerSelector->dialog->21->542"
       ]
     },
@@ -8106,7 +8132,7 @@
       "zh-chs": "错误编号",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1106",
-        "index.html->id_computerSelector->dialog->21->1435"
+        "index.html->id_computerSelector->dialog->21->1436"
       ]
     },
     {
@@ -8122,10 +8148,10 @@
       "ru": "Ошибка № {0}",
       "zh-chs": "错误＃{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1426",
-        "index.html->id_computerSelector->dialog->21->1441",
-        "index.html->id_computerSelector->dialog->21->1447",
-        "index.html->id_computerSelector->dialog->21->1697"
+        "index.html->id_computerSelector->dialog->21->1427",
+        "index.html->id_computerSelector->dialog->21->1442",
+        "index.html->id_computerSelector->dialog->21->1448",
+        "index.html->id_computerSelector->dialog->21->1698"
       ]
     },
     {
@@ -8147,7 +8173,7 @@
     {
       "en": "Error, Status = ",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1318"
+        "index.html->id_computerSelector->dialog->21->1321"
       ]
     },
     {
@@ -8453,7 +8479,7 @@
       "ru": "Экспортировать как .cer ...",
       "zh-chs": "导出为.cer ...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1568"
+        "index.html->id_computerSelector->dialog->21->1569"
       ]
     },
     {
@@ -8469,7 +8495,7 @@
       "ru": "Экспортировать как .p12 ...",
       "zh-chs": "导出为.p12 ...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1569"
+        "index.html->id_computerSelector->dialog->21->1570"
       ]
     },
     {
@@ -8807,7 +8833,7 @@
       "ru": "FQDN / имя хоста",
       "zh-chs": "FQDN /主机名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1278"
+        "index.html->id_computerSelector->dialog->21->1281"
       ]
     },
     {
@@ -8854,7 +8880,7 @@
       "ru": "Не удалось добавить сигнал тревоги {0}. <br/> Убедитесь, что сигнал тревоги относится к будущему времени.",
       "zh-chs": "添加警报{0}失败。<br/>验证警报是否将来。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1524"
+        "index.html->id_computerSelector->dialog->21->1525"
       ]
     },
     {
@@ -8870,7 +8896,7 @@
       "ru": "Не удалось добавить будильник. Статус: {0}. <br/> Убедитесь, что будильник на будущее.",
       "zh-chs": "添加告警失败。状态：{0}。<br/>验证警报是否将来。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1522"
+        "index.html->id_computerSelector->dialog->21->1523"
       ]
     },
     {
@@ -8886,7 +8912,7 @@
       "ru": "Не удалось добавить прокси, статус",
       "zh-chs": "无法添加代理，状态",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1282"
+        "index.html->id_computerSelector->dialog->21->1285"
       ]
     },
     {
@@ -8902,8 +8928,8 @@
       "ru": "Не удалось добавить сервер, статус {0}",
       "zh-chs": "无法添加服务器，状态为{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1250",
-        "index.html->id_computerSelector->dialog->21->1297"
+        "index.html->id_computerSelector->dialog->21->1253",
+        "index.html->id_computerSelector->dialog->21->1300"
       ]
     },
     {
@@ -9146,8 +9172,8 @@
       "ru": "Имя файла",
       "zh-chs": "文件名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1494",
-        "index.html->id_computerSelector->dialog->21->1495"
+        "index.html->id_computerSelector->dialog->21->1495",
+        "index.html->id_computerSelector->dialog->21->1496"
       ]
     },
     {
@@ -9251,7 +9277,7 @@
       "ru": "отпечаток пальца",
       "zh-chs": "指纹",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1588",
+        "index.html->id_computerSelector->dialog->21->1589",
         "index.html->id_computerSelector->dialog->21->256",
         "index.html->id_computerSelector->dialog->21->308"
       ]
@@ -9379,7 +9405,7 @@
       "ru": "Дискета (.img)",
       "zh-chs": "软盘（.img）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1179"
+        "index.html->id_computerSelector->dialog->21->1182"
       ]
     },
     {
@@ -9629,7 +9655,7 @@
     {
       "en": "GET CIM_BootSourceSetting, Error #{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1414"
+        "index.html->id_computerSelector->dialog->21->1415"
       ]
     },
     {
@@ -9744,7 +9770,7 @@
       "ru": "Получение настроек загрузки ...",
       "zh-chs": "获取启动设置...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1433"
+        "index.html->id_computerSelector->dialog->21->1434"
       ]
     },
     {
@@ -9789,7 +9815,7 @@
       "ru": "Глобальный адрес",
       "zh-chs": "全球地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1324"
+        "index.html->id_computerSelector->dialog->21->1327"
       ]
     },
     {
@@ -9805,7 +9831,7 @@
       "ru": "грациозный",
       "zh-chs": "优美",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1182"
+        "index.html->id_computerSelector->dialog->21->1185"
       ]
     },
     {
@@ -9867,7 +9893,7 @@
       "ru": "HTTP прокси #",
       "zh-chs": "HTTP代理",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1268"
+        "index.html->id_computerSelector->dialog->21->1271"
       ]
     },
     {
@@ -9883,7 +9909,7 @@
       "ru": "Удаление HTTP прокси",
       "zh-chs": "HTTP代理删除",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1269"
+        "index.html->id_computerSelector->dialog->21->1272"
       ]
     },
     {
@@ -9892,7 +9918,7 @@
     {
       "en": "HTTPS Boot",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1387"
+        "index.html->id_computerSelector->dialog->21->1390"
       ]
     },
     {
@@ -9956,8 +9982,8 @@
       "ru": "Хеш (HEX)",
       "zh-chs": "哈希（HEX）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1651",
-        "index.html->id_computerSelector->dialog->21->1662"
+        "index.html->id_computerSelector->dialog->21->1652",
+        "index.html->id_computerSelector->dialog->21->1663"
       ]
     },
     {
@@ -9973,8 +9999,8 @@
       "ru": "Имя хеша",
       "zh-chs": "哈希名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1652",
-        "index.html->id_computerSelector->dialog->21->1663"
+        "index.html->id_computerSelector->dialog->21->1653",
+        "index.html->id_computerSelector->dialog->21->1664"
       ]
     },
     {
@@ -9990,8 +10016,8 @@
       "ru": "Тип хэша",
       "zh-chs": "哈希类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1650",
-        "index.html->id_computerSelector->dialog->21->1661"
+        "index.html->id_computerSelector->dialog->21->1651",
+        "index.html->id_computerSelector->dialog->21->1662"
       ]
     },
     {
@@ -10029,7 +10055,7 @@
     {
       "en": "Hex Encoding",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1158"
+        "index.html->id_computerSelector->dialog->21->1161"
       ]
     },
     {
@@ -10045,7 +10071,7 @@
       "ru": "Hibernate",
       "zh-chs": "冬眠",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1364"
+        "index.html->id_computerSelector->dialog->21->1367"
       ]
     },
     {
@@ -10106,7 +10132,7 @@
       "ru": "Hostname",
       "zh-chs": "主机名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1299",
+        "index.html->id_computerSelector->dialog->21->1302",
         "index.html->id_computerSelector->dialog->dialog->5->dialog4->7->1"
       ]
     },
@@ -10123,8 +10149,8 @@
       "ru": "Имя хоста FQDN",
       "zh-chs": "主机名FQDN",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1271",
-        "index.html->id_computerSelector->dialog->21->1284"
+        "index.html->id_computerSelector->dialog->21->1274",
+        "index.html->id_computerSelector->dialog->21->1287"
       ]
     },
     {
@@ -10190,7 +10216,7 @@
       "ru": "Сессия IDE-R </ b>, подключено,",
       "zh-chs": "IDE-R会话</ b>，已连接，",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1193"
+        "index.html->id_computerSelector->dialog->21->1196"
       ]
     },
     {
@@ -10397,7 +10423,7 @@
       "ru": "IPv4-адрес",
       "zh-chs": "IPv4地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1300"
+        "index.html->id_computerSelector->dialog->21->1303"
       ]
     },
     {
@@ -10429,8 +10455,8 @@
       "ru": "Настройки IPv4",
       "zh-chs": "IPv4设置",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1347",
-        "index.html->id_computerSelector->dialog->21->1349"
+        "index.html->id_computerSelector->dialog->21->1350",
+        "index.html->id_computerSelector->dialog->21->1352"
       ]
     },
     {
@@ -10446,9 +10472,9 @@
       "ru": "Адрес IPv4",
       "zh-chs": "IPv4地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1272",
-        "index.html->id_computerSelector->dialog->21->1279",
-        "index.html->id_computerSelector->dialog->21->1285",
+        "index.html->id_computerSelector->dialog->21->1275",
+        "index.html->id_computerSelector->dialog->21->1282",
+        "index.html->id_computerSelector->dialog->21->1288",
         "index.html->id_computerSelector->dialog->21->491"
       ]
     },
@@ -10558,8 +10584,8 @@
       "ru": "Адрес IPv6",
       "zh-chs": "IPv6地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1273",
-        "index.html->id_computerSelector->dialog->21->1280",
+        "index.html->id_computerSelector->dialog->21->1276",
+        "index.html->id_computerSelector->dialog->21->1283",
         "index.html->id_computerSelector->dialog->21->501",
         "index.html->id_computerSelector->dialog->21->502"
       ]
@@ -10577,7 +10603,7 @@
       "ru": "IPv6-адреса для проводного интерфейса",
       "zh-chs": "有线接口的IPv6地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1335"
+        "index.html->id_computerSelector->dialog->21->1338"
       ]
     },
     {
@@ -10593,7 +10619,7 @@
       "ru": "IPv6-адреса для беспроводного интерфейса",
       "zh-chs": "无线接口的IPv6地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1336"
+        "index.html->id_computerSelector->dialog->21->1339"
       ]
     },
     {
@@ -10625,7 +10651,7 @@
       "ru": "IPv6 отключен",
       "zh-chs": "禁用IPv6",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1337"
+        "index.html->id_computerSelector->dialog->21->1340"
       ]
     },
     {
@@ -10657,7 +10683,7 @@
       "ru": "IPv6 включен, автоматический",
       "zh-chs": "启用IPv6，自动",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1338"
+        "index.html->id_computerSelector->dialog->21->1341"
       ]
     },
     {
@@ -10673,8 +10699,8 @@
       "ru": "IPv6 включен, автоматический + ручной адрес",
       "zh-chs": "已启用IPv6，自动+手动地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1339",
-        "index.html->id_computerSelector->dialog->21->1348"
+        "index.html->id_computerSelector->dialog->21->1342",
+        "index.html->id_computerSelector->dialog->21->1351"
       ]
     },
     {
@@ -10706,7 +10732,7 @@
       "ru": "Поддержка IPv6",
       "zh-chs": "IPv6支持",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1342"
+        "index.html->id_computerSelector->dialog->21->1345"
       ]
     },
     {
@@ -10722,7 +10748,7 @@
       "ru": "Поддержка IPv6 для проводного интерфейса",
       "zh-chs": "有线接口的IPv6支持",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1340"
+        "index.html->id_computerSelector->dialog->21->1343"
       ]
     },
     {
@@ -10738,7 +10764,7 @@
       "ru": "Поддержка IPv6 для беспроводного интерфейса",
       "zh-chs": "无线接口的IPv6支持",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1341"
+        "index.html->id_computerSelector->dialog->21->1344"
       ]
     },
     {
@@ -10851,7 +10877,7 @@
       "ru": "Если установлено, создает ссылку на этот контент с главной веб-страницы.",
       "zh-chs": "如果设置，则从主页创建指向该内容的链接",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1497"
+        "index.html->id_computerSelector->dialog->21->1498"
       ]
     },
     {
@@ -10915,7 +10941,7 @@
       "ru": "немедленный",
       "zh-chs": "即时",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1183"
+        "index.html->id_computerSelector->dialog->21->1186"
       ]
     },
     {
@@ -11205,8 +11231,8 @@
         "index.html->id_computerSelector->dialog->21->128",
         "index.html->id_computerSelector->dialog->21->138",
         "index.html->id_computerSelector->dialog->21->139",
-        "index.html->id_computerSelector->dialog->21->1584",
-        "index.html->id_computerSelector->dialog->21->1610",
+        "index.html->id_computerSelector->dialog->21->1585",
+        "index.html->id_computerSelector->dialog->21->1611",
         "index.html->id_computerSelector->dialog->21->304"
       ]
     },
@@ -11223,8 +11249,8 @@
       "ru": "Агент Intel&reg; AMT",
       "zh-chs": "英特尔&reg;AMT代理",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1583",
-        "index.html->id_computerSelector->dialog->21->1609",
+        "index.html->id_computerSelector->dialog->21->1584",
+        "index.html->id_computerSelector->dialog->21->1610",
         "index.html->id_computerSelector->dialog->21->303"
       ]
     },
@@ -11257,8 +11283,8 @@
       "ru": "Консоль Intel&reg; AMT",
       "zh-chs": "英特尔&reg;AMT控制台",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1582",
-        "index.html->id_computerSelector->dialog->21->1608",
+        "index.html->id_computerSelector->dialog->21->1583",
+        "index.html->id_computerSelector->dialog->21->1609",
         "index.html->id_computerSelector->dialog->21->302"
       ]
     },
@@ -11283,7 +11309,7 @@
       "ru": "Intel&reg; AMT Особенности",
       "zh-chs": "英特尔&reg;AMT功能",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1307"
+        "index.html->id_computerSelector->dialog->21->1310"
       ]
     },
     {
@@ -11299,7 +11325,7 @@
       "ru": "Intel&reg; AMT KVM",
       "zh-chs": "英特尔&reg;AMT KVM",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1679"
+        "index.html->id_computerSelector->dialog->21->1680"
       ]
     },
     {
@@ -11321,7 +11347,7 @@
       "ru": "Intel&reg; AMT Ping Response",
       "zh-chs": "英特尔&reg;AMT Ping响应",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1344"
+        "index.html->id_computerSelector->dialog->21->1347"
       ]
     },
     {
@@ -11369,7 +11395,7 @@
       "ru": "Intel&reg; AMT Redirection",
       "zh-chs": "英特尔&reg;AMT重定向",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1678"
+        "index.html->id_computerSelector->dialog->21->1679"
       ]
     },
     {
@@ -11385,7 +11411,7 @@
       "ru": "Версия файла Intel&reg; AMT Setup.bin {0}. {1}",
       "zh-chs": "英特尔&reg;AMT Setup.bin文件版本{0}。{1}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1636"
+        "index.html->id_computerSelector->dialog->21->1637"
       ]
     },
     {
@@ -11413,7 +11439,7 @@
       "ru": "Intel&reg; AMT WSMAN",
       "zh-chs": "英特尔&reg;AMT WSMAN",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1677"
+        "index.html->id_computerSelector->dialog->21->1678"
       ]
     },
     {
@@ -11429,7 +11455,7 @@
       "ru": "Intel&reg; AMT связан со следующим сертификатом. Нажмите «Отмена» для отключения, если это не ожидаемый сертификат.",
       "zh-chs": "英特尔&reg;AMT连接了以下证书。如果这不是预期的证书，请按取消以断开连接。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1700"
+        "index.html->id_computerSelector->dialog->21->1701"
       ]
     },
     {
@@ -11724,7 +11750,7 @@
       "ru": "внутренний",
       "zh-chs": "内部",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1528"
+        "index.html->id_computerSelector->dialog->21->1529"
       ]
     },
     {
@@ -11773,7 +11799,7 @@
       "ru": "Неверный файл .img.",
       "zh-chs": "无效的.img文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1189"
+        "index.html->id_computerSelector->dialog->21->1192"
       ]
     },
     {
@@ -11789,7 +11815,7 @@
       "ru": "Неверный файл .iso.",
       "zh-chs": "无效的.iso文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1191"
+        "index.html->id_computerSelector->dialog->21->1194"
       ]
     },
     {
@@ -11818,7 +11844,7 @@
       "ru": "Неверное Царство Дайджеста",
       "zh-chs": "无效的摘要领域",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1696"
+        "index.html->id_computerSelector->dialog->21->1697"
       ]
     },
     {
@@ -11876,7 +11902,7 @@
       "ru": "Неверный сертификат TLS",
       "zh-chs": "无效的TLS证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1695"
+        "index.html->id_computerSelector->dialog->21->1696"
       ]
     },
     {
@@ -11892,7 +11918,7 @@
       "ru": "Неверный пароль сертификата или невозможно декодировать файл.",
       "zh-chs": "无效的证书密码或无法解码文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1621"
+        "index.html->id_computerSelector->dialog->21->1622"
       ]
     },
     {
@@ -11940,8 +11966,8 @@
       "ru": "Неверный или поврежденный файл setup.bin. Невозможно открыть.",
       "zh-chs": "无效或损坏的setup.bin文件。打不开。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1630",
-        "index.html->id_computerSelector->dialog->21->1633"
+        "index.html->id_computerSelector->dialog->21->1631",
+        "index.html->id_computerSelector->dialog->21->1634"
       ]
     },
     {
@@ -11958,7 +11984,7 @@
       "zh-chs": "无效的脚本文件。",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->13",
-        "index.html->id_computerSelector->dialog->21->1536",
+        "index.html->id_computerSelector->dialog->21->1537",
         "index.html->id_computerSelector->dialog->21->272",
         "index.html->id_computerSelector->dialog->21->292"
       ]
@@ -12019,7 +12045,7 @@
       "ru": "Сертификат выдачи подписан {0}",
       "zh-chs": "由{0}签名的签发证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1616"
+        "index.html->id_computerSelector->dialog->21->1617"
       ]
     },
     {
@@ -12084,7 +12110,7 @@
       "ru": "Выпустить новый сертификат ...",
       "zh-chs": "颁发新证书...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1567"
+        "index.html->id_computerSelector->dialog->21->1568"
       ]
     },
     {
@@ -12100,7 +12126,7 @@
       "ru": "Эмитент Сертификат",
       "zh-chs": "发行人证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1589",
+        "index.html->id_computerSelector->dialog->21->1590",
         "index.html->id_computerSelector->dialog->21->257",
         "index.html->id_computerSelector->dialog->21->309",
         "index.html->id_computerSelector->dialog->21->681"
@@ -12311,7 +12337,16 @@
       "zh-chs": "KVM会话已开始"
     },
     {
-      "en": "KVM disconnection, they may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.",
+      "en": "KVM disconnection that may be due to the display size and resolution being too large for the Intel AMT KVM buffer. Try RLE8 encoding or reducing the display resolution.",
+      "xloc": [
+        "index.html->id_computerSelector->dialog->21->1136"
+      ]
+    },
+    {
+      "en": "KVM disconnection, they may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU."
+    },
+    {
+      "en": "KVM disconnection, this may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1134"
       ]
@@ -12329,7 +12364,7 @@
       "ru": "KVMRedirectionSAP, Ошибка RequestStateChange",
       "zh-chs": "KVMRedirectionSAP，RequestStateChange错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1311"
+        "index.html->id_computerSelector->dialog->21->1314"
       ]
     },
     {
@@ -12345,7 +12380,7 @@
       "ru": "Держать тревогу",
       "zh-chs": "保持警惕",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1531"
+        "index.html->id_computerSelector->dialog->21->1532"
       ]
     },
     {
@@ -12617,7 +12652,7 @@
       "ru": "Большой Фокус",
       "zh-chs": "大焦点",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1153"
+        "index.html->id_computerSelector->dialog->21->1156"
       ]
     },
     {
@@ -12690,7 +12725,7 @@
       "ru": "Ограничить частоту кадров",
       "zh-chs": "极限帧率",
       "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->1->16"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->7->1->14"
       ]
     },
     {
@@ -12706,8 +12741,8 @@
       "ru": "Ссылка на сайт",
       "zh-chs": "链接",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1482",
-        "index.html->id_computerSelector->dialog->21->1498"
+        "index.html->id_computerSelector->dialog->21->1483",
+        "index.html->id_computerSelector->dialog->21->1499"
       ]
     },
     {
@@ -12785,7 +12820,7 @@
       "ru": "Ссылка локальный адрес",
       "zh-chs": "链接本地地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1322"
+        "index.html->id_computerSelector->dialog->21->1325"
       ]
     },
     {
@@ -13188,7 +13223,7 @@
       "ru": "MIME Тип",
       "zh-chs": "MIME类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1496"
+        "index.html->id_computerSelector->dialog->21->1497"
       ]
     },
     {
@@ -13220,7 +13255,7 @@
       "ru": "Управление HTTP прокси, используемыми для управления соединениями.",
       "zh-chs": "管理用于管理连接的HTTP代理。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1222"
+        "index.html->id_computerSelector->dialog->21->1225"
       ]
     },
     {
@@ -13268,7 +13303,7 @@
       "ru": "Управление серверами удаленного управления Intel&reg; AMT.",
       "zh-chs": "管理英特尔&reg;AMT远程管理服务器。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1220"
+        "index.html->id_computerSelector->dialog->21->1223"
       ]
     },
     {
@@ -13284,7 +13319,7 @@
       "ru": "Управление хранилищем Intel&reg; AMT для этого компьютера.",
       "zh-chs": "管理此计算机的英特尔&reg;AMT存储。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1468"
+        "index.html->id_computerSelector->dialog->21->1469"
       ]
     },
     {
@@ -13364,7 +13399,7 @@
       "ru": "Управление будильником.",
       "zh-chs": "管理唤醒警报。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1509"
+        "index.html->id_computerSelector->dialog->21->1510"
       ]
     },
     {
@@ -13633,7 +13668,7 @@
       "ru": "MeshCentral Desktop",
       "zh-chs": "MeshCentral桌面",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1676"
+        "index.html->id_computerSelector->dialog->21->1677"
       ]
     },
     {
@@ -13649,7 +13684,7 @@
       "ru": "MeshCentral Terminal",
       "zh-chs": "网状中央终端",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1675"
+        "index.html->id_computerSelector->dialog->21->1676"
       ]
     },
     {
@@ -13741,7 +13776,7 @@
       "ru": "Смонтируйте образы дисков на компьютере Intel&reg; AMT - экспериментально.",
       "zh-chs": "在英特尔&reg;AMT计算机上安装磁盘映像-实验。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1178"
+        "index.html->id_computerSelector->dialog->21->1181"
       ]
     },
     {
@@ -13803,8 +13838,8 @@
       "zh-chs": "名称",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1091",
-        "index.html->id_computerSelector->dialog->21->1480",
-        "index.html->id_computerSelector->dialog->21->1526",
+        "index.html->id_computerSelector->dialog->21->1481",
+        "index.html->id_computerSelector->dialog->21->1527",
         "index.html->id_computerSelector->dialog->21->782",
         "index.html->id_computerSelector->dialog->21->836",
         "index.html->id_computerSelector->dialog->21->865",
@@ -13825,7 +13860,7 @@
       "ru": "Имя и домен",
       "zh-chs": "名称和域名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1301",
+        "index.html->id_computerSelector->dialog->21->1304",
         "index.html->id_computerSelector->dialog->21->375",
         "index.html->id_computerSelector->dialog->21->451"
       ]
@@ -13843,7 +13878,7 @@
       "ru": "Разделение имени",
       "zh-chs": "姓名分享",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1304"
+        "index.html->id_computerSelector->dialog->21->1307"
       ]
     },
     {
@@ -13921,7 +13956,7 @@
       "ru": "Сетевой локальный адрес",
       "zh-chs": "网络本地地址",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1323"
+        "index.html->id_computerSelector->dialog->21->1326"
       ]
     },
     {
@@ -14015,7 +14050,7 @@
       "ru": "Новая папка",
       "zh-chs": "新建文件夹",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1166",
+        "index.html->id_computerSelector->dialog->21->1169",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3"
       ]
     },
@@ -14061,7 +14096,7 @@
       "ru": "Новая запись #",
       "zh-chs": "新纪录 ＃",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1645"
+        "index.html->id_computerSelector->dialog->21->1646"
       ]
     },
     {
@@ -14077,7 +14112,7 @@
       "ru": "Новый скрипт",
       "zh-chs": "新剧本",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1547"
+        "index.html->id_computerSelector->dialog->21->1548"
       ]
     },
     {
@@ -14128,7 +14163,7 @@
       "ru": "Следующее действие загрузки установлено.",
       "zh-chs": "下一个启动操作集。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1465"
+        "index.html->id_computerSelector->dialog->21->1466"
       ]
     },
     {
@@ -14299,7 +14334,7 @@
       "ru": "Файлы не найдены.",
       "zh-chs": "找不到文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1474"
+        "index.html->id_computerSelector->dialog->21->1475"
       ]
     },
     {
@@ -14315,7 +14350,7 @@
       "ru": "Домены интрасети отсутствуют, обнаружение окружения отключено.",
       "zh-chs": "没有Intranet域，禁用环境检测。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1246"
+        "index.html->id_computerSelector->dialog->21->1249"
       ]
     },
     {
@@ -14357,7 +14392,7 @@
       "ru": "Не настроены прокси.",
       "zh-chs": "未配置代理。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1223"
+        "index.html->id_computerSelector->dialog->21->1226"
       ]
     },
     {
@@ -14373,7 +14408,7 @@
       "ru": "Удаленные серверы не найдены.",
       "zh-chs": "找不到远程服务器。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1221"
+        "index.html->id_computerSelector->dialog->21->1224"
       ]
     },
     {
@@ -14437,7 +14472,7 @@
       "ru": "Нет будильника зарегистрировано.",
       "zh-chs": "没有注册唤醒警报。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1515"
+        "index.html->id_computerSelector->dialog->21->1516"
       ]
     },
     {
@@ -14466,7 +14501,7 @@
       "ru": "NodeID",
       "zh-chs": "节点ID",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1674"
+        "index.html->id_computerSelector->dialog->21->1675"
       ]
     },
     {
@@ -14483,9 +14518,9 @@
       "zh-chs": "没有",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1101",
-        "index.html->id_computerSelector->dialog->21->1210",
-        "index.html->id_computerSelector->dialog->21->1212",
-        "index.html->id_computerSelector->dialog->21->1214",
+        "index.html->id_computerSelector->dialog->21->1213",
+        "index.html->id_computerSelector->dialog->21->1215",
+        "index.html->id_computerSelector->dialog->21->1217",
         "index.html->id_computerSelector->dialog->21->231",
         "index.html->id_computerSelector->dialog->21->329",
         "index.html->id_computerSelector->dialog->21->330",
@@ -14607,7 +14642,7 @@
       "ru": "Не положено",
       "zh-chs": "不允许",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1326"
+        "index.html->id_computerSelector->dialog->21->1329"
       ]
     },
     {
@@ -14655,7 +14690,7 @@
       "ru": "Не задано",
       "zh-chs": "没有设置",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1545"
+        "index.html->id_computerSelector->dialog->21->1546"
       ]
     },
     {
@@ -14716,7 +14751,7 @@
       "ru": "Хорошо",
       "zh-chs": "好",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1688",
+        "index.html->id_computerSelector->dialog->21->1689",
         "index.html->id_computerSelector->dialog->dialog->7"
       ]
     },
@@ -14733,7 +14768,7 @@
       "ru": "ОС энергосбережения",
       "zh-chs": "操作系统省电",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1360",
+        "index.html->id_computerSelector->dialog->21->1363",
         "index.html->id_computerSelector->dialog->dialog->5->dialog24->3->idx_d24Command->d24p501"
       ]
     },
@@ -14750,7 +14785,7 @@
       "ru": "OS Wake из режима ожидания",
       "zh-chs": "操作系统从待机状态唤醒",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1359",
+        "index.html->id_computerSelector->dialog->21->1362",
         "index.html->id_computerSelector->dialog->dialog->5->dialog24->3->idx_d24Command->d24p500"
       ]
     },
@@ -14767,7 +14802,7 @@
       "ru": "ОС включить",
       "zh-chs": "操作系统启用",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1204"
+        "index.html->id_computerSelector->dialog->21->1207"
       ]
     },
     {
@@ -14889,7 +14924,7 @@
       "ru": "При следующей загрузке",
       "zh-chs": "下次启动时",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1181"
+        "index.html->id_computerSelector->dialog->21->1184"
       ]
     },
     {
@@ -14991,8 +15026,8 @@
       "ru": "открыто",
       "zh-chs": "打开",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1470",
         "index.html->id_computerSelector->dialog->21->1471",
+        "index.html->id_computerSelector->dialog->21->1472",
         "index.html->id_computerSelector->dialog->21->914"
       ]
     },
@@ -15015,8 +15050,8 @@
       "ru": "Открыть файл",
       "zh-chs": "打开文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1629",
-        "index.html->id_computerSelector->dialog->21->1632",
+        "index.html->id_computerSelector->dialog->21->1630",
+        "index.html->id_computerSelector->dialog->21->1633",
         "index.html->id_computerSelector->dialog->21->176"
       ]
     },
@@ -15033,14 +15068,14 @@
       "ru": "Открыть файл...",
       "zh-chs": "打开文件...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1687",
+        "index.html->id_computerSelector->dialog->21->1688",
         "index.html->id_computerSelector->id_sessionPlayerPanel->1->1->0->7"
       ]
     },
     {
       "en": "Open Setup.bin file",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1631"
+        "index.html->id_computerSelector->dialog->21->1632"
       ]
     },
     {
@@ -15285,8 +15320,8 @@
       "ru": "организация",
       "zh-chs": "组织",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1600",
-        "index.html->id_computerSelector->dialog->21->1605",
+        "index.html->id_computerSelector->dialog->21->1601",
+        "index.html->id_computerSelector->dialog->21->1606",
         "index.html->id_computerSelector->dialog->21->662",
         "index.html->id_computerSelector->dialog->21->702"
       ]
@@ -15335,7 +15370,7 @@
       "ru": "Другие настройки",
       "zh-chs": "其他设定",
       "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->3"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->7->3"
       ]
     },
     {
@@ -15409,13 +15444,13 @@
       "ru": "PUT AMT_BootSettingData, Ошибка № {0}",
       "zh-chs": "PUT AMT_BootSettingData，错误＃{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1457"
+        "index.html->id_computerSelector->dialog->21->1458"
       ]
     },
     {
       "en": "PUT CIM_BootConfigSetting_ChangeBootOrder, Error #{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1453"
+        "index.html->id_computerSelector->dialog->21->1454"
       ]
     },
     {
@@ -15463,10 +15498,10 @@
       "ru": "пароль",
       "zh-chs": "密码",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1393",
-        "index.html->id_computerSelector->dialog->21->1592",
+        "index.html->id_computerSelector->dialog->21->1396",
         "index.html->id_computerSelector->dialog->21->1593",
-        "index.html->id_computerSelector->dialog->21->1618",
+        "index.html->id_computerSelector->dialog->21->1594",
+        "index.html->id_computerSelector->dialog->21->1619",
         "index.html->id_computerSelector->dialog->21->174",
         "index.html->id_computerSelector->dialog->21->264",
         "index.html->id_computerSelector->dialog->21->277",
@@ -15521,7 +15556,7 @@
       "zh-chs": "糊",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1125",
-        "index.html->id_computerSelector->dialog->21->1171",
+        "index.html->id_computerSelector->dialog->21->1174",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p13->13->1->4->1->3",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3"
       ]
@@ -15571,7 +15606,7 @@
       "ru": "Приостановлено",
       "zh-chs": "已暂停",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1553"
+        "index.html->id_computerSelector->dialog->21->1554"
       ]
     },
     {
@@ -15687,7 +15722,7 @@
       "ru": "Выполнение силового действия ...",
       "zh-chs": "正在执行电源操作...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1463"
+        "index.html->id_computerSelector->dialog->21->1464"
       ]
     },
     {
@@ -15703,7 +15738,7 @@
       "ru": "периодический",
       "zh-chs": "定期的",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1216"
+        "index.html->id_computerSelector->dialog->21->1219"
       ]
     },
     {
@@ -15719,7 +15754,7 @@
       "ru": "Периодическая связь",
       "zh-chs": "定期连接",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1219"
+        "index.html->id_computerSelector->dialog->21->1222"
       ]
     },
     {
@@ -15735,7 +15770,7 @@
       "ru": "Периодический, временной интервал",
       "zh-chs": "定期，时间间隔",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1239"
+        "index.html->id_computerSelector->dialog->21->1242"
       ]
     },
     {
@@ -15853,8 +15888,8 @@
       "ru": "PolicyRuleName",
       "zh-chs": "PolicyRuleName",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1215",
-        "index.html->id_computerSelector->dialog->21->1227"
+        "index.html->id_computerSelector->dialog->21->1218",
+        "index.html->id_computerSelector->dialog->21->1230"
       ]
     },
     {
@@ -15870,8 +15905,8 @@
       "ru": "порт",
       "zh-chs": "港口",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1254",
-        "index.html->id_computerSelector->dialog->21->1275"
+        "index.html->id_computerSelector->dialog->21->1257",
+        "index.html->id_computerSelector->dialog->21->1278"
       ]
     },
     {
@@ -15941,30 +15976,30 @@
       "ru": "Действие силы",
       "zh-chs": "权力行动",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1382",
-        "index.html->id_computerSelector->dialog->21->1384",
-        "index.html->id_computerSelector->dialog->21->1390",
-        "index.html->id_computerSelector->dialog->21->1411",
-        "index.html->id_computerSelector->dialog->21->1413",
-        "index.html->id_computerSelector->dialog->21->1415",
-        "index.html->id_computerSelector->dialog->21->1418",
-        "index.html->id_computerSelector->dialog->21->1422",
+        "index.html->id_computerSelector->dialog->21->1385",
+        "index.html->id_computerSelector->dialog->21->1387",
+        "index.html->id_computerSelector->dialog->21->1393",
+        "index.html->id_computerSelector->dialog->21->1412",
+        "index.html->id_computerSelector->dialog->21->1414",
+        "index.html->id_computerSelector->dialog->21->1416",
+        "index.html->id_computerSelector->dialog->21->1419",
         "index.html->id_computerSelector->dialog->21->1423",
-        "index.html->id_computerSelector->dialog->21->1425",
-        "index.html->id_computerSelector->dialog->21->1428",
-        "index.html->id_computerSelector->dialog->21->1432",
-        "index.html->id_computerSelector->dialog->21->1434",
-        "index.html->id_computerSelector->dialog->21->1438",
-        "index.html->id_computerSelector->dialog->21->1440",
-        "index.html->id_computerSelector->dialog->21->1444",
-        "index.html->id_computerSelector->dialog->21->1446",
-        "index.html->id_computerSelector->dialog->21->1450",
-        "index.html->id_computerSelector->dialog->21->1452",
-        "index.html->id_computerSelector->dialog->21->1456",
-        "index.html->id_computerSelector->dialog->21->1458",
-        "index.html->id_computerSelector->dialog->21->1462",
-        "index.html->id_computerSelector->dialog->21->1464",
-        "index.html->id_computerSelector->dialog->21->1467",
+        "index.html->id_computerSelector->dialog->21->1424",
+        "index.html->id_computerSelector->dialog->21->1426",
+        "index.html->id_computerSelector->dialog->21->1429",
+        "index.html->id_computerSelector->dialog->21->1433",
+        "index.html->id_computerSelector->dialog->21->1435",
+        "index.html->id_computerSelector->dialog->21->1439",
+        "index.html->id_computerSelector->dialog->21->1441",
+        "index.html->id_computerSelector->dialog->21->1445",
+        "index.html->id_computerSelector->dialog->21->1447",
+        "index.html->id_computerSelector->dialog->21->1451",
+        "index.html->id_computerSelector->dialog->21->1453",
+        "index.html->id_computerSelector->dialog->21->1457",
+        "index.html->id_computerSelector->dialog->21->1459",
+        "index.html->id_computerSelector->dialog->21->1463",
+        "index.html->id_computerSelector->dialog->21->1465",
+        "index.html->id_computerSelector->dialog->21->1468",
         "index.html->id_computerSelector->dialog->dialog->5->dialog5->3->3"
       ]
     },
@@ -15981,11 +16016,11 @@
       "ru": "Силовые Действия",
       "zh-chs": "权力行动",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1351",
-        "index.html->id_computerSelector->dialog->21->1381",
-        "index.html->id_computerSelector->dialog->21->1396",
-        "index.html->id_computerSelector->dialog->21->1397",
-        "index.html->id_computerSelector->dialog->21->1410"
+        "index.html->id_computerSelector->dialog->21->1354",
+        "index.html->id_computerSelector->dialog->21->1384",
+        "index.html->id_computerSelector->dialog->21->1399",
+        "index.html->id_computerSelector->dialog->21->1400",
+        "index.html->id_computerSelector->dialog->21->1411"
       ]
     },
     {
@@ -16061,9 +16096,9 @@
       "ru": "Силовое действие завершено.",
       "zh-chs": "电源操作已完成。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1388",
-        "index.html->id_computerSelector->dialog->21->1420",
-        "index.html->id_computerSelector->dialog->21->1466"
+        "index.html->id_computerSelector->dialog->21->1391",
+        "index.html->id_computerSelector->dialog->21->1421",
+        "index.html->id_computerSelector->dialog->21->1467"
       ]
     },
     {
@@ -16079,8 +16114,8 @@
       "ru": "Ошибка действия питания # {0}.",
       "zh-chs": "电源操作错误＃{0}。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1389",
-        "index.html->id_computerSelector->dialog->21->1421"
+        "index.html->id_computerSelector->dialog->21->1392",
+        "index.html->id_computerSelector->dialog->21->1422"
       ]
     },
     {
@@ -16096,7 +16131,7 @@
       "ru": "Силовой цикл",
       "zh-chs": "电源周期",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1355",
+        "index.html->id_computerSelector->dialog->21->1358",
         "index.html->id_computerSelector->dialog->dialog->5->dialog24->3->idx_d24Command->5"
       ]
     },
@@ -16177,7 +16212,7 @@
       "ru": "Выключить",
       "zh-chs": "掉电",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1356",
+        "index.html->id_computerSelector->dialog->21->1359",
         "index.html->id_computerSelector->dialog->dialog->5->dialog24->3->idx_d24Command->7"
       ]
     },
@@ -16201,7 +16236,7 @@
     {
       "en": "Power on to HTTPS Boot",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1378"
+        "index.html->id_computerSelector->dialog->21->1381"
       ]
     },
     {
@@ -16217,7 +16252,7 @@
       "ru": "Включите IDR-R CDROM",
       "zh-chs": "开启IDE-R CDROM",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1374"
+        "index.html->id_computerSelector->dialog->21->1377"
       ]
     },
     {
@@ -16233,7 +16268,7 @@
       "ru": "Включите IDE-R Floppy",
       "zh-chs": "打开IDE-R软盘",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1372"
+        "index.html->id_computerSelector->dialog->21->1375"
       ]
     },
     {
@@ -16249,7 +16284,7 @@
       "ru": "Включите PXE",
       "zh-chs": "开启PXE",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1376"
+        "index.html->id_computerSelector->dialog->21->1379"
       ]
     },
     {
@@ -16265,7 +16300,7 @@
       "ru": "Включите диагностику",
       "zh-chs": "开机进行诊断",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1357"
+        "index.html->id_computerSelector->dialog->21->1360"
       ]
     },
     {
@@ -16281,7 +16316,7 @@
       "ru": "Включите",
       "zh-chs": "充电",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1353",
+        "index.html->id_computerSelector->dialog->21->1356",
         "index.html->id_computerSelector->dialog->dialog->5->dialog24->3->idx_d24Command->1"
       ]
     },
@@ -16298,13 +16333,13 @@
       "ru": "Включите BIOS",
       "zh-chs": "启动BIOS",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1365"
+        "index.html->id_computerSelector->dialog->21->1368"
       ]
     },
     {
       "en": "Power up to Platform Erase",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1369"
+        "index.html->id_computerSelector->dialog->21->1372"
       ]
     },
     {
@@ -16320,7 +16355,7 @@
       "ru": "Включите безопасное стирание",
       "zh-chs": "上电以安全擦除",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1367"
+        "index.html->id_computerSelector->dialog->21->1370"
       ]
     },
     {
@@ -16359,10 +16394,7 @@
       ]
     },
     {
-      "en": "Prefer Downscale",
-      "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->1->d7decimationspan->0"
-      ]
+      "en": "Prefer Downscale"
     },
     {
       "de": "Vorhanden",
@@ -16393,10 +16425,10 @@
       "ru": "Нажмите [пробел] для воспроизведения / паузы.",
       "zh-chs": "按[空格]播放/暂停。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1681",
         "index.html->id_computerSelector->dialog->21->1682",
         "index.html->id_computerSelector->dialog->21->1683",
-        "index.html->id_computerSelector->dialog->21->1684"
+        "index.html->id_computerSelector->dialog->21->1684",
+        "index.html->id_computerSelector->dialog->21->1685"
       ]
     },
     {
@@ -16428,7 +16460,7 @@
       "ru": "Основной тип MPS",
       "zh-chs": "主要MPS类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1232"
+        "index.html->id_computerSelector->dialog->21->1235"
       ]
     },
     {
@@ -16463,7 +16495,7 @@
       "ru": "Основной сервер",
       "zh-chs": "主服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1229"
+        "index.html->id_computerSelector->dialog->21->1232"
       ]
     },
     {
@@ -16496,7 +16528,7 @@
       "ru": "Закрытый ключ",
       "zh-chs": "私钥",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1565"
+        "index.html->id_computerSelector->dialog->21->1566"
       ]
     },
     {
@@ -16593,7 +16625,7 @@
       "ru": "протокол",
       "zh-chs": "协议",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1680"
+        "index.html->id_computerSelector->dialog->21->1681"
       ]
     },
     {
@@ -16700,7 +16732,7 @@
       "ru": "Тип прокси",
       "zh-chs": "代理类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1267"
+        "index.html->id_computerSelector->dialog->21->1270"
       ]
     },
     {
@@ -16754,16 +16786,10 @@
       ]
     },
     {
-      "en": "Pyrite PSID",
-      "xloc": [
-        "index.html->id_computerSelector->dialog->21->1408"
-      ]
+      "en": "Pyrite PSID"
     },
     {
-      "en": "Pyrite Revert",
-      "xloc": [
-        "index.html->id_computerSelector->dialog->21->1401"
-      ]
+      "en": "Pyrite Revert"
     },
     {
       "de": "Qualität",
@@ -16850,7 +16876,7 @@
     {
       "en": "RAW16, 16k Colors",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1150"
+        "index.html->id_computerSelector->dialog->21->1153"
       ]
     },
     {
@@ -16872,7 +16898,7 @@
     {
       "en": "RAW8, 256 Colors",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1149"
+        "index.html->id_computerSelector->dialog->21->1152"
       ]
     },
     {
@@ -16939,8 +16965,8 @@
     {
       "en": "RLE16, 64k Colors",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1142",
-        "index.html->id_computerSelector->dialog->21->1148"
+        "index.html->id_computerSelector->dialog->21->1145",
+        "index.html->id_computerSelector->dialog->21->1151"
       ]
     },
     {
@@ -16962,7 +16988,7 @@
     {
       "en": "RLE4G, 16 Grays",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1139"
+        "index.html->id_computerSelector->dialog->21->1142"
       ]
     },
     {
@@ -16984,8 +17010,8 @@
     {
       "en": "RLE8, 256 Colors",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1141",
-        "index.html->id_computerSelector->dialog->21->1147"
+        "index.html->id_computerSelector->dialog->21->1144",
+        "index.html->id_computerSelector->dialog->21->1150"
       ]
     },
     {
@@ -17007,7 +17033,7 @@
     {
       "en": "RLE8G, 256 Grays",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1140"
+        "index.html->id_computerSelector->dialog->21->1143"
       ]
     },
     {
@@ -17162,7 +17188,7 @@
       "ru": "Запись №",
       "zh-chs": "记录号",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1640"
+        "index.html->id_computerSelector->dialog->21->1641"
       ]
     },
     {
@@ -17210,7 +17236,7 @@
       "ru": "Записанный игрок сеанса",
       "zh-chs": "录音会话播放器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1685"
+        "index.html->id_computerSelector->dialog->21->1686"
       ]
     },
     {
@@ -17258,7 +17284,7 @@
       "ru": "Записи: {0}, потреблено: {1}",
       "zh-chs": "记录：{0}，已消耗：{1}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1637"
+        "index.html->id_computerSelector->dialog->21->1638"
       ]
     },
     {
@@ -17303,7 +17329,7 @@
       "ru": "Ошибка PUT RedirectionService",
       "zh-chs": "RedirectionService PUT错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1313"
+        "index.html->id_computerSelector->dialog->21->1316"
       ]
     },
     {
@@ -17319,7 +17345,7 @@
       "ru": "RedirectionService, Ошибка RequestStateChange",
       "zh-chs": "RedirectionService，RequestStateChange错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1309"
+        "index.html->id_computerSelector->dialog->21->1312"
       ]
     },
     {
@@ -17352,8 +17378,8 @@
       "zh-chs": "刷新",
       "xloc": [
         "index.html->id_computerSelector->9->1->0->13->id_noScriptButtons",
-        "index.html->id_computerSelector->dialog->21->1477",
-        "index.html->id_computerSelector->dialog->21->1702",
+        "index.html->id_computerSelector->dialog->21->1478",
+        "index.html->id_computerSelector->dialog->21->1703",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3",
         "index.html->id_lmsMainPanel->1->id_lmsToolBarContent->7"
       ]
@@ -17470,6 +17496,7 @@
         "index.html->id_computerSelector->dialog->21->1129",
         "index.html->id_computerSelector->dialog->21->1131",
         "index.html->id_computerSelector->dialog->21->1133",
+        "index.html->id_computerSelector->dialog->21->1135",
         "index.html->id_computerSelector->dialog->21->414",
         "index.html->id_computerSelector->dialog->21->415",
         "index.html->id_computerSelector->id_mainview->id_leftbar->go14->0",
@@ -17502,7 +17529,7 @@
       "ru": "Настройки удаленного рабочего стола",
       "zh-chs": "远程桌面设置",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1137",
+        "index.html->id_computerSelector->dialog->21->1140",
         "index.html->id_computerSelector->dialog->21->539",
         "index.html->id_computerSelector->dialog->21->540"
       ]
@@ -17520,7 +17547,7 @@
       "ru": "Удаленный идентификатор",
       "zh-chs": "远端ID",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1258"
+        "index.html->id_computerSelector->dialog->21->1261"
       ]
     },
     {
@@ -17549,7 +17576,7 @@
       "ru": "Удаленный ввод с клавиатуры",
       "zh-chs": "远程键盘输入",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1155"
+        "index.html->id_computerSelector->dialog->21->1158"
       ]
     },
     {
@@ -17625,7 +17652,7 @@
       "ru": "Удаленный сервер #",
       "zh-chs": "远程服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1262"
+        "index.html->id_computerSelector->dialog->21->1265"
       ]
     },
     {
@@ -17641,7 +17668,7 @@
       "ru": "Удаленное удаление сервера",
       "zh-chs": "远程服务器删除",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1263"
+        "index.html->id_computerSelector->dialog->21->1266"
       ]
     },
     {
@@ -17710,7 +17737,7 @@
       "ru": "Удалить",
       "zh-chs": "去掉",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1247",
+        "index.html->id_computerSelector->dialog->21->1250",
         "index.html->id_computerSelector->dialog->21->892",
         "index.html->id_computerSelector->dialog->21->928"
       ]
@@ -17858,7 +17885,7 @@
       "ru": "Удалить все тревоги",
       "zh-chs": "删除所有警报",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1516"
+        "index.html->id_computerSelector->dialog->21->1517"
       ]
     },
     {
@@ -17874,7 +17901,7 @@
       "ru": "Удалить все будильники",
       "zh-chs": "删除所有唤醒警报",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1518"
+        "index.html->id_computerSelector->dialog->21->1519"
       ]
     },
     {
@@ -17922,7 +17949,7 @@
       "ru": "Rename",
       "zh-chs": "改名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1168",
+        "index.html->id_computerSelector->dialog->21->1171",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3"
       ]
     },
@@ -17988,7 +18015,7 @@
       "ru": "Сброс",
       "zh-chs": "重启",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1354",
+        "index.html->id_computerSelector->dialog->21->1357",
         "index.html->id_computerSelector->dialog->21->89",
         "index.html->id_computerSelector->dialog->dialog->5->dialog24->3->idx_d24Command->3"
       ]
@@ -18006,7 +18033,7 @@
       "ru": "Сбросить и очистить редактор скриптов?",
       "zh-chs": "重置并清除脚本编辑器？",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1548"
+        "index.html->id_computerSelector->dialog->21->1549"
       ]
     },
     {
@@ -18022,13 +18049,13 @@
       "ru": "Сбросить в BIOS",
       "zh-chs": "重置为BIOS",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1366"
+        "index.html->id_computerSelector->dialog->21->1369"
       ]
     },
     {
       "en": "Reset to HTTPS Boot",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1377"
+        "index.html->id_computerSelector->dialog->21->1380"
       ]
     },
     {
@@ -18044,7 +18071,7 @@
       "ru": "Сбросить на IDE-R CDROM",
       "zh-chs": "重置为IDE-R CDROM",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1373"
+        "index.html->id_computerSelector->dialog->21->1376"
       ]
     },
     {
@@ -18060,7 +18087,7 @@
       "ru": "Сбросить на IDE-R дискету",
       "zh-chs": "重置为IDE-R软盘",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1371"
+        "index.html->id_computerSelector->dialog->21->1374"
       ]
     },
     {
@@ -18076,13 +18103,13 @@
       "ru": "Сброс к PXE",
       "zh-chs": "重置为PXE",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1375"
+        "index.html->id_computerSelector->dialog->21->1378"
       ]
     },
     {
       "en": "Reset to Platform Erase",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1370"
+        "index.html->id_computerSelector->dialog->21->1373"
       ]
     },
     {
@@ -18098,7 +18125,7 @@
       "ru": "Сброс для безопасного стирания",
       "zh-chs": "重置为安全擦除",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1368"
+        "index.html->id_computerSelector->dialog->21->1371"
       ]
     },
     {
@@ -18114,7 +18141,7 @@
       "ru": "Сброс к диагностике",
       "zh-chs": "重置为诊断",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1358"
+        "index.html->id_computerSelector->dialog->21->1361"
       ]
     },
     {
@@ -18176,8 +18203,8 @@
       "ru": "корень",
       "zh-chs": "根",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1160",
-        "index.html->id_computerSelector->dialog->21->1469"
+        "index.html->id_computerSelector->dialog->21->1163",
+        "index.html->id_computerSelector->dialog->21->1470"
       ]
     },
     {
@@ -18242,8 +18269,8 @@
       "zh-chs": "运行脚本",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->12",
-        "index.html->id_computerSelector->dialog->21->1534",
         "index.html->id_computerSelector->dialog->21->1535",
+        "index.html->id_computerSelector->dialog->21->1536",
         "index.html->id_computerSelector->dialog->21->267",
         "index.html->id_computerSelector->dialog->21->269",
         "index.html->id_computerSelector->dialog->21->271",
@@ -18347,7 +18374,7 @@
       "ru": "Бег",
       "zh-chs": "跑步",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1552"
+        "index.html->id_computerSelector->dialog->21->1553"
       ]
     },
     {
@@ -18460,9 +18487,9 @@
       "zh-chs": "SHA1",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->142",
-        "index.html->id_computerSelector->dialog->21->1648",
-        "index.html->id_computerSelector->dialog->21->1653",
-        "index.html->id_computerSelector->dialog->21->1658"
+        "index.html->id_computerSelector->dialog->21->1649",
+        "index.html->id_computerSelector->dialog->21->1654",
+        "index.html->id_computerSelector->dialog->21->1659"
       ]
     },
     {
@@ -18479,8 +18506,8 @@
       "zh-chs": "SHA256",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->143",
-        "index.html->id_computerSelector->dialog->21->1654",
-        "index.html->id_computerSelector->dialog->21->1659"
+        "index.html->id_computerSelector->dialog->21->1655",
+        "index.html->id_computerSelector->dialog->21->1660"
       ]
     },
     {
@@ -18496,9 +18523,9 @@
       "ru": "SHA384",
       "zh-chs": "SHA3​​84",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1649",
-        "index.html->id_computerSelector->dialog->21->1655",
-        "index.html->id_computerSelector->dialog->21->1660"
+        "index.html->id_computerSelector->dialog->21->1650",
+        "index.html->id_computerSelector->dialog->21->1656",
+        "index.html->id_computerSelector->dialog->21->1661"
       ]
     },
     {
@@ -18662,7 +18689,7 @@
     {
       "en": "SSD Master Password",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1409"
+        "index.html->id_computerSelector->dialog->21->1410"
       ]
     },
     {
@@ -18728,7 +18755,7 @@
       "ru": "Сохранить .cer",
       "zh-chs": "保存.cer",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1574"
+        "index.html->id_computerSelector->dialog->21->1575"
       ]
     },
     {
@@ -18744,7 +18771,7 @@
       "ru": "Сохранить .p12",
       "zh-chs": "保存.p12",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1575"
+        "index.html->id_computerSelector->dialog->21->1576"
       ]
     },
     {
@@ -18760,7 +18787,7 @@
       "ru": "Сохранить .pem",
       "zh-chs": "保存.pem",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1576"
+        "index.html->id_computerSelector->dialog->21->1577"
       ]
     },
     {
@@ -18815,7 +18842,7 @@
     {
       "en": "Save Script",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1557"
+        "index.html->id_computerSelector->dialog->21->1558"
       ]
     },
     {
@@ -19080,7 +19107,7 @@
       "ru": "Блок скриптов",
       "zh-chs": "脚本块",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1556"
+        "index.html->id_computerSelector->dialog->21->1557"
       ]
     },
     {
@@ -19112,7 +19139,7 @@
       "ru": "Ошибка компиляции скрипта",
       "zh-chs": "脚本编译错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1549"
+        "index.html->id_computerSelector->dialog->21->1550"
       ]
     },
     {
@@ -19183,7 +19210,7 @@
       "ru": "Вторичный тип MPS",
       "zh-chs": "次要MPS类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1237"
+        "index.html->id_computerSelector->dialog->21->1240"
       ]
     },
     {
@@ -19217,13 +19244,13 @@
       "ru": "Вторичный сервер",
       "zh-chs": "辅助服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1234"
+        "index.html->id_computerSelector->dialog->21->1237"
       ]
     },
     {
       "en": "Secure Erase All SSDs",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1402"
+        "index.html->id_computerSelector->dialog->21->1404"
       ]
     },
     {
@@ -19429,8 +19456,8 @@
       "ru": "Выбрать все",
       "zh-chs": "全选",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1162",
-        "index.html->id_computerSelector->dialog->21->1164",
+        "index.html->id_computerSelector->dialog->21->1165",
+        "index.html->id_computerSelector->dialog->21->1167",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3"
       ]
     },
@@ -19447,7 +19474,7 @@
       "ru": "Выберите Нет",
       "zh-chs": "选择无",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1163"
+        "index.html->id_computerSelector->dialog->21->1166"
       ]
     },
     {
@@ -19466,7 +19493,7 @@
     {
       "en": "Select a disk image for remote boot.",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1386"
+        "index.html->id_computerSelector->dialog->21->1389"
       ]
     },
     {
@@ -19482,13 +19509,13 @@
       "ru": "Выберите небольшой файл для загрузки в хранилище и введите поставщика, приложение и имя файла.",
       "zh-chs": "选择一个小文件上传到存储，然后输入供应商，应用程序和文件名。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1488"
+        "index.html->id_computerSelector->dialog->21->1489"
       ]
     },
     {
       "en": "Select the actions to take:",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1407"
+        "index.html->id_computerSelector->dialog->21->1409"
       ]
     },
     {
@@ -19547,7 +19574,7 @@
       "ru": "Отправка согласия пользователя ...",
       "zh-chs": "正在传送使用者同意...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1439"
+        "index.html->id_computerSelector->dialog->21->1440"
       ]
     },
     {
@@ -19664,7 +19691,7 @@
       "ru": "сервер",
       "zh-chs": "服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1192"
+        "index.html->id_computerSelector->dialog->21->1195"
       ]
     },
     {
@@ -19680,7 +19707,7 @@
       "ru": "Общее имя сервера",
       "zh-chs": "服务器通用名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1288"
+        "index.html->id_computerSelector->dialog->21->1291"
       ]
     },
     {
@@ -19719,7 +19746,7 @@
       "ru": "Порт сервера",
       "zh-chs": "服务器端口",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1287"
+        "index.html->id_computerSelector->dialog->21->1290"
       ]
     },
     {
@@ -19837,7 +19864,7 @@
       "ru": "Начало сеанса",
       "zh-chs": "会话开始",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1184"
+        "index.html->id_computerSelector->dialog->21->1187"
       ]
     },
     {
@@ -19869,7 +19896,7 @@
       "ru": "Идентификатор сессии",
       "zh-chs": "会话ID",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1671"
+        "index.html->id_computerSelector->dialog->21->1672"
       ]
     },
     {
@@ -19917,7 +19944,7 @@
     {
       "en": "Set new credentials",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1699"
+        "index.html->id_computerSelector->dialog->21->1700"
       ]
     },
     {
@@ -19933,7 +19960,7 @@
       "ru": "Настройка параметров загрузки: ",
       "zh-chs": "设置启动设置：",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1449"
+        "index.html->id_computerSelector->dialog->21->1450"
       ]
     },
     {
@@ -19965,7 +19992,7 @@
       "ru": "Настройка параметров загрузки ...",
       "zh-chs": "设置启动设置...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1451"
+        "index.html->id_computerSelector->dialog->21->1452"
       ]
     },
     {
@@ -19981,7 +20008,7 @@
       "ru": "Установка следующей загрузки ...",
       "zh-chs": "设置下一次启动...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1459"
+        "index.html->id_computerSelector->dialog->21->1460"
       ]
     },
     {
@@ -19997,7 +20024,7 @@
       "ru": "Настройка ...",
       "zh-chs": "配置...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1177"
+        "index.html->id_computerSelector->dialog->21->1180"
       ]
     },
     {
@@ -20139,7 +20166,7 @@
       "ru": "Общий, такой же как ОС",
       "zh-chs": "共享，与操作系统相同",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1302"
+        "index.html->id_computerSelector->dialog->21->1305"
       ]
     },
     {
@@ -20200,7 +20227,7 @@
       "ru": "Показать Ctrl-Alt-Del",
       "zh-chs": "显示Ctrl-Alt-Del",
       "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->1->13"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->7->1->11"
       ]
     },
     {
@@ -20232,7 +20259,7 @@
       "ru": "Показать инструмент «Фокус»",
       "zh-chs": "显示焦点工具",
       "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->1->3"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->7->1->3"
       ]
     },
     {
@@ -20248,7 +20275,7 @@
       "ru": "Показать локальный курсор мыши",
       "zh-chs": "显示本地鼠标光标",
       "xloc": [
-        "index.html->id_computerSelector->dialog->dialog->5->dialog7->5->1->10"
+        "index.html->id_computerSelector->dialog->dialog->5->dialog7->7->1->8"
       ]
     },
     {
@@ -20301,7 +20328,7 @@
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1038",
         "index.html->id_computerSelector->dialog->21->1047",
-        "index.html->id_computerSelector->dialog->21->1481"
+        "index.html->id_computerSelector->dialog->21->1482"
       ]
     },
     {
@@ -20333,7 +20360,7 @@
       "ru": "Спать",
       "zh-chs": "睡觉",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1363"
+        "index.html->id_computerSelector->dialog->21->1366"
       ]
     },
     {
@@ -20374,7 +20401,7 @@
       "ru": "Малый Фокус",
       "zh-chs": "小焦点",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1152"
+        "index.html->id_computerSelector->dialog->21->1155"
       ]
     },
     {
@@ -20458,7 +20485,7 @@
       "ru": "Soft-офф",
       "zh-chs": "软脱",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1361"
+        "index.html->id_computerSelector->dialog->21->1364"
       ]
     },
     {
@@ -20474,7 +20501,7 @@
       "ru": "Мягкий сброс",
       "zh-chs": "软复位",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1362"
+        "index.html->id_computerSelector->dialog->21->1365"
       ]
     },
     {
@@ -20726,7 +20753,7 @@
       "ru": "Запустите ваш скрипт, перетаскивая блоки с левой стороны в это поле для скриптов.",
       "zh-chs": "通过将块从左侧拖放到此脚本框中来启动脚本。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1546"
+        "index.html->id_computerSelector->dialog->21->1547"
       ]
     },
     {
@@ -20760,7 +20787,7 @@
       "ru": "Начало подписки ...",
       "zh-chs": "开始选择加入...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1429"
+        "index.html->id_computerSelector->dialog->21->1430"
       ]
     },
     {
@@ -20826,8 +20853,8 @@
       "ru": "Штат / провинция",
       "zh-chs": "州/省",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1601",
-        "index.html->id_computerSelector->dialog->21->1606",
+        "index.html->id_computerSelector->dialog->21->1602",
+        "index.html->id_computerSelector->dialog->21->1607",
         "index.html->id_computerSelector->dialog->21->664",
         "index.html->id_computerSelector->dialog->21->665",
         "index.html->id_computerSelector->dialog->21->703"
@@ -20875,7 +20902,7 @@
       "ru": "Статическая конфигурация с использованием настроек IPv4 ниже",
       "zh-chs": "使用下面的IPv4设置进行静态配置",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1346"
+        "index.html->id_computerSelector->dialog->21->1349"
       ]
     },
     {
@@ -21024,8 +21051,8 @@
       "ru": "Остановился",
       "zh-chs": "已停止",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1550",
         "index.html->id_computerSelector->dialog->21->1551",
+        "index.html->id_computerSelector->dialog->21->1552",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p20->3->EditScriptStatus"
       ]
     },
@@ -21042,7 +21069,7 @@
       "ru": "Остановлено, без сценария",
       "zh-chs": "已停止，无脚本",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1554"
+        "index.html->id_computerSelector->dialog->21->1555"
       ]
     },
     {
@@ -21058,8 +21085,8 @@
       "ru": "Место хранения",
       "zh-chs": "存储",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1484",
-        "index.html->id_computerSelector->dialog->21->1486",
+        "index.html->id_computerSelector->dialog->21->1485",
+        "index.html->id_computerSelector->dialog->21->1487",
         "index.html->id_computerSelector->dialog->21->613",
         "index.html->id_computerSelector->id_mainview->id_leftbar->go21->0",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p21->1"
@@ -21130,7 +21157,7 @@
       "ru": "Элемент хранения",
       "zh-chs": "储存物品",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1483"
+        "index.html->id_computerSelector->dialog->21->1484"
       ]
     },
     {
@@ -21162,8 +21189,8 @@
       "ru": "Перенаправление хранилища",
       "zh-chs": "存储重定向",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1185",
-        "index.html->id_computerSelector->dialog->21->1198"
+        "index.html->id_computerSelector->dialog->21->1188",
+        "index.html->id_computerSelector->dialog->21->1201"
       ]
     },
     {
@@ -21179,9 +21206,9 @@
       "ru": "Ошибка перенаправления памяти",
       "zh-chs": "存储重定向错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1186",
-        "index.html->id_computerSelector->dialog->21->1188",
-        "index.html->id_computerSelector->dialog->21->1190"
+        "index.html->id_computerSelector->dialog->21->1189",
+        "index.html->id_computerSelector->dialog->21->1191",
+        "index.html->id_computerSelector->dialog->21->1193"
       ]
     },
     {
@@ -21197,7 +21224,7 @@
       "ru": "Загрузка хранилища",
       "zh-chs": "存储上传",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1499"
+        "index.html->id_computerSelector->dialog->21->1500"
       ]
     },
     {
@@ -21226,7 +21253,7 @@
       "ru": "Надежный пароль",
       "zh-chs": "强密码",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1293"
+        "index.html->id_computerSelector->dialog->21->1296"
       ]
     },
     {
@@ -21647,7 +21674,7 @@
       "ru": "Аутентификация TLS",
       "zh-chs": "TLS认证",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1561"
+        "index.html->id_computerSelector->dialog->21->1562"
       ]
     },
     {
@@ -21697,7 +21724,7 @@
       "ru": "Клиент TLS",
       "zh-chs": "TLS客户端",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1578",
+        "index.html->id_computerSelector->dialog->21->1579",
         "index.html->id_computerSelector->dialog->21->298"
       ]
     },
@@ -21714,7 +21741,7 @@
       "ru": "Клиент TLS (HTTPS)",
       "zh-chs": "TLS客户端（HTTPS）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1612",
+        "index.html->id_computerSelector->dialog->21->1613",
         "index.html->id_computerSelector->dialog->21->707"
       ]
     },
@@ -21792,7 +21819,7 @@
       "ru": "TLS-сервер",
       "zh-chs": "TLS服务器",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1581",
+        "index.html->id_computerSelector->dialog->21->1582",
         "index.html->id_computerSelector->dialog->21->301"
       ]
     },
@@ -21809,7 +21836,7 @@
       "ru": "TLS-сервер (HTTPS)",
       "zh-chs": "TLS服务器（HTTPS）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1611",
+        "index.html->id_computerSelector->dialog->21->1612",
         "index.html->id_computerSelector->dialog->21->706"
       ]
     },
@@ -21952,7 +21979,7 @@
     {
       "en": "TPM Clear",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1403"
+        "index.html->id_computerSelector->dialog->21->1405"
       ]
     },
     {
@@ -22007,7 +22034,7 @@
     {
       "en": "Text Encoding",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1157"
+        "index.html->id_computerSelector->dialog->21->1160"
       ]
     },
     {
@@ -22085,7 +22112,7 @@
       "ru": "Для выбранного файла сертификата требуется пароль.",
       "zh-chs": "所选证书文件需要密码。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1617"
+        "index.html->id_computerSelector->dialog->21->1618"
       ]
     },
     {
@@ -22133,7 +22160,7 @@
       "ru": "Этот сертификат будет использоваться для аутентификации этой консоли в Intel AMT.",
       "zh-chs": "该证书将用于向英特尔AMT验证此控制台。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1560"
+        "index.html->id_computerSelector->dialog->21->1561"
       ]
     },
     {
@@ -22172,8 +22199,8 @@
     {
       "en": "This feature requires a TLS connection to Intel AMT",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1385",
-        "index.html->id_computerSelector->dialog->21->1419"
+        "index.html->id_computerSelector->dialog->21->1388",
+        "index.html->id_computerSelector->dialog->21->1420"
       ]
     },
     {
@@ -22205,7 +22232,7 @@
       "ru": "Это доверенный сертификат",
       "zh-chs": "这是一个受信任的证书",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1571"
+        "index.html->id_computerSelector->dialog->21->1572"
       ]
     },
     {
@@ -22237,7 +22264,7 @@
       "ru": "Эта запись: ",
       "zh-chs": "该记录是： ",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1641"
+        "index.html->id_computerSelector->dialog->21->1642"
       ]
     },
     {
@@ -22269,7 +22296,7 @@
       "ru": "Время",
       "zh-chs": "时间",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1664",
+        "index.html->id_computerSelector->dialog->21->1665",
         "index.html->id_computerSelector->dialog->21->557",
         "index.html->id_computerSelector->dialog->21->625",
         "index.html->id_computerSelector->dialog->21->635"
@@ -22288,7 +22315,7 @@
       "ru": "Отметка времени",
       "zh-chs": "时标",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1615",
+        "index.html->id_computerSelector->dialog->21->1616",
         "index.html->id_computerSelector->dialog->21->710"
       ]
     },
@@ -22305,7 +22332,7 @@
       "ru": "Штамповка времени",
       "zh-chs": "时标",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1585",
+        "index.html->id_computerSelector->dialog->21->1586",
         "index.html->id_computerSelector->dialog->21->305"
       ]
     },
@@ -22322,7 +22349,7 @@
       "ru": "Время суток (ЧЧ: ММ)",
       "zh-chs": "时间（HH：MM）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1244"
+        "index.html->id_computerSelector->dialog->21->1247"
       ]
     },
     {
@@ -22338,7 +22365,7 @@
       "ru": "Время суток, один раз в день",
       "zh-chs": "一天中的时间，一天一次",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1240"
+        "index.html->id_computerSelector->dialog->21->1243"
       ]
     },
     {
@@ -22370,7 +22397,7 @@
       "ru": "Ошибка тайм-аута",
       "zh-chs": "超时错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1690"
+        "index.html->id_computerSelector->dialog->21->1691"
       ]
     },
     {
@@ -22568,7 +22595,7 @@
       "ru": "Интервал срабатывания (секунды)",
       "zh-chs": "触发间隔（秒）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1243"
+        "index.html->id_computerSelector->dialog->21->1246"
       ]
     },
     {
@@ -22584,7 +22611,7 @@
       "ru": "Тип триггера",
       "zh-chs": "触发类型",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1241"
+        "index.html->id_computerSelector->dialog->21->1244"
       ]
     },
     {
@@ -22600,7 +22627,7 @@
       "ru": "доверенный",
       "zh-chs": "值得信赖",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1563",
+        "index.html->id_computerSelector->dialog->21->1564",
         "index.html->id_computerSelector->dialog->21->513"
       ]
     },
@@ -22663,7 +22690,7 @@
       "ru": "Время жизни туннеля (секунды)",
       "zh-chs": "隧道寿命（秒）",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1238"
+        "index.html->id_computerSelector->dialog->21->1241"
       ]
     },
     {
@@ -22881,7 +22908,7 @@
       "ru": "Невозможно декодировать файл PEM.",
       "zh-chs": "无法解码PEM文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1623"
+        "index.html->id_computerSelector->dialog->21->1624"
       ]
     },
     {
@@ -22897,7 +22924,7 @@
       "ru": "Невозможно декодировать закрытый ключ PEM.",
       "zh-chs": "无法解码PEM私钥。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1625"
+        "index.html->id_computerSelector->dialog->21->1626"
       ]
     },
     {
@@ -22913,7 +22940,7 @@
       "ru": "Невозможно декодировать файл сертификата.",
       "zh-chs": "无法解码证书文件。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1627"
+        "index.html->id_computerSelector->dialog->21->1628"
       ]
     },
     {
@@ -22945,7 +22972,7 @@
       "ru": "Невозможно удалить файл (ERR {0}), убедитесь, что компьютер включен.",
       "zh-chs": "无法删除文件（ERR {0}），请检查计算机是否已打开电源。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1485"
+        "index.html->id_computerSelector->dialog->21->1486"
       ]
     },
     {
@@ -22961,7 +22988,7 @@
       "ru": "Невозможно получить системные возможности, ошибка {0}",
       "zh-chs": "无法获得系统功能，错误{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1383"
+        "index.html->id_computerSelector->dialog->21->1386"
       ]
     },
     {
@@ -22977,7 +23004,7 @@
       "ru": "Невозможно загрузить данные хранилища ...",
       "zh-chs": "无法加载存储数据...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1476"
+        "index.html->id_computerSelector->dialog->21->1477"
       ]
     },
     {
@@ -22993,7 +23020,7 @@
       "ru": "Невозможно проанализировать заголовок ответа HTTP",
       "zh-chs": "无法解析HTTP响应标头",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1692"
+        "index.html->id_computerSelector->dialog->21->1693"
       ]
     },
     {
@@ -23009,7 +23036,7 @@
       "ru": "Не удалось отправить файл (ERR {0}), убедитесь, что компьютер включен.",
       "zh-chs": "无法推送文件（ERR {0}），请检查计算机是否已打开电源。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1487"
+        "index.html->id_computerSelector->dialog->21->1488"
       ]
     },
     {
@@ -23025,7 +23052,7 @@
       "ru": "Невозможно удалить HTTP прокси, доступ запрещен.",
       "zh-chs": "无法删除HTTP代理，访问被拒绝。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1270"
+        "index.html->id_computerSelector->dialog->21->1273"
       ]
     },
     {
@@ -23089,7 +23116,7 @@
       "ru": "Невозможно удалить сервер, доступ запрещен.",
       "zh-chs": "无法删除服务器，访问被拒绝。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1264"
+        "index.html->id_computerSelector->dialog->21->1267"
       ]
     },
     {
@@ -23137,13 +23164,13 @@
       "ru": "Невозможно установить состояние IPv6, ошибка {0}",
       "zh-chs": "无法设置IPv6状态，错误{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1343"
+        "index.html->id_computerSelector->dialog->21->1346"
       ]
     },
     {
       "en": "Unable to set OCR/RPE, check that these features are enabled in BIOS.",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1320"
+        "index.html->id_computerSelector->dialog->21->1323"
       ]
     },
     {
@@ -23159,7 +23186,7 @@
       "ru": "Невозможно установить параметры сети, ошибка {0}",
       "zh-chs": "无法设置网络参数，错误{0}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1350"
+        "index.html->id_computerSelector->dialog->21->1353"
       ]
     },
     {
@@ -23288,7 +23315,7 @@
       "ru": "Неожиданный HTTP-ответ enum",
       "zh-chs": "意外的HTTP枚举响应",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1693"
+        "index.html->id_computerSelector->dialog->21->1694"
       ]
     },
     {
@@ -23304,7 +23331,7 @@
       "ru": "Неожиданный HTTP-ответ",
       "zh-chs": "意外的HTTP拉取响应",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1694"
+        "index.html->id_computerSelector->dialog->21->1695"
       ]
     },
     {
@@ -23533,8 +23560,8 @@
       "ru": "Загрузить файл",
       "zh-chs": "上传文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1169",
-        "index.html->id_computerSelector->dialog->21->1176"
+        "index.html->id_computerSelector->dialog->21->1172",
+        "index.html->id_computerSelector->dialog->21->1179"
       ]
     },
     {
@@ -23550,7 +23577,7 @@
       "ru": "Загрузить файл",
       "zh-chs": "上传文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1489"
+        "index.html->id_computerSelector->dialog->21->1490"
       ]
     },
     {
@@ -23566,7 +23593,7 @@
       "ru": "Загрузить ...",
       "zh-chs": "上载...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1475"
+        "index.html->id_computerSelector->dialog->21->1476"
       ]
     },
     {
@@ -23630,7 +23657,7 @@
       "ru": "Использовать для аутентификации консоли TLS",
       "zh-chs": "用于TLS控制台身份验证",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1572"
+        "index.html->id_computerSelector->dialog->21->1573"
       ]
     },
     {
@@ -23646,7 +23673,7 @@
       "ru": "Пользователь & Pass / Server-Auth TLS",
       "zh-chs": "用户和通过/服务器身份验证TLS",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1257"
+        "index.html->id_computerSelector->dialog->21->1260"
       ]
     },
     {
@@ -23679,12 +23706,12 @@
       "ru": "Согласие пользователя",
       "zh-chs": "用户同意",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1200",
-        "index.html->id_computerSelector->dialog->21->1321",
-        "index.html->id_computerSelector->dialog->21->1427",
-        "index.html->id_computerSelector->dialog->21->1430",
-        "index.html->id_computerSelector->dialog->21->1437",
-        "index.html->id_computerSelector->dialog->21->1442",
+        "index.html->id_computerSelector->dialog->21->1203",
+        "index.html->id_computerSelector->dialog->21->1324",
+        "index.html->id_computerSelector->dialog->21->1428",
+        "index.html->id_computerSelector->dialog->21->1431",
+        "index.html->id_computerSelector->dialog->21->1438",
+        "index.html->id_computerSelector->dialog->21->1443",
         "index.html->id_computerSelector->dialog->21->420"
       ]
     },
@@ -23701,9 +23728,9 @@
       "ru": "Ошибка согласия пользователя",
       "zh-chs": "用户同意错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1199",
-        "index.html->id_computerSelector->dialog->21->1201",
-        "index.html->id_computerSelector->dialog->21->1436"
+        "index.html->id_computerSelector->dialog->21->1202",
+        "index.html->id_computerSelector->dialog->21->1204",
+        "index.html->id_computerSelector->dialog->21->1437"
       ]
     },
     {
@@ -23745,7 +23772,7 @@
       "ru": "Пользователь инициирован",
       "zh-chs": "用户启动",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1226"
+        "index.html->id_computerSelector->dialog->21->1229"
       ]
     },
     {
@@ -23761,7 +23788,7 @@
       "ru": "Инициированный пользователем туннель",
       "zh-chs": "用户启动的隧道",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1252"
+        "index.html->id_computerSelector->dialog->21->1255"
       ]
     },
     {
@@ -23790,7 +23817,7 @@
       "ru": "Пользователь настроен",
       "zh-chs": "用户配置",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1325"
+        "index.html->id_computerSelector->dialog->21->1328"
       ]
     },
     {
@@ -23806,7 +23833,7 @@
       "ru": "Согласие пользователя не требуется.",
       "zh-chs": "无需用户同意。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1431"
+        "index.html->id_computerSelector->dialog->21->1432"
       ]
     },
     {
@@ -23822,7 +23849,7 @@
       "ru": "Согласие пользователя успешно.",
       "zh-chs": "用户同意成功。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1443"
+        "index.html->id_computerSelector->dialog->21->1444"
       ]
     },
     {
@@ -23838,7 +23865,7 @@
       "ru": "Согласие пользователя ...",
       "zh-chs": "用户同意...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1380"
+        "index.html->id_computerSelector->dialog->21->1383"
       ]
     },
     {
@@ -23854,7 +23881,7 @@
       "ru": "Пользователь инициировал соединение",
       "zh-chs": "用户发起的连接",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1211"
+        "index.html->id_computerSelector->dialog->21->1214"
       ]
     },
     {
@@ -23870,7 +23897,7 @@
       "ru": "Варианты инициации пользователя",
       "zh-chs": "用户启动选项",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1209"
+        "index.html->id_computerSelector->dialog->21->1212"
       ]
     },
     {
@@ -23899,7 +23926,7 @@
       "ru": "ID пользователя",
       "zh-chs": "用户身份",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1670"
+        "index.html->id_computerSelector->dialog->21->1671"
       ]
     },
     {
@@ -23915,8 +23942,8 @@
       "ru": "имя пользователя",
       "zh-chs": "用户名",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1292",
-        "index.html->id_computerSelector->dialog->21->1669",
+        "index.html->id_computerSelector->dialog->21->1295",
+        "index.html->id_computerSelector->dialog->21->1670",
         "index.html->id_computerSelector->dialog->21->263",
         "index.html->id_computerSelector->dialog->21->276",
         "index.html->id_computerSelector->dialog->21->590",
@@ -23939,7 +23966,7 @@
       "ru": "Имя пользователя Пароль",
       "zh-chs": "用户名密码",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1290"
+        "index.html->id_computerSelector->dialog->21->1293"
       ]
     },
     {
@@ -24026,7 +24053,7 @@
       "ru": "действительный",
       "zh-chs": "有效",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1642"
+        "index.html->id_computerSelector->dialog->21->1643"
       ]
     },
     {
@@ -24107,8 +24134,8 @@
       "zh-chs": "供应商",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1024",
-        "index.html->id_computerSelector->dialog->21->1478",
-        "index.html->id_computerSelector->dialog->21->1490"
+        "index.html->id_computerSelector->dialog->21->1479",
+        "index.html->id_computerSelector->dialog->21->1491"
       ]
     },
     {
@@ -24124,7 +24151,7 @@
       "ru": "Название поставщика",
       "zh-chs": "供应商名称",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1491"
+        "index.html->id_computerSelector->dialog->21->1492"
       ]
     },
     {
@@ -24338,8 +24365,8 @@
       "ru": "Посмотреть...",
       "zh-chs": "视图...",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1566",
-        "index.html->id_computerSelector->dialog->21->1570"
+        "index.html->id_computerSelector->dialog->21->1567",
+        "index.html->id_computerSelector->dialog->21->1571"
       ]
     },
     {
@@ -24478,7 +24505,7 @@
       "ru": "Ошибка синтаксического анализа WSMAN",
       "zh-chs": "WSMAN解析错误",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1691"
+        "index.html->id_computerSelector->dialog->21->1692"
       ]
     },
     {
@@ -24527,7 +24554,7 @@
       "ru": "Время пробуждения",
       "zh-chs": "唤醒时间",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1527"
+        "index.html->id_computerSelector->dialog->21->1528"
       ]
     },
     {
@@ -24637,7 +24664,7 @@
       "ru": "У нас есть закрытый ключ для этого сертификата.",
       "zh-chs": "我们有此证书的私钥。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1564"
+        "index.html->id_computerSelector->dialog->21->1565"
       ]
     },
     {
@@ -24653,7 +24680,7 @@
       "ru": "Мы доверяем сертификатам, подписанным этим сертификатом.",
       "zh-chs": "我们信任此证书签名的证书。",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1562"
+        "index.html->id_computerSelector->dialog->21->1563"
       ]
     },
     {
@@ -25064,7 +25091,7 @@
     {
       "en": "ZRLE16, Compressed Color",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1146"
+        "index.html->id_computerSelector->dialog->21->1149"
       ]
     },
     {
@@ -25073,19 +25100,19 @@
     {
       "en": "ZRLE4G, Compressed Gray",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1143"
+        "index.html->id_computerSelector->dialog->21->1146"
       ]
     },
     {
       "en": "ZRLE8, Compressed Color",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1145"
+        "index.html->id_computerSelector->dialog->21->1148"
       ]
     },
     {
       "en": "ZRLE8G, Compressed Gray",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1144"
+        "index.html->id_computerSelector->dialog->21->1147"
       ]
     },
     {
@@ -25210,7 +25237,7 @@
       "ru": "столкновение",
       "zh-chs": "碰撞",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1332"
+        "index.html->id_computerSelector->dialog->21->1335"
       ]
     },
     {
@@ -25282,7 +25309,7 @@
       "ru": "Устаревшее",
       "zh-chs": "不推荐使用",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1329"
+        "index.html->id_computerSelector->dialog->21->1332"
       ]
     },
     {
@@ -25298,7 +25325,7 @@
       "ru": "истекший",
       "zh-chs": "已过期",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1331"
+        "index.html->id_computerSelector->dialog->21->1334"
       ]
     },
     {
@@ -25314,7 +25341,7 @@
       "ru": "файл",
       "zh-chs": "文件",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1558"
+        "index.html->id_computerSelector->dialog->21->1559"
       ]
     },
     {
@@ -25370,7 +25397,7 @@
       "ru": "не положено",
       "zh-chs": "不允许",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1333"
+        "index.html->id_computerSelector->dialog->21->1336"
       ]
     },
     {
@@ -25420,7 +25447,7 @@
       "ru": "p24filetable",
       "zh-chs": "p24文件表",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1172"
+        "index.html->id_computerSelector->dialog->21->1175"
       ]
     },
     {
@@ -25456,7 +25483,7 @@
       "ru": "предпочтительный / устаревший",
       "zh-chs": "首选/已弃用",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1330"
+        "index.html->id_computerSelector->dialog->21->1333"
       ]
     },
     {
@@ -25485,7 +25512,7 @@
       "ru": "sblock_",
       "zh-chs": "sblock_",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1540"
+        "index.html->id_computerSelector->dialog->21->1541"
       ]
     },
     {
@@ -25501,7 +25528,7 @@
       "ru": "script.mescript",
       "zh-chs": "script.mescript",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1559"
+        "index.html->id_computerSelector->dialog->21->1560"
       ]
     },
     {
@@ -25556,7 +25583,7 @@
       "ru": "действительный",
       "zh-chs": "有效",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1328"
+        "index.html->id_computerSelector->dialog->21->1331"
       ]
     },
     {
@@ -25572,7 +25599,7 @@
       "ru": "проснуться",
       "zh-chs": "醒来",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1510"
+        "index.html->id_computerSelector->dialog->21->1511"
       ]
     },
     {
@@ -25601,7 +25628,7 @@
       "ru": "{0} соединение",
       "zh-chs": "{0}连接",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1242"
+        "index.html->id_computerSelector->dialog->21->1245"
       ]
     },
     {
@@ -25617,7 +25644,7 @@
       "ru": "{0} байт",
       "zh-chs": "{0}个字节",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1174"
+        "index.html->id_computerSelector->dialog->21->1177"
       ]
     },
     {
@@ -25633,7 +25660,7 @@
       "ru": "{0} секунд",
       "zh-chs": "{0}秒",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1666"
+        "index.html->id_computerSelector->dialog->21->1667"
       ]
     },
     {
@@ -25649,7 +25676,7 @@
       "ru": "{0} в {1}",
       "zh-chs": "{0}至{1}",
       "xloc": [
-        "index.html->id_computerSelector->dialog->21->1673"
+        "index.html->id_computerSelector->dialog->21->1674"
       ]
     },
     {
