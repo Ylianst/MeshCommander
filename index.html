@@ -1798,7 +1798,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.9.3';
+        var version = '0.9.4';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -1817,7 +1817,7 @@
         var LoadingHtml = '<div style=text-align:center;padding-top:20px>' + "Loading..." + '<div>';
         var amtversion = 0;
         var amtversionmin = 0;
-        var amtFirstPull = 0; // Bitmask, Set this when the first pull request is made on a device: 1 = HardwareInfo, 2 = WirelessInfo, 4 = SystemDefense, 8 = Storage, 16 = EventLog, 32 = AuditLog, 64 = ExtraInfo, 128 = 802.11x
+        var amtFirstPull = 0; // Bitmask, Set this when the first pull request is made on a device: 1 = HardwareInfo, 2 = WirelessInfo, 4 = SystemDefense, 8 = Storage, 16 = EventLog, 32 = AuditLog, 64 = ExtraInfo, 128 = 802.1x
 // ###BEGIN###{NetworkSettings}
         var amtwirelessif = -1; // Set to the interface index for the wireless interface, -1 if no wireless.
 // ###END###{NetworkSettings}
@@ -5685,10 +5685,10 @@
             x += TableEntry("Dynamic DNS", addLinkConditional(ddns, 'showEditDnsDlg()', xxAccountAdminName));
 
             // ###BEGIN###{NetAuth}
-            // 802.11x
+            // 802.1x
             var netAuthProtocols = ["TLS", "TTLS MSCHAPv2", "PEAP MSCHAPv2", "EAP GTC", "EAPFAST MSCHAPv2", "EAPFAST GTC", "EAPFAST TLS"], netAuthStr = "Disabled";
             if (amtsysstate['AMT_8021XProfile'].responses.Body['Enabled']) { netAuthStr = "Enabled, " + netAuthProtocols[amtsysstate['AMT_8021XProfile'].responses.Body['AuthenticationProtocol']]; }
-            x += TableEntry("802.11x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
+            x += TableEntry("802.1x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
             // ###END###{NetAuth}
 
             x += TableEnd();
@@ -7784,7 +7784,7 @@
 // ###BEGIN###{NetAuth}
 
         //
-        // 802.11x SETTINGS
+        // 802.1x SETTINGS
         //
 
         function editNetAuthProfile() {
@@ -7799,7 +7799,7 @@
                     clientcertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
                 }
             }
-            if (clientcertoptions == '') { messagebox("802.11x Profile", "No client certificates available to enable 802.11x."); return; }
+            if (clientcertoptions == '') { messagebox("802.1x Profile", "No client certificates available to enable 802.1x."); return; }
             QH('idx_d27clientcert', clientcertoptions);
             QH('idx_d27servercert', servercertoptions);
 
@@ -7825,7 +7825,7 @@
                     if (xxCertificates[i]['InstanceID'] == ccInstanceId) { Q('idx_d27clientcert').value = i; }
                 }
             }
-            setDialogMode(27, "802.11x Profile", 3, function () { setNetAuthProfile() });
+            setDialogMode(27, "802.1x Profile", 3, function () { setNetAuthProfile() });
             updateNetAuthDialog();
         }
 
@@ -7882,9 +7882,9 @@
                 updateSystemStatus();
             } else {
                 if (response.Header['WsmanError']) {
-                    messagebox("802.11x Error", response.Header['WsmanError'].replace(/_/g, ' '));
+                    messagebox("802.1x Error", response.Header['WsmanError'].replace(/_/g, ' '));
                 } else {
-                    messagebox("802.11x Error", "Error, Status = " + status);
+                    messagebox("802.1x Error", "Error, Status = " + status);
                 }
             }
         }
@@ -11018,10 +11018,14 @@
                     r['SecureErase'] = ((AvdPowerDlg.SecureErase) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] == true) && (AvdPowerDlg.RSEPassword)) { r['RSEPassword'] = AvdPowerDlg.RSEPassword; }
                 }
-                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
-                    r['PlatformErase'] = true;
-                    r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
-                    r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                if (r['PlatformErase'] != null) {
+                    if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
+                        r['PlatformErase'] = true;
+                        r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
+                        r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                    } else {
+                        r['PlatformErase'] = false;
+                    }
                 }
                 if (r['ConfigurationDataReset'] != null) { r['ConfigurationDataReset'] = AvdPowerDlg.FirmwareReset; }
             } else {
@@ -11047,10 +11051,14 @@
                     r['SecureErase'] = (((action == 104) || (action == 105)) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
-                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
-                    r['PlatformErase'] = true;
-                    r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
-                    r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                if (r['PlatformErase'] != null) {
+                    if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
+                        r['PlatformErase'] = true;
+                        r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
+                        r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                    } else {
+                        r['PlatformErase'] = false;
+                    }
                 }
                 if (r['ConfigurationDataReset'] != null) {
                     r['ConfigurationDataReset'] = false;
@@ -11135,7 +11143,7 @@
 
         var targetPowerAction = 0;
         function powerActionResponse3(stack, name, response, status) {
-            console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
+            //console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
             if (errcheck(status, stack)) return;
             if (response.Body['ReturnValue'] != 0) { messagebox("Change Boot Order", "(2) Change Boot Order returns "+ response.Body.ReturnValueStr); return; }
 
