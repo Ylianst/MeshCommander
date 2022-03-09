@@ -1454,28 +1454,22 @@
                     <div>Priority</div>
                 </div>
                 <div style='height:26px'>
-                    <select id="idx_d12auth" style="float:right;width:200px" onclick="updateWifiDialog()">
-                        <option id="idx_d12auth_wpa3" value="32768">WPA3 SAE</option>
-                        <!--<option value="7">WPA2 IEEE 802.1x</option>-->
-                        <option value="6">WPA2 PSK</option>
-                        <!--<option value="5">WPA IEEE 802.1x</option>-->
-                        <option value="4">WPA PSK</option>
-                        <!--<option value="3">Shared Key</option>-->
-                        <!--<option value="2">Open</option>-->
-                    </select>
+                    <select id="idx_d12auth" style="float:right;width:200px" onclick="updateWifiDialog()"></select>
                     <div>Authentication</div>
                 </div>
                 <div style='height:26px'>
                     <select id="idx_d12enc" style="float:right;width:200px" onclick="updateWifiDialog()">
                         <option id="id_d12e4" value="4">CCMP-AES</option>
                         <option id="id_d12e3" value="3">TKIP-RC4</option>
-                        <option id="id_d12e2" value="2">WEP</option>
-                        <option id="id_d12e5" value="5">None</option>
+                        <!--<option id="id_d12e2" value="2">WEP</option>-->
+                        <!--<option id="id_d12e5" value="5">None</option>-->
                     </select>
                     <div>Encryption</div>
                 </div>
-                <div style='height:26px'><input id="idx_d12password1" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Length between 8 and 63 characters"><div title="Length between 8 and 63 characters">Password*</div></div>
-                <div style='height:26px'><input id="idx_d12password2" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Length between 8 and 63 characters"><div title="Length between 8 and 63 characters">Confirm Password</div></div>
+                <div id="idx_d12pass">
+                    <div style='height:26px'><input id="idx_d12password1" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Length between 8 and 63 characters"><div title="Length between 8 and 63 characters">Password*</div></div>
+                    <div style='height:26px'><input id="idx_d12password2" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Length between 8 and 63 characters"><div title="Length between 8 and 63 characters">Confirm Password</div></div>
+                </div>
             </div>
             <!-- ###END###{Wireless} -->
             <!-- ###BEGIN###{USBSetup} -->
@@ -5683,14 +5677,6 @@
                 ddns = "Update by DHCP server";
             }
             x += TableEntry("Dynamic DNS", addLinkConditional(ddns, 'showEditDnsDlg()', xxAccountAdminName));
-
-            // ###BEGIN###{NetAuth}
-            // 802.1x
-            var netAuthProtocols = ["TLS", "TTLS MSCHAPv2", "PEAP MSCHAPv2", "EAP GTC", "EAPFAST MSCHAPv2", "EAPFAST GTC", "EAPFAST TLS"], netAuthStr = "Disabled";
-            if (amtsysstate['AMT_8021XProfile'].responses.Body['Enabled']) { netAuthStr = "Enabled, " + netAuthProtocols[amtsysstate['AMT_8021XProfile'].responses.Body['AuthenticationProtocol']]; }
-            x += TableEntry("802.1x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
-            // ###END###{NetAuth}
-
             x += TableEnd();
 
             for (var y in amtsysstate['AMT_EthernetPortSettings'].responses) {
@@ -5760,6 +5746,12 @@
                 if (amtwirelessif != y) {
                     // Things that are specific to the wired interface
                     x += TableEntry("Respond to ping", addLinkConditional(["Disabled", "ICMP response", "RMCP response", "ICMP & RMCP response"][gs['PingResponseEnabled'] + (gs['RmcpPingResponseEnabled'] << 1)], 'showPingActionDlg()', xxAccountAdminName));
+                    // ###BEGIN###{NetAuth}
+                    // 802.1x
+                    var netAuthProtocols = ["TLS", "TTLS MSCHAPv2", "PEAP MSCHAPv2", "EAP GTC", "EAPFAST MSCHAPv2", "EAPFAST GTC", "EAPFAST TLS"], netAuthStr = "Disabled";
+                    if (amtsysstate['AMT_8021XProfile'].responses.Body['Enabled']) { netAuthStr = "Enabled, " + netAuthProtocols[amtsysstate['AMT_8021XProfile'].responses.Body['AuthenticationProtocol']]; }
+                    x += TableEntry("802.1x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
+                    // ###END###{NetAuth}
                     var ipStateString = z['DHCPEnabled'] == true ? "Automatic using DHCP server" : "Static IP address";
                     if (z['IpSyncEnabled'] == true) { ipStateString += ', IP sync with OS'; }
                     x += TableEntry("IPv4 state", addLinkConditional(ipStateString, 'showIPSetupDlg()', xxAccountAdminName));
@@ -7730,11 +7722,19 @@
                 if (t) { x += '<option value='+ i +'>'+ i; } // Option is a tag that is self closing.
             }
             QH('idx_d12pri', x);
-            QV('idx_d12auth_wpa3', amtversion > 13);
+
+            var authOptions = '';
+            // ###BEGIN###{NetAuth}
+            authOptions += '<option id="idx_d12auth_wpa3x" value=32768>' + "WPA3 IEEE 802.1x" + '</option>';
+            authOptions += '<option id="idx_d12auth_wpa2x" value=7>' + "WPA2 IEEE 802.1x" + '</option>';
+            authOptions += '<option id="idx_d12auth_wpax" value=5>' + "WPA IEEE 802.1x" + '</option>';
+            // ###END###{NetAuth}
+            authOptions += '<option value=6>' + "WPA2 PSK" + '</option>';
+            authOptions += '<option value=4>' + "WPA PSK" + '</option>';
+            QH('idx_d12auth', authOptions);
 
             idx_d12auth.value = 6;
             idx_d12enc.value = 4;
-
             idx_d12name.value = idx_d12ssid.value = idx_d12password1.value = idx_d12password2.value = '';
 
             setDialogMode(12, "Add Wireless Profile", 3, function () { addWifiProfile() });
@@ -7742,23 +7742,39 @@
         }
 
         function addWifiProfile() {
+            var netAuthSettings, netAuthSettingsClientCert, netAuthSettingsServerCaCert;
+            var v = {
+                '__parameterType': 'instance',
+                '__namespace': amtstack.CompleteName('CIM_WiFiEndpointSettings'),
+                'ElementName': idx_d12name.value,
+                'InstanceID': 'Intel(r) AMT:WiFi Endpoint Settings ' + idx_d12name.value,
+                'AuthenticationMethod': idx_d12auth.value,
+                'EncryptionMethod': idx_d12enc.value,
+                'SSID': idx_d12ssid.value,
+                'Priority': idx_d12pri.value
+            };
+            if ((idx_d12auth.value == 4) || (idx_d12auth.value == 6)) { v['PSKPassPhrase'] = idx_d12password1.value; }
+            // ###BEGIN###{NetAuth}
+            if ((idx_d12auth.value == 5) || (idx_d12auth.value == 7) || (idx_d12auth.value == 32768)) {
+                netAuthSettings = {
+                    '__parameterType': 'instance',
+                    '__namespace': amtstack.CompleteName('CIM_IEEE8021xSettings'),
+                    'ElementName': '8021x-' + idx_d12name.value,
+                    'InstanceID': '8021x-' + idx_d12name.value,
+                    'AuthenticationProtocol': 2,
+                    'Username': 'user',
+                    'Password': 'pass',
+                    'AvailableInS0': true
+                };
+            }
+            // ###END###{NetAuth}
             amtstack.AMT_WiFiPortConfigurationService_AddWiFiSettings(
 				{
 				    '__parameterType': 'reference',
 				    '__resourceUri': amtstack.CompleteName('CIM_WiFiEndpoint'),
 				    'Name': 'WiFi Endpoint 0'
-				}, {
-				    '__parameterType': 'instance',
-				    '__namespace': amtstack.CompleteName('CIM_WiFiEndpointSettings'),
-				    'ElementName': idx_d12name.value,
-				    'InstanceID': 'Intel(r) AMT:WiFi Endpoint Settings ' + idx_d12name.value,
-				    'AuthenticationMethod': idx_d12auth.value,
-				    'EncryptionMethod': idx_d12enc.value,
-				    'SSID': idx_d12ssid.value,
-				    'Priority': idx_d12pri.value,
-				    'PSKPassPhrase': idx_d12password1.value
-				},
-				null, null, null, removeWifiEntryResponse
+				}, v,
+				netAuthSettings, netAuthSettingsClientCert, netAuthSettingsServerCaCert, removeWifiEntryResponse
 			);
         }
 
@@ -7766,18 +7782,21 @@
             var r = true;
             var a = idx_d12auth.value;
             var e = idx_d12enc.value;
-            QV('id_d12e2', a < 4);
-            QV('id_d12e3', a > 3);
-            QV('id_d12e4', a > 3);
-            QV('id_d12e5', a < 4);
+            //QV('id_d12e2', a < 4);
+            //QV('id_d12e3', a > 3);
+            //QV('id_d12e4', a > 3);
+            //QV('id_d12e5', a < 4);
             if (a < 4 && (e == 3 || e == 4)) { idx_d12enc.value = 2; }
             if (a > 3 && (e == 2 || e == 5)) { idx_d12enc.value = 3; }
             if (a == 32768) { idx_d12enc.value = 4; }
+            QV('idx_d12pass', (a == 4) || (a == 6));
 
             // Check if there is already a profile with this name
             for (var j in xxWireless['CIM_WiFiEndpointSettings'].responses) { if (xxWireless['CIM_WiFiEndpointSettings'].responses[j]['ElementName'] == idx_d12name.value) { r = false; } }
+            if ((idx_d12name.value.length == 0) && (idx_d12ssid.value.length == 0)) { r = false; }
+            if (((a == 4) || (a == 6)) && ((idx_d12password1.value.length < 8) || (idx_d12password1.value.length > 63) || (idx_d12password1.value != idx_d12password2.value))) { r = false; }
 
-            QE('idx_dlgOkButton', r == true && (idx_d12name.value.length > 0) && (idx_d12ssid.value.length > 0) && (idx_d12password1.value.length > 7) && (idx_d12password1.value == idx_d12password2.value));
+            QE('idx_dlgOkButton', r);
         }
 
 // ###END###{Wireless}
@@ -7791,7 +7810,7 @@
             if (xxdialogMode) return;
 
             // Set certificates
-            var clientcertoptions = '', servercertoptions = '';
+            var clientcertoptions = '<option value=-1>' + EscapeHtml("None") + '</option>', servercertoptions = '<option value=-1>' + EscapeHtml("None") + '</option>';
             for (var i in xxCertificates) {
                 if (xxCertificates[i].TrustedRootCertficate) {
                     servercertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
@@ -7799,7 +7818,6 @@
                     clientcertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
                 }
             }
-            if (clientcertoptions == '') { messagebox("802.1x Profile", "No client certificates available to enable 802.1x."); return; }
             QH('idx_d27clientcert', clientcertoptions);
             QH('idx_d27servercert', servercertoptions);
 
@@ -7818,8 +7836,9 @@
                 Q('idx_d27domain').value = sc['Domain'] ? sc['Domain'] : '';
                 Q('idx_d27pac').value = sc['ProtectedAccessCredential'] ? sc['ProtectedAccessCredential'] : '';
                 Q('idx_d27pacpassword').value = sc['PACPassword'] ? sc['PACPassword'] : '';
-                var scInstanceId = sc['ServerCertificateIssuer']['ReferenceParameters']['SelectorSet']['Selector']['Value'];
-                var ccInstanceId = sc['ClientCertificate']['ReferenceParameters']['SelectorSet']['Selector']['Value'];
+                var scInstanceId = -1, ccInstanceId = -1;
+                if (sc['ServerCertificateIssuer']) { scInstanceId = sc['ServerCertificateIssuer']['ReferenceParameters']['SelectorSet']['Selector']['Value']; }
+                if (sc['ClientCertificate']) { ccInstanceId = sc['ClientCertificate']['ReferenceParameters']['SelectorSet']['Selector']['Value']; }
                 for (var i in xxCertificates) {
                     if (xxCertificates[i]['InstanceID'] == scInstanceId) { Q('idx_d27servercert').value = i; }
                     if (xxCertificates[i]['InstanceID'] == ccInstanceId) { Q('idx_d27clientcert').value = i; }
@@ -7869,8 +7888,8 @@
                     delete sc['ProtectedAccessCredential'];
                     delete sc['PACPassword'];
                 }
-                sc['ClientCertificate'] = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d27clientcert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>';
-                sc['ServerCertificateIssuer'] = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d27servercert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>';
+                if (parseInt(Q('idx_d27clientcert').value) >= 0) { sc['ClientCertificate'] = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d27clientcert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>'; } else { delete sc['ClientCertificate']; }
+                if (parseInt(Q('idx_d27servercert').value) >= 0) { sc['ServerCertificateIssuer'] = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d27servercert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>'; } else { delete sc['ServerCertificateIssuer']; }
                 sc['PxeTimeout'] = Q('idx_d27pxetimeout').value;
             }
             amtstack.Put('AMT_8021XProfile', sc, setNetAuthProfileEx);
