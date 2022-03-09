@@ -5390,10 +5390,10 @@
             amtstack.BatchEnum('', ['*AMT_GeneralSettings'], processSystemStatus);
             // ###END###{Look-Intel-SBT}
             // ###BEGIN###{!Look-Intel-SBT}
-            var query = ['CIM_ServiceAvailableToElement', '*AMT_GeneralSettings', 'AMT_EthernetPortSettings', '*AMT_RedirectionService', 'CIM_ElementSettingData'];
+            var query = ['CIM_ServiceAvailableToElement', '*AMT_GeneralSettings', 'AMT_EthernetPortSettings', '*AMT_RedirectionService', 'CIM_ElementSettingData', '*AMT_BootCapabilities'];
             if (amtversion > 5) query.push('IPS_IPv6PortSettings', '*CIM_KVMRedirectionSAP', '*IPS_OptInService','*IPS_KVMRedirectionSettingData');
             if (amtversion > 9) query.push('*IPS_ScreenConfigurationService', '*IPS_PowerManagementService');
-            if ((amtversion > 15) && (amtstack.wsman.comm.xtls == 1)) query.push('*CIM_BootService');
+            if (amtversion > 15) query.push('*CIM_BootService');
             // ###BEGIN###{NetAuth}
             if (amtversion > 2) query.push('*AMT_8021XProfile');
             // ###END###{NetAuth}
@@ -5642,7 +5642,7 @@
             }
 
             // Power Options
-            if ((amtstack.wsman.comm.xtls == 1) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] != null)) {
+            if ((amtsysstate['AMT_BootCapabilities'].response['PlatformErase'] != null) && (amtsysstate['AMT_BootCapabilities'].response['PlatformErase'] > 0) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] != null)) {
                 var enabledBootStateStr = { 0: "Unknown", 1: "Other", 2: "Enabled", 3: "Disabled", 4: "Shutting Down", 5: "Not Applicable", 6: "Enabled but Offline", 7: "In Test", 8: "Deferred", 9: "Quiesce", 10: "Starting", 32768: "OCR Disabled", 32769: "OCR Enabled", 32770: "OCR Disabled, RPE Enabled", 32771: "RPE & OCR Enabled" };
                 if (amtversion > 15) { enabledBootStateStr[32768] = "OCR & RPE Disabled"; enabledBootStateStr[32769] = "OCR Enabled, RPE Disabled"; }
                 var t = enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]?enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]:"Unknown";
@@ -5779,7 +5779,7 @@
                         x += TableEntry("Local WIFI Profile Sync", addLinkConditional(((xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 1) ? "Enabled" : "Disabled"), 'showWifiSyncDlg(' + y + ')', xxAccountAdminName));
                     }
                     // CSME UEFI Wifi profile sharing, check if it is enabled in boot setting and it is not null at AMT_WiFiPortConfigrationService
-                    if (xxWireless['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare']!=null && xxWireless['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare']==true 
+                    if (amtsysstate['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare'] != null && amtsysstate['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare'] == true
                         && xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled']!=null) {
                             x += TableEntry("UEFI WiFi CoEx Profile sharing", addLinkConditional(xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled']==1? "Enabled":"Disabled", 'showUefiWifiCoExDlg()', xxAccountAdminName));
                      } else {
@@ -7647,7 +7647,7 @@
         function PullWireless() {
             amtFirstPull |= 2;
             try { if (amtwirelessif == -1) return; } catch (e) {} // If the wireless adapter has no MAC, don't show this.
-            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService', '*AMT_BootCapabilities'], processWireless);
+            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService'], processWireless);
         }
 
         function wifiRefresh() { if (!xxdialogMode) PullWireless(); }
@@ -10625,67 +10625,64 @@
             amtstack.Get('AMT_BootCapabilities', powerActionResponse00, 0, 1);
         }
 
-        function powerActionResponse00(stack, name, response, status) {
-            if (status == 200) {
-                var powerState = 3;
-                try {
-                    var x = amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'];
-                    if (x == 2) { powerState = 1; } else { powerState = 2; }
-                } catch (ex) { }
-                amtPowerBootCapabilities = response.Body;
-                QH('d5actionSelect', '');
-                if (powerState & 2) { addOption('d5actionSelect', "Power up", 2); }
-                if (powerState & 1) {
-                    addOption('d5actionSelect', "Reset", 10);
-                    addOption('d5actionSelect', "Power cycle", 5);
-                    addOption('d5actionSelect', "Power down", 8);
-                }
-                if (amtPowerBootCapabilities['ForceDiagnosticBoot'] == true) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Power on to diagnostic", 300); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to diagnostic", 301); }
-                }
-                if ((amtversion > 9) && (powerState & 1)) {
-                    addOption('d5actionSelect', "OS Wake from Standby", 500);
-                    addOption('d5actionSelect', "OS Power Saving", 501);
-                    addOption('d5actionSelect', "Soft-off", 12);
-                    addOption('d5actionSelect', "Soft-reset", 14);
-                    addOption('d5actionSelect', "Sleep", 4);
-                    addOption('d5actionSelect', "Hibernate", 7);
-                }
-                if (amtPowerBootCapabilities['BIOSSetup'] == true) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Power up to BIOS", 100); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to BIOS", 101); }
-                }
-                if (amtPowerBootCapabilities['SecureErase'] == true) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Power up to Secure Erase", 104); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to Secure Erase", 105); }
-                }
-                if ((amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2)) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
-                }
-                // ###BEGIN###{IDER}
-                if (powerState & 1) { addOption('d5actionSelect', "Reset to IDE-R Floppy", 200); }
-                if (powerState & 2) { addOption('d5actionSelect', "Power on to IDE-R Floppy", 201); }
-                if (powerState & 1) { addOption('d5actionSelect', "Reset to IDE-R CDROM", 202); }
-                if (powerState & 2) { addOption('d5actionSelect', "Power on to IDE-R CDROM", 203); }
-                // ###END###{IDER}
-                if (powerState & 1) { addOption('d5actionSelect', "Reset to PXE", 400); }
-                if (powerState & 2) { addOption('d5actionSelect', "Power on to PXE", 401); }
-                // ###BEGIN###{PowerControl-Advanced}
-                // ###BEGIN###{PowerControl-OneClick}
-                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] === true) {
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to HTTPS Boot", 600); }
-                    if (powerState & 2) { addOption('d5actionSelect', "Power on to HTTPS Boot", 601); }
-                }
-                // ###END###{PowerControl-OneClick}
-                addOption('d5actionSelect', "Custom action...", 999);
-                // ###END###{PowerControl-Advanced}
-                if (amtversion > 5) { addOption('d5actionSelect', "User consent...", 998); } // On AMT 5 and higher, offer the option of doing user consent alone.
-                setDialogMode(5, "Power Actions", 3, powerActionDlgCheck);
-            } else {
-                messagebox("Power Action", format("Unable to get system capabilities, error {0}", status));
+        function showPowerActionDlg() {
+            if (xxdialogMode) return;
+            var powerState = 3;
+            try {
+                var x = amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'];
+                if (x == 2) { powerState = 1; } else { powerState = 2; }
+            } catch (ex) { }
+            amtPowerBootCapabilities = amtsysstate['AMT_BootCapabilities'].response;
+            QH('d5actionSelect', '');
+            if (powerState & 2) { addOption('d5actionSelect', "Power up", 2); }
+            if (powerState & 1) {
+                addOption('d5actionSelect', "Reset", 10);
+                addOption('d5actionSelect', "Power cycle", 5);
+                addOption('d5actionSelect', "Power down", 8);
             }
+            if (amtPowerBootCapabilities['ForceDiagnosticBoot'] == true) {
+                if (powerState & 2) { addOption('d5actionSelect', "Power on to diagnostic", 300); }
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to diagnostic", 301); }
+            }
+            if ((amtversion > 9) && (powerState & 1)) {
+                addOption('d5actionSelect', "OS Wake from Standby", 500);
+                addOption('d5actionSelect', "OS Power Saving", 501);
+                addOption('d5actionSelect', "Soft-off", 12);
+                addOption('d5actionSelect', "Soft-reset", 14);
+                addOption('d5actionSelect', "Sleep", 4);
+                addOption('d5actionSelect', "Hibernate", 7);
+            }
+            if (amtPowerBootCapabilities['BIOSSetup'] == true) {
+                if (powerState & 2) { addOption('d5actionSelect', "Power up to BIOS", 100); }
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to BIOS", 101); }
+            }
+            if (amtPowerBootCapabilities['SecureErase'] == true) {
+                if (powerState & 2) { addOption('d5actionSelect', "Power up to Secure Erase", 104); }
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to Secure Erase", 105); }
+            }
+            if ((amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2)) {
+                if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
+            }
+            // ###BEGIN###{IDER}
+            if (powerState & 1) { addOption('d5actionSelect', "Reset to IDE-R Floppy", 200); }
+            if (powerState & 2) { addOption('d5actionSelect', "Power on to IDE-R Floppy", 201); }
+            if (powerState & 1) { addOption('d5actionSelect', "Reset to IDE-R CDROM", 202); }
+            if (powerState & 2) { addOption('d5actionSelect', "Power on to IDE-R CDROM", 203); }
+            // ###END###{IDER}
+            if (powerState & 1) { addOption('d5actionSelect', "Reset to PXE", 400); }
+            if (powerState & 2) { addOption('d5actionSelect', "Power on to PXE", 401); }
+            // ###BEGIN###{PowerControl-Advanced}
+            // ###BEGIN###{PowerControl-OneClick}
+            if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] === true) {
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to HTTPS Boot", 600); }
+                if (powerState & 2) { addOption('d5actionSelect', "Power on to HTTPS Boot", 601); }
+            }
+            // ###END###{PowerControl-OneClick}
+            addOption('d5actionSelect', "Custom action...", 999);
+            // ###END###{PowerControl-Advanced}
+            if (amtversion > 5) { addOption('d5actionSelect', "User consent...", 998); } // On AMT 5 and higher, offer the option of doing user consent alone.
+            setDialogMode(5, "Power Actions", 3, powerActionDlgCheck);
         }
 
         // ###BEGIN###{PowerControl-Advanced}
