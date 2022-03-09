@@ -7654,7 +7654,7 @@
 
         var xxWifiState = { 3: "Disabled", 32768: "Enabled in S0", 32769: "Enabled in S0, Sx/AC" };
         var xxRadioState = 	{ 2: "On, Connected", 3: "Off", 6: "On, Disconnected" };
-        var xxWifiAuthenticationMethod = { 1: "Other", 2: "Open", 3: "Shared Key", 4: "WPA PSK", 5: "WPA IEEE 802.1x", 6: "WPA2 PSK", 7: "WPA2 IEEE 802.1x", 32768: "WPA3 SAE" };
+        var xxWifiAuthenticationMethod = { 1: "Other", 2: "Open", 3: "Shared Key", 4: "WPA PSK", 5: "WPA IEEE 802.1x", 6: "WPA2 PSK", 7: "WPA2 IEEE 802.1x", 32768: "WPA3 SAE IEEE 802.1x", 32769: "WPA3 OWE IEEE 802.1x" };
         var xxWifiEncryptionMethod = { 1: "Other", 2: "WEP", 3: "TKIP-RC4", 4: "CCMP-AES", 5: "None" }; // For 2 & 5, AuthenticationMethod must be 2 or 3. For 3 & 4 AuthenticationMethod must be 4,5,6 or 7
 
         function processWireless(stack, name, responses, status) {
@@ -7784,9 +7784,10 @@
 
             var authOptions = '';
             // ###BEGIN###{NetAuth}
-            authOptions += '<option id="idx_d12auth_wpa3x" value=32768>' + "WPA3 IEEE 802.1x" + '</option>';
-            authOptions += '<option id="idx_d12auth_wpa2x" value=7>' + "WPA2 IEEE 802.1x" + '</option>';
-            authOptions += '<option id="idx_d12auth_wpax" value=5>' + "WPA IEEE 802.1x" + '</option>';
+            authOptions += '<option value=32769>' + "WPA3 OWE IEEE 802.1x" + '</option>';
+            authOptions += '<option value=32768>' + "WPA3 SAE IEEE 802.1x" + '</option>';
+            authOptions += '<option value=7>' + "WPA2 IEEE 802.1x" + '</option>';
+            authOptions += '<option value=5>' + "WPA IEEE 802.1x" + '</option>';
             // ###END###{NetAuth}
             authOptions += '<option value=6>' + "WPA2 PSK" + '</option>';
             authOptions += '<option value=4>' + "WPA PSK" + '</option>';
@@ -7814,7 +7815,7 @@
             };
             if ((idx_d12auth.value == 4) || (idx_d12auth.value == 6)) { v['PSKPassPhrase'] = idx_d12password1.value; }
             // ###BEGIN###{NetAuth}
-            if ((idx_d12auth.value == 5) || (idx_d12auth.value == 7) || (idx_d12auth.value == 32768)) {
+            if ((idx_d12auth.value == 5) || (idx_d12auth.value == 7) || (idx_d12auth.value == 32768) || (idx_d12auth.value == 32769)) {
                 sc = {
                     '__parameterType': 'instance',
                     '__namespace': amtstack.CompleteName('CIM_IEEE8021xSettings'),
@@ -7859,9 +7860,9 @@
             //QV('id_d12e5', a < 4);
             if (a < 4 && (e == 3 || e == 4)) { idx_d12enc.value = 2; }
             if (a > 3 && (e == 2 || e == 5)) { idx_d12enc.value = 3; }
-            if (a == 32768) { idx_d12enc.value = 4; }
+            if ((a == 32768) || (a == 32769)) { idx_d12enc.value = 4; }
             QV('idx_d12pass', (a == 4) || (a == 6));
-            QV('idx_d12netauth', (a == 5) || (a == 7) || (a == 32768));
+            QV('idx_d12netauth', (a == 5) || (a == 7) || (a == 32768) || (a == 32769));
 
             // Check if there is already a profile with this name
             for (var j in xxWireless['CIM_WiFiEndpointSettings'].responses) { if (xxWireless['CIM_WiFiEndpointSettings'].responses[j]['ElementName'] == idx_d12name.value) { r = false; } }
