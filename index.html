@@ -1470,6 +1470,51 @@
                     <div style='height:26px'><input id="idx_d12password1" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Length between 8 and 63 characters"><div title="Length between 8 and 63 characters">Password*</div></div>
                     <div style='height:26px'><input id="idx_d12password2" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Length between 8 and 63 characters"><div title="Length between 8 and 63 characters">Confirm Password</div></div>
                 </div>
+                <!-- ###BEGIN###{NetAuth} -->
+                <div id="idx_d12netauth" style="display:none">
+                    <div id="idx_d12protocoldiv" style='height:26px'>
+                        <select id='idx_d12protocol' style='float:right;width:200px' onclick='updateNetAuth2Dialog()'>
+                            <option value='0'>TLS</option>
+                            <option value='1'>TTLS MSCHAPv2</option>
+                            <option value='2'>PEAP MSCHAPv2</option>
+                            <option value='3'>EAP GTC</option>
+                            <option value='4'>EAPFAST MSCHAPv2</option>
+                            <option value='5'>EAPFAST GTC</option>
+                            <option value='6'>EAPFAST TLS</option>
+                        </select>
+                        <div>Protocol</div>
+                    </div>
+                    <div id="idx_d12servernamediv" style='height:26px'><input id='idx_d12servername' style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuthDialog()" title="Maximum 32 characters"><div title="Maximum 32 characters">Server Name</div></div>
+                    <div id="idx_d12servernamecomparediv" style='height:26px'>
+                        <select id='idx_d12servernamecompare' style="float:right;width:200px" onclick="updateNetAuth2Dialog()">
+                            <option value='0'>Full Name</option>
+                            <option value='1'>Domain Suffix</option>
+                        </select>
+                        <div>Server Name Compare</div>
+                    </div>
+                    <div id="idx_d12domaindiv" style='height:26px'><input id="idx_d12domain" style="float:right;width:200px" maxlength="128" onkeyup="updateNetAuth2Dialog()" title="Maximum 128 characters"><div title="Maximum 128 characters">Domain</div></div>
+                    <div id="idx_d12usernamediv" style='height:26px'><input id="idx_d12username" style="float:right;width:200px" maxlength="128" onkeyup="updateNetAuth2Dialog()" title="Maximum 128 characters"><div title="Maximum 128 characters">Username</div></div>
+                    <div id="idx_d12passworddiv" style='height:26px'><input id="idx_d12password" type="password" style="float:right;width:200px" maxlength="32" onkeyup="updateNetAuth2Dialog()" title="Maximum length is 32 characters"><div title="Maximum length is 32 characters">Password</div></div>
+                    <div id="idx_d12roamingidentitydiv" style='height:26px'><input id="idx_d12roamingidentity" style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuth2Dialog()" title="Maximum 80 characters"><div title="Maximum 80 characters">Roaming Identity</div></div>
+                    <div id="idx_d12pacdiv" style='height:26px'><input id="idx_d12pac" style="float:right;width:200px" maxlength="256" onkeyup="updateNetAuth2Dialog()" title="Maximum 256 characters"><div title="Maximum 256 characters">Protected Access Credentials</div></div>
+                    <div id="idx_d12pacpassworddiv" style='height:26px'><input id="idx_d12pacpassword" type="password" style="float:right;width:200px" maxlength="256" onkeyup="updateNetAuth2Dialog()" title="Maximum length is 256 characters"><div title="Maximum length is 256 characters">PAC Password</div></div>
+                    <div id="idx_d12clientcertdiv" style='height:26px'>
+                        <select id="idx_d12clientcert" style="float:right;width:200px" onclick="updateNetAuth2Dialog()"></select>
+                        <div>Client Certificate</div>
+                    </div>
+                    <div id="idx_d12servercertdiv" style='height:26px'>
+                        <select id="idx_d12servercert" style="float:right;width:200px" onclick="updateNetAuth2Dialog()"></select>
+                        <div>Server Issuer Cert</div>
+                    </div>
+                    <div id="idx_d12activeins0div" style='height:26px'>
+                        <select id="idx_d12activeins0" style="float:right;width:200px" onclick="updateNetAuth2Dialog()">
+                            <option value="0">Enabled</option>
+                            <option value="1">Disabled</option>
+                        </select>
+                        <div>Active in S0</div>
+                    </div>
+                </div>
+                <!-- ###END###{NetAuth} -->
             </div>
             <!-- ###END###{Wireless} -->
             <!-- ###BEGIN###{USBSetup} -->
@@ -7723,6 +7768,20 @@
             }
             QH('idx_d12pri', x);
 
+            // ###BEGIN###{NetAuth}
+            // Set certificates
+            var clientcertoptions = '<option value=-1>' + EscapeHtml("None") + '</option>', servercertoptions = '<option value=-1>' + EscapeHtml("None") + '</option>';
+            for (var i in xxCertificates) {
+                if (xxCertificates[i].TrustedRootCertficate) {
+                    servercertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
+                } else if (xxCertificates[i].XPrivateKey) {
+                    clientcertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
+                }
+            }
+            QH('idx_d12clientcert', clientcertoptions);
+            QH('idx_d12servercert', servercertoptions);
+            // ###END###{NetAuth}
+
             var authOptions = '';
             // ###BEGIN###{NetAuth}
             authOptions += '<option id="idx_d12auth_wpa3x" value=32768>' + "WPA3 IEEE 802.1x" + '</option>';
@@ -7742,7 +7801,7 @@
         }
 
         function addWifiProfile() {
-            var netAuthSettings, netAuthSettingsClientCert, netAuthSettingsServerCaCert;
+            var sc, netAuthSettingsClientCert, netAuthSettingsServerCaCert;
             var v = {
                 '__parameterType': 'instance',
                 '__namespace': amtstack.CompleteName('CIM_WiFiEndpointSettings'),
@@ -7756,16 +7815,28 @@
             if ((idx_d12auth.value == 4) || (idx_d12auth.value == 6)) { v['PSKPassPhrase'] = idx_d12password1.value; }
             // ###BEGIN###{NetAuth}
             if ((idx_d12auth.value == 5) || (idx_d12auth.value == 7) || (idx_d12auth.value == 32768)) {
-                netAuthSettings = {
+                sc = {
                     '__parameterType': 'instance',
                     '__namespace': amtstack.CompleteName('CIM_IEEE8021xSettings'),
                     'ElementName': '8021x-' + idx_d12name.value,
                     'InstanceID': '8021x-' + idx_d12name.value,
-                    'AuthenticationProtocol': 2,
-                    'Username': 'user',
-                    'Password': 'pass',
-                    'AvailableInS0': true
+                    'ActiveInS0': (Q('idx_d12activeins0').value == 1),
+                    'AuthenticationProtocol': Q('idx_d12protocol').value
                 };
+                if (Q('idx_d12roamingidentity').value != '') { sc['RoamingIdentity'] = Q('idx_d12roamingidentity').value; }
+                if (Q('idx_d12servername').value != '') { sc['ServerCertificateName'] = Q('idx_d12servername').value; sc['ServerCertificateNameComparison'] = Q('idx_d12servernamecompare').value; }
+                if (Q('idx_d12username').value != '') { sc['Username'] = Q('idx_d12username').value; }
+                if (Q('idx_d12password').value != '') { sc['Password'] = Q('idx_d12password').value; }
+                if (Q('idx_d12domain').value != '') { sc['Domain'] = Q('idx_d12domain').value; }
+                if (Q('idx_d12protocol').value > 3) { sc['ProtectedAccessCredential'] = Q('idx_d12pac').value; sc['PACPassword'] = Q('idx_d12pacpassword').value; }
+                if (parseInt(Q('idx_d12clientcert').value) >= 0) {
+                    // TODO: DOES NOT WORK
+                    netAuthSettingsClientCert = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12clientcert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>';
+                }
+                if (parseInt(Q('idx_d12servercert').value) >= 0) {
+                    // TODO: DOES NOT WORK
+                    netAuthSettingsServerCaCert = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12servercert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>';
+                }
             }
             // ###END###{NetAuth}
             amtstack.AMT_WiFiPortConfigurationService_AddWiFiSettings(
@@ -7774,7 +7845,7 @@
 				    '__resourceUri': amtstack.CompleteName('CIM_WiFiEndpoint'),
 				    'Name': 'WiFi Endpoint 0'
 				}, v,
-				netAuthSettings, netAuthSettingsClientCert, netAuthSettingsServerCaCert, removeWifiEntryResponse
+				sc, netAuthSettingsClientCert, netAuthSettingsServerCaCert, removeWifiEntryResponse
 			);
         }
 
@@ -7790,6 +7861,7 @@
             if (a > 3 && (e == 2 || e == 5)) { idx_d12enc.value = 3; }
             if (a == 32768) { idx_d12enc.value = 4; }
             QV('idx_d12pass', (a == 4) || (a == 6));
+            QV('idx_d12netauth', (a == 5) || (a == 7) || (a == 32768));
 
             // Check if there is already a profile with this name
             for (var j in xxWireless['CIM_WiFiEndpointSettings'].responses) { if (xxWireless['CIM_WiFiEndpointSettings'].responses[j]['ElementName'] == idx_d12name.value) { r = false; } }
@@ -7797,7 +7869,19 @@
             if (((a == 4) || (a == 6)) && ((idx_d12password1.value.length < 8) || (idx_d12password1.value.length > 63) || (idx_d12password1.value != idx_d12password2.value))) { r = false; }
 
             QE('idx_dlgOkButton', r);
+
+            // ###BEGIN###{NetAuth}
+            updateNetAuthDialog();
+            // ###END###{NetAuth}
         }
+
+        // ###BEGIN###{NetAuth}
+        function updateNetAuth2Dialog() {
+            QV('idx_d12servernamecomparediv', (Q('idx_d12protocol').value != ''));
+            QV('idx_d12pacdiv', (Q('idx_d12protocol').value > 3));
+            QV('idx_d12pacpassworddiv', (Q('idx_d12protocol').value > 3));
+        }
+        // ###END###{NetAuth}
 
 // ###END###{Wireless}
 // ###BEGIN###{NetAuth}
