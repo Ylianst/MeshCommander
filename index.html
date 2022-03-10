@@ -1474,13 +1474,13 @@
                 <div id="idx_d12netauth" style="display:none">
                     <div id="idx_d12protocoldiv" style='height:26px'>
                         <select id='idx_d12protocol' style='float:right;width:200px' onclick='updateNetAuth2Dialog()'>
-                            <option value='0'>TLS</option>
-                            <option value='1'>TTLS MSCHAPv2</option>
-                            <option value='2'>PEAP MSCHAPv2</option>
-                            <option value='3'>EAP GTC</option>
-                            <option value='4'>EAPFAST MSCHAPv2</option>
-                            <option value='5'>EAPFAST GTC</option>
-                            <option value='6'>EAPFAST TLS</option>
+                            <option value='0'>EAP-TLS</option>
+                            <option value='1'>EAP-TTLS/MSCHAPv2</option>
+                            <option value='2'>PEAPv0/EAP-MSCHAPv2</option>
+                            <option value='3'>PEAPv1/EAP-GTC</option>
+                            <option value='4'>EAP-FAST/MSCHAPv2</option>
+                            <option value='5'>EAP-FAST/GTC</option>
+                            <option value='6'>EAP-FAST/TLS</option>
                         </select>
                         <div>Protocol</div>
                     </div>
@@ -1779,13 +1779,13 @@
                 </div>
                 <div id="idx_d27protocoldiv" style='height:26px'>
                     <select id='idx_d27protocol' style='float:right;width:200px' onclick='updateNetAuthDialog()'>
-                        <option value='0'>TLS</option>
-                        <option value='1'>TTLS MSCHAPv2</option>
-                        <option value='2'>PEAP MSCHAPv2</option>
-                        <option value='3'>EAP GTC</option>
-                        <option value='4'>EAPFAST MSCHAPv2</option>
-                        <option value='5'>EAPFAST GTC</option>
-                        <option value='6'>EAPFAST TLS</option>
+                        <option value='0'>EAP-TLS</option>
+                        <option value='1'>EAP-TTLS/MSCHAPv2</option>
+                        <option value='2'>PEAPv0/EAP-MSCHAPv2</option>
+                        <option value='3'>PEAPv1/EAP-GTC</option>
+                        <option value='4'>EAP-FAST/MSCHAPv2</option>
+                        <option value='5'>EAP-FAST/GTC</option>
+                        <option value='6'>EAP-FAST/TLS</option>
                     </select>
                     <div>Protocol</div>
                 </div>
@@ -7646,8 +7646,13 @@
         var xxWireless;
         function PullWireless() {
             amtFirstPull |= 2;
-            try { if (amtwirelessif == -1) return; } catch (e) {} // If the wireless adapter has no MAC, don't show this.
+            try { if (amtwirelessif == -1) return; } catch (e) { } // If the wireless adapter has no MAC, don't show this.
+            // ###BEGIN###{!NetAuth}
             amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService'], processWireless);
+            // ###END###{!NetAuth}
+            // ###BEGIN###{NetAuth}
+            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService', 'CIM_IEEE8021xSettings'], processWireless);
+            // ###END###{NetAuth}
         }
 
         function wifiRefresh() { if (!xxdialogMode) PullWireless(); }
@@ -7677,7 +7682,17 @@
                     sc = xxWireless['CIM_WiFiEndpointSettings'].responses[j];
                     if (sc['AuthenticationMethod'] == 1) continue; // Skip "Endpoint User Settings"
                     if (sc['Priority'] == i) {
-                        x += '<div class=itemBar onclick=showWifiDetails(' + j + ')><div style=float:right>' + EscapeHtml(sc['SSID']) + ', ' + xxWifiAuthenticationMethod[sc['AuthenticationMethod']] + ', ' + xxWifiEncryptionMethod[sc['EncryptionMethod']] + ' &nbsp; ';
+                        var details = '';
+                        // ###BEGIN###{NetAuth}
+                        var netAuthProfile = null, netAuthProtocols = ['EAP-TLS', 'EAP-TTLS/MSCHAPv2', 'PEAPv0/EAP-MSCHAPv2', 'PEAPv1/EAP-GTC', 'EAP-FAST/MSCHAPv2', 'EAP-FAST/GTC', 'EAP-MD5', 'EAP-PSK', 'EAP-SIM', 'EAP-AKA', 'EAP-FAST/TLS'];
+                        if (xxWireless['CIM_IEEE8021xSettings'].responses) {
+                            for (var k in xxWireless['CIM_IEEE8021xSettings'].responses) {
+                                if (xxWireless['CIM_IEEE8021xSettings'].responses[k]['ElementName'] == sc['ElementName']) { netAuthProfile = xxWireless['CIM_IEEE8021xSettings'].responses[k]; }
+                            }
+                        }
+                        if (netAuthProfile) { details = ', ' + netAuthProtocols[netAuthProfile['AuthenticationProtocol']]; }
+                        // ###END###{NetAuth}
+                        x += '<div class=itemBar onclick=showWifiDetails(' + j + ')><div style=float:right>' + EscapeHtml(sc['SSID']) + ', ' + xxWifiAuthenticationMethod[sc['AuthenticationMethod']] + ', ' + xxWifiEncryptionMethod[sc['EncryptionMethod']] + details + ' &nbsp; ';
                         if (xxAccountAdminName) x += AddButton2("Remove", 'wifiRemoveButton(\"' + j + '\")');
                         x += '</div><div style=padding-top:3px><b>' + EscapeHtml(sc['ElementName']) + '</b></div></div>';
                         s++;
@@ -7733,10 +7748,23 @@
             if (xxdialogMode) return;
             var i, sc = xxWireless['CIM_WiFiEndpointSettings'].responses[h], x = '<div style=text-align:left>';
             x += addHtmlValue("Profile Name", EscapeHtml(sc['ElementName']));
-            x += addHtmlValue("SSID", sc['SSID']);
+            x += addHtmlValue("SSID", EscapeHtml(sc['SSID']));
             x += addHtmlValue("Authentication", xxWifiAuthenticationMethod[sc['AuthenticationMethod']]);
             x += addHtmlValue("Encryption", xxWifiEncryptionMethod[sc['EncryptionMethod']]);
             x += addHtmlValue("Priority", sc['Priority']);
+            // ###BEGIN###{NetAuth}
+            var netAuthProfile = null, netAuthProtocols = ['EAP-TLS', 'EAP-TTLS/MSCHAPv2', 'PEAPv0/EAP-MSCHAPv2', 'PEAPv1/EAP-GTC', 'EAP-FAST/MSCHAPv2', 'EAP-FAST/GTC', 'EAP-MD5', 'EAP-PSK', 'EAP-SIM', 'EAP-AKA', 'EAP-FAST/TLS'];
+            if (xxWireless['CIM_IEEE8021xSettings'].responses) {
+                for (var k in xxWireless['CIM_IEEE8021xSettings'].responses) {
+                    if (xxWireless['CIM_IEEE8021xSettings'].responses[k]['ElementName'] == sc['ElementName']) { netAuthProfile = xxWireless['CIM_IEEE8021xSettings'].responses[k]; }
+                }
+            }
+            if (netAuthProfile) {
+                x += '<div style="width:100%;border-bottom:1px solid #000;margin-bottom:5px;margin-top:5px">802.11x</div>'
+                x += addHtmlValue("Authentication", netAuthProtocols[netAuthProfile['AuthenticationProtocol']]);
+                if (netAuthProfile['Username']) { x += addHtmlValue("Username", EscapeHtml(netAuthProfile['Username'])); }
+            }
+            // ###END###{NetAuth}
             x += '</div>';
             messagebox("Wireless Profile", x);
         }
