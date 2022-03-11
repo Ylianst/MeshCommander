@@ -7783,7 +7783,23 @@
 
         function removeWifiEntryResponse(stack, name, response, status, tag) {
             if (methodcheck(response)) return;
-            amtstack.Enum('CIM_WiFiEndpointSettings', function(stack, name, responses, status) { if (status == 200) { xxWireless['CIM_WiFiEndpointSettings'].responses = responses; showWirelessInfo(); } } );
+            // ###BEGIN###{!NetAuth}
+            amtstack.BatchEnum('', ['CIM_WiFiEndpointSettings'], function (stack, name, responses, status) {
+                if (status == 200) {
+                    xxWireless['CIM_WiFiEndpointSettings'].responses = responses['CIM_WiFiEndpointSettings'].responses;
+                    showWirelessInfo();
+                }
+            });
+            // ###END###{!NetAuth}
+            // ###BEGIN###{NetAuth}
+            amtstack.BatchEnum('', ['CIM_WiFiEndpointSettings', 'CIM_IEEE8021xSettings'], function (stack, name, responses, status) {
+                if (status == 200) {
+                    xxWireless['CIM_WiFiEndpointSettings'].responses = responses['CIM_WiFiEndpointSettings'].responses;
+                    xxWireless['CIM_IEEE8021xSettings'].responses = responses['CIM_IEEE8021xSettings'].responses;
+                    showWirelessInfo();
+                }
+            });
+            // ###END###{NetAuth}
         }
 
         function showWifiNewProfile() {
@@ -7858,14 +7874,8 @@
                 if (Q('idx_d12password').value != '') { sc['Password'] = Q('idx_d12password').value; }
                 if (Q('idx_d12domain').value != '') { sc['Domain'] = Q('idx_d12domain').value; }
                 if (Q('idx_d12protocol').value > 3) { sc['ProtectedAccessCredential'] = Q('idx_d12pac').value; sc['PACPassword'] = Q('idx_d12pacpassword').value; }
-                if (parseInt(Q('idx_d12clientcert').value) >= 0) {
-                    // TODO: DOES NOT WORK
-                    netAuthSettingsClientCert = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12clientcert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>';
-                }
-                if (parseInt(Q('idx_d12servercert').value) >= 0) {
-                    // TODO: DOES NOT WORK
-                    netAuthSettingsServerCaCert = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12servercert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>';
-                }
+                if (parseInt(Q('idx_d12clientcert').value) >= 0) { netAuthSettingsClientCert = '<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12clientcert').value)]['InstanceID'] + '</Selector></SelectorSet></ReferenceParameters>'; }
+                if (parseInt(Q('idx_d12servercert').value) >= 0) { netAuthSettingsServerCaCert = '<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12servercert').value)]['InstanceID'] + '</Selector></SelectorSet></ReferenceParameters>'; }
             }
             // ###END###{NetAuth}
             amtstack.AMT_WiFiPortConfigurationService_AddWiFiSettings(

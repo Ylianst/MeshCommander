@@ -962,15 +962,14 @@ args = {
 }, 
 */
 function execArgumentsToXml(args) {
-	if(args === undefined || args === null) return null;
-	
+	if ((args === undefined) || (args === null)) return null;
 	var result = '';
-	for(var argName in args) {
+	for (var argName in args) {
 		var arg = args[argName];
-		if(!arg) continue;
-		if(arg['__parameterType'] === 'reference') result += referenceToXml(argName, arg);
-		else result += instanceToXml(argName, arg);
-		//if(arg['__isInstance']) result += instanceToXml(argName, arg);
+		if (!arg) continue;
+		if (arg['__parameterType'] === 'reference') { result += referenceToXml(argName, arg); }
+		else { result += instanceToXml(argName, arg); }
+		//if (arg['__isInstance']) result += instanceToXml(argName, arg);
 	}
 	return result;
 }
@@ -988,25 +987,28 @@ function execArgumentsToXml(args) {
 	</r:WiFiEndpointSettingsInput>
  */
 function instanceToXml(instanceName, inInstance) {
-	if(inInstance === undefined || inInstance === null) return null;
+	if (inInstance === undefined || inInstance === null) return null;
 	
 	var hasNamespace = !!inInstance['__namespace'];
 	var startTag = hasNamespace ? '<q:' : '<';
 	var endTag = hasNamespace ? '</q:' : '</';
 	var namespaceDef = hasNamespace ? (' xmlns:q="' + inInstance['__namespace'] + '"' ): '';
 	var result = '<r:' + instanceName + namespaceDef + '>';
-	for(var prop in inInstance) {
-		if (!inInstance.hasOwnProperty(prop) || prop.indexOf('__') === 0) continue;
-		
-		if (typeof inInstance[prop] === 'function' || Array.isArray(inInstance[prop]) ) continue;
-		
-		if (typeof inInstance[prop] === 'object') {
-			//result += startTag + prop +'>' + instanceToXml('prop', inInstance[prop]) + endTag + prop +'>';
-			console.error('only convert one level down...');
-		}
-		else {
-			result += startTag + prop +'>' + inInstance[prop].toString() + endTag + prop +'>';
-		}
+	if (typeof inInstance == 'string') {
+	    result += inInstance;
+	} else {
+	    for (var prop in inInstance) {
+	        if (!inInstance.hasOwnProperty(prop) || prop.indexOf('__') === 0) continue;
+
+	        if (typeof inInstance[prop] === 'function' || Array.isArray(inInstance[prop])) continue;
+
+	        if (typeof inInstance[prop] === 'object') {
+	            //result += startTag + prop +'>' + instanceToXml('prop', inInstance[prop]) + endTag + prop +'>';
+	            console.error('only convert one level down...');
+	        } else {
+	            result += startTag + prop + '>' + inInstance[prop].toString() + endTag + prop + '>';
+	        }
+	    }
 	}
 	result += '</r:' + instanceName + '>';
 	return result;
