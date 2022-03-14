@@ -10798,6 +10798,7 @@
             if (actionTaken.length > 1) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
             x += '<div id=rpepsid style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("Pyrite PSID", '<input id=rpepsidx style=width:210px maxlength=64 type=input>') + '</div>';
             x += '<div id=rpessdpass style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("SSD Master Password", '<input id=rpessdpassx style=width:210px maxlength=64 type=input>') + '</div>';
+            x += '<div id=rpeeomdata style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("OEM Data (HEX)", '<input id=rpeoemdatax style=width:210px maxlength=256 type=input>') + '</div>';
             setDialogMode(11, "Power Actions", 3, powerActionDlgRPEEx, x, advanced);
             QE('idx_dlgOkButton', false);
         }
@@ -10806,6 +10807,7 @@
             var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 6, 16, 25, 26, 31];
             for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
             QV('rpessdpass', rpeFlags & 4);
+            QV('rpeeomdata', rpeFlags & (1 << 16));
             QE('idx_dlgOkButton', rpeFlags);
         }
 
@@ -10816,6 +10818,7 @@
             var tlv = makeUefiBootParam(1, rpeFlags, 4), tlvlen = 1;
             if (rpeFlags & 2) { tlv += makeUefiBootParam(10, Q('rpepsidx').value); tlvlen++; }
             if (rpeFlags & 4) { tlv += makeUefiBootParam(20, Q('rpessdpassx').value); tlvlen++; }
+            if ((rpeFlags & (1 << 16)) && (Q('rpeoemdatax').value != '')) { tlv += makeUefiBootParam(20, hex2rstr(Q('rpeoemdatax').value), null, 11); tlvlen++; }
             platfromEraseTLV = { tlv: btoa(tlv), tlvlen: tlvlen };
             if (advanced) {
                 // Attempt user consent

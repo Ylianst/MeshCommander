@@ -107,7 +107,7 @@ function trademarks(x) { return x.replace(/\(R\)/g, '&reg;').replace(/\(TM\)/g, 
 function format(format) { var args = Array.prototype.slice.call(arguments, 1); return format.replace(/{(\d+)}/g, function (match, number) { return typeof args[number] != 'undefined' ? args[number] : match; }); };
 
 // Returns a UEFI boot parameter in binary
-function makeUefiBootParam(type, data, len) {
+function makeUefiBootParam(type, data, len, vendorid) {
     if (typeof data == 'number') { if (len == 1) { data = String.fromCharCode(data & 0xFF); } if (len == 2) { data = ShortToStrX(data); } if (len == 4) { data = IntToStrX(data); } }
-    return ShortToStrX(0x8086) + ShortToStrX(type) + IntToStrX(data.length) + data;
+    return ShortToStrX(vendorid ? vendorid : 0x8086) + ShortToStrX(type) + IntToStrX(data.length) + data;
 }
