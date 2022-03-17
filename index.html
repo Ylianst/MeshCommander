@@ -10795,7 +10795,7 @@
             if (platfromEraseSupport & (1 << 25)) { actionTaken.push('<label><input id=rpef25 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Clear BIOS NVM Variables" + '</label>'); }
             if (platfromEraseSupport & (1 << 26)) { actionTaken.push('<label><input id=rpef26 type=checkbox onchange=powerActionDlgRPEValidate()>' + "BIOS Reload of Golden Configuration" + '</label>'); }
             if (platfromEraseSupport & (1 << 31)) { actionTaken.push('<label><input id=rpef31 type=checkbox onchange=powerActionDlgRPEValidate()>' + "CSME Unconfigure" + '</label>'); }
-            if (actionTaken.length > 1) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
+            if (actionTaken.length > 0) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
             x += '<div id=rpepsid style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("Pyrite PSID", '<input id=rpepsidx style=width:210px maxlength=64 type=input>') + '</div>';
             x += '<div id=rpessdpass style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("SSD Master Password", '<input id=rpessdpassx style=width:210px maxlength=64 type=input>') + '</div>';
             x += '<div id=rpeeomdata style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("OEM Data (HEX)", '<input id=rpeoemdatax style=width:210px maxlength=256 type=input>') + '</div>';
