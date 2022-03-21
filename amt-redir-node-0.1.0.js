@@ -184,6 +184,7 @@ var CreateAmtRedirect = function (module) {
                                 // Good Digest Auth (With cnonce and all)
                                 obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x04) + IntToStrX(obj.user.length + obj.authuri.length + 8) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(0x00, 0x00) + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(0x00, 0x00, 0x00, 0x00));
                             }
+                            /*
                             else if (authData.indexOf(3) >= 0) {
                                 // Bad Digest Auth (Not sure why this is supported, cnonce is not used!)
                                 obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x03) + IntToStrX(obj.user.length + obj.authuri.length + 7) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(0x00, 0x00) + String.fromCharCode(obj.authuri.length) + obj.authuri + String.fromCharCode(0x00, 0x00, 0x00));
@@ -192,6 +193,7 @@ var CreateAmtRedirect = function (module) {
                                 // Basic Auth (Probably a good idea to not support this unless this is an old version of Intel AMT)
                                 obj.xxSend(String.fromCharCode(0x13, 0x00, 0x00, 0x00, 0x01) + IntToStrX(obj.user.length + obj.pass.length + 2) + String.fromCharCode(obj.user.length) + obj.user + String.fromCharCode(obj.pass.length) + obj.pass);
                             }
+                            */
                             else obj.Stop(2);
                         // ###BEGIN###{Mode-NodeWebkit}
                         }
