@@ -1473,8 +1473,8 @@
                 <!-- ###BEGIN###{NetAuth} -->
                 <div id="idx_d12netauth" style="display:none">
                     <div id="idx_d12protocoldiv" style='height:26px'>
-                        <select id='idx_d12protocol' style='float:right;width:200px' onclick='updateNetAuth2Dialog()'>
-                            <option value='0'>EAP-TLS</option>
+                        <select id='idx_d12protocol' style='float:right;width:200px' onchange=updateNetAuth2Dialog(event)>
+                            <option value='0' selected="selected">EAP-TLS</option>
                             <option value='1'>EAP-TTLS/MSCHAPv2</option>
                             <option value='2'>PEAPv0/EAP-MSCHAPv2</option>
                             <option value='3'>PEAPv1/EAP-GTC</option>
@@ -1487,7 +1487,7 @@
                     <div id="idx_d12servernamediv" style='height:26px'><input id='idx_d12servername' style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuthDialog()" title="Maximum 32 characters"><div title="Maximum 32 characters">Server Name</div></div>
                     <div id="idx_d12servernamecomparediv" style='height:26px'>
                         <select id='idx_d12servernamecompare' style="float:right;width:200px" onclick="updateNetAuth2Dialog()">
-                            <option value='0'>Full Name</option>
+                            <option value='0' selected="selected">Full Name</option>
                             <option value='1'>Domain Suffix</option>
                         </select>
                         <div>Server Name Compare</div>
@@ -1779,7 +1779,7 @@
                 </div>
                 <div id="idx_d27protocoldiv" style='height:26px'>
                     <select id='idx_d27protocol' style='float:right;width:200px' onclick='updateNetAuthDialog()'>
-                        <option value='0'>EAP-TLS</option>
+                        <option value='0' selected="selected">EAP-TLS</option>
                         <option value='1'>EAP-TTLS/MSCHAPv2</option>
                         <option value='2'>PEAPv0/EAP-MSCHAPv2</option>
                         <option value='3'>PEAPv1/EAP-GTC</option>
@@ -1792,7 +1792,7 @@
                 <div id="idx_d27servernamediv" style='height:26px'><input id='idx_d27servername' style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuthDialog()" title="Maximum 32 characters"><div title="Maximum 32 characters">Server Name</div></div>
                 <div id="idx_d27servernamecomparediv" style='height:26px'>
                     <select id='idx_d27servernamecompare' style="float:right;width:200px" onclick="updateNetAuthDialog()">
-                        <option value='0'>Full Name</option>
+                        <option value='0' selected="selected">Full Name</option>
                         <option value='1'>Domain Suffix</option>
                     </select>
                     <div>Server Name Compare</div>
@@ -7916,7 +7916,7 @@
 
         // ###BEGIN###{NetAuth}
         function updateNetAuth2Dialog() {
-            QV('idx_d12servernamecomparediv', (Q('idx_d12protocol').value != ''));
+            QV('idx_d12servernamecomparediv', (Q('idx_d12servernamediv').value != ''));
             QV('idx_d12pacdiv', (Q('idx_d12protocol').value > 3));
             QV('idx_d12pacpassworddiv', (Q('idx_d12protocol').value > 3));
         }
@@ -7953,7 +7953,7 @@
                 Q('idx_d27protocol').value = sc['AuthenticationProtocol'];
                 Q('idx_d27roamingidentity').value = sc['RoamingIdentity'] ? sc['RoamingIdentity'] : '';
                 Q('idx_d27servername').value = sc['ServerCertificateName'] ? sc['ServerCertificateName'] : '';
-                Q('idx_d27servernamecompare').value = sc['ServerCertificateNameComparison'];
+                Q('idx_d27servernamecompare').value = sc['ServerCertificateNameComparison'] ? sc['ServerCertificateNameComparison'] : 0;
                 Q('idx_d27username').value = sc['Username'] ? sc['Username'] : '';
                 Q('idx_d27password').value = sc['Password'] ? sc['Password'] : '';
                 Q('idx_d27domain').value = sc['Domain'] ? sc['Domain'] : '';
