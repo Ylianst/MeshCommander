@@ -2023,6 +2023,8 @@
             QE('idx_connectbutton1', true);
             try { t = localStorage.getItem('desktopsettings'); } catch (ex) {}
             if (t) { desktopsettings = JSON.parse(t); }
+            if (urlvars.kvmenc) { var v = parseInt(urlvars.kvmenc); if (typeof v == 'number') { desktopsettings.encflags = v; } }
+            if (urlvars.kvmdec) { var v = parseInt(urlvars.kvmdec); if (typeof v == 'number') { desktopsettings.decimationMode = v; } }
             applyDesktopSettings();
             var s = '';
             //for (var c = 1; c < 13; c++) s += '<option value="' + (0xffbd + c) + '">F' + c +;
