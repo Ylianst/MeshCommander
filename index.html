@@ -1508,8 +1508,8 @@
                     </div>
                     <div id="idx_d12activeins0div" style='height:26px'>
                         <select id="idx_d12activeins0" style="float:right;width:200px" onclick="updateNetAuth2Dialog()">
-                            <option value="0">Enabled</option>
-                            <option value="1">Disabled</option>
+                            <option value="1">Enabled</option>
+                            <option value="0">Disabled</option>
                         </select>
                         <div>Active in S0</div>
                     </div>
@@ -5694,7 +5694,7 @@
             var x = '<table class=log1 cellpadding=0 cellspacing=0 style=width:100%;border-radius:8px>';
             x += TableEnd('<div>&nbsp;' + AddRefreshButton('PullSystemStatus(1)')
                 // ###BEGIN###{!Mode-LMS}
-                + " Changing network settings may cause this page to becaume unavailable."
+                + " Changing network settings may cause this page to become unavailable."
                 // ###END###{!Mode-LMS}
                 // ###BEGIN###{Mode-LMS}
                 + " Changing network settings may cause this page to be unavailable for a few seconds."
@@ -5795,7 +5795,7 @@
                     x += TableEntry("Respond to ping", addLinkConditional(["Disabled", "ICMP response", "RMCP response", "ICMP & RMCP response"][gs['PingResponseEnabled'] + (gs['RmcpPingResponseEnabled'] << 1)], 'showPingActionDlg()', xxAccountAdminName));
                     // ###BEGIN###{NetAuth}
                     // 802.1x
-                    var netAuthProtocols = ["TLS", "TTLS MSCHAPv2", "PEAP MSCHAPv2", "EAP GTC", "EAPFAST MSCHAPv2", "EAPFAST GTC", "EAPFAST TLS"], netAuthStr = "Disabled";
+                    var netAuthProtocols = ['EAP-TLS', 'EAP-TTLS/MSCHAPv2', 'PEAPv0/EAP-MSCHAPv2', 'PEAPv1/EAP-GTC', 'EAP-FAST/MSCHAPv2', 'EAP-FAST/GTC', 'EAP-FAST/TLS'], netAuthStr = "Disabled";
                     if (amtsysstate['AMT_8021XProfile'].responses.Body['Enabled']) { netAuthStr = "Enabled, " + netAuthProtocols[amtsysstate['AMT_8021XProfile'].responses.Body['AuthenticationProtocol']]; }
                     x += TableEntry("802.1x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
                     // ###END###{NetAuth}
@@ -7764,6 +7764,7 @@
             if (netAuthProfile) {
                 x += '<div style="width:100%;border-bottom:1px solid #000;margin-bottom:5px;margin-top:5px">802.11x</div>'
                 x += addHtmlValue("Authentication", netAuthProtocols[netAuthProfile['AuthenticationProtocol']]);
+                if (netAuthProfile['Domain']) { x += addHtmlValue("Domain", EscapeHtml(netAuthProfile['Domain'])); }
                 if (netAuthProfile['Username']) { x += addHtmlValue("Username", EscapeHtml(netAuthProfile['Username'])); }
             }
             // ###END###{NetAuth}
@@ -7880,6 +7881,12 @@
                 if (parseInt(Q('idx_d12servercert').value) >= 0) { netAuthSettingsServerCaCert = '<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12servercert').value)]['InstanceID'] + '</Selector></SelectorSet></ReferenceParameters>'; }
             }
             // ###END###{NetAuth}
+
+            console.log('wifiepsettinginput', JSON.sstringify(v, null, 2));
+            console.log('netAuthProfile', JSON.sstringify(sc, null, 2));
+            console.log('netAuthSettingsClientCert', netAuthSettingsClientCert);
+            console.log('netAuthSettingsServerCaCert', netAuthSettingsServerCaCert);
+
             amtstack.AMT_WiFiPortConfigurationService_AddWiFiSettings(
 				{
 				    '__parameterType': 'reference',
