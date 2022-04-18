@@ -11708,7 +11708,7 @@
                         x += '<div style=padding-left:15px><br><i>' + "No wake alarms registered." + '</i></div><br>';
                     }
                     var y = '<div>&nbsp;' + AddRefreshButton('PullAlarms()');
-                    if (xxAccountAdminName) { y += AddButton("Remove all alarms", 'RemoveAllAlarms()') + AddButton("Add", 'showAddAlarm()'); }
+                    if (xxAccountAdminName) { y += AddButton2("Remove all alarms", 'RemoveAllAlarms()', xxAlarms ? '' : 'disabled') + AddButton("Add", 'showAddAlarm()'); }
                     x += '<br><td class=r1>' + TableEnd(y + '</div>');
                     QH('id_TableAlarm', x);
                 }
