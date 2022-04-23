@@ -6847,7 +6847,7 @@
             if (xxdialogMode) return;
             var x = '';
             x += '<div style=height:26px;margin-top:4px><select onchange=showSetTlsSecurityDlgUpdate() id=tlscert style=float:right;width:260px><option value=-1>' + "No Certificate, TLS Disabled" + '</option>';
-            for (var i in xxCertificates) { if (xxCertificates[i].TrustedRootCertficate == false && xxCertificates[i].XPrivateKey && (xxTlsCurrentCert == null || xxTlsCurrentCert == i)) { x += '<option value=' + i + '>' + xxCertificates[i].XSubject['CN'] + '</option>'; } }
+            for (var i in xxCertificates) { if (xxCertificates[i].TrustedRootCertficate == false && xxCertificates[i].XPrivateKey) { x += '<option value=' + i + '>' + xxCertificates[i].XSubject['CN'] + '</option>'; } }
             x += '</select><div style=padding-top:4px>' + "Certificate" + '</div></div>';
 
             x += '<div style=height:26px;margin-top:4px><select id=tlsremote style=float:right;width:260px onchange=showSetTlsSecurityDlgUpdate()><option value=0>Server-auth TLS only</option><option value=1>Server-auth, non-TLS allowed</option>';
@@ -8672,7 +8672,7 @@
             connectDesktopConsent = false; // TODO, this is not a good idea when calls are pending.
             if (desktop.State == 0) {
                 // Check if user consent is needed
-                if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
+                if ((skipConsent !== true) && (amtversion > 5) && ((amtsysstate == null) || (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != null) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] != 0))) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
                 // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = 4bit Color
@@ -8887,7 +8887,7 @@
                         messagebox("Remote Desktop", "KVM disconnection, this may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
                     } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again if connection was more than 5 seconds long.
                         reconnect = (desktop.connectTime != null) && ((desktop.connectTime + 5000) < Date.now());
-                        console.log(desktop.disconnectCode, reconnect);
+                        //console.log(desktop.disconnectCode, reconnect);
                     } else if (desktop.disconnectCode == 50002) { // KVM-BufferOverflow
                         messagebox("Remote Desktop", "KVM disconnection that may be due to the display size and resolution being too large for the Intel AMT KVM buffer. Try RLE8 encoding or reducing the display resolution.");
                     }
@@ -9019,7 +9019,7 @@
                 console.log('deskToggleFull1', fullscreenonly, urlvars['kvmonly']);
                 fullscreenonly = false;
                 if (urlvars['kvmonly'] == 1) {
-                    console.log('deskToggleFull2');
+                    //console.log('deskToggleFull2');
                     // It was initiated by a command line switch, exit now.
                     // ###BEGIN###{Mode-NodeWebkit}
                     require('nw.gui').Window.get().close();
@@ -11056,9 +11056,9 @@
             //console.log("OptInRequired:", response.Body['OptInRequired']);
             //console.log("OptInState:", response.Body['OptInState']);
             //console.log(response);
-            if (response.Body['OptInRequired'] == 0xFFFFFFFF && response.Body['OptInState'] != 3 && response.Body['OptInState'] != 4) {
+            if (((response.Body['OptInRequired'] == 0xFFFFFFFF) || (connectDesktopConsent && (response.Body['OptInRequired'] != 0))) && (response.Body['OptInState'] != 3) && (response.Body['OptInState'] != 4)) {
                 if (response.Body['OptInState'] == 2) {
-                    // amtstack.IPS_OptInService_CancelOptIn(null);
+                    amtstack.IPS_OptInService_CancelOptIn(null);
                     d6ConsentText.value = ''; // Reset user consent code to empty
                     setDialogMode(6, "User Consent", 11, powerActionSendConsent);
                     checkConsentDisplay();
@@ -11078,7 +11078,7 @@
 
         function powerActionResponseC1(stack, name, response, status) {
             //if (errcheck(status, stack)) return;
-            //console.log('powerActionResponseC1', action, status, response);
+            //console.log('powerActionResponseC1', name, status, response);
             if (status != 200) { if (connectDesktopConsent) { setDialogMode(0); connectDesktop(true); } else { messagebox("Power Action", format("Error #", status)); } return; }
             //console.log("powerActionResponseC1(" + name + "," + ObjectToString2(response) + "," + status + ")");
             if (response.Body['ReturnValue'] != 0) {
@@ -11107,9 +11107,12 @@
         //function powerActionCancelConsent() { amtstack.IPS_OptInService_CancelOptIn(null); }
 
         function powerActionSendConsent(buttons) {
+            console.log('powerActionSendConsent', buttons);
             if (buttons == 0) {
                 // Cancel button
-                amtstack.IPS_OptInService_CancelOptIn(function() {});
+                amtstack.IPS_OptInService_CancelOptIn(function () { });
+                connectDesktopConsent = false;
+                desktop.Stop();
             } else {
                 // OK Button
                 statusbox("Power Action", "Sending user consent...");
