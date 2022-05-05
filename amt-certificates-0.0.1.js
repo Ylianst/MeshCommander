@@ -4,6 +4,7 @@
 * @version v0.2.0b
 */
 
+/*
 // Check which key pair matches the public key in the certificate
 function amtcert_linkCertPrivateKey(certs, keys) {
     for (var i in certs) {
@@ -13,6 +14,25 @@ function amtcert_linkCertPrivateKey(certs, keys) {
             var publicKeyPEM = forge.pki.publicKeyToPem(forge.pki.certificateFromAsn1(forge.asn1.fromDer(cert.X509Certificate)).publicKey).substring(28 + 32).replace(/(\r\n|\n|\r)/gm, "");
             for (var j = 0; j < keys.length; j++) {
                 if (publicKeyPEM === (keys[j]['DERKey'] + '-----END PUBLIC KEY-----')) {
+                    keys[j].XCert = cert; // Link the key pair to the certificate
+                    cert.XPrivateKey = keys[j]; // Link the certificate to the key pair
+                }
+            }
+        } catch (e) { console.log(e); }
+    }
+}
+*/
+
+// Check which key pair matches the public key in the certificate
+function amtcert_linkCertPrivateKey(certs, keys) {
+    for (var i in certs) {
+        var cert = certs[i];
+        try {
+            if (keys.length == 0) return;
+            var publicKeyPEM = forge.pki.publicKeyToPem(forge.pki.certificateFromAsn1(forge.asn1.fromDer(cert.X509Certificate)).publicKey).substring(28 + 32).replace(/(\r\n|\n|\r)/gm, "");
+            publicKeyPEM = publicKeyPEM.substring(0, publicKeyPEM.length - 24); // Remove the PEM footer
+            for (var j = 0; j < keys.length; j++) {
+                if ((publicKeyPEM === (keys[j]['DERKey'])) || (publicKeyPEM == btoa(atob(keys[j]['DERKey']).substring(24)))) { // Match directly or, new version of Intel AMT put the key type OID in the private key, skip that and match.
                     keys[j].XCert = cert; // Link the key pair to the certificate
                     cert.XPrivateKey = keys[j]; // Link the certificate to the key pair
                 }
