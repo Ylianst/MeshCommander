@@ -1383,6 +1383,7 @@
                         <label><input type="checkbox" id='d7showcad'>Show Ctrl-Alt-Del</label><br>
                         <label><input type="checkbox" id='d7limitFrameRate'>Limit Frame Rate</label><br>
                         <label><input type="checkbox" id='d7noMouseRotate'>Don't Rotate Mouse</label><br>
+                        <label><input type="checkbox" id='d7kvmrmw'>Reverse Mouse Wheel</label><br>
                     </div>
                     <div>Other Settings</div>
                 </div>
@@ -8760,6 +8761,7 @@
                 // ###END###{DesktopInband}
                 desktop.m.frameRateDelay = ((desktopsettings.limitFrameRate == true)?200:0);
                 desktop.m.noMouseRotate = desktopsettings.noMouseRotate;
+                desktop.m.ReverseMouseWheel = desktopsettings.reverseMouseWheel;
                 // ###BEGIN###{Mode-MeshCentral2}
                 desktop.tlsv1only = amtstack.wsman.comm.tlsv1only;
                 desktop.Start(currentMeshNode._id, 16994, '*', '*', 0);
@@ -8946,6 +8948,7 @@
             desktopsettings.showcad = d7showcad.checked;
             desktopsettings.limitFrameRate = d7limitFrameRate.checked;
             desktopsettings.noMouseRotate = d7noMouseRotate.checked;
+            desktopsettings.reverseMouseWheel = d7kvmrmw.checked;
             // ###BEGIN###{DesktopInband}
             desktopsettings.quality = d7bitmapquality.value;
             desktopsettings.scaling = d7bitmapscaling.value;
@@ -8968,6 +8971,7 @@
             d7showcad.checked = desktopsettings.showcad;
             d7limitFrameRate.checked = desktopsettings.limitFrameRate;
             d7noMouseRotate.checked = desktopsettings.noMouseRotate;
+            d7kvmrmw.checked = desktopsettings.reverseMouseWheel;
             // ###BEGIN###{DesktopInband}
             if (desktopsettings.quality) { d7bitmapquality.value = desktopsettings.quality; }
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
@@ -14011,8 +14015,8 @@
         function AddButton(v, f) { return '<input type=button value=\'' + v + '\' onclick=\'' + f + '\' style=margin:4px>'; }
         function AddButton2(v, f, s) { return '<input type=button value=\'' + v + '\' onclick=\'' + f + '\' ' + s + '>'; }
         function AddRefreshButton(f) { return '<input type=button name=refreshbtn value="' + "Refresh" + '" onclick=\'refreshButtons(false);' + f + '\' style=margin:4px ' + (refreshButtonsState==false?'disabled':'') + '>'; }
-        function MoreStart() { return '<a style=cursor:pointer;color:blue id=morexxx1 onclick=QV(\"morexxx1\",false);QV(\"morexxx2\",true)>&#x25BC; More</a><div id=morexxx2 style=display:none><br><hr>'; };
-        function MoreEnd() { return '<a style=cursor:pointer;color:blue onclick=QV(\"morexxx2\",false);QV(\"morexxx1\",true)>&#x25B2; Less</a></div>'; };
+        function MoreStart() { return '<a style=cursor:pointer;color:blue id=morexxx1 onclick=QV(\"morexxx1\",false);QV(\"morexxx2\",true)>&#x25BC; ' + "More" + '</a><div id=morexxx2 style=display:none><br><hr>'; };
+        function MoreEnd() { return '<a style=cursor:pointer;color:blue onclick=QV(\"morexxx2\",false);QV(\"morexxx1\",true)>&#x25B2; ' + "Less" + '</a></div>'; };
         function getSelectedOptions(sel) { var opts = [], opt; for (var i = 0, len = sel.options.length; i < len; i++) { opt = sel.options[i]; if (opt.selected) { opts.push(opt.value); } } return opts; }
         function getInstance(x, y) { for (var i in x) { if (x[i]['InstanceID'] == y) return x[i]; } return null; }
         function getItem(x, y, z) { for (var i in x) { if (x[i][y] == z) return x[i]; } return null; }
