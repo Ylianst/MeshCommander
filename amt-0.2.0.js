@@ -551,7 +551,7 @@ function AmtStackCreateService(wsmanStack) {
                 return _SystemFirmwareError[eventDataField[1]];
             } else if (eventOffset == 3) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
-                    return format("AMT One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
+                    return format("One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
                 } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
                     if (eventDataField[2] == 1) return "Got an error erasing Device SSD";
                     if (eventDataField[2] == 2) return "Erasing Device TPM is not supported";
@@ -562,11 +562,11 @@ function AmtStackCreateService(wsmanStack) {
             } else if (eventOffset == 5) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
                     if (eventDataField[2] == 1) {
-                        return format("AMT One Click Recovery: CSME Boot Option {0}:{1} added successfully", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
+                        return format("One Click Recovery: CSME Boot Option {0}:{1} added successfully", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
                     } else if (eventDataField[2] < 7) {
-                        return format("AMT One Click Recovery: {0}", _OCRProgressEvents[eventDataField[2]]);
+                        return format("One Click Recovery: {0}", _OCRProgressEvents[eventDataField[2]]);
                     } else {
-                        return format("AMT One Click Recovery: Unknown progress event {0}", eventDataField[2]);
+                        return format("One Click Recovery: Unknown progress event {0}", eventDataField[2]);
                     }
                 } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
                     if (eventDataField[2] == 1) {
