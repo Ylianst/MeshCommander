@@ -1,7 +1,10 @@
 MeshCommander Command Line Switches
 ===================================
 
-To make Mesh Commander run as a stand-alone tool, you will need NW.js (http://nwjs.io/). It's basically a browser frame that allows web applications to run natively. Once you get NW.js installed, open "commander.htm". MeshCommander will accept the following command line arguments:
+To make Mesh Commander run as a stand-alone tool, you will need NW.js (http://nwjs.io/). It's basically a browser frame that allows web
+applications to run natively. Once you get NW.js installed, open "commander.htm". MeshCommander will accept the following command line
+arguments. Note that these command line switches are only intended to work with MeshCommander running within NW.js, and are not
+applicable to other editions of MeshCommander.
 
 	-kvmviewonly		Remote desktop will not allow mouse & keyboard input.
 	-host:[hostname]	Directly connect to a target host. If user/pass arguments are not provided, Kerberos will be used.
