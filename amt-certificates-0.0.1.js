@@ -25,10 +25,10 @@ function amtcert_linkCertPrivateKey(certs, keys) {
 
 // Check which key pair matches the public key in the certificate
 function amtcert_linkCertPrivateKey(certs, keys) {
+    if ((keys == null) || (keys.length == 0)) return;
     for (var i in certs) {
         var cert = certs[i];
         try {
-            if (keys.length == 0) return;
             var publicKeyPEM = forge.pki.publicKeyToPem(forge.pki.certificateFromAsn1(forge.asn1.fromDer(cert.X509Certificate)).publicKey).substring(28 + 32).replace(/(\r\n|\n|\r)/gm, "");
             publicKeyPEM = publicKeyPEM.substring(0, publicKeyPEM.length - 24); // Remove the PEM footer
             for (var j = 0; j < keys.length; j++) {

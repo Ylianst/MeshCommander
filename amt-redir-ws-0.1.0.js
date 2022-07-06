@@ -127,9 +127,6 @@ var CreateAmtRedirect = function (module, authCookie) {
                     cmdsize = 9 + authDataLen;
                     // ###BEGIN###{!Mode-Firmware}
                     if (authType == 0) {
-
-                        console.log('aaa', authData);
-
                         // Query
                         if (authData.indexOf(4) >= 0) {
                             // Good Digest Auth (With cnonce and all)
