@@ -1129,6 +1129,7 @@
                                             <option value=15>F10</option>
                                             <option value=16>F11</option>
                                             <option value=17>F12</option>
+                                            <option value=25>Enter</option>
                                             <!-- <option value=18>LS+LA+PrtSc</option> -->
                                         </select>
                                         <input id=DeskWD type=button value="Send" onkeypress="return false" onkeydown="return false" onclick="deskSendKeys()">
@@ -9152,7 +9153,8 @@
             21: [[0xffe9, 1], [0xffc1, 1], [0xffc1, 0], [0xffe9, 0]], // Alt-F4
             22: [[0xffe3, 1], [0x77, 1], [0x77, 0], [0xffe3, 0]], // Ctrl-W
             23: [[0xffe7, 1], [0xff51, 1], [0xff51, 0], [0xffe7, 0]], // WIN+Left
-            24: [[0xffe7, 1], [0xff53, 1], [0xff53, 0], [0xffe7, 0]] // Win+Right
+            24: [[0xffe7, 1], [0xff53, 1], [0xff53, 0], [0xffe7, 0]], // Win+Right
+            25: [[0xff0d, 1], [0xff0d, 0]] // Enter
         }
 
         // Send special keys to the remote side.
