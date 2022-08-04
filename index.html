@@ -10805,6 +10805,7 @@
             var actionTaken = [], platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'];
             if (platfromEraseSupport & (1 << 1)) { actionTaken.push('<label><input id=rpef1 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Pyrite Revert" + '</label>'); }
             if (platfromEraseSupport & (1 << 2)) { actionTaken.push('<label><input id=rpef2 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Secure Erase All SSDs" + '</label>'); }
+            if (platfromEraseSupport & (1 << 3)) { actionTaken.push('<label><input id=rpef3 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Verify Storage Erase" + '</label>'); }
             if (platfromEraseSupport & (1 << 6)) { actionTaken.push('<label><input id=rpef6 type=checkbox onchange=powerActionDlgRPEValidate()>' + "TPM Clear" + '</label>'); }
             if (platfromEraseSupport & (1 << 16)) { actionTaken.push('<label><input id=rpef16 type=checkbox onchange=powerActionDlgRPEValidate()>' + "OEM Custom Action" + '</label>'); }
             if (platfromEraseSupport & (1 << 25)) { actionTaken.push('<label><input id=rpef25 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Clear BIOS NVM Variables" + '</label>'); }
@@ -10819,7 +10820,7 @@
         }
 
         function powerActionDlgRPEValidate() {
-            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 6, 16, 25, 26, 31];
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 3, 6, 16, 25, 26, 31];
             for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
             QV('rpessdpass', rpeFlags & 4);
             QV('rpeeomdata', rpeFlags & (1 << 16));
