@@ -10829,7 +10829,7 @@
 
         var platfromEraseTLV = null;
         function powerActionDlgRPEEx(b, advanced) {
-            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 6, 16, 25, 26, 31];
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 3, 6, 16, 25, 26, 31];
             for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
             var tlv = makeUefiBootParam(1, rpeFlags, 4), tlvlen = 1;
             if (rpeFlags & 2) { tlv += makeUefiBootParam(10, Q('rpepsidx').value); tlvlen++; }
