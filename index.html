@@ -1661,18 +1661,7 @@
                     <div>Boot Settings</div>
                 </div>
                 <div style=height:26px>
-                    <select id="idx_d24ForceBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
-                        <option value=0>None</option>
-                        <option id="ForceDVDBootOption" value=1>Force CD/DVD Boot</option>
-                        <option id="ForcePXEBootOption" value=2>Force PXE Boot</option>
-                        <option id="ForceHDBootOption" value=3>Force Hard Disk Boot</option>
-                        <option id="ForceDiagBootOption" value=4>Force Diagnostic Boot</option>
-                        <!-- ###BEGIN###{PowerControl-OneClick} -->
-                        <option id="ForceUEFIBootOption" value=5>Force OCR UEFI Boot Option</option>
-                        <option id="ForceHttpBootOption" value=6>Force OCR UEFI HTTPS Boot (.iso)</option>
-                        <option id="ForceHttpUrlBootOption" value=7>Force OCR UEFI HTTPS Boot (url)</option>
-                        <!-- ###END###{PowerControl-OneClick} -->
-                    </select>
+                    <select id="idx_d24ForceBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()></select>
                     <div>Boot Source</div>
                 </div>
                 <div id="idx_d24bootSource" style=height:26px>
@@ -10911,6 +10900,9 @@
         function showAdvPowerDlg() {
             try { Q('idx_d24Command').value = (amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'] == 2)?10:2; } catch (ex) { }
 
+            // Available force boot options
+            var forceBootDeviceOptions = '<option value=0>None</option><option id="ForceDVDBootOption" value=1>Force CD/DVD Boot</option><option id="ForcePXEBootOption" value=2>Force PXE Boot</option><option id="ForceHDBootOption" value=3>Force Hard Disk Boot</option><option id="ForceDiagBootOption" value=4>Force Diagnostic Boot</option>';
+
             // Show boot capabilities
             QV('d24dBiosPause', amtPowerBootCapabilities['BIOSPause'] == true);
             QV('d24dBiosSecureBoot', amtPowerBootCapabilities['BIOSSecureBoot'] == true);
@@ -10923,17 +10915,15 @@
             //QV('', amtPowerBootCapabilities['ForceWinREBoot'] == true);
             QV('ForcePXEBootOption', amtPowerBootCapabilities['ForcePXEBoot'] == true);
             // ###BEGIN###{PowerControl-OneClick}
-            QV('ForceUEFIBootOption', false);
             if ((AmtOcrPbaLength > 0) && (amtPowerBootCapabilities['ForceUEFIPBABoot'] == true)) {
-                QV('ForceUEFIBootOption', true);
+                forceBootDeviceOptions += '<option id="ForceUEFIBootOption" value=5>Force OCR UEFI Boot Option</option>';
                 var x = '';
                 for (var i in AmtOcrPba) { x += '<option value=' + i + '>' + AmtOcrPba[i].instance + '</option>'; }
                 QH('idx_d24customBootMediaIndex', x);
             }
-            var httpsBootPossible = (meshCentralServer==null && wsstack.comm.xtlsCertificate != null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
-
-            QV('ForceHttpBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
-            QV('ForceHttpUrlBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
+            var httpsBootPossible = ((meshCentralServer == null) && (wsstack.comm.xtlsCertificate != null)) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
+            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpBootOption" value=6>Force OCR UEFI HTTPS Boot (.iso)</option>'; }
+            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpUrlBootOption" value=7>Force OCR UEFI HTTPS Boot (url)</option>'; }
             // ###END###{PowerControl-OneClick}
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
@@ -10952,6 +10942,7 @@
             QV('d24p500', amtversion > 9);
             QV('d24p501', amtversion > 9);
 
+            QH('idx_d24ForceBootDevice', forceBootDeviceOptions);
             setDialogMode(24, "Custom Power Action", 3, showAdvPowerDlgOk);
             showAdvPowerDlgChange();
         }
@@ -11224,9 +11215,7 @@
                         r['PlatformErase'] = false;
                     }
                 }
-                if (r['ConfigurationDataReset'] != null) {
-                    r['ConfigurationDataReset'] = false;
-                }
+                if (r['ConfigurationDataReset'] != null) { r['ConfigurationDataReset'] = false; }
                 rsepass = null;
                 // ###BEGIN###{PowerControl-Advanced}
             }
@@ -11234,7 +11223,14 @@
             // ###BEGIN###{PowerControl-OneClick}
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
             if ((action == 999) && (Q('idx_d24ForceBootDevice').value == 7)) { // Force UEFI HTTPS Boot using URL
-                r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
+                const bootUrl = new URL(Q('idx_d24ocrBootUrl').value.trim());
+                const bootUrlUsername = bootUrl.username;
+                const bootUrlPassword = bootUrl.password;
+                bootUrl.username = bootUrl.password = '';
+                var uefiParams = makeUefiBootParam(1, bootUrl.href) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2);
+                if (bootUrlUsername != '') { uefiParams += makeUefiBootParam(40, bootUrlUsername); } // HTTP basic auth username
+                if (bootUrlPassword != '') { uefiParams += makeUefiBootParam(41, bootUrlPassword); } // HTTP basic auth password
+                r['UefiBootParametersArray'] = btoa(uefiParams);
                 r['UefiBootNumberOfParams'] = 3;
                 r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
             } else if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
@@ -11256,6 +11252,7 @@
             console.log("Boot Action: " + action);
             console.log("Setting Boot Settings: " + ObjectToString2(r));
             statusbox("Power Action", "Setting boot settings...");
+            return;
 
             // Set the boot order to null, this is needed for some AMT versions that don't clear this automatically.
             amtstack.CIM_BootConfigSetting_ChangeBootOrder(null, function (stack, name, response, status) {
@@ -11291,10 +11288,7 @@
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
             // ###BEGIN###{PowerControl-Advanced}
-                if (action == 600 || action == 601) {
-
-                    bootSource = 'Force OCR UEFI HTTPS Boot';
-                }
+                if (action == 600 || action == 601) { bootSource = 'Force OCR UEFI HTTPS Boot'; }
             }
 
             // Resetting Force boot data in case it was changed so that it won't be used on the next power action
