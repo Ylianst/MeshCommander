@@ -1687,6 +1687,10 @@
                     <input id=idx_d24ocrBootUrl type=text onchange=showAdvPowerDlgChange() onkeyup=showAdvPowerDlgChange() placeholder="https://" style="float:right;width:200px">
                     <div>Boot URL</div>
                 </div>
+                <div id="idx_d24diskImageHttpTimeout" style=height:26px>
+                    <input id=idx_d24ocrBootHttpBootTimeout type=text onchange=showAdvPowerDlgChange() onkeyup=showAdvPowerDlgChange() value="0" style="float:right;width:200px">
+                    <div>Timeout (Seconds)</div>
+                </div>
                 <!-- ###END###{PowerControl-OneClick} -->
                 <div style=height:26px id=idd_d24IDERBootDevice>
                     <select id="idx_d24IDERBootDevice" style="float:right;width:200px" onchange=showAdvPowerDlgChange()>
@@ -10974,8 +10978,13 @@
             QV('idx_d24customBootSource', bootSourceIndex == 5)
             QV('idx_d24diskImage', bootSourceIndex == 6);
             QV('idx_d24diskImageUrl', bootSourceIndex == 7);
+            QV('idx_d24diskImageHttpTimeout', (bootSourceIndex == 7) && (amtversion > 16));
             if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootFile').files.length != 1)) { ok = false; }
-            if ((bootSourceIndex == 7) && (Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith('https://') == false)) { ok = false;}
+            if ((bootSourceIndex == 7) && (Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith('https://') == false)) { ok = false; }
+            if ((bootSourceIndex == 7) && (amtversion > 16)) {
+                var timeout = parseInt(Q('idx_d24ocrBootHttpBootTimeout').value);
+                if (isNaN(timeout) || (timeout > 65535) || (timeout < 0)) { ok = false; }
+            }
             // ###END###{PowerControl-OneClick}
 
             QE('idx_dlgOkButton', ok);
@@ -10986,7 +10995,7 @@
             var forceBootSelection = Q('idx_d24ForceBootDevice').value;
             // ###BEGIN###{Mode-NodeWebkit}            
             if (((forceBootSelection == 5) || (forceBootSelection == 6) || (forceBootSelection == 7)) && 
-                ((meshCentralServer==null && wsstack.comm.xtlsCertificate == null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 0))) {
+                (((meshCentralServer == null) && (wsstack.comm.xtlsCertificate == null)) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 0))) {
                 messagebox("Power Action", "This feature requires a TLS connection to Intel AMT"); return;
             }
             // ###END###{Mode-NodeWebkit}
@@ -11230,6 +11239,10 @@
                 var uefiParams = makeUefiBootParam(1, bootUrl.href) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2);
                 if (bootUrlUsername != '') { uefiParams += makeUefiBootParam(40, bootUrlUsername); } // HTTP basic auth username
                 if (bootUrlPassword != '') { uefiParams += makeUefiBootParam(41, bootUrlPassword); } // HTTP basic auth password
+                if (amtversion > 16) {
+                    var timeout = parseInt(Q('idx_d24ocrBootHttpBootTimeout').value);
+                    if (timeout > 0) { uefiParams += makeUefiBootParam(30, timeout, 2); }
+                }
                 r['UefiBootParametersArray'] = btoa(uefiParams);
                 r['UefiBootNumberOfParams'] = 3;
                 r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
@@ -11252,7 +11265,6 @@
             console.log("Boot Action: " + action);
             console.log("Setting Boot Settings: " + ObjectToString2(r));
             statusbox("Power Action", "Setting boot settings...");
-            return;
 
             // Set the boot order to null, this is needed for some AMT versions that don't clear this automatically.
             amtstack.CIM_BootConfigSetting_ChangeBootOrder(null, function (stack, name, response, status) {
