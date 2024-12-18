@@ -874,6 +874,9 @@
                     <!-- ###BEGIN###{Wireless} -->
                     <span id="id_TableWifi2"></span>
                     <!-- ###END###{Wireless} -->
+                    <!-- ###BEGIN###{NetAuth} -->
+                    <span id="id_TableNetAuth"></span>
+                    <!-- ###END###{NetAuth} -->
                 </div>
                 <!-- ###END###{NetworkSettings} -->
                 <div id="p11" style="display:none">
@@ -1057,7 +1060,7 @@
                                 <div id="DeskFocus" style="color:transparent;border:3px dotted rgba(255,0,0,.2);position:absolute;border-radius:5px" oncontextmenu="return false" onmousedown="dmousedown(event)" onmouseup="dmouseup(event)" onmousemove="dmousemove(event)"></div>
                                 <!-- ###END###{DesktopFocus} -->
                                 <!-- ###BEGIN###{DesktopInband} -->
-                                <canvas id="Desk" width="640" height="400" style="-ms-touch-action:none;margin-left:0px" oncontextmenu="return false" onmousedown="dmousedown(event)" onmouseup="dmouseup(event)" onmousemove="dmousemove(event)" onmousewheel="dmousewheel(event)" moz-opaque=""></canvas>
+                                <canvas id="Desk" width="640" height="400" style="-ms-touch-action:none;margin-left:0px" oncontextmenu="return false" onmousedown="dmousedown(event)" onmouseup="dmouseup(event)" onmousemove="dmousemove(event)" onwheel="dmousewheel(event)" moz-opaque=""></canvas>
                                 <!-- ###END###{DesktopInband} -->
                                 <!-- ###BEGIN###{!DesktopInband} -->
                                 <canvas id="Desk" width="640" height="400" style="-ms-touch-action:none;margin-left:0px" oncontextmenu="return false" onmousedown="dmousedown(event)" onmouseup="dmouseup(event)" onmousemove="dmousemove(event)" moz-opaque=""></canvas>
@@ -1114,6 +1117,7 @@
                                             <option value="15">F10</option>
                                             <option value="16">F11</option>
                                             <option value="17">F12</option>
+                                            <option value="25">Enter</option>
                                             <!-- <option value=18>LS+LA+PrtSc</option> -->
                                         </select>
                                         <input id="DeskWD" type="button" value="послать" onkeypress="return false" onkeydown="return false" onclick="deskSendKeys()">
@@ -1368,6 +1372,7 @@
                         <label><input type="checkbox" id="d7showcad">Показать Ctrl-Alt-Del</label><br>
                         <label><input type="checkbox" id="d7limitFrameRate">Ограничить частоту кадров</label><br>
                         <label><input type="checkbox" id="d7noMouseRotate">Не вращайте мышь</label><br>
+                        <label><input type="checkbox" id="d7kvmrmw">Reverse Mouse Wheel</label><br>
                     </div>
                     <div>Другие настройки</div>
                 </div>
@@ -1439,28 +1444,67 @@
                     <div>приоритет</div>
                 </div>
                 <div style="height:26px">
-                    <select id="idx_d12auth" style="float:right;width:200px" onclick="updateWifiDialog()">
-                        <option id="idx_d12auth_wpa3" value="32768">WPA3 SAE</option>
-                        <!--<option value="7">WPA2 IEEE 802.1x</option>-->
-                        <option value="6">WPA2 PSK</option>
-                        <!--<option value="5">WPA IEEE 802.1x</option>-->
-                        <option value="4">WPA PSK</option>
-                        <!--<option value="3">Shared Key</option>-->
-                        <!--<option value="2">Open</option>-->
-                    </select>
+                    <select id="idx_d12auth" style="float:right;width:200px" onclick="updateWifiDialog()"></select>
                     <div>Аутентификация</div>
                 </div>
                 <div style="height:26px">
                     <select id="idx_d12enc" style="float:right;width:200px" onclick="updateWifiDialog()">
                         <option id="id_d12e4" value="4">CCMP-AES</option>
                         <option id="id_d12e3" value="3">TKIP-RC4</option>
-                        <option id="id_d12e2" value="2">WEP</option>
-                        <option id="id_d12e5" value="5">Никто</option>
+                        <!--<option id="id_d12e2" value="2">WEP</option>-->
+                        <!--<option id="id_d12e5" value="5">None</option>-->
                     </select>
                     <div>шифрование</div>
                 </div>
-                <div style="height:26px"><input id="idx_d12password1" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Длина от 8 до 63 символов"><div title="Длина от 8 до 63 символов">Пароль*</div></div>
-                <div style="height:26px"><input id="idx_d12password2" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Длина от 8 до 63 символов"><div title="Длина от 8 до 63 символов">Подтвердите Пароль</div></div>
+                <div id="idx_d12pass">
+                    <div style="height:26px"><input id="idx_d12password1" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Длина от 8 до 63 символов"><div title="Длина от 8 до 63 символов">Пароль*</div></div>
+                    <div style="height:26px"><input id="idx_d12password2" type="password" style="float:right;width:200px" maxlength="63" onkeyup="updateWifiDialog()" title="Длина от 8 до 63 символов"><div title="Длина от 8 до 63 символов">Подтвердите Пароль</div></div>
+                </div>
+                <!-- ###BEGIN###{NetAuth} -->
+                <div id="idx_d12netauth" style="display:none">
+                    <div id="idx_d12protocoldiv" style="height:26px">
+                        <select id="idx_d12protocol" style="float:right;width:200px" onchange="updateNetAuth2Dialog(event)">
+                            <option value="0" selected="selected">EAP-TLS</option>
+                            <option value="1">EAP-TTLS/MSCHAPv2</option>
+                            <option value="2">PEAPv0/EAP-MSCHAPv2</option>
+                            <option value="3">PEAPv1/EAP-GTC</option>
+                            <option value="4">EAP-FAST/MSCHAPv2</option>
+                            <option value="5">EAP-FAST/GTC</option>
+                            <option value="6">EAP-FAST/TLS</option>
+                        </select>
+                        <div>протокол</div>
+                    </div>
+                    <div id="idx_d12servernamediv" style="height:26px"><input id="idx_d12servername" style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuthDialog()" title="Максимум 32 символа"><div title="Максимум 32 символа">Server Name</div></div>
+                    <div id="idx_d12servernamecomparediv" style="height:26px">
+                        <select id="idx_d12servernamecompare" style="float:right;width:200px" onclick="updateNetAuth2Dialog()">
+                            <option value="0" selected="selected">Full Name</option>
+                            <option value="1">Domain Suffix</option>
+                        </select>
+                        <div>Server Name Compare</div>
+                    </div>
+                    <div id="idx_d12domaindiv" style="height:26px"><input id="idx_d12domain" style="float:right;width:200px" maxlength="128" onkeyup="updateNetAuth2Dialog()" title="Maximum 128 characters"><div title="Maximum 128 characters">Domain</div></div>
+                    <div id="idx_d12usernamediv" style="height:26px"><input id="idx_d12username" style="float:right;width:200px" maxlength="128" onkeyup="updateNetAuth2Dialog()" title="Maximum 128 characters"><div title="Maximum 128 characters">имя пользователя</div></div>
+                    <div id="idx_d12passworddiv" style="height:26px"><input id="idx_d12password" type="password" style="float:right;width:200px" maxlength="32" onkeyup="updateNetAuth2Dialog()" title="Maximum length is 32 characters"><div title="Maximum length is 32 characters">пароль</div></div>
+                    <div id="idx_d12roamingidentitydiv" style="height:26px"><input id="idx_d12roamingidentity" style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuth2Dialog()" title="Maximum 80 characters"><div title="Maximum 80 characters">Roaming Identity</div></div>
+                    <div id="idx_d12pacdiv" style="height:26px"><input id="idx_d12pac" style="float:right;width:200px" maxlength="256" onkeyup="updateNetAuth2Dialog()" title="Maximum 256 characters"><div title="Maximum 256 characters">Protected Access Credentials</div></div>
+                    <div id="idx_d12pacpassworddiv" style="height:26px"><input id="idx_d12pacpassword" type="password" style="float:right;width:200px" maxlength="256" onkeyup="updateNetAuth2Dialog()" title="Maximum length is 256 characters"><div title="Maximum length is 256 characters">PAC Password</div></div>
+                    <div id="idx_d12clientcertdiv" style="height:26px">
+                        <select id="idx_d12clientcert" style="float:right;width:200px" onclick="updateNetAuth2Dialog()"></select>
+                        <div>Client Certificate</div>
+                    </div>
+                    <div id="idx_d12servercertdiv" style="height:26px">
+                        <select id="idx_d12servercert" style="float:right;width:200px" onclick="updateNetAuth2Dialog()"></select>
+                        <div>Server Issuer Cert</div>
+                    </div>
+                    <div id="idx_d12activeins0div" style="height:26px">
+                        <select id="idx_d12activeins0" style="float:right;width:200px" onclick="updateNetAuth2Dialog()">
+                            <option value="1">Включено</option>
+                            <option value="0">Отключено</option>
+                        </select>
+                        <div>Active in S0</div>
+                    </div>
+                </div>
+                <!-- ###END###{NetAuth} -->
             </div>
             <!-- ###END###{Wireless} -->
             <!-- ###BEGIN###{USBSetup} -->
@@ -1605,18 +1649,7 @@
                     <div>Настройки загрузки</div>
                 </div>
                 <div style="height:26px">
-                    <select id="idx_d24ForceBootDevice" style="float:right;width:200px" onchange="showAdvPowerDlgChange()">
-                        <option value="0">Никто</option>
-                        <option id="ForceDVDBootOption" value="1">Force CD / DVD Boot</option>
-                        <option id="ForcePXEBootOption" value="2">Force PXE Boot</option>
-                        <option id="ForceHDBootOption" value="3">Принудительная загрузка жесткого диска</option>
-                        <option id="ForceDiagBootOption" value="4">Принудительный диагностический ботинок</option>
-                        <!-- ###BEGIN###{PowerControl-OneClick} -->
-                        <option id="ForceUEFIBootOption" value="5">Force OCR UEFI Boot Option</option>
-                        <option id="ForceHttpBootOption" value="6">Force OCR UEFI HTTPS Boot (.iso)</option>
-                        <option id="ForceHttpUrlBootOption" value="7">Force OCR UEFI HTTPS Boot (url)</option>
-                        <!-- ###END###{PowerControl-OneClick} -->
-                    </select>
+                    <select id="idx_d24ForceBootDevice" style="float:right;width:200px" onchange="showAdvPowerDlgChange()"></select>
                     <div>Загрузочный источник</div>
                 </div>
                 <div id="idx_d24bootSource" style="height:26px">
@@ -1641,6 +1674,10 @@
                 <div id="idx_d24diskImageUrl" style="height:26px">
                     <input id="idx_d24ocrBootUrl" type="text" onchange="showAdvPowerDlgChange()" onkeyup="showAdvPowerDlgChange()" placeholder="https://" style="float:right;width:200px">
                     <div>Boot URL</div>
+                </div>
+                <div id="idx_d24diskImageHttpTimeout" style="height:26px">
+                    <input id="idx_d24ocrBootHttpBootTimeout" type="text" onchange="showAdvPowerDlgChange()" onkeyup="showAdvPowerDlgChange()" value="0" style="float:right;width:200px">
+                    <div>Timeout (Seconds)</div>
                 </div>
                 <!-- ###END###{PowerControl-OneClick} -->
                 <div style="height:26px" id="idd_d24IDERBootDevice">
@@ -1713,6 +1750,60 @@
                 <label><input type="radio" name="d26a" id="idx_d26ocr1" value="1">Включено<br></label>
                 <label><input type="radio" name="d26a" id="idx_d26ocr0" value="0">Отключено<br></label>
             </div>
+            <!-- ###BEGIN###{NetAuth} -->
+            <div id="dialog27" style="margin:auto;margin:3px">
+                <br>
+                <div style="height:26px">
+                    <select id="idx_d27enabled" style="float:right;width:200px" onclick="updateNetAuthDialog()">
+                        <option value="0">Отключено</option>
+                        <option value="1">Включено</option>
+                    </select>
+                    <div>Включено</div>
+                </div>
+                <div id="idx_d27protocoldiv" style="height:26px">
+                    <select id="idx_d27protocol" style="float:right;width:200px" onclick="updateNetAuthDialog()">
+                        <option value="0" selected="selected">EAP-TLS</option>
+                        <option value="1">EAP-TTLS/MSCHAPv2</option>
+                        <option value="2">PEAPv0/EAP-MSCHAPv2</option>
+                        <option value="3">PEAPv1/EAP-GTC</option>
+                        <option value="4">EAP-FAST/MSCHAPv2</option>
+                        <option value="5">EAP-FAST/GTC</option>
+                        <option value="6">EAP-FAST/TLS</option>
+                    </select>
+                    <div>протокол</div>
+                </div>
+                <div id="idx_d27servernamediv" style="height:26px"><input id="idx_d27servername" style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuthDialog()" title="Максимум 32 символа"><div title="Максимум 32 символа">Server Name</div></div>
+                <div id="idx_d27servernamecomparediv" style="height:26px">
+                    <select id="idx_d27servernamecompare" style="float:right;width:200px" onclick="updateNetAuthDialog()">
+                        <option value="0" selected="selected">Full Name</option>
+                        <option value="1">Domain Suffix</option>
+                    </select>
+                    <div>Server Name Compare</div>
+                </div>
+                <div id="idx_d27domaindiv" style="height:26px"><input id="idx_d27domain" style="float:right;width:200px" maxlength="128" onkeyup="updateNetAuthDialog()" title="Maximum 128 characters"><div title="Maximum 128 characters">Domain</div></div>
+                <div id="idx_d27usernamediv" style="height:26px"><input id="idx_d27username" style="float:right;width:200px" maxlength="128" onkeyup="updateNetAuthDialog()" title="Maximum 128 characters"><div title="Maximum 128 characters">имя пользователя</div></div>
+                <div id="idx_d27passworddiv" style="height:26px"><input id="idx_d27password" type="password" style="float:right;width:200px" maxlength="32" onkeyup="updateNetAuthDialog()" title="Maximum length is 32 characters"><div title="Maximum length is 32 characters">пароль</div></div>
+                <div id="idx_d27roamingidentitydiv" style="height:26px"><input id="idx_d27roamingidentity" style="float:right;width:200px" maxlength="80" onkeyup="updateNetAuthDialog()" title="Maximum 80 characters"><div title="Maximum 80 characters">Roaming Identity</div></div>
+                <div id="idx_d27pacdiv" style="height:26px"><input id="idx_d27pac" style="float:right;width:200px" maxlength="256" onkeyup="updateNetAuthDialog()" title="Maximum 256 characters"><div title="Maximum 256 characters">Protected Access Credentials</div></div>
+                <div id="idx_d27pacpassworddiv" style="height:26px"><input id="idx_d27pacpassword" type="password" style="float:right;width:200px" maxlength="256" onkeyup="updateNetAuthDialog()" title="Maximum length is 256 characters"><div title="Maximum length is 256 characters">PAC Password</div></div>
+                <div id="idx_d27clientcertdiv" style="height:26px">
+                    <select id="idx_d27clientcert" style="float:right;width:200px" onclick="updateNetAuthDialog()"></select>
+                    <div>Client Certificate</div>
+                </div>
+                <div id="idx_d27servercertdiv" style="height:26px">
+                    <select id="idx_d27servercert" style="float:right;width:200px" onclick="updateNetAuthDialog()"></select>
+                    <div>Server Issuer Cert</div>
+                </div>
+                <div id="idx_d27activeins0div" style="height:26px">
+                    <select id="idx_d27activeins0" style="float:right;width:200px" onclick="updateNetAuthDialog()">
+                        <option value="0">Включено</option>
+                        <option value="1">Отключено</option>
+                    </select>
+                    <div>Active in S0</div>
+                </div>
+                <div id="idx_d27pxetimeoutdiv" style="height:26px"><input id="idx_d27pxetimeout" style="float:right;width:200px" onkeyup="updateNetAuthDialog()"><div>PXE Timeout</div></div>
+            </div>
+            <!-- ###END###{NetAuth} -->
         </div>
         <div style="padding:10px;margin-bottom:4px">
             <input id="idx_dlgCancelButton" type="button" value="Отмена" style="float:right;width:80px;margin-left:5px" onclick="dialogclose(0)">
@@ -1729,7 +1820,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.9.3';
+        var version = '0.9.6';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -1748,7 +1839,7 @@
         var LoadingHtml = '<div style=text-align:center;padding-top:20px>' + "Loading ..." + '<div>';
         var amtversion = 0;
         var amtversionmin = 0;
-        var amtFirstPull = 0; // Bitmask, Set this when the first pull request is made on a device: 1 = HardwareInfo, 2 = WirelessInfo, 4 = SystemDefense, 8 = Storage, 16 = EventLog, 32 = AuditLog
+        var amtFirstPull = 0; // Bitmask, Set this when the first pull request is made on a device: 1 = HardwareInfo, 2 = WirelessInfo, 4 = SystemDefense, 8 = Storage, 16 = EventLog, 32 = AuditLog, 64 = ExtraInfo, 128 = 802.1x
 // ###BEGIN###{NetworkSettings}
         var amtwirelessif = -1; // Set to the interface index for the wireless interface, -1 if no wireless.
 // ###END###{NetworkSettings}
@@ -1915,6 +2006,8 @@
             QE('idx_connectbutton1', true);
             try { t = localStorage.getItem('desktopsettings'); } catch (ex) {}
             if (t) { desktopsettings = JSON.parse(t); }
+            if (urlvars.kvmenc) { var v = parseInt(urlvars.kvmenc); if (typeof v == 'number') { desktopsettings.encflags = v; } }
+            if (urlvars.kvmdec) { var v = parseInt(urlvars.kvmdec); if (typeof v == 'number') { desktopsettings.decimationMode = v; } }
             applyDesktopSettings();
             var s = '';
             //for (var c = 1; c < 13; c++) s += '<option value="' + (0xffbd + c) + '">F' + c +;
@@ -5282,10 +5375,13 @@
             amtstack.BatchEnum('', ['*AMT_GeneralSettings'], processSystemStatus);
             // ###END###{Look-Intel-SBT}
             // ###BEGIN###{!Look-Intel-SBT}
-            var query = ['CIM_ServiceAvailableToElement', '*AMT_GeneralSettings', 'AMT_EthernetPortSettings', '*AMT_RedirectionService', 'CIM_ElementSettingData'];
+            var query = ['CIM_ServiceAvailableToElement', '*AMT_GeneralSettings', 'AMT_EthernetPortSettings', '*AMT_RedirectionService', 'CIM_ElementSettingData', '*AMT_BootCapabilities'];
             if (amtversion > 5) query.push('IPS_IPv6PortSettings', '*CIM_KVMRedirectionSAP', '*IPS_OptInService','*IPS_KVMRedirectionSettingData');
             if (amtversion > 9) query.push('*IPS_ScreenConfigurationService', '*IPS_PowerManagementService');
-            if ((amtversion > 15) && (amtstack.wsman.comm.xtls == 1)) query.push('*CIM_BootService');
+            if (amtversion > 15) query.push('*CIM_BootService');
+            // ###BEGIN###{NetAuth}
+            if (amtversion > 2) query.push('*AMT_8021XProfile');
+            // ###END###{NetAuth}
             amtstack.BatchEnum('', query, processSystemStatus, true);
             // ###END###{!Look-Intel-SBT}
             // ###BEGIN###{Wireless}
@@ -5531,7 +5627,7 @@
             }
 
             // Power Options
-            if ((amtstack.wsman.comm.xtls == 1) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] != null)) {
+            if ((amtsysstate['AMT_BootCapabilities'].response['PlatformErase'] != null) && (amtsysstate['AMT_BootCapabilities'].response['PlatformErase'] > 0) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] != null)) {
                 var enabledBootStateStr = { 0: "неизвестный", 1: "Другой", 2: "Включено", 3: "Отключено", 4: "Выключение", 5: "Непригодный", 6: "Включено, но в автономном режиме", 7: "В тесте", 8: "Отложенный", 9: "Замораживание", 10: "начало", 32768: "OCR Disabled", 32769: "OCR Enabled", 32770: "OCR Disabled, RPE Enabled", 32771: "RPE & OCR Enabled" };
                 if (amtversion > 15) { enabledBootStateStr[32768] = "OCR & RPE Disabled"; enabledBootStateStr[32769] = "OCR Enabled, RPE Disabled"; }
                 var t = enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]?enabledBootStateStr[amtsysstate['CIM_BootService'].response['EnabledState']]:"неизвестный";
@@ -5668,7 +5764,7 @@
                         x += TableEntry("Local WIFI Profile Sync", addLinkConditional(((xxWireless['AMT_WiFiPortConfigurationService'].response['localProfileSynchronizationEnabled'] == 1) ? "Включено" : "Отключено"), 'showWifiSyncDlg(' + y + ')', xxAccountAdminName));
                     }
                     // CSME UEFI Wifi profile sharing, check if it is enabled in boot setting and it is not null at AMT_WiFiPortConfigrationService
-                    if (xxWireless['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare']!=null && xxWireless['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare']==true 
+                    if (amtsysstate['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare'] != null && amtsysstate['AMT_BootCapabilities'].response['UEFIWiFiCoExistenceAndProfileShare'] == true
                         && xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled']!=null) {
                             x += TableEntry("UEFI WiFi CoEx Profile sharing", addLinkConditional(xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled']==1? "Включено":"Отключено", 'showUefiWifiCoExDlg()', xxAccountAdminName));
                      } else {
@@ -5680,6 +5776,12 @@
                 if (amtwirelessif != y) {
                     // Things that are specific to the wired interface
                     x += TableEntry("Ответить на пинг", addLinkConditional(["Отключено", "ICMP-ответ", "Ответ RMCP", "ICMP и RMCP ответ"][gs['PingResponseEnabled'] + (gs['RmcpPingResponseEnabled'] << 1)], 'showPingActionDlg()', xxAccountAdminName));
+                    // ###BEGIN###{NetAuth}
+                    // 802.1x
+                    var netAuthProtocols = ['EAP-TLS', 'EAP-TTLS/MSCHAPv2', 'PEAPv0/EAP-MSCHAPv2', 'PEAPv1/EAP-GTC', 'EAP-FAST/MSCHAPv2', 'EAP-FAST/GTC', 'EAP-FAST/TLS'], netAuthStr = "Отключено";
+                    if (amtsysstate['AMT_8021XProfile'].responses.Body['Enabled']) { netAuthStr = "Включено," + netAuthProtocols[amtsysstate['AMT_8021XProfile'].responses.Body['AuthenticationProtocol']]; }
+                    x += TableEntry("802.1x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
+                    // ###END###{NetAuth}
                     var ipStateString = z['DHCPEnabled'] == true ? "Автоматически с использованием DHCP-сервера" : "Статический IP-адрес";
                     if (z['IpSyncEnabled'] == true) { ipStateString += ', IP sync with OS'; }
                     x += TableEntry("Состояние IPv4", addLinkConditional(ipStateString, 'showIPSetupDlg()', xxAccountAdminName));
@@ -6728,7 +6830,7 @@
             if (xxdialogMode) return;
             var x = '';
             x += '<div style=height:26px;margin-top:4px><select onchange=showSetTlsSecurityDlgUpdate() id=tlscert style=float:right;width:260px><option value=-1>' + "Нет сертификата, TLS отключен" + '</option>';
-            for (var i in xxCertificates) { if (xxCertificates[i].TrustedRootCertficate == false && xxCertificates[i].XPrivateKey && (xxTlsCurrentCert == null || xxTlsCurrentCert == i)) { x += '<option value=' + i + '>' + xxCertificates[i].XSubject['CN'] + '</option>'; } }
+            for (var i in xxCertificates) { if (xxCertificates[i].TrustedRootCertficate == false && xxCertificates[i].XPrivateKey) { x += '<option value=' + i + '>' + xxCertificates[i].XSubject['CN'] + '</option>'; } }
             x += '</select><div style=padding-top:4px>' + "сертификат" + '</div></div>';
 
             x += '<div style=height:26px;margin-top:4px><select id=tlsremote style=float:right;width:260px onchange=showSetTlsSecurityDlgUpdate()><option value=0>Server-auth TLS only</option><option value=1>Server-auth, non-TLS allowed</option>';
@@ -7529,15 +7631,20 @@
         var xxWireless;
         function PullWireless() {
             amtFirstPull |= 2;
-            try { if (amtwirelessif == -1) return; } catch (e) {} // If the wireless adapter has no MAC, don't show this.
-            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService', '*AMT_BootCapabilities'], processWireless);
+            try { if (amtwirelessif == -1) return; } catch (e) { } // If the wireless adapter has no MAC, don't show this.
+            // ###BEGIN###{!NetAuth}
+            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService'], processWireless);
+            // ###END###{!NetAuth}
+            // ###BEGIN###{NetAuth}
+            amtstack.BatchEnum('', ['*CIM_WiFiPortCapabilities', '*CIM_WiFiPort', '*CIM_WiFiEndpoint', 'CIM_WiFiEndpointSettings', '*AMT_WiFiPortConfigurationService', 'CIM_IEEE8021xSettings'], processWireless);
+            // ###END###{NetAuth}
         }
 
         function wifiRefresh() { if (!xxdialogMode) PullWireless(); }
 
         var xxWifiState = { 3: "Отключено", 32768: "Включено в S0", 32769: "Включено в S0, Sx / AC" };
         var xxRadioState = 	{ 2: "На подключен", 3: "от", 6: "Отключен" };
-        var xxWifiAuthenticationMethod = { 1: "Другой", 2: "открыто", 3: "Общий ключ", 4: "WPA PSK", 5: "WPA IEEE 802.1x", 6: "WPA2 PSK", 7: "WPA2 IEEE 802.1x", 32768: "WPA3 SAE" };
+        var xxWifiAuthenticationMethod = { 1: "Другой", 2: "открыто", 3: "Общий ключ", 4: "WPA PSK", 5: "WPA IEEE 802.1x", 6: "WPA2 PSK", 7: "WPA2 IEEE 802.1x", 32768: "WPA3 SAE IEEE 802.1x", 32769: "WPA3 OWE IEEE 802.1x" };
         var xxWifiEncryptionMethod = { 1: "Другой", 2: "WEP", 3: "TKIP-RC4", 4: "CCMP-AES", 5: "Никто" }; // For 2 & 5, AuthenticationMethod must be 2 or 3. For 3 & 4 AuthenticationMethod must be 4,5,6 or 7
 
         function processWireless(stack, name, responses, status) {
@@ -7560,7 +7667,17 @@
                     sc = xxWireless['CIM_WiFiEndpointSettings'].responses[j];
                     if (sc['AuthenticationMethod'] == 1) continue; // Skip "Endpoint User Settings"
                     if (sc['Priority'] == i) {
-                        x += '<div class=itemBar onclick=showWifiDetails(' + j + ')><div style=float:right>' + EscapeHtml(sc['SSID']) + ', ' + xxWifiAuthenticationMethod[sc['AuthenticationMethod']] + ', ' + xxWifiEncryptionMethod[sc['EncryptionMethod']] + ' &nbsp; ';
+                        var details = '';
+                        // ###BEGIN###{NetAuth}
+                        var netAuthProfile = null, netAuthProtocols = ['EAP-TLS', 'EAP-TTLS/MSCHAPv2', 'PEAPv0/EAP-MSCHAPv2', 'PEAPv1/EAP-GTC', 'EAP-FAST/MSCHAPv2', 'EAP-FAST/GTC', 'EAP-MD5', 'EAP-PSK', 'EAP-SIM', 'EAP-AKA', 'EAP-FAST/TLS'];
+                        if (xxWireless['CIM_IEEE8021xSettings'].responses) {
+                            for (var k in xxWireless['CIM_IEEE8021xSettings'].responses) {
+                                if (xxWireless['CIM_IEEE8021xSettings'].responses[k]['ElementName'] == sc['ElementName']) { netAuthProfile = xxWireless['CIM_IEEE8021xSettings'].responses[k]; }
+                            }
+                        }
+                        if (netAuthProfile) { details = ', ' + netAuthProtocols[netAuthProfile['AuthenticationProtocol']]; }
+                        // ###END###{NetAuth}
+                        x += '<div class=itemBar onclick=showWifiDetails(' + j + ')><div style=float:right>' + EscapeHtml(sc['SSID']) + ', ' + xxWifiAuthenticationMethod[sc['AuthenticationMethod']] + ', ' + xxWifiEncryptionMethod[sc['EncryptionMethod']] + details + ' &nbsp; ';
                         if (xxAccountAdminName) x += AddButton2("Удалить", 'wifiRemoveButton(\"' + j + '\")');
                         x += '</div><div style=padding-top:3px><b>' + EscapeHtml(sc['ElementName']) + '</b></div></div>';
                         s++;
@@ -7616,10 +7733,24 @@
             if (xxdialogMode) return;
             var i, sc = xxWireless['CIM_WiFiEndpointSettings'].responses[h], x = '<div style=text-align:left>';
             x += addHtmlValue("Имя профиля", EscapeHtml(sc['ElementName']));
-            x += addHtmlValue("SSID", sc['SSID']);
+            x += addHtmlValue("SSID", EscapeHtml(sc['SSID']));
             x += addHtmlValue("Аутентификация", xxWifiAuthenticationMethod[sc['AuthenticationMethod']]);
             x += addHtmlValue("шифрование", xxWifiEncryptionMethod[sc['EncryptionMethod']]);
             x += addHtmlValue("приоритет", sc['Priority']);
+            // ###BEGIN###{NetAuth}
+            var netAuthProfile = null, netAuthProtocols = ['EAP-TLS', 'EAP-TTLS/MSCHAPv2', 'PEAPv0/EAP-MSCHAPv2', 'PEAPv1/EAP-GTC', 'EAP-FAST/MSCHAPv2', 'EAP-FAST/GTC', 'EAP-MD5', 'EAP-PSK', 'EAP-SIM', 'EAP-AKA', 'EAP-FAST/TLS'];
+            if (xxWireless['CIM_IEEE8021xSettings'].responses) {
+                for (var k in xxWireless['CIM_IEEE8021xSettings'].responses) {
+                    if (xxWireless['CIM_IEEE8021xSettings'].responses[k]['ElementName'] == sc['ElementName']) { netAuthProfile = xxWireless['CIM_IEEE8021xSettings'].responses[k]; }
+                }
+            }
+            if (netAuthProfile) {
+                x += '<div style="width:100%;border-bottom:1px solid #000;margin-bottom:5px;margin-top:5px">802.11x</div>'
+                x += addHtmlValue("Аутентификация", netAuthProtocols[netAuthProfile['AuthenticationProtocol']]);
+                if (netAuthProfile['Domain']) { x += addHtmlValue("Domain", EscapeHtml(netAuthProfile['Domain'])); }
+                if (netAuthProfile['Username']) { x += addHtmlValue("имя пользователя", EscapeHtml(netAuthProfile['Username'])); }
+            }
+            // ###END###{NetAuth}
             x += '</div>';
             messagebox("Беспроводной профиль", x);
         }
@@ -7638,7 +7769,23 @@
 
         function removeWifiEntryResponse(stack, name, response, status, tag) {
             if (methodcheck(response)) return;
-            amtstack.Enum('CIM_WiFiEndpointSettings', function(stack, name, responses, status) { if (status == 200) { xxWireless['CIM_WiFiEndpointSettings'].responses = responses; showWirelessInfo(); } } );
+            // ###BEGIN###{!NetAuth}
+            amtstack.BatchEnum('', ['CIM_WiFiEndpointSettings'], function (stack, name, responses, status) {
+                if (status == 200) {
+                    xxWireless['CIM_WiFiEndpointSettings'].responses = responses['CIM_WiFiEndpointSettings'].responses;
+                    showWirelessInfo();
+                }
+            });
+            // ###END###{!NetAuth}
+            // ###BEGIN###{NetAuth}
+            amtstack.BatchEnum('', ['CIM_WiFiEndpointSettings', 'CIM_IEEE8021xSettings'], function (stack, name, responses, status) {
+                if (status == 200) {
+                    xxWireless['CIM_WiFiEndpointSettings'].responses = responses['CIM_WiFiEndpointSettings'].responses;
+                    xxWireless['CIM_IEEE8021xSettings'].responses = responses['CIM_IEEE8021xSettings'].responses;
+                    showWirelessInfo();
+                }
+            });
+            // ###END###{NetAuth}
         }
 
         function showWifiNewProfile() {
@@ -7650,11 +7797,34 @@
                 if (t) { x += '<option value='+ i +'>'+ i; } // Option is a tag that is self closing.
             }
             QH('idx_d12pri', x);
-            QV('idx_d12auth_wpa3', amtversion > 13);
+
+            // ###BEGIN###{NetAuth}
+            // Set certificates
+            var clientcertoptions = '<option value=-1>' + EscapeHtml("Никто") + '</option>', servercertoptions = '<option value=-1>' + EscapeHtml("Никто") + '</option>';
+            for (var i in xxCertificates) {
+                if (xxCertificates[i].TrustedRootCertficate) {
+                    servercertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
+                } else if (xxCertificates[i].XPrivateKey) {
+                    clientcertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
+                }
+            }
+            QH('idx_d12clientcert', clientcertoptions);
+            QH('idx_d12servercert', servercertoptions);
+            // ###END###{NetAuth}
+
+            var authOptions = '';
+            // ###BEGIN###{NetAuth}
+            authOptions += '<option value=32769>' + "WPA3 OWE IEEE 802.1x" + '</option>';
+            authOptions += '<option value=32768>' + "WPA3 SAE IEEE 802.1x" + '</option>';
+            authOptions += '<option value=7>' + "WPA2 IEEE 802.1x" + '</option>';
+            authOptions += '<option value=5>' + "WPA IEEE 802.1x" + '</option>';
+            // ###END###{NetAuth}
+            authOptions += '<option value=6>' + "WPA2 PSK" + '</option>';
+            authOptions += '<option value=4>' + "WPA PSK" + '</option>';
+            QH('idx_d12auth', authOptions);
 
             idx_d12auth.value = 6;
             idx_d12enc.value = 4;
-
             idx_d12name.value = idx_d12ssid.value = idx_d12password1.value = idx_d12password2.value = '';
 
             setDialogMode(12, "Добавить профиль беспроводной сети", 3, function () { addWifiProfile() });
@@ -7662,23 +7832,51 @@
         }
 
         function addWifiProfile() {
+            var sc, netAuthSettingsClientCert, netAuthSettingsServerCaCert;
+            var v = {
+                '__parameterType': 'instance',
+                '__namespace': amtstack.CompleteName('CIM_WiFiEndpointSettings'),
+                'ElementName': idx_d12name.value,
+                'InstanceID': 'Intel(r) AMT:WiFi Endpoint Settings ' + idx_d12name.value,
+                'AuthenticationMethod': idx_d12auth.value,
+                'EncryptionMethod': idx_d12enc.value,
+                'SSID': idx_d12ssid.value,
+                'Priority': idx_d12pri.value
+            };
+            if ((idx_d12auth.value == 4) || (idx_d12auth.value == 6)) { v['PSKPassPhrase'] = idx_d12password1.value; }
+            // ###BEGIN###{NetAuth}
+            if ((idx_d12auth.value == 5) || (idx_d12auth.value == 7) || (idx_d12auth.value == 32768) || (idx_d12auth.value == 32769)) {
+                sc = {
+                    '__parameterType': 'instance',
+                    '__namespace': amtstack.CompleteName('CIM_IEEE8021xSettings'),
+                    'ElementName': '8021x-' + idx_d12name.value,
+                    'InstanceID': '8021x-' + idx_d12name.value,
+                    'ActiveInS0': (Q('idx_d12activeins0').value == 1),
+                    'AuthenticationProtocol': Q('idx_d12protocol').value
+                };
+                if (Q('idx_d12roamingidentity').value != '') { sc['RoamingIdentity'] = Q('idx_d12roamingidentity').value; }
+                if (Q('idx_d12servername').value != '') { sc['ServerCertificateName'] = Q('idx_d12servername').value; sc['ServerCertificateNameComparison'] = Q('idx_d12servernamecompare').value; }
+                if (Q('idx_d12username').value != '') { sc['Username'] = Q('idx_d12username').value; }
+                if (Q('idx_d12password').value != '') { sc['Password'] = Q('idx_d12password').value; }
+                if (Q('idx_d12domain').value != '') { sc['Domain'] = Q('idx_d12domain').value; }
+                if (Q('idx_d12protocol').value > 3) { sc['ProtectedAccessCredential'] = Q('idx_d12pac').value; sc['PACPassword'] = Q('idx_d12pacpassword').value; }
+                if (parseInt(Q('idx_d12clientcert').value) >= 0) { netAuthSettingsClientCert = '<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12clientcert').value)]['InstanceID'] + '</Selector></SelectorSet></ReferenceParameters>'; }
+                if (parseInt(Q('idx_d12servercert').value) >= 0) { netAuthSettingsServerCaCert = '<Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d12servercert').value)]['InstanceID'] + '</Selector></SelectorSet></ReferenceParameters>'; }
+            }
+            // ###END###{NetAuth}
+
+            console.log('wifiepsettinginput', JSON.sstringify(v, null, 2));
+            console.log('netAuthProfile', JSON.sstringify(sc, null, 2));
+            console.log('netAuthSettingsClientCert', netAuthSettingsClientCert);
+            console.log('netAuthSettingsServerCaCert', netAuthSettingsServerCaCert);
+
             amtstack.AMT_WiFiPortConfigurationService_AddWiFiSettings(
 				{
 				    '__parameterType': 'reference',
 				    '__resourceUri': amtstack.CompleteName('CIM_WiFiEndpoint'),
 				    'Name': 'WiFi Endpoint 0'
-				}, {
-				    '__parameterType': 'instance',
-				    '__namespace': amtstack.CompleteName('CIM_WiFiEndpointSettings'),
-				    'ElementName': idx_d12name.value,
-				    'InstanceID': 'Intel(r) AMT:WiFi Endpoint Settings ' + idx_d12name.value,
-				    'AuthenticationMethod': idx_d12auth.value,
-				    'EncryptionMethod': idx_d12enc.value,
-				    'SSID': idx_d12ssid.value,
-				    'Priority': idx_d12pri.value,
-				    'PSKPassPhrase': idx_d12password1.value
-				},
-				null, null, null, removeWifiEntryResponse
+				}, v,
+				sc, netAuthSettingsClientCert, netAuthSettingsServerCaCert, removeWifiEntryResponse
 			);
         }
 
@@ -7686,21 +7884,146 @@
             var r = true;
             var a = idx_d12auth.value;
             var e = idx_d12enc.value;
-            QV('id_d12e2', a < 4);
-            QV('id_d12e3', a > 3);
-            QV('id_d12e4', a > 3);
-            QV('id_d12e5', a < 4);
+            //QV('id_d12e2', a < 4);
+            //QV('id_d12e3', a > 3);
+            //QV('id_d12e4', a > 3);
+            //QV('id_d12e5', a < 4);
             if (a < 4 && (e == 3 || e == 4)) { idx_d12enc.value = 2; }
             if (a > 3 && (e == 2 || e == 5)) { idx_d12enc.value = 3; }
-            if (a == 32768) { idx_d12enc.value = 4; }
+            if ((a == 32768) || (a == 32769)) { idx_d12enc.value = 4; }
+            QV('idx_d12pass', (a == 4) || (a == 6));
+            QV('idx_d12netauth', (a == 5) || (a == 7) || (a == 32768) || (a == 32769));
 
             // Check if there is already a profile with this name
             for (var j in xxWireless['CIM_WiFiEndpointSettings'].responses) { if (xxWireless['CIM_WiFiEndpointSettings'].responses[j]['ElementName'] == idx_d12name.value) { r = false; } }
+            if ((idx_d12name.value.length == 0) && (idx_d12ssid.value.length == 0)) { r = false; }
+            if (((a == 4) || (a == 6)) && ((idx_d12password1.value.length < 8) || (idx_d12password1.value.length > 63) || (idx_d12password1.value != idx_d12password2.value))) { r = false; }
 
-            QE('idx_dlgOkButton', r == true && (idx_d12name.value.length > 0) && (idx_d12ssid.value.length > 0) && (idx_d12password1.value.length > 7) && (idx_d12password1.value == idx_d12password2.value));
+            QE('idx_dlgOkButton', r);
+
+            // ###BEGIN###{NetAuth}
+            updateNetAuthDialog();
+            // ###END###{NetAuth}
         }
 
+        // ###BEGIN###{NetAuth}
+        function updateNetAuth2Dialog() {
+            QV('idx_d12servernamecomparediv', (Q('idx_d12servernamediv').value != ''));
+            QV('idx_d12pacdiv', (Q('idx_d12protocol').value > 3));
+            QV('idx_d12pacpassworddiv', (Q('idx_d12protocol').value > 3));
+        }
+        // ###END###{NetAuth}
+
 // ###END###{Wireless}
+// ###BEGIN###{NetAuth}
+
+        //
+        // 802.1x SETTINGS
+        //
+
+        function editNetAuthProfile() {
+            if (xxdialogMode) return;
+
+            // Set certificates
+            var clientcertoptions = '<option value=-1>' + EscapeHtml("Никто") + '</option>', servercertoptions = '<option value=-1>' + EscapeHtml("Никто") + '</option>';
+            for (var i in xxCertificates) {
+                if (xxCertificates[i].TrustedRootCertficate) {
+                    servercertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
+                } else if (xxCertificates[i].XPrivateKey) {
+                    clientcertoptions += '<option value="' + i + '">' + EscapeHtml(xxCertificates[i].XSubject['CN']) + '</option>';
+                }
+            }
+            QH('idx_d27clientcert', clientcertoptions);
+            QH('idx_d27servercert', servercertoptions);
+
+            // Set profile
+            var sc = amtsysstate['AMT_8021XProfile'].responses.Body;
+            Q('idx_d27enabled').value = sc['Enabled'] ? 1 : 0;
+            Q('idx_d27activeins0').value = (sc['ActiveInS0'] ? 1 : 0);
+            Q('idx_d27pxetimeout').value = sc['PxeTimeout'];
+            if (sc['Enabled']) {
+                Q('idx_d27protocol').value = sc['AuthenticationProtocol'];
+                Q('idx_d27roamingidentity').value = sc['RoamingIdentity'] ? sc['RoamingIdentity'] : '';
+                Q('idx_d27servername').value = sc['ServerCertificateName'] ? sc['ServerCertificateName'] : '';
+                Q('idx_d27servernamecompare').value = sc['ServerCertificateNameComparison'] ? sc['ServerCertificateNameComparison'] : 0;
+                Q('idx_d27username').value = sc['Username'] ? sc['Username'] : '';
+                Q('idx_d27password').value = sc['Password'] ? sc['Password'] : '';
+                Q('idx_d27domain').value = sc['Domain'] ? sc['Domain'] : '';
+                Q('idx_d27pac').value = sc['ProtectedAccessCredential'] ? sc['ProtectedAccessCredential'] : '';
+                Q('idx_d27pacpassword').value = sc['PACPassword'] ? sc['PACPassword'] : '';
+                var scInstanceId = -1, ccInstanceId = -1;
+                if (sc['ServerCertificateIssuer']) { scInstanceId = sc['ServerCertificateIssuer']['ReferenceParameters']['SelectorSet']['Selector']['Value']; }
+                if (sc['ClientCertificate']) { ccInstanceId = sc['ClientCertificate']['ReferenceParameters']['SelectorSet']['Selector']['Value']; }
+                for (var i in xxCertificates) {
+                    if (xxCertificates[i]['InstanceID'] == scInstanceId) { Q('idx_d27servercert').value = i; }
+                    if (xxCertificates[i]['InstanceID'] == ccInstanceId) { Q('idx_d27clientcert').value = i; }
+                }
+            }
+            setDialogMode(27, "802.1x Profile", 3, function () { setNetAuthProfile() });
+            updateNetAuthDialog();
+        }
+
+        function updateNetAuthDialog() {
+            QV('idx_d27protocoldiv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27servernamediv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27servernamecomparediv', (Q('idx_d27enabled').value == 1) && (Q('idx_d27servername').value != ''));
+            QV('idx_d27domaindiv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27usernamediv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27passworddiv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27roamingidentitydiv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27pacdiv', (Q('idx_d27enabled').value == 1) && (Q('idx_d27protocol').value > 3));
+            QV('idx_d27pacpassworddiv', (Q('idx_d27enabled').value == 1) && (Q('idx_d27protocol').value > 3));
+            QV('idx_d27clientcertdiv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27servercertdiv', Q('idx_d27enabled').value == 1);
+            QV('idx_d27activeins0div', Q('idx_d27enabled').value == 1);
+            QV('idx_d27pxetimeoutdiv', Q('idx_d27enabled').value == 1);
+        }
+
+        function setNetAuthProfile() {
+            var sc = Clone(amtsysstate['AMT_8021XProfile'].responses.Body);
+            sc['Enabled'] = (Q('idx_d27enabled').value == 1);
+            if (sc['Enabled']) {
+                sc['ActiveInS0'] = (Q('idx_d27activeins0').value == 1);
+                sc['AuthenticationProtocol'] = Q('idx_d27protocol').value;
+                if (Q('idx_d27roamingidentity').value != '') { sc['RoamingIdentity'] = Q('idx_d27roamingidentity').value; } else { delete sc['RoamingIdentity']; }
+                if (Q('idx_d27servername').value != '') {
+                    sc['ServerCertificateName'] = Q('idx_d27servername').value;
+                    sc['ServerCertificateNameComparison'] = Q('idx_d27servernamecompare').value;
+                } else {
+                    delete sc['ServerCertificateName'];
+                    delete sc['ServerCertificateNameComparison'];
+                }
+                if (Q('idx_d27username').value != '') { sc['Username'] = Q('idx_d27username').value; } else { delete sc['Username']; }
+                if (Q('idx_d27password').value != '') { sc['Password'] = Q('idx_d27password').value; } else { delete sc['Password']; }
+                if (Q('idx_d27domain').value != '') { sc['Domain'] = Q('idx_d27domain').value; } else { delete sc['Domain']; }
+                if (Q('idx_d27protocol').value > 3) {
+                    sc['ProtectedAccessCredential'] = Q('idx_d27pac').value;
+                    sc['PACPassword'] = Q('idx_d27pacpassword').value;
+                } else {
+                    delete sc['ProtectedAccessCredential'];
+                    delete sc['PACPassword'];
+                }
+                if (parseInt(Q('idx_d27clientcert').value) >= 0) { sc['ClientCertificate'] = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d27clientcert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>'; } else { delete sc['ClientCertificate']; }
+                if (parseInt(Q('idx_d27servercert').value) >= 0) { sc['ServerCertificateIssuer'] = '<a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>' + amtstack.CompleteName('AMT_PublicKeyCertificate') + '</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">' + xxCertificates[parseInt(Q('idx_d27servercert').value)]['InstanceID'] + '</w:Selector></w:SelectorSet></a:ReferenceParameters>'; } else { delete sc['ServerCertificateIssuer']; }
+                sc['PxeTimeout'] = Q('idx_d27pxetimeout').value;
+            }
+            amtstack.Put('AMT_8021XProfile', sc, setNetAuthProfileEx);
+        }
+
+        function setNetAuthProfileEx(stack, name, response, status) {
+            if (status == 200) {
+                amtsysstate['AMT_8021XProfile'].responses.Body = amtsysstate['AMT_8021XProfile'].response = response.Body;
+                updateSystemStatus();
+            } else {
+                if (response.Header['WsmanError']) {
+                    messagebox("802.1x Error", response.Header['WsmanError'].replace(/_/g, ' '));
+                } else {
+                    messagebox("802.1x Error", "Error, Status = " + status);
+                }
+            }
+        }
+
+// ###END###{NetAuth}
 // ###END###{NetworkSettings}
 
 // ###BEGIN###{HardwareInfo}
@@ -8332,7 +8655,7 @@
             connectDesktopConsent = false; // TODO, this is not a good idea when calls are pending.
             if (desktop.State == 0) {
                 // Check if user consent is needed
-                if ((skipConsent !== true) && (amtversion > 5) && (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != undefined) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] == 0xFFFFFFFF)) {
+                if ((skipConsent !== true) && (amtversion > 5) && ((amtsysstate == null) || (amtsysstate != null) && (amtsysstate['IPS_OptInService'] != null) && (amtsysstate['IPS_OptInService'].response != null) && (amtsysstate['IPS_OptInService'].response['OptInRequired'] != 0))) {
                     connectDesktopConsent = true; amtstack.Get('IPS_OptInService', powerActionResponse0, 0, 1); return; // User consent always required, ask for it before KVM.
                 }
                 // Encoding Flags: 1 = RLE, 2 = 16bit, 4 = Gray, 8 = ZLib, 16 = 4bit Color
@@ -8420,6 +8743,7 @@
                 // ###END###{DesktopInband}
                 desktop.m.frameRateDelay = ((desktopsettings.limitFrameRate == true)?200:0);
                 desktop.m.noMouseRotate = desktopsettings.noMouseRotate;
+                desktop.m.ReverseMouseWheel = desktopsettings.reverseMouseWheel;
                 // ###BEGIN###{Mode-MeshCentral2}
                 desktop.tlsv1only = amtstack.wsman.comm.tlsv1only;
                 desktop.Start(currentMeshNode._id, 16994, '*', '*', 0);
@@ -8547,7 +8871,7 @@
                         messagebox("Удаленный рабочий стол", "KVM disconnection, this may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
                     } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again if connection was more than 5 seconds long.
                         reconnect = (desktop.connectTime != null) && ((desktop.connectTime + 5000) < Date.now());
-                        console.log(desktop.disconnectCode, reconnect);
+                        //console.log(desktop.disconnectCode, reconnect);
                     } else if (desktop.disconnectCode == 50002) { // KVM-BufferOverflow
                         messagebox("Удаленный рабочий стол", "KVM disconnection that may be due to the display size and resolution being too large for the Intel AMT KVM buffer. Try RLE8 encoding or reducing the display resolution.");
                     }
@@ -8606,6 +8930,7 @@
             desktopsettings.showcad = d7showcad.checked;
             desktopsettings.limitFrameRate = d7limitFrameRate.checked;
             desktopsettings.noMouseRotate = d7noMouseRotate.checked;
+            desktopsettings.reverseMouseWheel = d7kvmrmw.checked;
             // ###BEGIN###{DesktopInband}
             desktopsettings.quality = d7bitmapquality.value;
             desktopsettings.scaling = d7bitmapscaling.value;
@@ -8628,6 +8953,7 @@
             d7showcad.checked = desktopsettings.showcad;
             d7limitFrameRate.checked = desktopsettings.limitFrameRate;
             d7noMouseRotate.checked = desktopsettings.noMouseRotate;
+            d7kvmrmw.checked = desktopsettings.reverseMouseWheel;
             // ###BEGIN###{DesktopInband}
             if (desktopsettings.quality) { d7bitmapquality.value = desktopsettings.quality; }
             if (desktopsettings.scaling) { d7bitmapscaling.value = desktopsettings.scaling; }
@@ -8679,7 +9005,7 @@
                 console.log('deskToggleFull1', fullscreenonly, urlvars['kvmonly']);
                 fullscreenonly = false;
                 if (urlvars['kvmonly'] == 1) {
-                    console.log('deskToggleFull2');
+                    //console.log('deskToggleFull2');
                     // It was initiated by a command line switch, exit now.
                     // ###BEGIN###{Mode-NodeWebkit}
                     require('nw.gui').Window.get().close();
@@ -8808,7 +9134,8 @@
             21: [[0xffe9, 1], [0xffc1, 1], [0xffc1, 0], [0xffe9, 0]], // Alt-F4
             22: [[0xffe3, 1], [0x77, 1], [0x77, 0], [0xffe3, 0]], // Ctrl-W
             23: [[0xffe7, 1], [0xff51, 1], [0xff51, 0], [0xffe7, 0]], // WIN+Left
-            24: [[0xffe7, 1], [0xff53, 1], [0xff53, 0], [0xffe7, 0]] // Win+Right
+            24: [[0xffe7, 1], [0xff53, 1], [0xff53, 0], [0xffe7, 0]], // Win+Right
+            25: [[0xff0d, 1], [0xff0d, 0]] // Enter
         }
 
         // Send special keys to the remote side.
@@ -10333,67 +10660,64 @@
             amtstack.Get('AMT_BootCapabilities', powerActionResponse00, 0, 1);
         }
 
-        function powerActionResponse00(stack, name, response, status) {
-            if (status == 200) {
-                var powerState = 3;
-                try {
-                    var x = amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'];
-                    if (x == 2) { powerState = 1; } else { powerState = 2; }
-                } catch (ex) { }
-                amtPowerBootCapabilities = response.Body;
-                QH('d5actionSelect', '');
-                if (powerState & 2) { addOption('d5actionSelect', "Включите", 2); }
-                if (powerState & 1) {
-                    addOption('d5actionSelect', "Сброс", 10);
-                    addOption('d5actionSelect', "Силовой цикл", 5);
-                    addOption('d5actionSelect', "Выключить", 8);
-                }
-                if (amtPowerBootCapabilities['ForceDiagnosticBoot'] == true) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Включите диагностику", 300); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Сброс к диагностике", 301); }
-                }
-                if ((amtversion > 9) && (powerState & 1)) {
-                    addOption('d5actionSelect', "OS Wake из режима ожидания", 500);
-                    addOption('d5actionSelect', "ОС энергосбережения", 501);
-                    addOption('d5actionSelect', "Soft-офф", 12);
-                    addOption('d5actionSelect', "Мягкий сброс", 14);
-                    addOption('d5actionSelect', "Спать", 4);
-                    addOption('d5actionSelect', "Hibernate", 7);
-                }
-                if (amtPowerBootCapabilities['BIOSSetup'] == true) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Включите BIOS", 100); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Сбросить в BIOS", 101); }
-                }
-                if (amtPowerBootCapabilities['SecureErase'] == true) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Включите безопасное стирание", 104); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Сброс для безопасного стирания", 105); }
-                }
-                if ((amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2)) {
-                    if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
-                }
-                // ###BEGIN###{IDER}
-                if (powerState & 1) { addOption('d5actionSelect', "Сбросить на IDE-R дискету", 200); }
-                if (powerState & 2) { addOption('d5actionSelect', "Включите IDE-R Floppy", 201); }
-                if (powerState & 1) { addOption('d5actionSelect', "Сбросить на IDE-R CDROM", 202); }
-                if (powerState & 2) { addOption('d5actionSelect', "Включите IDR-R CDROM", 203); }
-                // ###END###{IDER}
-                if (powerState & 1) { addOption('d5actionSelect', "Сброс к PXE", 400); }
-                if (powerState & 2) { addOption('d5actionSelect', "Включите PXE", 401); }
-                // ###BEGIN###{PowerControl-Advanced}
-                // ###BEGIN###{PowerControl-OneClick}
-                if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] === true) {
-                    if (powerState & 1) { addOption('d5actionSelect', "Reset to HTTPS Boot", 600); }
-                    if (powerState & 2) { addOption('d5actionSelect', "Power on to HTTPS Boot", 601); }
-                }
-                // ###END###{PowerControl-OneClick}
-                addOption('d5actionSelect', "Пользовательское действие ...", 999);
-                // ###END###{PowerControl-Advanced}
-                if (amtversion > 5) { addOption('d5actionSelect', "Согласие пользователя ...", 998); } // On AMT 5 and higher, offer the option of doing user consent alone.
-                setDialogMode(5, "Силовые Действия", 3, powerActionDlgCheck);
-            } else {
-                messagebox("Действие силы", format("Невозможно получить системные возможности, ошибка {0}", status));
+        function showPowerActionDlg() {
+            if (xxdialogMode) return;
+            var powerState = 3;
+            try {
+                var x = amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'];
+                if (x == 2) { powerState = 1; } else { powerState = 2; }
+            } catch (ex) { }
+            amtPowerBootCapabilities = amtsysstate['AMT_BootCapabilities'].response;
+            QH('d5actionSelect', '');
+            if (powerState & 2) { addOption('d5actionSelect', "Включите", 2); }
+            if (powerState & 1) {
+                addOption('d5actionSelect', "Сброс", 10);
+                addOption('d5actionSelect', "Силовой цикл", 5);
+                addOption('d5actionSelect', "Выключить", 8);
             }
+            if (amtPowerBootCapabilities['ForceDiagnosticBoot'] == true) {
+                if (powerState & 2) { addOption('d5actionSelect', "Включите диагностику", 300); }
+                if (powerState & 1) { addOption('d5actionSelect', "Сброс к диагностике", 301); }
+            }
+            if ((amtversion > 9) && (powerState & 1)) {
+                addOption('d5actionSelect', "OS Wake из режима ожидания", 500);
+                addOption('d5actionSelect', "ОС энергосбережения", 501);
+                addOption('d5actionSelect', "Soft-офф", 12);
+                addOption('d5actionSelect', "Мягкий сброс", 14);
+                addOption('d5actionSelect', "Спать", 4);
+                addOption('d5actionSelect', "Hibernate", 7);
+            }
+            if (amtPowerBootCapabilities['BIOSSetup'] == true) {
+                if (powerState & 2) { addOption('d5actionSelect', "Включите BIOS", 100); }
+                if (powerState & 1) { addOption('d5actionSelect', "Сбросить в BIOS", 101); }
+            }
+            if (amtPowerBootCapabilities['SecureErase'] == true) {
+                if (powerState & 2) { addOption('d5actionSelect', "Включите безопасное стирание", 104); }
+                if (powerState & 1) { addOption('d5actionSelect', "Сброс для безопасного стирания", 105); }
+            }
+            if ((amtPowerBootCapabilities['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2)) {
+                if (powerState & 2) { addOption('d5actionSelect', "Power up to Platform Erase", 106); }
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to Platform Erase", 107); }
+            }
+            // ###BEGIN###{IDER}
+            if (powerState & 1) { addOption('d5actionSelect', "Сбросить на IDE-R дискету", 200); }
+            if (powerState & 2) { addOption('d5actionSelect', "Включите IDE-R Floppy", 201); }
+            if (powerState & 1) { addOption('d5actionSelect', "Сбросить на IDE-R CDROM", 202); }
+            if (powerState & 2) { addOption('d5actionSelect', "Включите IDR-R CDROM", 203); }
+            // ###END###{IDER}
+            if (powerState & 1) { addOption('d5actionSelect', "Сброс к PXE", 400); }
+            if (powerState & 2) { addOption('d5actionSelect', "Включите PXE", 401); }
+            // ###BEGIN###{PowerControl-Advanced}
+            // ###BEGIN###{PowerControl-OneClick}
+            if (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] === true) {
+                if (powerState & 1) { addOption('d5actionSelect', "Reset to HTTPS Boot", 600); }
+                if (powerState & 2) { addOption('d5actionSelect', "Power on to HTTPS Boot", 601); }
+            }
+            // ###END###{PowerControl-OneClick}
+            addOption('d5actionSelect', "Пользовательское действие ...", 999);
+            // ###END###{PowerControl-Advanced}
+            if (amtversion > 5) { addOption('d5actionSelect', "Согласие пользователя ...", 998); } // On AMT 5 and higher, offer the option of doing user consent alone.
+            setDialogMode(5, "Силовые Действия", 3, powerActionDlgCheck);
         }
 
         // ###BEGIN###{PowerControl-Advanced}
@@ -10460,31 +10784,38 @@
             var x = ("Confirm execution of Intel&reg; Remote Platform Erase?" + '<br>');
             x += ('<br><div style=color:red>' + "<b> ПРЕДУПРЕЖДЕНИЕ. </ b> Это приведет к удалению данных на удаленной системе." + '</div>');
             var actionTaken = [], platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'];
+            if (platfromEraseSupport & (1 << 1)) { actionTaken.push('<label><input id=rpef1 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Pyrite Revert" + '</label>'); }
             if (platfromEraseSupport & (1 << 2)) { actionTaken.push('<label><input id=rpef2 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Secure Erase All SSDs" + '</label>'); }
+            if (platfromEraseSupport & (1 << 3)) { actionTaken.push('<label><input id=rpef3 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Verify Storage Erase" + '</label>'); }
             if (platfromEraseSupport & (1 << 6)) { actionTaken.push('<label><input id=rpef6 type=checkbox onchange=powerActionDlgRPEValidate()>' + "TPM Clear" + '</label>'); }
+            if (platfromEraseSupport & (1 << 16)) { actionTaken.push('<label><input id=rpef16 type=checkbox onchange=powerActionDlgRPEValidate()>' + "OEM Custom Action" + '</label>'); }
             if (platfromEraseSupport & (1 << 25)) { actionTaken.push('<label><input id=rpef25 type=checkbox onchange=powerActionDlgRPEValidate()>' + "Clear BIOS NVM Variables" + '</label>'); }
             if (platfromEraseSupport & (1 << 26)) { actionTaken.push('<label><input id=rpef26 type=checkbox onchange=powerActionDlgRPEValidate()>' + "BIOS Reload of Golden Configuration" + '</label>'); }
             if (platfromEraseSupport & (1 << 31)) { actionTaken.push('<label><input id=rpef31 type=checkbox onchange=powerActionDlgRPEValidate()>' + "CSME Unconfigure" + '</label>'); }
-            if (actionTaken.length > 1) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
+            if (actionTaken.length > 0) { x += (format('<br />' + "Select the actions to take:" + '<br /><br /><div style=margin-left:16px>{0}</div><br />', actionTaken.join('<br />'))); }
+            x += '<div id=rpepsid style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("Pyrite PSID", '<input id=rpepsidx style=width:210px maxlength=64 type=input>') + '</div>';
             x += '<div id=rpessdpass style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("SSD Master Password", '<input id=rpessdpassx style=width:210px maxlength=64 type=input>') + '</div>';
+            x += '<div id=rpeeomdata style=margin-top:4px;margin-bottom:4px;display:none>' + addHtmlValue("OEM Data (HEX)", '<input id=rpeoemdatax style=width:210px maxlength=256 type=input>') + '</div>';
             setDialogMode(11, "Силовые Действия", 3, powerActionDlgRPEEx, x, advanced);
             QE('idx_dlgOkButton', false);
         }
 
         function powerActionDlgRPEValidate() {
-            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [2,6,25,26,31];
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 3, 6, 16, 25, 26, 31];
             for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
             QV('rpessdpass', rpeFlags & 4);
+            QV('rpeeomdata', rpeFlags & (1 << 16));
             QE('idx_dlgOkButton', rpeFlags);
         }
 
         var platfromEraseTLV = null;
         function powerActionDlgRPEEx(b, advanced) {
-            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 6, 25, 26, 31];
+            var rpeFlags = 0, platfromEraseSupport = amtPowerBootCapabilities['PlatformErase'], sf = [1, 2, 3, 6, 16, 25, 26, 31];
             for (var i in sf) { if (platfromEraseSupport & (1 << sf[i])) { if (Q('rpef' + sf[i]).checked) { rpeFlags += (1 << sf[i]); } } }
             var tlv = makeUefiBootParam(1, rpeFlags, 4), tlvlen = 1;
             if (rpeFlags & 2) { tlv += makeUefiBootParam(10, Q('rpepsidx').value); tlvlen++; }
             if (rpeFlags & 4) { tlv += makeUefiBootParam(20, Q('rpessdpassx').value); tlvlen++; }
+            if ((rpeFlags & (1 << 16)) && (Q('rpeoemdatax').value != '')) { tlv += makeUefiBootParam(20, hex2rstr(Q('rpeoemdatax').value), null, 11); tlvlen++; }
             platfromEraseTLV = { tlv: btoa(tlv), tlvlen: tlvlen };
             if (advanced) {
                 // Attempt user consent
@@ -10561,6 +10892,9 @@
         function showAdvPowerDlg() {
             try { Q('idx_d24Command').value = (amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'] == 2)?10:2; } catch (ex) { }
 
+            // Available force boot options
+            var forceBootDeviceOptions = '<option value=0>None</option><option id="ForceDVDBootOption" value=1>Force CD/DVD Boot</option><option id="ForcePXEBootOption" value=2>Force PXE Boot</option><option id="ForceHDBootOption" value=3>Force Hard Disk Boot</option><option id="ForceDiagBootOption" value=4>Force Diagnostic Boot</option>';
+
             // Show boot capabilities
             QV('d24dBiosPause', amtPowerBootCapabilities['BIOSPause'] == true);
             QV('d24dBiosSecureBoot', amtPowerBootCapabilities['BIOSSecureBoot'] == true);
@@ -10573,17 +10907,15 @@
             //QV('', amtPowerBootCapabilities['ForceWinREBoot'] == true);
             QV('ForcePXEBootOption', amtPowerBootCapabilities['ForcePXEBoot'] == true);
             // ###BEGIN###{PowerControl-OneClick}
-            QV('ForceUEFIBootOption', false);
             if ((AmtOcrPbaLength > 0) && (amtPowerBootCapabilities['ForceUEFIPBABoot'] == true)) {
-                QV('ForceUEFIBootOption', true);
+                forceBootDeviceOptions += '<option id="ForceUEFIBootOption" value=5>Force OCR UEFI Boot Option</option>';
                 var x = '';
                 for (var i in AmtOcrPba) { x += '<option value=' + i + '>' + AmtOcrPba[i].instance + '</option>'; }
                 QH('idx_d24customBootMediaIndex', x);
             }
-            var httpsBootPossible = (meshCentralServer==null && wsstack.comm.xtlsCertificate != null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
-
-            QV('ForceHttpBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
-            QV('ForceHttpUrlBootOption', (amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible);
+            var httpsBootPossible = ((meshCentralServer == null) && (wsstack.comm.xtlsCertificate != null)) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
+            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpBootOption" value=6>Force OCR UEFI HTTPS Boot (.iso)</option>'; }
+            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpUrlBootOption" value=7>Force OCR UEFI HTTPS Boot (url)</option>'; }
             // ###END###{PowerControl-OneClick}
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
@@ -10602,6 +10934,7 @@
             QV('d24p500', amtversion > 9);
             QV('d24p501', amtversion > 9);
 
+            QH('idx_d24ForceBootDevice', forceBootDeviceOptions);
             setDialogMode(24, "Custom Power Action", 3, showAdvPowerDlgOk);
             showAdvPowerDlgChange();
         }
@@ -10633,8 +10966,13 @@
             QV('idx_d24customBootSource', bootSourceIndex == 5)
             QV('idx_d24diskImage', bootSourceIndex == 6);
             QV('idx_d24diskImageUrl', bootSourceIndex == 7);
+            QV('idx_d24diskImageHttpTimeout', (bootSourceIndex == 7) && (amtversion > 16));
             if ((bootSourceIndex == 6) && (Q('idx_d24ocrBootFile').files.length != 1)) { ok = false; }
-            if ((bootSourceIndex == 7) && (Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith('https://') == false)) { ok = false;}
+            if ((bootSourceIndex == 7) && (Q('idx_d24ocrBootUrl').value.trim().toLowerCase().startsWith('https://') == false)) { ok = false; }
+            if ((bootSourceIndex == 7) && (amtversion > 16)) {
+                var timeout = parseInt(Q('idx_d24ocrBootHttpBootTimeout').value);
+                if (isNaN(timeout) || (timeout > 65535) || (timeout < 0)) { ok = false; }
+            }
             // ###END###{PowerControl-OneClick}
 
             QE('idx_dlgOkButton', ok);
@@ -10645,7 +10983,7 @@
             var forceBootSelection = Q('idx_d24ForceBootDevice').value;
             // ###BEGIN###{Mode-NodeWebkit}            
             if (((forceBootSelection == 5) || (forceBootSelection == 6) || (forceBootSelection == 7)) && 
-                ((meshCentralServer==null && wsstack.comm.xtlsCertificate == null) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 0))) {
+                (((meshCentralServer == null) && (wsstack.comm.xtlsCertificate == null)) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 0))) {
                 messagebox("Действие силы", "This feature requires a TLS connection to Intel AMT"); return;
             }
             // ###END###{Mode-NodeWebkit}
@@ -10713,9 +11051,9 @@
             //console.log("OptInRequired:", response.Body['OptInRequired']);
             //console.log("OptInState:", response.Body['OptInState']);
             //console.log(response);
-            if (response.Body['OptInRequired'] == 0xFFFFFFFF && response.Body['OptInState'] != 3 && response.Body['OptInState'] != 4) {
+            if (((response.Body['OptInRequired'] == 0xFFFFFFFF) || (connectDesktopConsent && (response.Body['OptInRequired'] != 0))) && (response.Body['OptInState'] != 3) && (response.Body['OptInState'] != 4)) {
                 if (response.Body['OptInState'] == 2) {
-                    // amtstack.IPS_OptInService_CancelOptIn(null);
+                    amtstack.IPS_OptInService_CancelOptIn(null);
                     d6ConsentText.value = ''; // Reset user consent code to empty
                     setDialogMode(6, "Согласие пользователя", 11, powerActionSendConsent);
                     checkConsentDisplay();
@@ -10735,7 +11073,7 @@
 
         function powerActionResponseC1(stack, name, response, status) {
             //if (errcheck(status, stack)) return;
-            //console.log('powerActionResponseC1', action, status, response);
+            //console.log('powerActionResponseC1', name, status, response);
             if (status != 200) { if (connectDesktopConsent) { setDialogMode(0); connectDesktop(true); } else { messagebox("Действие силы", format("Ошибка #", status)); } return; }
             //console.log("powerActionResponseC1(" + name + "," + ObjectToString2(response) + "," + status + ")");
             if (response.Body['ReturnValue'] != 0) {
@@ -10764,9 +11102,12 @@
         //function powerActionCancelConsent() { amtstack.IPS_OptInService_CancelOptIn(null); }
 
         function powerActionSendConsent(buttons) {
+            console.log('powerActionSendConsent', buttons);
             if (buttons == 0) {
                 // Cancel button
-                amtstack.IPS_OptInService_CancelOptIn(function() {});
+                amtstack.IPS_OptInService_CancelOptIn(function () { });
+                connectDesktopConsent = false;
+                desktop.Stop();
             } else {
                 // OK Button
                 statusbox("Действие силы", "Отправка согласия пользователя ...");
@@ -10829,10 +11170,14 @@
                     r['SecureErase'] = ((AvdPowerDlg.SecureErase) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] == true) && (AvdPowerDlg.RSEPassword)) { r['RSEPassword'] = AvdPowerDlg.RSEPassword; }
                 }
-                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
-                    r['PlatformErase'] = true;
-                    r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
-                    r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                if (r['PlatformErase'] != null) {
+                    if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && ((AvdPowerDlg.PlatformErase) && (amtPowerBootCapabilities['PlatformErase'] != null) && ((amtPowerBootCapabilities['PlatformErase'] & 1) != 0))) {
+                        r['PlatformErase'] = true;
+                        r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
+                        r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                    } else {
+                        r['PlatformErase'] = false;
+                    }
                 }
                 if (r['ConfigurationDataReset'] != null) { r['ConfigurationDataReset'] = AvdPowerDlg.FirmwareReset; }
             } else {
@@ -10858,14 +11203,16 @@
                     r['SecureErase'] = (((action == 104) || (action == 105)) && (amtPowerBootCapabilities['SecureErase'] == true));
                     if ((r['SecureErase'] === true) && (rsepass.length > 0)) { r['RSEPassword'] = rsepass; }
                 }
-                if ((r['PlatformErase'] != null) && (amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
-                    r['PlatformErase'] = true;
-                    r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
-                    r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                if (r['PlatformErase'] != null) {
+                    if ((amtsysstate['CIM_BootService'] != null) && (amtsysstate['CIM_BootService'].response['EnabledState'] >= 32768) && (amtsysstate['CIM_BootService'].response['EnabledState'] & 2) && (((action == 106) || (action == 107)) && (amtPowerBootCapabilities['PlatformErase'] != null) && (((amtPowerBootCapabilities['PlatformErase'] & 1)) != 0))) {
+                        r['PlatformErase'] = true;
+                        r['UefiBootParametersArray'] = platfromEraseTLV.tlv;
+                        r['UefiBootNumberOfParams'] = platfromEraseTLV.tlvlen;
+                    } else {
+                        r['PlatformErase'] = false;
+                    }
                 }
-                if (r['ConfigurationDataReset'] != null) {
-                    r['ConfigurationDataReset'] = false;
-                }
+                if (r['ConfigurationDataReset'] != null) { r['ConfigurationDataReset'] = false; }
                 rsepass = null;
                 // ###BEGIN###{PowerControl-Advanced}
             }
@@ -10873,7 +11220,18 @@
             // ###BEGIN###{PowerControl-OneClick}
             // Add OCR TLV parameters if firmware supports OCR and Force HTTPS Boot is requested
             if ((action == 999) && (Q('idx_d24ForceBootDevice').value == 7)) { // Force UEFI HTTPS Boot using URL
-                r['UefiBootParametersArray'] = btoa(makeUefiBootParam(1, Q('idx_d24ocrBootUrl').value.trim()) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2));
+                const bootUrl = new URL(Q('idx_d24ocrBootUrl').value.trim());
+                const bootUrlUsername = bootUrl.username;
+                const bootUrlPassword = bootUrl.password;
+                bootUrl.username = bootUrl.password = '';
+                var uefiParams = makeUefiBootParam(1, bootUrl.href) + makeUefiBootParam(20, 1, 1) + makeUefiBootParam(30, 0, 2);
+                if (bootUrlUsername != '') { uefiParams += makeUefiBootParam(40, bootUrlUsername); } // HTTP basic auth username
+                if (bootUrlPassword != '') { uefiParams += makeUefiBootParam(41, bootUrlPassword); } // HTTP basic auth password
+                if (amtversion > 16) {
+                    var timeout = parseInt(Q('idx_d24ocrBootHttpBootTimeout').value);
+                    if (timeout > 0) { uefiParams += makeUefiBootParam(30, timeout, 2); }
+                }
+                r['UefiBootParametersArray'] = btoa(uefiParams);
                 r['UefiBootNumberOfParams'] = 3;
                 r['BootMediaIndex'] = 0; // Do not use boot media index for One Click Recovery (OCR)
             } else if ((action == 600) || (action == 601) || ((action == 999) && (Q('idx_d24ForceBootDevice').value == 6))) { // Force UEFI HTTPS Boot
@@ -10930,10 +11288,7 @@
                 if (action == 300 || action == 301) { bootSource = 'Force Diagnostic Boot'; }
                 if (action == 400 || action == 401) { bootSource = 'Force PXE Boot'; }
             // ###BEGIN###{PowerControl-Advanced}
-                if (action == 600 || action == 601) {
-
-                    bootSource = 'Force OCR UEFI HTTPS Boot';
-                }
+                if (action == 600 || action == 601) { bootSource = 'Force OCR UEFI HTTPS Boot'; }
             }
 
             // Resetting Force boot data in case it was changed so that it won't be used on the next power action
@@ -10946,7 +11301,7 @@
 
         var targetPowerAction = 0;
         function powerActionResponse3(stack, name, response, status) {
-            console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
+            //console.log('powerActionResponse3(' + name + ',' + response + ',' + status + ')');
             if (errcheck(status, stack)) return;
             if (response.Body['ReturnValue'] != 0) { messagebox("Change Boot Order", "(2) Change Boot Order returns "+ response.Body.ReturnValueStr); return; }
 
@@ -11357,7 +11712,7 @@
                         x += '<div style=padding-left:15px><br><i>' + "Нет будильника зарегистрировано." + '</i></div><br>';
                     }
                     var y = '<div>&nbsp;' + AddRefreshButton('PullAlarms()');
-                    if (xxAccountAdminName) { y += AddButton("Удалить все тревоги", 'RemoveAllAlarms()') + AddButton("Добавить", 'showAddAlarm()'); }
+                    if (xxAccountAdminName) { y += AddButton2("Удалить все тревоги", 'RemoveAllAlarms()', xxAlarms ? '' : 'disabled') + AddButton("Добавить", 'showAddAlarm()'); }
                     x += '<br><td class=r1>' + TableEnd(y + '</div>');
                     QH('id_TableAlarm', x);
                 }
@@ -13407,7 +13762,7 @@
             QV('id_dialogclose', b & 2);
             QV('idx_dlgDeleteButton', b & 4);
             if (y) QH('id_dialogtitle', y);
-            for (var i = 1; i < 27; i++) { QV('dialog' + i, i == x); } // Edit this line when more dialogs are added
+            for (var i = 1; i < 28; i++) { QV('dialog' + i, i == x); } // Edit this line when more dialogs are added
             QV('dialog', x);
             if (c) { if (x == 11) { QH('id_dialogOptions', c); } else { QH('id_dialogMessage', c); } }
 
@@ -13657,8 +14012,8 @@
         function AddButton(v, f) { return '<input type=button value=\'' + v + '\' onclick=\'' + f + '\' style=margin:4px>'; }
         function AddButton2(v, f, s) { return '<input type=button value=\'' + v + '\' onclick=\'' + f + '\' ' + s + '>'; }
         function AddRefreshButton(f) { return '<input type=button name=refreshbtn value="' + "обновление" + '" onclick=\'refreshButtons(false);' + f + '\' style=margin:4px ' + (refreshButtonsState==false?'disabled':'') + '>'; }
-        function MoreStart() { return '<a style=cursor:pointer;color:blue id=morexxx1 onclick=QV(\"morexxx1\",false);QV(\"morexxx2\",true)>&#x25BC; More</a><div id=morexxx2 style=display:none><br><hr>'; };
-        function MoreEnd() { return '<a style=cursor:pointer;color:blue onclick=QV(\"morexxx2\",false);QV(\"morexxx1\",true)>&#x25B2; Less</a></div>'; };
+        function MoreStart() { return '<a style=cursor:pointer;color:blue id=morexxx1 onclick=QV(\"morexxx1\",false);QV(\"morexxx2\",true)>&#x25BC; ' + "More" + '</a><div id=morexxx2 style=display:none><br><hr>'; };
+        function MoreEnd() { return '<a style=cursor:pointer;color:blue onclick=QV(\"morexxx2\",false);QV(\"morexxx1\",true)>&#x25B2; ' + "Less" + '</a></div>'; };
         function getSelectedOptions(sel) { var opts = [], opt; for (var i = 0, len = sel.options.length; i < len; i++) { opt = sel.options[i]; if (opt.selected) { opts.push(opt.value); } } return opts; }
         function getInstance(x, y) { for (var i in x) { if (x[i]['InstanceID'] == y) return x[i]; } return null; }
         function getItem(x, y, z) { for (var i in x) { if (x[i][y] == z) return x[i]; } return null; }
