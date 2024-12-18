@@ -24,7 +24,6 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     obj.useRLE = true;
     obj.showmouse = true;
     obj.buttonmask = 0;
-    obj.localKeyMap = true;
     obj.spare = null;
     obj.sparew = 0;
     obj.spareh = 0;
@@ -751,7 +750,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
     function _keyevent(d, e) {
         if (!e) { e = window.event; }
 
-        if (e.code && (obj.localKeyMap == false)) {
+        if (e.code) {
             // For new browsers, this mapping is keyboard language independent
             var k = convertAmtKeyCode(e);
             if (k != null) { obj.sendkey(k, d); }
@@ -783,6 +782,7 @@ var CreateAmtRemoteDesktop = function (divid, scrolldiv) {
             if (k == 109) kk = 45; // Pad -
             if (k == 110) kk = 46; // Pad .
             if (k == 111) kk = 47; // Pad /
+            if (k == 173) kk = 45; // - (Number row)
             if (k == 186) kk = 59; // ;
             if (k == 187) kk = 61; // =
             if (k == 188) kk = 44; // ,
