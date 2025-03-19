@@ -302,7 +302,10 @@ function AmtStackCreateService(wsmanStack) {
     obj.AMT_TimeSynchronizationService_SetHighAccuracyTimeSynch = function (Ta0, Tm1, Tm2, callback_func, tag) { obj.Exec('AMT_TimeSynchronizationService', 'SetHighAccuracyTimeSynch', { 'Ta0': Ta0, 'Tm1': Tm1, 'Tm2': Tm2 }, callback_func, tag); }
     obj.AMT_UserInitiatedConnectionService_RequestStateChange = function (RequestedState, TimeoutPeriod, callback_func) { obj.Exec('AMT_UserInitiatedConnectionService', 'RequestStateChange', { 'RequestedState': RequestedState, 'TimeoutPeriod': TimeoutPeriod }, callback_func); }
     obj.AMT_WebUIService_RequestStateChange = function (RequestedState, TimeoutPeriod, callback_func) { obj.Exec('AMT_WebUIService', 'RequestStateChange', { 'RequestedState': RequestedState, 'TimeoutPeriod': TimeoutPeriod }, callback_func); }
-    obj.AMT_WiFiPortConfigurationService_AddWiFiSettings = function (WiFiEndpoint, WiFiEndpointSettingsInput, IEEE8021xSettingsInput, ClientCredential, CACredential, callback_func) { obj.ExecWithXml('AMT_WiFiPortConfigurationService', 'AddWiFiSettings', { 'WiFiEndpoint': WiFiEndpoint, 'WiFiEndpointSettingsInput': WiFiEndpointSettingsInput, 'IEEE8021xSettingsInput': IEEE8021xSettingsInput, 'ClientCredential': ClientCredential, 'CACredential': CACredential }, callback_func); }
+    obj.AMT_WiFiPortConfigurationService_AddWiFiSettings = function (WiFiEndpoint, WiFiEndpointSettingsInput, IEEE8021xSettingsInput, ClientCredential, CACredential, callback_func) {
+        console.log(JSON.stringify({ "WiFiEndpoint": WiFiEndpoint, "WiFiEndpointSettingsInput": WiFiEndpointSettingsInput, "IEEE8021xSettingsInput": IEEE8021xSettingsInput, "ClientCredential": ClientCredential, "CACredential": CACredential }, null, 2));
+        obj.ExecWithXml('AMT_WiFiPortConfigurationService', 'AddWiFiSettings', { 'WiFiEndpoint': WiFiEndpoint, 'WiFiEndpointSettingsInput': WiFiEndpointSettingsInput, 'IEEE8021xSettingsInput': IEEE8021xSettingsInput, 'ClientCredential': ClientCredential, 'CACredential': CACredential }, callback_func);
+    }
     obj.AMT_WiFiPortConfigurationService_UpdateWiFiSettings = function (WiFiEndpointSettings, WiFiEndpointSettingsInput, IEEE8021xSettingsInput, ClientCredential, CACredential, callback_func) { obj.ExecWithXml('AMT_WiFiPortConfigurationService', 'UpdateWiFiSettings', { 'WiFiEndpointSettings': WiFiEndpointSettings, 'WiFiEndpointSettingsInput': WiFiEndpointSettingsInput, 'IEEE8021xSettingsInput': IEEE8021xSettingsInput, 'ClientCredential': ClientCredential, 'CACredential': CACredential }, callback_func); }
     obj.AMT_WiFiPortConfigurationService_DeleteAllITProfiles = function (_method_dummy, callback_func) { obj.Exec('AMT_WiFiPortConfigurationService', 'DeleteAllITProfiles', { '_method_dummy': _method_dummy }, callback_func); }
     obj.AMT_WiFiPortConfigurationService_DeleteAllUserProfiles = function (_method_dummy, callback_func) { obj.Exec('AMT_WiFiPortConfigurationService', 'DeleteAllUserProfiles', { '_method_dummy': _method_dummy }, callback_func); }
@@ -548,7 +551,7 @@ function AmtStackCreateService(wsmanStack) {
                 return _SystemFirmwareError[eventDataField[1]];
             } else if (eventOffset == 3) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
-                    return format("AMT One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
+                    return format("One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
                 } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
                     if (eventDataField[2] == 1) return "Got an error erasing Device SSD";
                     if (eventDataField[2] == 2) return "Erasing Device TPM is not supported";
@@ -559,11 +562,11 @@ function AmtStackCreateService(wsmanStack) {
             } else if (eventOffset == 5) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
                     if (eventDataField[2] == 1) {
-                        return format("AMT One Click Recovery: CSME Boot Option {0}:{1} added successfully", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
+                        return format("One Click Recovery: CSME Boot Option {0}:{1} added successfully", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
                     } else if (eventDataField[2] < 7) {
-                        return format("AMT One Click Recovery: {0}", _OCRProgressEvents[eventDataField[2]]);
+                        return format("One Click Recovery: {0}", _OCRProgressEvents[eventDataField[2]]);
                     } else {
-                        return format("AMT One Click Recovery: Unknown progress event {0}", eventDataField[2]);
+                        return format("One Click Recovery: Unknown progress event {0}", eventDataField[2]);
                     }
                 } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
                     if (eventDataField[2] == 1) {
@@ -962,15 +965,14 @@ args = {
 }, 
 */
 function execArgumentsToXml(args) {
-	if(args === undefined || args === null) return null;
-	
+	if ((args === undefined) || (args === null)) return null;
 	var result = '';
-	for(var argName in args) {
+	for (var argName in args) {
 		var arg = args[argName];
-		if(!arg) continue;
-		if(arg['__parameterType'] === 'reference') result += referenceToXml(argName, arg);
-		else result += instanceToXml(argName, arg);
-		//if(arg['__isInstance']) result += instanceToXml(argName, arg);
+		if (!arg) continue;
+		if (arg['__parameterType'] === 'reference') { result += referenceToXml(argName, arg); }
+		else { result += instanceToXml(argName, arg); }
+		//if (arg['__isInstance']) result += instanceToXml(argName, arg);
 	}
 	return result;
 }
@@ -988,25 +990,28 @@ function execArgumentsToXml(args) {
 	</r:WiFiEndpointSettingsInput>
  */
 function instanceToXml(instanceName, inInstance) {
-	if(inInstance === undefined || inInstance === null) return null;
+	if (inInstance === undefined || inInstance === null) return null;
 	
 	var hasNamespace = !!inInstance['__namespace'];
 	var startTag = hasNamespace ? '<q:' : '<';
 	var endTag = hasNamespace ? '</q:' : '</';
 	var namespaceDef = hasNamespace ? (' xmlns:q="' + inInstance['__namespace'] + '"' ): '';
 	var result = '<r:' + instanceName + namespaceDef + '>';
-	for(var prop in inInstance) {
-		if (!inInstance.hasOwnProperty(prop) || prop.indexOf('__') === 0) continue;
-		
-		if (typeof inInstance[prop] === 'function' || Array.isArray(inInstance[prop]) ) continue;
-		
-		if (typeof inInstance[prop] === 'object') {
-			//result += startTag + prop +'>' + instanceToXml('prop', inInstance[prop]) + endTag + prop +'>';
-			console.error('only convert one level down...');
-		}
-		else {
-			result += startTag + prop +'>' + inInstance[prop].toString() + endTag + prop +'>';
-		}
+	if (typeof inInstance == 'string') {
+	    result += inInstance;
+	} else {
+	    for (var prop in inInstance) {
+	        if (!inInstance.hasOwnProperty(prop) || prop.indexOf('__') === 0) continue;
+
+	        if (typeof inInstance[prop] === 'function' || Array.isArray(inInstance[prop])) continue;
+
+	        if (typeof inInstance[prop] === 'object') {
+	            //result += startTag + prop +'>' + instanceToXml('prop', inInstance[prop]) + endTag + prop +'>';
+	            console.error('only convert one level down...');
+	        } else {
+	            result += startTag + prop + '>' + inInstance[prop].toString() + endTag + prop + '>';
+	        }
+	    }
 	}
 	result += '</r:' + instanceName + '>';
 	return result;
