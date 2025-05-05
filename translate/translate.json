@@ -22086,7 +22086,7 @@
       ]
     },
     {
-      "en": "The device indicated that this type of connection of not supported.",
+      "en": "The device indicated that this type of connection is not supported.",
       "xloc": [
         "index.html->id_computerSelector->dialog->21->1112",
         "index.html->id_computerSelector->dialog->21->1132"
