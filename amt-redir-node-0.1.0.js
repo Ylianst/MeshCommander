@@ -64,7 +64,7 @@ var CreateAmtRedirect = function (module) {
             obj.socket.on('close', obj.xxOnSocketClosed);
             obj.socket.on('error', obj.xxOnSocketClosed);
         } else {
-            if (obj.xtlsoptions == null) { obj.xtlsoptions = { secureProtocol: 'TLSv1_method', ciphers: 'RSA+AES:!aNULL:!MD5:!DSS', secureOptions: obj.constants.SSL_OP_NO_SSLv2 | obj.constants.SSL_OP_NO_SSLv3 | obj.constants.SSL_OP_NO_COMPRESSION | obj.constants.SSL_OP_CIPHER_SERVER_PREFERENCE, rejectUnauthorized: false }; }
+            if (obj.xtlsoptions == null) { obj.xtlsoptions = { secureProtocol: 'TLSv1_method', ciphers: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:RSA+AES:!aNULL:!MD5:!DSS', secureOptions: obj.constants.SSL_OP_NO_SSLv2 | obj.constants.SSL_OP_NO_SSLv3 | obj.constants.SSL_OP_NO_COMPRESSION | obj.constants.SSL_OP_CIPHER_SERVER_PREFERENCE, rejectUnauthorized: false }; }
             obj.socket = obj.tls.connect(port, host, obj.xtlsoptions, obj.xxOnSocketConnected);
             //obj.socket.setEncoding('binary');
             obj.socket.on('data', obj.xxOnSocketData);

@@ -443,7 +443,7 @@ var CreateAmtRemoteIderIMR = function () {
                 });
             } else {
                 // Open connection with TLS
-                if (obj.m.xtlsoptions == null) { obj.m.xtlsoptions = { secureProtocol: 'TLSv1_method', ciphers: 'RSA+AES:!aNULL:!MD5:!DSS', secureOptions: obj.constants.SSL_OP_NO_SSLv2 | obj.constants.SSL_OP_NO_SSLv3 | obj.constants.SSL_OP_NO_COMPRESSION | obj.constants.SSL_OP_CIPHER_SERVER_PREFERENCE, rejectUnauthorized: false }; }
+                if (obj.m.xtlsoptions == null) { obj.m.xtlsoptions = { secureProtocol: 'TLSv1_method', ciphers: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:RSA+AES:!aNULL:!MD5:!DSS', secureOptions: obj.constants.SSL_OP_NO_SSLv2 | obj.constants.SSL_OP_NO_SSLv3 | obj.constants.SSL_OP_NO_COMPRESSION | obj.constants.SSL_OP_CIPHER_SERVER_PREFERENCE, rejectUnauthorized: false }; }
                 obj.m.client = _tls.connect(obj.m.port, obj.m.host, obj.m.xtlsoptions, function () {
                     //console.log('IDER Connected TLS, ' + obj.m.host + ':' + obj.m.port);
 

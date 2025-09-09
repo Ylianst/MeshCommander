@@ -352,7 +352,67 @@ var prf_TLS1 = function(secret, label, seed, length) {
  * @return the pseudo random bytes in a byte buffer.
  */
 var prf_sha256 = function(secret, label, seed, length) {
-   // FIXME: implement me for TLS 1.2
+  var hmac = forge.hmac.create();
+  
+  var seedData = forge.util.createBuffer();
+  seedData.putBytes(label);
+  seedData.putBytes(seed);
+  var A = seedData.getBytes();
+  
+  var output = forge.util.createBuffer();
+  while(output.length() < length) {
+    // A(i) = HMAC_hash(secret, A(i-1))
+    hmac.start('SHA256', secret);
+    hmac.update(A);
+    A = hmac.digest().getBytes();
+    
+    // P_hash output = HMAC_hash(secret, A(i) + seed)
+    hmac.start('SHA256', secret);
+    hmac.update(A);
+    hmac.update(seedData.getBytes());
+    output.putBytes(hmac.digest().getBytes());
+  }
+  
+  // truncate to desired length
+  output.truncate(output.length() - length);
+  return output;
+};
+
+/**
+ * Generates pseudo random bytes using a SHA384 algorithm. For TLS 1.2.
+ *
+ * @param secret the secret to use.
+ * @param label the label to use.
+ * @param seed the seed value to use.
+ * @param length the number of bytes to generate.
+ *
+ * @return the pseudo random bytes in a byte buffer.
+ */
+var prf_sha384 = function(secret, label, seed, length) {
+  var hmac = forge.hmac.create();
+  
+  var seedData = forge.util.createBuffer();
+  seedData.putBytes(label);
+  seedData.putBytes(seed);
+  var A = seedData.getBytes();
+  
+  var output = forge.util.createBuffer();
+  while(output.length() < length) {
+    // A(i) = HMAC_hash(secret, A(i-1))
+    hmac.start('SHA384', secret);
+    hmac.update(A);
+    A = hmac.digest().getBytes();
+    
+    // P_hash output = HMAC_hash(secret, A(i) + seed)
+    hmac.start('SHA384', secret);
+    hmac.update(A);
+    hmac.update(seedData.getBytes());
+    output.putBytes(hmac.digest().getBytes());
+  }
+  
+  // truncate to desired length
+  output.truncate(output.length() - length);
+  return output;
 };
 
 /**
@@ -375,6 +435,30 @@ var hmac_sha1 = function(key, seqNum, record) {
   */
   var hmac = forge.hmac.create();
   hmac.start('SHA1', key);
+  var b = forge.util.createBuffer();
+  b.putInt32(seqNum[0]);
+  b.putInt32(seqNum[1]);
+  b.putByte(record.type);
+  b.putByte(record.version.major);
+  b.putByte(record.version.minor);
+  b.putInt16(record.length);
+  b.putBytes(record.fragment.bytes());
+  hmac.update(b.getBytes());
+  return hmac.digest().getBytes();
+};
+
+/**
+ * Gets a MAC for a record using the SHA-256 hash algorithm.
+ *
+ * @param key the mac key.
+ * @param state the sequence number (array of two 32-bit integers).
+ * @param record the record.
+ *
+ * @return the sha-256 hash (32 bytes) for the given record.
+ */
+var hmac_sha256 = function(key, seqNum, record) {
+  var hmac = forge.hmac.create();
+  hmac.start('SHA256', key);
   var b = forge.util.createBuffer();
   b.putInt32(seqNum[0]);
   b.putInt32(seqNum[1]);
@@ -528,10 +612,11 @@ tls.ConnectionEnd = {
 /**
  * Pseudo-random function algorithm used to generate keys from the master
  * secret.
- * enum { tls_prf_sha256 } PRFAlgorithm;
+ * enum { tls_prf_sha256, tls_prf_sha384 } PRFAlgorithm;
  */
 tls.PRFAlgorithm = {
-  tls_prf_sha256: 0
+  tls_prf_sha256: 0,
+  tls_prf_sha384: 1
 };
 
 /**
@@ -566,7 +651,8 @@ tls.MACAlgorithm = {
   hmac_sha1: 1,
   hmac_sha256: 2,
   hmac_sha384: 3,
-  hmac_sha512: 4
+  hmac_sha512: 4,
+  aead: 5
 };
 
 /**
@@ -1333,17 +1419,139 @@ tls.handleCertificate = function(c, record, length) {
  * @param length the length of the handshake message.
  */
 tls.handleServerKeyExchange = function(c, record, length) {
-  // this implementation only supports RSA, no Diffie-Hellman support
-  // so any length > 0 is invalid
-  if(length > 0) {
-    return c.error(c, {
-      message: 'Invalid key parameters. Only RSA is supported.',
-      send: true,
-      alert: {
-        level: tls.Alert.Level.fatal,
-        description: tls.Alert.Description.unsupported_certificate
+  // check if cipher suite uses DHE key exchange
+  var cipherSuite = c.session.cipherSuite;
+  var sp = c.session.sp;
+  
+  if(sp.key_exchange_algorithm === 'dhe_rsa') {
+    // DHE_RSA key exchange - parse DH parameters
+    if(length === 0) {
+      return c.error(c, {
+        message: 'DHE requires server key exchange parameters.',
+        send: true,
+        alert: {
+          level: tls.Alert.Level.fatal,
+          description: tls.Alert.Description.handshake_failure
+        }
+      });
+    }
+    
+    try {
+      // Parse DH parameters (p, g, Ys) from server
+      var dh_p_length = record.fragment.getInt16();
+      var dh_p_bytes = record.fragment.getBytes(dh_p_length);
+      var dh_p = new forge.jsbn.BigInteger(forge.util.bytesToHex(dh_p_bytes), 16);
+      
+      var dh_g_length = record.fragment.getInt16();
+      var dh_g_bytes = record.fragment.getBytes(dh_g_length);
+      var dh_g = new forge.jsbn.BigInteger(forge.util.bytesToHex(dh_g_bytes), 16);
+      
+      var dh_Ys_length = record.fragment.getInt16();
+      var dh_Ys_bytes = record.fragment.getBytes(dh_Ys_length);
+      var dh_Ys = new forge.jsbn.BigInteger(forge.util.bytesToHex(dh_Ys_bytes), 16);
+      
+      // Store DH parameters for client key exchange
+      c.session.dhParams = {
+        p: dh_p,
+        g: dh_g,
+        serverPublicKey: dh_Ys
+      };
+      
+      // Consume and optionally verify the RSA signature over params
+      // Structure:
+      // TLS 1.2: signature: SignatureAndHashAlgorithm (2 bytes) + uint16 len + bytes
+      // TLS 1.0/1.1: signature: uint16 len + bytes
+      var isTls12 = (c.version.major === tls.Versions.TLS_1_2.major &&
+        c.version.minor === tls.Versions.TLS_1_2.minor);
+      var sigHashAlg = null, sigSigAlg = null;
+      if(isTls12) { sigHashAlg = record.fragment.getByte(); sigSigAlg = record.fragment.getByte(); }
+      var sigLen = record.fragment.getInt16();
+      var sigBytes = record.fragment.getBytes(sigLen);
+      // TODO: Verify signature using server certificate and transcript hash
+      
+    } catch(ex) {
+      return c.error(c, {
+        message: 'Invalid DHE parameters: ' + ex.message,
+        send: true,
+        alert: {
+          level: tls.Alert.Level.fatal,
+          description: tls.Alert.Description.decode_error
+        }
+      });
+    }
+  } else if(sp.key_exchange_algorithm === 'ecdhe_rsa') {
+    // ECDHE_RSA key exchange - parse EC parameters
+    if(length === 0) {
+      return c.error(c, {
+        message: 'ECDHE requires server key exchange parameters.',
+        send: true,
+        alert: {
+          level: tls.Alert.Level.fatal,
+          description: tls.Alert.Description.handshake_failure
+        }
+      });
+    }
+    
+    try {
+      // Parse ECDHE parameters from server
+      var curveType = record.fragment.getByte();
+      if(curveType !== 3) { // named_curve
+        throw new Error('Only named curves are supported');
       }
-    });
+      
+      var namedCurve = record.fragment.getInt16();
+      var curveName;
+      switch(namedCurve) {
+        case 23: curveName = 'secp256r1'; break; // 0x0017
+        case 24: curveName = 'secp384r1'; break; // 0x0018
+        default:
+          throw new Error('Unsupported named curve: ' + namedCurve);
+      }
+      
+      var publicKeyLength = record.fragment.getByte();
+      var publicKeyBytes = record.fragment.getBytes(publicKeyLength);
+      
+      // Store ECDHE parameters for client key exchange
+      c.session.ecdhParams = {
+        curveName: curveName,
+        namedCurve: namedCurve,
+        serverPublicKey: publicKeyBytes
+      };
+      
+      // Consume and optionally verify the RSA/ECDSA signature over params
+      // Structure:
+      // TLS 1.2: signature: SignatureAndHashAlgorithm (2 bytes) + uint16 len + bytes
+      // TLS 1.0/1.1: signature: uint16 len + bytes
+      var isTls12 = (c.version.major === tls.Versions.TLS_1_2.major &&
+        c.version.minor === tls.Versions.TLS_1_2.minor);
+      var sigHashAlg = null, sigSigAlg = null;
+      if(isTls12) { sigHashAlg = record.fragment.getByte(); sigSigAlg = record.fragment.getByte(); }
+      var sigLen = record.fragment.getInt16();
+      var sigBytes = record.fragment.getBytes(sigLen);
+      // TODO: Verify signature using server certificate and transcript hash
+      
+    } catch(ex) {
+      return c.error(c, {
+        message: 'Invalid ECDHE parameters: ' + ex.message,
+        send: true,
+        alert: {
+          level: tls.Alert.Level.fatal,
+          description: tls.Alert.Description.decode_error
+        }
+      });
+    }
+  } else {
+    // RSA key exchange - no server key exchange needed
+    if(length > 0) {
+      return c.error(c, {
+        message: 'Invalid key parameters. Only RSA is supported.',
+        send: true,
+        alert: {
+          level: tls.Alert.Level.fatal,
+          description: tls.Alert.Description.unsupported_certificate
+        }
+      });
+    }
   }
 
   // expect an optional CertificateRequest message next
@@ -1814,10 +2022,29 @@ tls.handleFinished = function(c, record, length) {
   var client = (c.entity === tls.ConnectionEnd.client);
   var label = client ? 'server finished' : 'client finished';
 
-  // TODO: determine prf function and verify length for TLS 1.2
+  // determine the PRF based on TLS version and cipher suite
   var sp = c.session.sp;
   var vdl = 12;
-  var prf = prf_TLS1;
+  var prf;
+  if(c.version.major === tls.Versions.TLS_1_2.major && 
+     c.version.minor === tls.Versions.TLS_1_2.minor &&
+     sp.prf_algorithm !== undefined) {
+    // TLS 1.2 - use cipher suite specified PRF
+    switch(sp.prf_algorithm) {
+    case tls.PRFAlgorithm.tls_prf_sha256:
+      prf = prf_sha256;
+      break;
+    case tls.PRFAlgorithm.tls_prf_sha384:
+      prf = prf_sha384;
+      break;
+    default:
+      // fallback to TLS 1.0 PRF for unknown algorithms
+      prf = prf_TLS1;
+    }
+  } else {
+    // TLS 1.0/1.1 implementation - use legacy PRF
+    prf = prf_TLS1;
+  }
   b = prf(sp.master_secret, label, b.getBytes(), vdl);
   if(b.getBytes() !== vd) {
     return c.error(c, {
@@ -2352,22 +2579,26 @@ tls.generateKeys = function(c, sp) {
   // TLS 1.0 but we don't care right now because AES is better and we have
   // an implementation for it
 
-  // TODO: TLS 1.2 implementation
-  /*
-  // determine the PRF
+  // Choose PRF per TLS version and cipher suite
+  var isTls12 = (c.version.major === tls.Versions.TLS_1_2.major &&
+    c.version.minor === tls.Versions.TLS_1_2.minor);
   var prf;
-  switch(sp.prf_algorithm) {
-  case tls.PRFAlgorithm.tls_prf_sha256:
-    prf = prf_sha256;
-    break;
-  default:
-    // should never happen
-    throw new Error('Invalid PRF');
+  if(isTls12 && sp.prf_algorithm !== undefined) {
+    switch(sp.prf_algorithm) {
+    case tls.PRFAlgorithm.tls_prf_sha256:
+      prf = prf_sha256;
+      break;
+    case tls.PRFAlgorithm.tls_prf_sha384:
+      prf = prf_sha384;
+      break;
+    default:
+      // fallback to TLS 1.0 PRF for unknown algorithms
+      prf = prf_TLS1;
+    }
+  } else {
+    // TLS 1.0/1.1 legacy PRF
+    prf = prf_TLS1;
   }
-  */
-
-  // TLS 1.0/1.1 implementation
-  var prf = prf_TLS1;
 
   // concatenate server and client random
   var random = sp.client_random + sp.server_random;
@@ -2989,40 +3220,124 @@ tls.createCertificate = function(c) {
  * @return the ClientKeyExchange byte buffer.
  */
 tls.createClientKeyExchange = function(c) {
-  // create buffer to encrypt
-  var b = forge.util.createBuffer();
-
-  // add highest client-supported protocol to help server avoid version
-  // rollback attacks
-  b.putByte(c.session.clientHelloVersion.major);
-  b.putByte(c.session.clientHelloVersion.minor);
-
-  // generate and add 46 random bytes
-  b.putBytes(forge.random.getBytes(46));
-
-  // save pre-master secret
   var sp = c.session.sp;
-  sp.pre_master_secret = b.getBytes();
-
-  // RSA-encrypt the pre-master secret
-  var key = c.session.serverCertificate.publicKey;
-  b = key.encrypt(sp.pre_master_secret);
-
-  /* Note: The encrypted pre-master secret will be stored in a
-    public-key-encrypted opaque vector that has the length prefixed using
-    2 bytes, so include those 2 bytes in the handshake message length. This
-    is done as a minor optimization instead of calling writeVector(). */
-
-  // determine length of the handshake message
-  var length = b.length + 2;
-
-  // build record fragment
   var rval = forge.util.createBuffer();
-  rval.putByte(tls.HandshakeType.client_key_exchange);
-  rval.putInt24(length);
-  // add vector length bytes
-  rval.putInt16(b.length);
-  rval.putBytes(b);
+  
+  if(sp.key_exchange_algorithm === 'ecdhe_rsa') {
+    // ECDHE key exchange
+    try {
+      var ecdhParams = c.session.ecdhParams;
+      if(!ecdhParams) {
+        throw new Error('Missing ECDHE parameters');
+      }
+      
+      // Generate client ECDH key pair
+      var clientKeyPair = tls.ecdh.generateKeyPair(ecdhParams.curveName);
+      var clientPrivateKey = clientKeyPair.privateKey;
+      var clientPublicPoint = clientKeyPair.publicKey;
+      
+      // Encode client public key
+      var clientPublicKey = tls.ecdh.encodePoint(clientPublicPoint);
+      
+      // Parse server public key
+      var curve = tls.ecdh.curves[ecdhParams.curveName];
+      var serverPublicPoint = tls.ecdh.decodePoint(curve, ecdhParams.serverPublicKey);
+      
+      // Compute shared secret
+      var sharedSecret = tls.ecdh.computeSharedSecret(clientPrivateKey, serverPublicPoint);
+      sp.pre_master_secret = sharedSecret;
+      
+      // Build ClientKeyExchange message with client public key
+      rval.putByte(tls.HandshakeType.client_key_exchange);
+      var length = 1 + clientPublicKey.length; // 1 byte for length + public key
+      rval.putInt24(length);
+      rval.putByte(clientPublicKey.length);
+      rval.putBytes(clientPublicKey);
+      
+    } catch(ex) {
+      // Fallback to error
+      throw new Error('ECDHE key exchange failed: ' + ex.message);
+    }
+    
+  } else if(sp.key_exchange_algorithm === 'dhe_rsa') {
+    // DHE key exchange
+    try {
+      var dhParams = c.session.dhParams;
+      if(!dhParams) {
+        throw new Error('Missing DHE parameters');
+      }
+      
+      // Generate client DH key pair
+      var clientKeyPair = tls.dh.generateKeyPair(dhParams.p, dhParams.g);
+      var clientPrivateKey = clientKeyPair.privateKey;
+      var clientPublicKey = clientKeyPair.publicKey;
+      
+      // Compute shared secret
+      var sharedSecret = tls.dh.computeSecret(clientPrivateKey, dhParams.serverPublicKey, dhParams.p);
+      
+      // Convert shared secret to bytes
+      var secretBytes = forge.util.hexToBytes(sharedSecret.toString(16));
+      // Pad to proper length
+      while(secretBytes.length < 256) { // 2048-bit = 256 bytes
+        secretBytes = '\x00' + secretBytes;
+      }
+      sp.pre_master_secret = secretBytes;
+      
+      // Build ClientKeyExchange message with client public key
+      var publicKeyBytes = forge.util.hexToBytes(clientPublicKey.toString(16));
+      // Pad to proper length
+      while(publicKeyBytes.length < 256) { // 2048-bit = 256 bytes
+        publicKeyBytes = '\x00' + publicKeyBytes;
+      }
+      
+      rval.putByte(tls.HandshakeType.client_key_exchange);
+      var length = 2 + publicKeyBytes.length; // 2 bytes for length + public key
+      rval.putInt24(length);
+      rval.putInt16(publicKeyBytes.length);
+      rval.putBytes(publicKeyBytes);
+      
+    } catch(ex) {
+      // Fallback to error
+      throw new Error('DHE key exchange failed: ' + ex.message);
+    }
+    
+  } else {
+    // RSA key exchange (original implementation)
+    
+    // create buffer to encrypt
+    var b = forge.util.createBuffer();
+
+    // add highest client-supported protocol to help server avoid version
+    // rollback attacks
+    b.putByte(c.session.clientHelloVersion.major);
+    b.putByte(c.session.clientHelloVersion.minor);
+
+    // generate and add 46 random bytes
+    b.putBytes(forge.random.getBytes(46));
+
+    // save pre-master secret
+    sp.pre_master_secret = b.getBytes();
+
+    // RSA-encrypt the pre-master secret
+    var key = c.session.serverCertificate.publicKey;
+    b = key.encrypt(sp.pre_master_secret);
+
+    /* Note: The encrypted pre-master secret will be stored in a
+      public-key-encrypted opaque vector that has the length prefixed using
+      2 bytes, so include those 2 bytes in the handshake message length. This
+      is done as a minor optimization instead of calling writeVector(). */
+
+    // determine length of the handshake message
+    var length = b.length + 2;
+
+    // build record fragment
+    rval.putByte(tls.HandshakeType.client_key_exchange);
+    rval.putInt24(length);
+    // add vector length bytes
+    rval.putInt16(b.length);
+    rval.putBytes(b);
+  }
+  
   return rval;
 };
 
@@ -3294,7 +3609,26 @@ tls.createFinished = function(c) {
   var client = (c.entity === tls.ConnectionEnd.client);
   var sp = c.session.sp;
   var vdl = 12;
-  var prf = prf_TLS1;
+  var prf;
+  if(c.version.major === tls.Versions.TLS_1_2.major && 
+     c.version.minor === tls.Versions.TLS_1_2.minor &&
+     sp.prf_algorithm !== undefined) {
+    // TLS 1.2 - use cipher suite specified PRF
+    switch(sp.prf_algorithm) {
+    case tls.PRFAlgorithm.tls_prf_sha256:
+      prf = prf_sha256;
+      break;
+    case tls.PRFAlgorithm.tls_prf_sha384:
+      prf = prf_sha384;
+      break;
+    default:
+      // fallback to TLS 1.0 PRF for unknown algorithms
+      prf = prf_TLS1;
+    }
+  } else {
+    // TLS 1.0/1.1 implementation - use legacy PRF
+    prf = prf_TLS1;
+  }
   var label = client ? 'client finished' : 'server finished';
   b = prf(sp.master_secret, label, b.getBytes(), vdl);
 
@@ -4149,6 +4483,9 @@ forge.tls.prf_tls1 = prf_TLS1;
 
 // expose sha1 hmac method
 forge.tls.hmac_sha1 = hmac_sha1;
+
+// expose sha256 hmac method
+forge.tls.hmac_sha256 = hmac_sha256;
 
 // expose session cache creation
 forge.tls.createSessionCache = tls.createSessionCache;
