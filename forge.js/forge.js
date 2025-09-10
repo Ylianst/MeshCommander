@@ -66,6 +66,8 @@ define([
   './cipherModes',
   './debug',
   './des',
+  './dhe',
+  './ecdh',
   './hmac',
   './kem',
   './log',
