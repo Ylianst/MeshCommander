@@ -31,7 +31,6 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
     obj.debugmode = 0;
     obj.firstUpKeys = [];
     obj.stopInput = false;
-    obj.localKeyMap = true;
     obj.altPressed = false;
     obj.ctrlPressed = false;
     obj.shiftPressed = false;
@@ -401,7 +400,7 @@ var CreateAgentRemoteDesktop = function (canvasid, scrolldiv) {
     obj.SendKeyMsg = function (action, event) {
         if (action == null) return;
         if (!event) { event = window.event; }
-        if (event.code && (obj.localKeyMap == false)) {
+        if (event.code) {
             // Convert "event.code" into a scancode. This works the same regardless of the keyboard language.
             // Older browsers will not support this.
             var kc = convertKeyCode(event);
