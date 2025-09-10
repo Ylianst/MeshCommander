@@ -47,7 +47,7 @@ Like the NPM version, this will start an HTTP web server on port 3000. You can t
 Compiling MeshCommander
 -----------------------
 
-MeshCommander is a set of HTML web pages that can be used in many different ways. You can run it in a browser or in nw.js, you can run it as a stand-alone application or as a web application served from Intel AMT. Because of all the different roles MeshCommander can take and the unique requirement of being able to fit within 64k limit of Intel AMT file storage, MeshCommander has to be "compiled" using the [WebSite Compiler](http://info.meshcentral.com/downloads/websitecompiler/websitecompiler.zip) tool that currently only runs on Windows. WebSite Compiler will merge all of the html, css and js files into a single big file, it will run a pre-processor to remove portions that are not needed and then minify and compress the output as needed.
+MeshCommander is a set of HTML web pages that can be used in many different ways. You can run it in a browser or in nw.js, you can run it as a stand-alone application or as a web application served from Intel AMT. Because of all the different roles MeshCommander can take and the unique requirement of being able to fit within 64k limit of Intel AMT file storage, MeshCommander has to be "compiled" using the [WebSite Compiler](https://meshcentral.com/tools/websitecompiler.zip) tool that currently only runs on Windows. WebSite Compiler will merge all of the html, css and js files into a single big file, it will run a pre-processor to remove portions that are not needed and then minify and compress the output as needed.
 
 
 Tutorials
