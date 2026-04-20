@@ -1093,14 +1093,14 @@
                                     &nbsp;
                                     <span id="deskkeysspan">
                                         <select style="margin-left:6px" id="deskkeys">
-                                            <option value="0">勝つ</option>
+                                            <option value="0">Win</option>
                                             <option value="1">Win + Down</option>
                                             <option value="2">Win + Up</option>
                                             <option value="3">Win + L</option>
                                             <option value="4">Win + M</option>
                                             <option value="20">Win + R</option>
-                                            <option value="23">勝利+左</option>
-                                            <option value="24">勝利+右</option>
+                                            <option value="23">Win + Left</option>
+                                            <option value="24">Win + Right</option>
                                             <option value="5">Shift + Win + M</option>
                                             <option value="19">Alt-Tab</option>
                                             <option value="21">Alt-F4</option>
@@ -1820,7 +1820,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.9.6';
+        var version = '0.9.7';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -5465,7 +5465,7 @@
                 QH('id_p14power', t); // Display the power state on the desktop form
                 // ###END###{Desktop}
             }
-            if (gs['PowerSource']) t += ["、 差し込む", "、 電池で"][gs['PowerSource']];
+            if (gs['PowerSource']) t += ["、 差し込む", "、 バッテリーで"][gs['PowerSource']];
             x += TableEntry("力", addLink(t, 'showPowerActionDlg()'));
             // ###END###{PowerControl}
 
@@ -5797,7 +5797,7 @@
                     x += TableEntry("IPv4ドメインネームサーバー", dns);
                 }
 
-                if ((amtsysstate['IPS_IPv6PortSettings'].status == 200) && (amtversion > 5)) {
+                if ((amtversion > 5) && (amtsysstate['IPS_IPv6PortSettings'].status == 200)) {
                     // Check if IPv6 is enabled for this interface
                     var zz = amtsysstate['IPS_IPv6PortSettings'].responses[y];
                     var ipv6state = "無効", ipv6, ipv6manual, elementSettings = amtsysstate['CIM_ElementSettingData'].responses;
@@ -6252,7 +6252,7 @@
         var auditLogEnabledStates = ["わからない", "その他の", "有効", "無効", "シャットダウン", "適用できません", "有効だがオフライン", "テスト中", "据え置き", "休止", "起動"];
 
         function processAuditLog0(stack, name, responses, status) {
-            if (status == 200) {
+            if (status == 200 && responses && responses.length > 0) {
                 QV('go15', true); // Show audit log left panel option
 
                 var r = responses[0]['AuditState'];
@@ -6264,7 +6264,7 @@
 
                 var x = '<h1>' + "監査ログ設定" + '</h1>' + TableStart();
                 x += TableEntry("状態", auditstate);
-                x += TableEntry("ストレージ", responses[0]['CurrentNumberOfRecords'] + " 記録）、" + responses[0]['PercentageFree'] + "％ 自由");
+                x += TableEntry("ストレージ", responses[0]['CurrentNumberOfRecords'] + " 記録、" + responses[0]['PercentageFree'] + "％ 自由");
                 x += TableEntry("上書きポリシー", ((responses[0]['OverwritePolicy'] == 2) ? "いっぱいになったときにラップ" : "上書きしない"));
                 x += TableEnd();
                 QH('id_TableAuditLog1', x);
@@ -6347,7 +6347,7 @@
                 if (m['Ex'].length > 2 && ReadShort(m['Ex'], 0) == (m['Ex'].length - 2)) x += addHtmlValue("データ文字列", m['Ex'].substring(2));
             }
             x += '</div>';
-            messagebox("監査イベント＃" + (h + 1) + " 細部", x);
+            messagebox("監査イベント＃" + (h + 1) + " 詳細", x);
         }
 
 // ###END###{AuditLog}
@@ -7014,7 +7014,7 @@
             // Global Agent Presense Values
             x += TableStart();
             x += TableEntry("最大ウォッチドッグ", xxWatchdog['AMT_AgentPresenceCapabilities'].response['MaxTotalAgents'] + " ウォッチ・ドッグス");
-            x += TableEntry("最大合計アクション", xxWatchdog['AMT_AgentPresenceCapabilities'].response['MaxTotalActions'] + " 行動");
+            x += TableEntry("最大合計アクション", xxWatchdog['AMT_AgentPresenceCapabilities'].response['MaxTotalActions'] + " アクション");
             // x += TableEntry("Maximum EAC Watchdogs", xxWatchdog['AMT_AgentPresenceCapabilities'].response['MaxEacAgents'] + " watchdogs");
             x += TableEnd() + '<br>';
 
@@ -7865,8 +7865,8 @@
             }
             // ###END###{NetAuth}
 
-            console.log('wifiepsettinginput', JSON.sstringify(v, null, 2));
-            console.log('netAuthProfile', JSON.sstringify(sc, null, 2));
+            console.log('wifiepsettinginput', JSON.stringify(v, null, 2));
+            console.log('netAuthProfile', JSON.stringify(sc, null, 2));
             console.log('netAuthSettingsClientCert', netAuthSettingsClientCert);
             console.log('netAuthSettingsServerCaCert', netAuthSettingsServerCaCert);
 
@@ -8060,10 +8060,10 @@
             QV('go2', true); // Show "Hardware Information" on left panel
 
             // ###BEGIN###{!FileSaver}
-            x += TableEnd('<div>&nbsp;' + AddRefreshButton('PullHardware(1)') + " ハードウェア情報は、システムのブート時に収集されます。");
+            x += TableEnd('<div>&nbsp;' + AddRefreshButton('PullHardware(1)') + " ハードウェア情報は、システムの起動時に収集されます。");
             // ###END###{!FileSaver}
             // ###BEGIN###{FileSaver}
-            x += TableEnd('<div>&nbsp;' + AddRefreshButton('PullHardware(1)') + AddButton("セーブ...", 'SaveHardwareLog()') + " ハードウェア情報は、システムのブート時に収集されます。");
+            x += TableEnd('<div>&nbsp;' + AddRefreshButton('PullHardware(1)') + AddButton("セーブ...", 'SaveHardwareLog()') + " ハードウェア情報は、システムの起動時に収集されます。");
             // ###END###{FileSaver}
 
             var ba = responses['CIM_Chassis'].response;
@@ -8446,7 +8446,7 @@
                     if (terminal.disconnectCode == 2) { // BUSY
                         messagebox("Remote Terminal", "The remote device is busy, a session may already be open.");
                     } else if (terminal.disconnectCode == 3) { // UNSUPPORTED
-                        messagebox("Remote Terminal", "The device indicated that this type of connection of not supported.");
+                        messagebox("Remote Terminal", "The device indicated that this type of connection is not supported.");
                     }
                     break;
                 case 3:
@@ -8866,7 +8866,7 @@
                     if (desktop.disconnectCode == 2) { // BUSY
                         messagebox("リモートデスクトップ", "The remote device is busy, a session may already be open.");
                     } else if (desktop.disconnectCode == 3) { // UNSUPPORTED
-                        messagebox("リモートデスクトップ", "The device indicated that this type of connection of not supported.");
+                        messagebox("リモートデスクトップ", "The device indicated that this type of connection is not supported.");
                     } else if (desktop.disconnectCode == 50000) { // KVM-Disconnect
                         messagebox("リモートデスクトップ", "KVM disconnection, this may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
                     } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again if connection was more than 5 seconds long.
@@ -11678,7 +11678,7 @@
 
         function _fmtinterval(str) {
             var cl = str.replace('T', '').substring(str.indexOf('P') + 1);
-            cl = ' ' + cl.replace('D', " 日々").replace('H', " 時間").replace('M'," 分");
+            cl = ' ' + cl.replace('D', " 日").replace('H', " 時間").replace('M'," 分");
             cl = cl.replace(" 1日", " 1日").replace(" 1時間", " 1時間").replace(" 1分 "," 1分 ");
             return cl.substring(0, cl.length - 1);
         }

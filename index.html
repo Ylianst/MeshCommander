@@ -1832,7 +1832,7 @@
     <!-- ###END###{PowerControl} -->
         <script type="text/javascript">
         // ###BEGIN###{!Look-BrandedCommander}
-        var version = '0.9.6';
+        var version = '0.9.7';
         // ###END###{!Look-BrandedCommander}
         // ###BEGIN###{Look-BrandedCommander}
         var version = '1.2.0';
@@ -5809,7 +5809,7 @@
                     x += TableEntry("IPv4 domain name server", dns);
                 }
 
-                if ((amtsysstate['IPS_IPv6PortSettings'].status == 200) && (amtversion > 5)) {
+                if ((amtversion > 5) && (amtsysstate['IPS_IPv6PortSettings'].status == 200)) {
                     // Check if IPv6 is enabled for this interface
                     var zz = amtsysstate['IPS_IPv6PortSettings'].responses[y];
                     var ipv6state = "Disabled", ipv6, ipv6manual, elementSettings = amtsysstate['CIM_ElementSettingData'].responses;
@@ -6264,7 +6264,7 @@
         var auditLogEnabledStates = ["Unknown", "Other", "Enabled", "Disabled", "Shutting Down", "Not Applicable", "Enabled but Offline", "In Test", "Deferred", "Quiesce", "Starting"];
 
         function processAuditLog0(stack, name, responses, status) {
-            if (status == 200) {
+            if (status == 200 && responses && responses.length > 0) {
                 QV('go15', true); // Show audit log left panel option
 
                 var r = responses[0]['AuditState'];
@@ -8458,7 +8458,7 @@
                     if (terminal.disconnectCode == 2) { // BUSY
                         messagebox("Remote Terminal", "The remote device is busy, a session may already be open.");
                     } else if (terminal.disconnectCode == 3) { // UNSUPPORTED
-                        messagebox("Remote Terminal", "The device indicated that this type of connection of not supported.");
+                        messagebox("Remote Terminal", "The device indicated that this type of connection is not supported.");
                     }
                     break;
                 case 3:
@@ -8878,7 +8878,7 @@
                     if (desktop.disconnectCode == 2) { // BUSY
                         messagebox("Remote Desktop", "The remote device is busy, a session may already be open.");
                     } else if (desktop.disconnectCode == 3) { // UNSUPPORTED
-                        messagebox("Remote Desktop", "The device indicated that this type of connection of not supported.");
+                        messagebox("Remote Desktop", "The device indicated that this type of connection is not supported.");
                     } else if (desktop.disconnectCode == 50000) { // KVM-Disconnect
                         messagebox("Remote Desktop", "KVM disconnection, this may indicate that Intel AMT is unable to capture the display (Try RLE8 encoding), or unsupported GPU.");
                     } else if (desktop.disconnectCode == 50001) { // Intel AMT disconnect, try to connect again if connection was more than 5 seconds long.
