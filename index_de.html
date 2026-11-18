@@ -11677,10 +11677,12 @@
         }
 
         function _fmtinterval(str) {
-            var cl = str.replace('T', '').substring(str.indexOf('P') + 1);
-            cl = ' ' + cl.replace('D', " Tage").replace('H', " Std").replace('M'," Protokoll");
-            cl = cl.replace(" 1 Tag", " 1 Tag").replace(" 1 Stunde", " 1 Stunde").replace(" 1 minute "," 1 Minute ");
-            return cl.substring(0, cl.length - 1);
+            var units = { D: [" 1 Tag", " Tage"], H: [" 1 Stunde", " Std"], M: [" 1 Minute ", " Protokoll"] };
+            var interval = str.replace(/^P/, '').replace('T', '');
+            return ' ' + interval.replace(/(\d+)([DHM])/g, function (match, count, unit) {
+                var forms = units[unit];
+                return ((+count === 1) ? forms[0] : count + forms[1]).trim() + ' ';
+            }).trim();
         }
 
         function _fmttimepad(str) {

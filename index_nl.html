@@ -11677,10 +11677,12 @@
         }
 
         function _fmtinterval(str) {
-            var cl = str.replace('T', '').substring(str.indexOf('P') + 1);
-            cl = ' ' + cl.replace('D', " dagen").replace('H', " uren").replace('M'," minuten");
-            cl = cl.replace(" 1 dag", " 1 dag").replace(" 1 uur", " 1 uur").replace(" 1 minuut "," 1 minuut ");
-            return cl.substring(0, cl.length - 1);
+            var units = { D: [" 1 dag", " dagen"], H: [" 1 uur", " uren"], M: [" 1 minuut ", " minuten"] };
+            var interval = str.replace(/^P/, '').replace('T', '');
+            return ' ' + interval.replace(/(\d+)([DHM])/g, function (match, count, unit) {
+                var forms = units[unit];
+                return ((+count === 1) ? forms[0] : count + forms[1]).trim() + ' ';
+            }).trim();
         }
 
         function _fmttimepad(str) {
