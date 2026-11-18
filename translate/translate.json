@@ -21,7 +21,7 @@
       "en": " 1 days ",
       "es": " 1 día",
       "fr": " 1 jour",
-      "it": " 1 giorni ",
+      "it": " 1 giorno ",
       "ja": " 1日",
       "ko": " 1 일",
       "nl": " 1 dag",
@@ -53,7 +53,7 @@
       "en": " 1 hours ",
       "es": " 1 hora",
       "fr": " 1 heure",
-      "it": " 1 ore ",
+      "it": " 1 ora ",
       "ja": " 1時間",
       "ko": " 1 시간",
       "nl": " 1 uur",
@@ -85,7 +85,7 @@
       "en": " 1 minutes ",
       "es": " 1 minuto ",
       "fr": " 1 minutes ",
-      "it": " 1 minuti ",
+      "it": " 1 minuto ",
       "ja": " 1分 ",
       "ko": " 1 분 ",
       "nl": " 1 minuut ",
@@ -267,7 +267,7 @@
       "en": " and each",
       "es": " y cada",
       "fr": " et chacun",
-      "it": " e ciascuno",
+      "it": " e poi ogni",
       "ja": " そしてそれぞれ",
       "ko": " 그리고 각각",
       "nl": " en elk",
@@ -18519,6 +18519,10 @@
         "index.html->id_computerSelector->dialog->21->1192",
         "index.html->id_computerSelector->id_mainview->id_mainarea->id_mainarea_pad->p24->p24toolbar->1->0->1->3"
       ]
+    },
+    {
+      "en": "Repeat interval",
+      "it": "Intervallo di ripetizione"
     },
     {
       "de": "Austauschbar?",

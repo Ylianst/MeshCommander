@@ -11677,10 +11677,12 @@
         }
 
         function _fmtinterval(str) {
-            var cl = str.replace('T', '').substring(str.indexOf('P') + 1);
-            cl = ' ' + cl.replace('D', " giorni ").replace('H', " ore ").replace('M'," minuti ");
-            cl = cl.replace(" 1 giorni ", " 1 giorno ").replace(" 1 ore ", " 1 ora ").replace(" 1 minuti "," 1 minuto ");
-            return cl.substring(0, cl.length - 1);
+            var units = { D: [" 1 giorno ", " giorni "], H: [" 1 ora ", " ore "], M: [" 1 minuto ", " minuti "] };
+            var interval = str.replace(/^P/, '').replace('T', '');
+            return ' ' + interval.replace(/(\d+)([DHM])/g, function (match, count, unit) {
+                var forms = units[unit];
+                return ((+count === 1) ? forms[0] : count + forms[1]).trim() + ' ';
+            }).trim();
         }
 
         function _fmttimepad(str) {
@@ -11701,7 +11703,7 @@
                         for (var i = 0; i < response.length; i++) {
                             var waketime = new Date(response[i]['StartTime']['Datetime']);
                             var details = '<b>' + response[i]['ElementName'] + '</b>, ' + "riattivazione prevista per il" + ' ' + waketime.toLocaleString().replace(', ', " alle ");
-                            if (response[i]['Interval'] != undefined) { details += " e ciascuno" + _fmtinterval(response[i]['Interval']['Interval']); }
+                            if (response[i]['Interval'] != undefined) { details += " e poi ogni" + _fmtinterval(response[i]['Interval']['Interval']); }
                             if (response[i]['DeleteOnCompletion'] == true) { details += ", elimina al termine"; }
                             x += '<div class=itemBar onclick=showAlertDetails(' + i + ')><div style=float:right>';
                             if (xxAccountAdminName) x += ' ' + AddButton2("Modifica...", 'showAddAlarm(" + i + ")');
@@ -11808,7 +11810,7 @@
             if (xxdialogMode) return;
             var alarm = xxAlarms[i], waketime = new Date(alarm['StartTime']['Datetime']);
             var x = '<div style=text-align:left>' + addHtmlValue("Nome", alarm['ElementName']) + addHtmlValue("Ora di riattivazione", waketime.toLocaleString().replace(', ', ' at '));
-            if (alarm['Interval'] != undefined) { x += addHtmlValue("Interno", _fmtinterval(alarm['Interval']['Interval'])); }
+            if (alarm['Interval'] != undefined) { x += addHtmlValue("Intervallo di ripetizione", _fmtinterval(alarm['Interval']['Interval'])); }
             x += addHtmlValue("Dopo la riattivazione", (alarm['DeleteOnCompletion'] == true)?"Elimina timer":"Mantieni timer") + '</div>';
             messagebox(format("Timer {0}", alarm['ElementName']), x);
             setDialogMode(11, "Timer di riattivazione " + alarm['ElementName'], 5, showAlertDetailsDelete, x, i);
