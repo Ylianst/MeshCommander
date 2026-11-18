@@ -11677,10 +11677,12 @@
         }
 
         function _fmtinterval(str) {
-            var cl = str.replace('T', '').substring(str.indexOf('P') + 1);
-            cl = ' ' + cl.replace('D', " journées").replace('H', " heures").replace('M'," minutes");
-            cl = cl.replace(" 1 jour", " Un jour").replace(" 1 heure", " 1 heure").replace(" 1 minutes "," 1 minute ");
-            return cl.substring(0, cl.length - 1);
+            var units = { D: [" Un jour", " journées"], H: [" 1 heure", " heures"], M: [" 1 minute ", " minutes"] };
+            var interval = str.replace(/^P/, '').replace('T', '');
+            return ' ' + interval.replace(/(\d+)([DHM])/g, function (match, count, unit) {
+                var forms = units[unit];
+                return ((+count === 1) ? forms[0] : count + forms[1]).trim() + ' ';
+            }).trim();
         }
 
         function _fmttimepad(str) {

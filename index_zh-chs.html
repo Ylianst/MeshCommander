@@ -11677,10 +11677,12 @@
         }
 
         function _fmtinterval(str) {
-            var cl = str.replace('T', '').substring(str.indexOf('P') + 1);
-            cl = ' ' + cl.replace('D', " 天").replace('H', " 小时").replace('M'," 分钟");
-            cl = cl.replace(" 1天", " 1天").replace(" 1小时", " 1小时").replace(" 1分钟 "," 1分钟 ");
-            return cl.substring(0, cl.length - 1);
+            var units = { D: [" 1天", " 天"], H: [" 1小时", " 小时"], M: [" 1分钟 ", " 分钟"] };
+            var interval = str.replace(/^P/, '').replace('T', '');
+            return ' ' + interval.replace(/(\d+)([DHM])/g, function (match, count, unit) {
+                var forms = units[unit];
+                return ((+count === 1) ? forms[0] : count + forms[1]).trim() + ' ';
+            }).trim();
         }
 
         function _fmttimepad(str) {
