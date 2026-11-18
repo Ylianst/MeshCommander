@@ -534,15 +534,15 @@ function AmtStackCreateService(wsmanStack) {
         if (responses.Body['NoMoreRecords'] != true) { obj.AMT_MessageLog_GetRecords(responses.Body['IterationIdentifier'], 390, _GetMessageLog1, [tag[0], AmtMessages, tag[2]]); } else { tag[0](obj, AmtMessages, tag[2]); }
     }
 
-    var _EventTrapSourceTypes = "Firmware della piattaforma (ad es. BIOS) | Gestore SMI | Software di gestione del sistema ISV | Avviso ASIC | IPMI | Fornitore di BIOS | Fornitore di set di schede di sistema | Integratore di sistema | Componente aggiuntivo di terzi | OSV | NIC | Scheda di gestione del sistema".split('|');
-    var _SystemFirmwareError = "Non specificato. | Nessuna memoria di sistema fisicamente installata nel sistema. | Nessuna memoria di sistema utilizzabile, tutta la memoria installata ha riscontrato un errore irreversibile. | Errore irreversibile del disco fisso / ATAPI / IDE. | Errore irreversibile della scheda di sistema. | Dischetto irreversibile errore del sottosistema. | Errore irreversibile del controller del disco fisso. | Errore irreversibile della tastiera PS / 2 o USB. | Supporto di avvio rimovibile non trovato. | Errore irreversibile del controller video. | Nessun dispositivo video rilevato. | Corruzione del firmware (BIOS) ROM rilevata. | Mancata corrispondenza della tensione della CPU (i processori che condividono la stessa alimentazione hanno requisiti di tensione non corrispondenti) | Errore di corrispondenza della velocità della CPU".split('|');
-    var _SystemFirmwareProgress = "Unspecified.|Memory initialization.|Starting hard-disk initialization and test|Secondary processor(s) initialization|User authentication|Entering BIOS setup|USB resource configuration|PCI resource configuration|Option ROM initialization|Video initialization|Cache initialization|SM Bus initialization|Keyboard controller initialization|Embedded controller/management controller initialization|Docking station attachment|Enabling docking station|Docking station ejection|Disabling docking station|Calling operating system wake-up vector|Starting operating system boot process|Baseboard or motherboard initialization|reserved|Floppy initialization|Keyboard test|Pointing device test|Primary processor initialization".split('|');
-    var _SystemEntityTypes = "Non specificato | Altro | Sconosciuto | Processore | Disco | Periferiche | Modulo di gestione del sistema | Scheda di sistema | Modulo di memoria | Modulo del processore | Alimentazione | Scheda aggiuntiva | Scheda del pannello anteriore | Scheda del pannello posteriore | Scheda del sistema di alimentazione | Backplane dell'unità | Espansione interna del sistema scheda | Altre schede di sistema | Scheda del processore | Unità di potenza | Modulo di potenza | Scheda di gestione dell'alimentazione | Scheda del pannello posteriore del telaio | Telaio del sistema | Sottotelaio | Altre schede del telaio | Alloggiamento unità disco | Alloggiamento periferiche | Alloggiamento dispositivo | Ventola di raffreddamento | Unità di raffreddamento | Cavo di interconnessione | Dispositivo di memoria | Software di gestione del sistema | BIOS | Intel (r) ME | Bus di sistema | Gruppo | Intel (r) ME | Ambiente esterno | Batteria | Lama di elaborazione | Interruttore di connettività | Modulo processore / memoria | Modulo I / O | Modulo I / O del processore | Firmware del controller di gestione | Canale IPMI | Bus PCI | Bus PCI express | Bus SCSI | Bus SATA / SAS | Bus lato anteriore del processore".split('|');
-    obj.RealmNames = "|| Reindirizzamento || Risorse hardware | Telecomando | Archiviazione | Gestione eventi | Amministratore archiviazione | Presenza agente locale | Presenza agente remoto | Interruttore automatico | Tempo di rete | Informazioni generali | Aggiornamento firmware | EIT | LocalUN | Controllo accesso endpoint | Controllo accesso endpoint Amministratore | Lettore registro eventi | Registro controllo | Regno ACL ||| Sistema locale".split('|');
-    obj.WatchdogCurrentStates = { 1: "Non iniziato", 2: "Fermato", 4: "In esecuzione", 8: "Scaduto", 16: "Sospeso" };
-    var _OCRProgressEvents = ["Boot parameters received from CSME", "CSME Boot Option % added successfully", "HTTPS URI name resolved", "HTTPS connected successfully", "HTTPSBoot download is completed", "Attempt to boot", "Exit boot services"];
-    var _OCRErrorEvents = ['', "No network connection available", "Name resolution of URI failed", "Connect to URI failed", "OEM app not found at local URI", "HTTPS TLS Auth failed", "HTTPS Digest Auth failed", "Verified boot failed (bad image)", "HTTPS Boot File not found"];
-    var _OCRSource = { 1: '', 2: "HTTPS", 4: "Local PBA", 8: "WinRE" };
+    var _EventTrapSourceTypes = "Firmware della piattaforma (es. BIOS)|Gestore SMI|Software di gestione del sistema ISV|ASIC degli avvisi|IPMI|Fornitore del BIOS|Fornitore del gruppo di schede di sistema|Integratore di sistema|Componente aggiuntivo di terze parti|Fornitore del sistema operativo|Scheda di rete|Scheda di gestione del sistema".split('|');
+    var _SystemFirmwareError = "Non specificato.|Nessuna memoria di sistema installata.|Nessuna memoria utilizzabile: errore irreversibile in tutta la memoria installata.|Errore irreversibile del disco rigido o del dispositivo ATAPI/IDE.|Errore irreversibile della scheda di sistema.|Errore irreversibile del sottosistema floppy.|Errore irreversibile del controller del disco rigido.|Errore irreversibile della tastiera PS/2 o USB.|Supporto di avvio rimovibile non trovato.|Errore irreversibile del controller video.|Nessun dispositivo video rilevato.|Rilevato un danneggiamento della ROM del firmware (BIOS).|Tensioni CPU incompatibili tra processori che condividono la stessa alimentazione|Velocità dei processori incompatibili".split('|');
+    var _SystemFirmwareProgress = "Non specificato.|Inizializzazione della memoria.|Avvio dell'inizializzazione e del test del disco rigido|Inizializzazione dei processori secondari|Autenticazione utente|Apertura delle impostazioni del BIOS|Configurazione delle risorse USB|Configurazione delle risorse PCI|Inizializzazione della ROM opzionale|Inizializzazione video|Inizializzazione della cache|Inizializzazione del bus SMBus|Inizializzazione del controller della tastiera|Inizializzazione del controller integrato o di gestione|Collegamento della docking station|Abilitazione della docking station|Rimozione della docking station|Disabilitazione della docking station|Chiamata al vettore di riattivazione del sistema operativo|Avvio del sistema operativo|Inizializzazione della scheda madre|Riservato|Inizializzazione dell'unità floppy|Test della tastiera|Test del dispositivo di puntamento|Inizializzazione del processore principale".split('|');
+    var _SystemEntityTypes = "Non specificato|Altro|Sconosciuto|Processore|Disco|Periferica|Modulo di gestione del sistema|Scheda di sistema|Modulo di memoria|Modulo del processore|Alimentatore|Scheda aggiuntiva|Scheda del pannello anteriore|Scheda del pannello posteriore|Scheda di alimentazione del sistema|Backplane dell'unità|Scheda di espansione interna|Altra scheda di sistema|Scheda del processore|Unità di alimentazione|Modulo di alimentazione|Scheda di gestione dell'alimentazione|Scheda del pannello posteriore del telaio|Telaio del sistema|Sottotelaio|Altra scheda del telaio|Alloggiamento dell'unità disco|Alloggiamento per periferiche|Alloggiamento per dispositivi|Ventola di raffreddamento|Unità di raffreddamento|Cavo di interconnessione|Dispositivo di memoria|Software di gestione del sistema|BIOS|Intel(r) ME|Bus di sistema|Gruppo|Intel(r) ME|Ambiente esterno|Batteria|Blade di elaborazione|Switch di rete|Modulo processore/memoria|Modulo I/O|Modulo I/O del processore|Firmware del controller di gestione|Canale IPMI|Bus PCI|Bus PCI Express|Bus SCSI|Bus SATA/SAS|Front-side bus del processore".split('|');
+    obj.RealmNames = "||Reindirizzamento||Inventario hardware|Controllo remoto|Archiviazione|Gestione eventi|Amministrazione dell'archiviazione|Presenza degli agenti (locale)|Presenza degli agenti (remota)|Circuit Breaker|Ora di rete|Informazioni generali|Aggiornamento firmware|EIT|LocalUN|Controllo dell'accesso agli endpoint|Amministrazione del controllo dell'accesso agli endpoint|Lettura del registro eventi|Registro di audit|Realm ACL|||Sistema locale".split('|');
+    obj.WatchdogCurrentStates = { 1: "Non avviato", 2: "Arrestato", 4: "In esecuzione", 8: "Scaduto", 16: "Sospeso" };
+    var _OCRProgressEvents = ["Parametri di avvio ricevuti da CSME", "Opzione di avvio CSME % aggiunta", "Nome host dell'URI HTTPS risolto", "Connessione HTTPS stabilita", "Download per l'avvio HTTPS completato", "Tenta l'avvio", "Uscita dai servizi di avvio"];
+    var _OCRErrorEvents = ['', "Nessuna connessione di rete disponibile", "Risoluzione del nome host dell'URI non riuscita", "Connessione all'URI non riuscita", "Applicazione OEM non trovata all'URI locale", "Autenticazione TLS HTTPS non riuscita", "Autenticazione Digest HTTPS non riuscita", "Verifica dell'avvio non riuscita (immagine non valida)", "File di avvio HTTPS non trovato"];
+    var _OCRSource = { 1: '', 2: "HTTPS", 4: "PBA locale", 8: "WinRE" };
 
     function _GetEventDetailStr(eventSensorType, eventOffset, eventDataField, entity) {
         if (eventSensorType == 15) {
@@ -553,37 +553,37 @@ function AmtStackCreateService(wsmanStack) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
                     return format("One Click Recovery: {0}", _OCRErrorEvents[eventDataField[2]]);
                 } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
-                    if (eventDataField[2] == 1) return "Got an error erasing Device SSD";
-                    if (eventDataField[2] == 2) return "Erasing Device TPM is not supported";
-                    if (eventDataField[2] == 3) return "Reached Max Counter";
+                    if (eventDataField[2] == 1) return "Errore durante la cancellazione dell'SSD del dispositivo";
+                    if (eventDataField[2] == 2) return "La cancellazione del TPM del dispositivo non è supportata";
+                    if (eventDataField[2] == 3) return "Raggiunto il valore massimo del contatore";
                 } else {
-                    return "OEM Specific Firmware Error event";
+                    return "Evento OEM di errore del firmware";
                 }
             } else if (eventOffset == 5) {
                 if ((eventDataField[0] == 170) && (eventDataField[1] == 48)) {
                     if (eventDataField[2] == 1) {
-                        return format("One Click Recovery: CSME Boot Option {0}:{1} added successfully", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
+                        return format("One Click Recovery: opzione di avvio CSME {0}:{1} aggiunta", (eventDataField[3]), _OCRSource[(eventDataField[3])]);
                     } else if (eventDataField[2] < 7) {
                         return format("One Click Recovery: {0}", _OCRProgressEvents[eventDataField[2]]);
                     } else {
-                        return format("One Click Recovery: Unknown progress event {0}", eventDataField[2]);
+                        return format("One Click Recovery: evento di avanzamento sconosciuto {0}", eventDataField[2]);
                     }
                 } else if ((eventDataField[0] == 170) && (eventDataField[1] == 64)) {
                     if (eventDataField[2] == 1) {
-                        if (eventDataField[3] == 2) return "Started erasing Device SSD";
-                        if (eventDataField[3] == 3) return "Started erasing Device TPM";
-                        if (eventDataField[3] == 5) return "Started erasing Device BIOS Reload of Golden Config";
+                        if (eventDataField[3] == 2) return "Cancellazione dell'SSD del dispositivo avviata";
+                        if (eventDataField[3] == 3) return "Cancellazione del TPM del dispositivo avviata";
+                        if (eventDataField[3] == 5) return "Ripristino della configurazione di riferimento del BIOS avviato";
                     }
                     if (eventDataField[2] == 2) {
-                        if (eventDataField[3] == 2) return "Erasing Device SSD ended successfully";
-                        if (eventDataField[3] == 3) return "Erasing Device TPM ended successfully";
-                        if (eventDataField[3] == 5) return "Erasing Device BIOS Reload of Golden Config ended successfully";
+                        if (eventDataField[3] == 2) return "Cancellazione dell'SSD del dispositivo completata";
+                        if (eventDataField[3] == 3) return "Cancellazione del TPM del dispositivo completata";
+                        if (eventDataField[3] == 5) return "Ripristino della configurazione di riferimento del BIOS completato";
                     }
-                    if (eventDataField[2] == 3) return "Beginning Platform Erase";
-                    if (eventDataField[2] == 4) return "Clear Reserved Parameters";
-                    if (eventDataField[2] == 5) return "All setting decremented";
+                    if (eventDataField[2] == 3) return "Avvio della cancellazione della piattaforma";
+                    if (eventDataField[2] == 4) return "Cancella i parametri riservati";
+                    if (eventDataField[2] == 5) return "Tutte le impostazioni sono state decrementate";
                 } else {
-                    return "OEM Specific Firmware Progress event";
+                    return "Evento OEM di avanzamento del firmware";
                 }
             } else {
                 return _SystemFirmwareProgress[eventDataField[1]];
@@ -591,19 +591,19 @@ function AmtStackCreateService(wsmanStack) {
         }
 
         if ((eventSensorType == 18) && (eventDataField[0] == 170)) { // System watchdog event
-            return "Cane da guardia dell'agente" + char2hex(eventDataField[4]) + char2hex(eventDataField[3]) + char2hex(eventDataField[2]) + char2hex(eventDataField[1]) + '-' + char2hex(eventDataField[6]) + char2hex(eventDataField[5]) + '-...' + " cambiato in" + obj.WatchdogCurrentStates[eventDataField[7]];
+            return "Watchdog dell'agente " + char2hex(eventDataField[4]) + char2hex(eventDataField[3]) + char2hex(eventDataField[2]) + char2hex(eventDataField[1]) + '-' + char2hex(eventDataField[6]) + char2hex(eventDataField[5]) + '-...' + " cambiato in " + obj.WatchdogCurrentStates[eventDataField[7]];
         }
 
         if ((eventSensorType == 5) && (eventOffset == 0)) { // System chassis
-            return "Caso di intrusione";
+            return "Intrusione nel telaio";
         }
 
         if ((eventSensorType == 192) && (eventOffset == 0) && (eventDataField[0] == 170) && (eventDataField[1] == 48))
         {
-            if (eventDataField[2] == 0) return "È stata stabilita una sessione seriale su LAN remota.";
-            if (eventDataField[2] == 1) return "Sessione remota su seriale via LAN terminata. Il controllo utente è stato ripristinato.";
-            if (eventDataField[2] == 2) return "È stata stabilita una sessione di reindirizzamento IDE remoto.";
-            if (eventDataField[2] == 3) return "Sessione di reindirizzamento IDE remoto terminata. Il controllo utente è stato ripristinato.";
+            if (eventDataField[2] == 0) return "È stata stabilita una sessione remota Serial-over-LAN.";
+            if (eventDataField[2] == 1) return "Sessione remota Serial-over-LAN terminata. Il controllo è stato restituito all'utente.";
+            if (eventDataField[2] == 2) return "È stata stabilita una sessione remota di reindirizzamento IDE.";
+            if (eventDataField[2] == 3) return "Sessione remota di reindirizzamento IDE terminata. Il controllo è stato restituito all'utente.";
         }
 
         if (eventSensorType == 36) {
@@ -612,33 +612,33 @@ function AmtStackCreateService(wsmanStack) {
             if (eventDataField[0] == 0xAA) nic = "cablata"; // TODO: Add wireless *****
             //if (eventDataField[0] == 0xAA) nic = "wireless";
 
-            if (handle == 4294967293) { return "Tutti i filtri di pacchetti ricevuti sono stati abbinati" + nic + " interfaccia."; }
-            if (handle == 4294967292) { return "Tutto il filtro pacchetti in uscita è stato associato" + nic + " interfaccia."; }
-            if (handle == 4294967290) { return "Il filtro pacchetti contraffatto è stato abbinato" + nic + " interfaccia."; }
-            return "Filtro" + handle + " è stato abbinato" + nic + " interfaccia.";
+            if (handle == 4294967293) { return "Corrispondenza per il filtro di tutti i pacchetti in ingresso sull'interfaccia " + nic + "."; }
+            if (handle == 4294967292) { return "Corrispondenza per il filtro di tutti i pacchetti in uscita sull'interfaccia " + nic + "."; }
+            if (handle == 4294967290) { return "Corrispondenza per il filtro dei pacchetti contraffatti sull'interfaccia " + nic + "."; }
+            return "Filtro " + handle + " ha rilevato una corrispondenza sull'interfaccia " + nic + ".";
         }
 
         if (eventSensorType == 192) {
-            if (eventDataField[2] == 0) return "Politica di sicurezza invocata. Parte o tutto il traffico di rete (TX) è stato arrestato.";
-            if (eventDataField[2] == 2) return "Politica di sicurezza invocata. Parte o tutto il traffico di rete (RX) è stato arrestato.";
-            return "Politica di sicurezza invocata.";
+            if (eventDataField[2] == 0) return "Criterio di sicurezza applicato. Il traffico di rete in uscita (TX) è stato bloccato in parte o del tutto.";
+            if (eventDataField[2] == 2) return "Criterio di sicurezza applicato. Il traffico di rete in ingresso (RX) è stato bloccato in parte o del tutto.";
+            return "Criterio di sicurezza applicato.";
         }
 
         if (eventSensorType == 193) {
             if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x30) && (eventDataField[2] == 0x00) && (eventDataField[3] == 0x00)) { return "Richiesta dell'utente per la connessione remota."; }
-            if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x20) && (eventDataField[2] == 0x03) && (eventDataField[3] == 0x01)) { return "Errore EAC: tenta di ottenere la postura mentre NAC in Intel AMT è disabilitato."; } // eventDataField = 0xAA20030100000000
+            if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x20) && (eventDataField[2] == 0x03) && (eventDataField[3] == 0x01)) { return "Errore EAC: richiesta dello stato di conformità con NAC disabilitato in Intel AMT."; } // eventDataField = 0xAA20030100000000
             if ((eventDataField[0] == 0xAA) && (eventDataField[1] == 0x20) && (eventDataField[2] == 0x04) && (eventDataField[3] == 0x00)) { return "Errore HWA: errore generale"; } // Used to be "Certificate revoked." but don"t know the source of this.
         }
 
-        if (eventSensorType == 6) return "Autenticazione fallita" + (eventDataField[1] + (eventDataField[2] << 8)) + " volte. Il sistema potrebbe essere sotto attacco.";
+        if (eventSensorType == 6) return "Tentativi di autenticazione non riusciti: " + (eventDataField[1] + (eventDataField[2] << 8)) + " volte. Il sistema potrebbe essere sotto attacco.";
         if (eventSensorType == 30) return "Nessun supporto di avvio";
         if (eventSensorType == 32) return "Blocco del sistema operativo o interruzione dell'alimentazione";
         if (eventSensorType == 35) {
-            if (eventDataField[0] == 64) return "BIOS POST (Power On Self-Test) Watchdog Timeout."; // 64,2,252,84,89,0,0,0
+            if (eventDataField[0] == 64) return "Timeout del watchdog durante il test POST del BIOS."; // 64,2,252,84,89,0,0,0
             return "Errore di avvio del sistema";
         }
-        if (eventSensorType == 37) return "Firmware di sistema avviato (almeno una CPU si sta eseguendo correttamente).";
-        return "Tipo di sensore sconosciuto #" + eventSensorType;
+        if (eventSensorType == 37) return "Firmware di sistema avviato (almeno una CPU è in funzione).";
+        return "Tipo di sensore sconosciuto n. " + eventSensorType;
     }
 
 // ###BEGIN###{AuditLog}
@@ -647,53 +647,53 @@ function AmtStackCreateService(wsmanStack) {
 
     var _AmtAuditStringTable =
     {
-        16: "Security Admin",
+        16: "Amministratore della sicurezza",
         17: "RCO",
-        18: "Manager di reindirizzamento",
-        19: "Firmware Update Manager",
-        20: "Registro di controllo della sicurezza",
-        21: "Tempo di rete",
+        18: "Gestione del reindirizzamento",
+        19: "Gestione aggiornamento firmware",
+        20: "Registro di audit della sicurezza",
+        21: "Ora di rete",
         22: "Amministrazione di rete",
-        23: "Amministrazione archiviazione",
-        24: "Manager di eventi",
-        25: "Responsabile dell'interruttore",
-        26: "Manager di presenza agente",
-        27: "Configurazione senza fili",
+        23: "Amministrazione dell'archiviazione",
+        24: "Gestione eventi",
+        25: "Gestione Circuit Breaker",
+        26: "Gestione presenza degli agenti",
+        27: "Configurazione wireless",
         28: "EAC",
         29: "KVM",
-        30: "Eventi di attivazione dell'utente",
+        30: "Eventi di consenso dell'utente",
         32: "Oscuramento dello schermo",
-        33: "Eventi del cane da guardia",
+        33: "Eventi del watchdog",
         1600: "Provisioning avviato",
         1601: "Provisioning completato",
         1602: "Voce ACL aggiunta",
         1603: "Voce ACL modificata",
         1604: "Voce ACL rimossa",
         1605: "Accesso ACL con credenziali non valide",
-        1606: "Stato di ingresso ACL",
+        1606: "Stato della voce ACL",
         1607: "Stato TLS modificato",
-        1608: "Set di certificati server TLS",
-        1609: "Rimuovi certificato server TLS",
+        1608: "Certificato del server TLS impostato",
+        1609: "Certificato del server TLS rimosso",
         1610: "Aggiunto certificato radice attendibile TLS",
-        1611: "Certificato radice radice TLS rimosso",
-        1612: "Set chiavi precondivise TLS",
+        1611: "Certificato radice attendibile TLS rimosso",
+        1612: "Chiave precondivisa TLS impostata",
         1613: "Impostazioni Kerberos modificate",
         1614: "Chiave principale Kerberos modificata",
-        1615: "Ripristino contatori flash usurati",
-        1616: "Pacchetto di alimentazione modificato",
+        1615: "Contatori di usura della memoria flash azzerati",
+        1616: "Profilo di alimentazione modificato",
         1617: "Imposta la modalità di autenticazione del realm",
-        1618: "Aggiorna il client alla modalità di controllo amministratore",
+        1618: "Passaggio dalla modalità di controllo client a quella amministratore",
         1619: "Annullamento del provisioning avviato",
         1700: "Accensione eseguita",
         1701: "Spegnimento eseguito",
-        1702: "Ciclo di potenza eseguito",
-        1703: "Ripristino eseguito",
+        1702: "Spegnimento e riaccensione eseguiti",
+        1703: "Riavvio eseguito",
         1704: "Imposta le opzioni di avvio",
-        1705: "Remote graceful power down initiated",
-        1706: "Remote graceful reset initiated",
-        1707: "Remote Standby initiated",
-        1708: "Remote Hiberate initiated",
-        1709: "Remote NMI initiated",
+        1705: "Spegnimento remoto tramite il sistema operativo avviato",
+        1706: "Riavvio remoto tramite il sistema operativo avviato",
+        1707: "Sospensione remota avviata",
+        1708: "Ibernazione remota avviata",
+        1709: "Interrupt NMI remoto inviato",
         1800: "Sessione IDER aperta",
         1801: "Sessione IDER chiusa",
         1802: "IDER abilitato",
@@ -706,61 +706,61 @@ function AmtStackCreateService(wsmanStack) {
         1809: "Sessione KVM terminata",
         1810: "KVM abilitato",
         1811: "KVM disabilitato",
-        1812: "Password VNC non riuscita 3 volte",
+        1812: "Tre tentativi di autenticazione VNC non riusciti",
         1900: "Firmware aggiornato",
         1901: "Aggiornamento firmware non riuscito",
-        2000: "Registro controllo sicurezza cancellato",
-        2001: "Politica di controllo della sicurezza modificata",
-        2002: "Registro controllo sicurezza disabilitato",
-        2003: "Registro controllo sicurezza abilitato",
-        2004: "Registro controllo di sicurezza esportato",
-        2005: "Registro controllo di sicurezza recuperato",
-        2100: "Intel&reg; ME Time Set",
-        2200: "Parametri TCPIP impostati",
+        2000: "Registro di audit della sicurezza cancellato",
+        2001: "Criterio di audit della sicurezza modificato",
+        2002: "Registro di audit della sicurezza disabilitato",
+        2003: "Registro di audit della sicurezza abilitato",
+        2004: "Registro di audit della sicurezza esportato",
+        2005: "Registro di audit della sicurezza recuperato",
+        2100: "Ora di Intel&reg; ME impostata",
+        2200: "Parametri TCP/IP impostati",
         2201: "Nome host impostato",
-        2202: "Set di nomi di dominio",
+        2202: "Nome del dominio impostato",
         2203: "Parametri VLAN impostati",
-        2204: "Insieme di criteri di collegamento",
+        2204: "Criterio di collegamento impostato",
         2205: "Parametri IPv6 impostati",
-        2300: "Set di attributi di archiviazione globale",
-        2301: "Archiviazione EACL modificata",
-        2302: "Memoria FPACL modificata",
-        2303: "Operazione di scrittura in memoria",
-        2400: "Avviso iscritto",
-        2401: "Avviso Non iscritto",
+        2300: "Attributi globali dell'archiviazione impostati",
+        2301: "EACL dell'archivio modificato",
+        2302: "FPACL dell'archivio modificato",
+        2303: "Operazione di scrittura nell'archivio",
+        2400: "Sottoscrizione agli avvisi attivata",
+        2401: "Sottoscrizione agli avvisi annullata",
         2402: "Registro eventi cancellato",
-        2403: "Registro eventi congelato",
+        2403: "Registro eventi bloccato",
         2500: "Filtro CB aggiunto",
         2501: "Filtro CB rimosso",
-        2502: "Aggiunta politica CB",
-        2503: "Politica CB rimossa",
-        2504: "Set di criteri predefinito CB",
-        2505: "Set di opzioni euristiche CB",
-        2506: "Stato euristico CB cancellato",
-        2600: "Cane da guardia dell'agente aggiunto",
+        2502: "Criterio CB aggiunto",
+        2503: "Criterio CB rimosso",
+        2504: "Criterio CB predefinito impostato",
+        2505: "Opzione euristica CB impostata",
+        2506: "Stato euristico CB azzerato",
+        2600: "Watchdog dell'agente aggiunto",
         2601: "Agent Watchdog rimosso",
-        2602: "Set di azioni del watchdog dell'agente",
+        2602: "Azioni del watchdog dell'agente impostate",
         2700: "Profilo wireless aggiunto",
         2701: "Profilo wireless rimosso",
         2702: "Profilo wireless aggiornato",
-        2703: "An existing profile sync was modified",
-        2704: "An existing profile link preference was changed",
-        2705: "Wireless profile share with UEFI enabled setting was changed",
-        2800: "Set di firme postura EAC",
+        2703: "Sincronizzazione di un profilo esistente modificata",
+        2704: "Preferenza di collegamento di un profilo esistente modificata",
+        2705: "Impostazione di condivisione dei profili wireless con UEFI modificata",
+        2800: "Firmatario dello stato di conformità EAC impostato",
         2801: "EAC abilitato",
         2802: "EAC disabilitato",
-        2803: "EAC Posture State",
-        2804: "EAC Set Options",
-        2900: "Opt-in KVM abilitato",
-        2901: "Attivazione KVM disabilitata",
+        2803: "Stato di conformità EAC",
+        2804: "Opzioni EAC impostate",
+        2900: "Richiesta di consenso KVM abilitata",
+        2901: "Richiesta di consenso KVM disabilitata",
         2902: "Password KVM modificata",
-        2903: "Consenso KVM riuscito",
-        2904: "Consenso KVM non riuscito",
-        3000: "Modifica della politica di attivazione",
-        3001: "Invia evento codice consenso",
-        3002: "Avvia evento bloccato opt-in",
-        3301: "A user has modified the Watchdog Action settings",
-        3302: "A user has modified a Watchdog to add, remove, or alter the Watchdog Action connected to it"
+        2903: "Consenso KVM ottenuto",
+        2904: "Consenso KVM non ottenuto",
+        3000: "Criterio di consenso dell'utente modificato",
+        3001: "Invia evento con il codice di consenso",
+        3002: "Evento di blocco dell'avvio della richiesta di consenso",
+        3301: "Un utente ha modificato le impostazioni delle azioni del watchdog",
+        3302: "Un utente ha modificato le azioni associate a un watchdog"
     }
 
     // Return human readable extended audit log data
@@ -770,14 +770,14 @@ function AmtStackCreateService(wsmanStack) {
         if ((id == 1602 || id == 1604) && data.charCodeAt(0) == 0) { return data.substring(2, 2 + data.charCodeAt(1)); } // ACL Entry Added/Removed (Digest)
         if (id == 1603) { if (data.charCodeAt(1) == 0) { return data.substring(3); } return null; } // ACL Entry Modified
         if (id == 1605) { return ["Accesso ME non valido", "Accesso MEBx non valido"][data.charCodeAt(0)]; } // ACL Access with Invalid Credentials
-        if (id == 1606) { var r = ["Disabilitato", "Abilitato"][data.charCodeAt(0)]; if (data.charCodeAt(1) == 0) { r += "," + data.substring(3); } return r;} // ACL Entry State
-        if (id == 1607) { return "A distanza" + ["noauth", "ServerAuth", "MutualAuth"][data.charCodeAt(0)] + ", Locale" + ["noauth", "ServerAuth", "MutualAuth"][data.charCodeAt(1)]; } // TLS State Changed
-        if (id == 1617) { return obj.RealmNames[ReadInt(data, 0)] + "," + ["noauth", "auth", "Disabilitato"][data.charCodeAt(4)]; } // Set Realm Authentication Mode
-        if (id == 1619) { return ["BIOS", "MEBx", "MEI locale", "WSMAN locale", "WSAMN remoto"][data.charCodeAt(0)]; } // Intel AMT Unprovisioning Started
-        if (id == 1900) { return "A partire dal" + ReadShort(data, 0) + '.' + ReadShort(data, 2) + '.' + ReadShort(data, 4) + '.' + ReadShort(data, 6) + " per" + ReadShort(data, 8) + '.' + ReadShort(data, 10) + '.' + ReadShort(data, 12) + '.' + ReadShort(data, 14); } // Firmware Updated
+        if (id == 1606) { var r = ["Disabilitato", "Abilitato"][data.charCodeAt(0)]; if (data.charCodeAt(1) == 0) { r += ", " + data.substring(3); } return r;} // ACL Entry State
+        if (id == 1607) { return "Remoto " + ["Senza autenticazione", "Autenticazione del server", "Autenticazione reciproca"][data.charCodeAt(0)] + ", locale " + ["Senza autenticazione", "Autenticazione del server", "Autenticazione reciproca"][data.charCodeAt(1)]; } // TLS State Changed
+        if (id == 1617) { return obj.RealmNames[ReadInt(data, 0)] + ", " + ["Senza autenticazione", "Autenticazione", "Disabilitato"][data.charCodeAt(4)]; } // Set Realm Authentication Mode
+        if (id == 1619) { return ["BIOS", "MEBx", "MEI locale", "WSMAN locale", "WSMAN remoto"][data.charCodeAt(0)]; } // Intel AMT Unprovisioning Started
+        if (id == 1900) { return "Da " + ReadShort(data, 0) + '.' + ReadShort(data, 2) + '.' + ReadShort(data, 4) + '.' + ReadShort(data, 6) + " a " + ReadShort(data, 8) + '.' + ReadShort(data, 10) + '.' + ReadShort(data, 12) + '.' + ReadShort(data, 14); } // Firmware Updated
         if (id == 2100) { var t4 = new Date(); t4.setTime(ReadInt(data, 0) * 1000 + (new Date().getTimezoneOffset() * 60000)); return t4.toLocaleString(); } // Intel AMT Time Set
-        if (id == 3000) { return "A partire dal" + ["Nessuna", "KVM", "Tutti"][data.charCodeAt(0)] + " per" + ["Nessuna", "KVM", "Tutti"][data.charCodeAt(1)]; } // Opt-In Policy Change
-        if (id == 3001) { return ["Successo", "Fallito 3 volte"][data.charCodeAt(0)]; } // Send Consent Code Event
+        if (id == 3000) { return "Da " + ["Nessuna", "KVM", "Tutti"][data.charCodeAt(0)] + " a " + ["Nessuna", "KVM", "Tutti"][data.charCodeAt(1)]; } // Opt-In Policy Change
+        if (id == 3001) { return ["Successo", "Tre tentativi non riusciti"][data.charCodeAt(0)]; } // Send Consent Code Event
         return null;
     }
 

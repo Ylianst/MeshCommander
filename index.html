@@ -2001,7 +2001,7 @@
             lms.Start();
             QH('id_lmsData', LoadingHtml);
             QH('id_lmsData', '');
-            QH('id_computername', 'Configuration Console v' + version);
+            QH('id_computername', "Configuration Console v" + version);
             go(101);
             lmsRefresh();
             // ###END###{Mode-LMS}
@@ -2618,7 +2618,7 @@
             }
             // ###END###{MeshServerConnect}
             // ###END###{ComputerSelectorScanner}
-            helpmenusub.append(new gui.MenuItem({ label: "Reset", click: NW_Reload }));
+            helpmenusub.append(new gui.MenuItem({ label: "Reload console", click: NW_Reload }));
             if (urlvars['debug']) { helpmenusub.append(new gui.MenuItem({ label: "Show Debug...", click: NW_Debug })); }
             // ###BEGIN###{Look-ISDU}
             helpmenusub.append(new gui.MenuItem({ type: 'separator' }));
@@ -4258,7 +4258,7 @@
                         // ###BEGIN###{ContextMenus}
                         x += '<div cm="' + NoBreak("View Certificate...") + '#viewCurrentPinCertificate(' + currentcomputer['h'] + ')|' + NoBreak("Remove Pinning...") + '#removeCurrentPinCertificate(' + currentcomputer['h'] + ')">';
                         // ###END###{ContextMenus}
-                        x += addComputerDetailsEntry("TLS Certificate", '<span title="Cert hash: ' + currentcomputer['tlscerthash'] + '">' + "Pinned to specific certificate" + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=viewCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Show Certificate" + '</u></a> <a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Remove Pinning" + '</u></a></span>');
+                        x += addComputerDetailsEntry("TLS Certificate", '<span title="' + "Cert hash: " + currentcomputer['tlscerthash'] + '">' + "Pinned to specific certificate" + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=viewCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Show Certificate" + '</u></a> <a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Remove Pinning" + '</u></a></span>');
                         // ###BEGIN###{ContextMenus}
                         x += '</div>';
                         // ###END###{ContextMenus}
@@ -4266,7 +4266,7 @@
                         // ###BEGIN###{ContextMenus}
                         x += '<div cm="' + NoBreak("Remove Pinning...") + '#removeCurrentPinCertificate(' + currentcomputer['h'] + ')">';
                         // ###END###{ContextMenus}
-                        x += addComputerDetailsEntry("TLS Certificate", '<span title="Cert hash: ' + currentcomputer['tlscerthash'] + '">' + "Pinned to specific certificate" + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Remove Pinning" + '</u></a></span>');
+                        x += addComputerDetailsEntry("TLS Certificate", '<span title="' + "Cert hash: " + currentcomputer['tlscerthash'] + '">' + "Pinned to specific certificate" + '</span><br /><span style=margin-left:5px><a style=cursor:pointer;font-size:10px;color:blue onclick=removeCurrentPinCertificate(' + currentcomputer['h'] + ')><u>' + "Remove Pinning" + '</u></a></span>');
                         // ###BEGIN###{ContextMenus}
                         x += '</div>';
                         // ###END###{ContextMenus}
@@ -4322,7 +4322,7 @@
             var fingerprint = '', fingerprint2 = forge.md.sha1.create().update(forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()).digest().toHex().toUpperCase();
             for (i = 0; i < fingerprint2.length; i++) { if ((i != 0) && (i % 2 == 0)) { fingerprint += ':'; } fingerprint += fingerprint2.substring(i, i + 1); }
             var x = '<img src=images-commander/cert1.png style=float:right height=32 width=32 />';
-            x += 'This certificate is pinned to computer ' + c['name'] + '. When connecting, if this certificate is received the connection will allowed. Hit delete button to un-pin.<br>';
+            x += format("This certificate is pinned to computer {0}. When connecting, if this certificate is received the connection will be allowed. Click Delete to remove the pin.", c['name']) + '<br>';
             // ###BEGIN###{FileSaver}
             //x += addHtmlValue("Certificate", c.X509Certificate.length + " bytes, " + '<a style=cursor:pointer;color:blue onclick=downloadCert(' + h + ')>' + "Download" + '</a>');
             // ###END###{FileSaver}
@@ -4454,7 +4454,7 @@
             if ((currentcomputer['user'] != '*') && (currentcomputer['pass'] == '')) {
                 if (skipPass === true) { computerConnectLogin(9, m); return; }
                 // Query for the login password
-                var x = '<br>Enter the login password for ' + EscapeHtml(currentcomputer['name'] ? currentcomputer['name'] : currentcomputer['host']) + '.<br><br>';
+                var x = '<br>' + "Enter the login password for " + EscapeHtml(currentcomputer['name'] ? currentcomputer['name'] : currentcomputer['host']) + '.<br><br>';
                 x += '<div style=height:26px><input id=d11connectUser onkeyup=computerConnectUpdateLogin() style=float:right;width:200px value="' + currentcomputer['user'] + '"><div>' + "Username" + '</div></div>';
                 x += '<div style=height:26px><input id=d11connectPass onkeyup=computerConnectUpdateLogin(event) type=password style=float:right;width:200px><div>' + "Password" + '</div></div>';
                 setDialogMode(11, "Login Credentials", 3, computerConnectLogin, x);
@@ -4751,7 +4751,7 @@
                     // Connecting
                     currentcomputer = null;
                     computerlist = [];
-                    QH('id_computername', 'Remote Management Console v' + version + ', Connecting to ' + meshCentralServer.host + '...');
+                    QH('id_computername', format("Remote Management Console v{0}, Connecting to {1}...", version, meshCentralServer.host));
                 } else if (state == 3) {
                     // Connected
                     currentcomputer = null;
@@ -4827,13 +4827,13 @@
             if ((xxdialogMode == undefined) || (!Q('idx_iprange'))) return;
             if (result == null) {
                 // If no results where found, display a nice message
-                QH('idx_results', '<div style=width:100%;text-align:center;margin-top:12px>Scan returned no results.</div><div style=width:100%;text-align:center;margin-top:12px;color:gray;line-height:1.5>Sample IP range values<br />192.168.0.100<br />192.168.0.0/16<br />192.167.0.1-192.168.0.100</div>');
+                QH('idx_results', '<div style=width:100%;text-align:center;margin-top:12px>' + "Scan returned no results." + '</div><div style=width:100%;text-align:center;margin-top:12px;color:gray;line-height:1.5>' + "Sample IP range values" + '<br />192.168.0.100<br />192.168.0.0/16<br />192.167.0.1-192.168.0.100</div>');
             } else {
                 // Add the new result to the scan results dialog box
                 var x = '', str = '<b>' + result.rinfo.address + '</b> - v' + result.ver;
                 if (globalAmtScannerResults == null) { globalAmtScannerResults = {}; QH('idx_results', ''); }
                 globalAmtScannerResults[result.rinfo.address] = result;
-                if (result.state == 2) { if (result.tls == 1) { str += ' with TLS.'; } else { str += ' without TLS.'; } } else { str += ' not activated.'; }
+                if (result.state == 2) { if (result.tls == 1) { str += " with TLS."; } else { str += " without TLS."; } } else { str += " not activated."; }
                 x += '<div style=margin-bottom:2px>';
                 x += '<div class=j1 style=height:24px;float:left;background-color:white></div>';
                 x += '<div class=g1 style=height:24px;float:left></div><div class=g2 style=height:24px;float:right></div><div style=height:24px;width:100%;background-color:#c9c9c9><div><div style=display:inline-block;margin-right:5px><input class=DevScanCheckbox tag="' + result.rinfo.address + '" type=checkbox onclick=amtScanCheckbox() /></div><div style=display:inline-block;margin-left:5px>' + str + '</div></div></div></div>';
@@ -5795,7 +5795,7 @@
                     x += TableEntry("802.1x", addLinkConditional(netAuthStr, 'editNetAuthProfile()', xxAccountAdminName));
                     // ###END###{NetAuth}
                     var ipStateString = z['DHCPEnabled'] == true ? "Automatic using DHCP server" : "Static IP address";
-                    if (z['IpSyncEnabled'] == true) { ipStateString += ', IP sync with OS'; }
+                    if (z['IpSyncEnabled'] == true) { ipStateString += ", IP sync with OS"; }
                     x += TableEntry("IPv4 state", addLinkConditional(ipStateString, 'showIPSetupDlg()', xxAccountAdminName));
                 }
 
@@ -5875,10 +5875,10 @@
         function showLinkPolicyDlg(y) {
             if (xxdialogMode) return;
             var z = amtsysstate['AMT_EthernetPortSettings'].responses[y], s = '';
-            s += '<label><input type=checkbox id=d11p1 value=1 ' + ((z['LinkPolicy'].indexOf(1) >= 0) ? 'checked' : '') + '>Available in S0/AC - Powered on & plugged in</label><br>';
-            s += '<label><input type=checkbox id=d11p2 value=14 ' + ((z['LinkPolicy'].indexOf(14) >= 0) ? 'checked' : '') + '>Available in Sx/AC - Sleeping & plugged in</label><br>';
-            s += '<label><input type=checkbox id=d11p3 value=16 ' + ((z['LinkPolicy'].indexOf(16) >= 0) ? 'checked' : '') + '>Available in S0/DC - Powered on & on battery</label><br>';
-            s += '<label><input type=checkbox id=d11p4 value=224 ' + ((z['LinkPolicy'].indexOf(224) >= 0) ? 'checked' : '') + '>Available in Sx/DC - Sleeping & on battery</label><br>';
+            s += '<label><input type=checkbox id=d11p1 value=1 ' + ((z['LinkPolicy'].indexOf(1) >= 0) ? 'checked' : '') + '>' + "Available in S0/AC - Powered on & plugged in" + '</label><br>';
+            s += '<label><input type=checkbox id=d11p2 value=14 ' + ((z['LinkPolicy'].indexOf(14) >= 0) ? 'checked' : '') + '>' + "Available in Sx/AC - Sleeping & plugged in" + '</label><br>';
+            s += '<label><input type=checkbox id=d11p3 value=16 ' + ((z['LinkPolicy'].indexOf(16) >= 0) ? 'checked' : '') + '>' + "Available in S0/DC - Powered on & on battery" + '</label><br>';
+            s += '<label><input type=checkbox id=d11p4 value=224 ' + ((z['LinkPolicy'].indexOf(224) >= 0) ? 'checked' : '') + '>' + "Available in Sx/DC - Sleeping & on battery" + '</label><br>';
             setDialogMode(11, "Link Policy", 3, showLinkPolicyDlgEx, s, y);
         }
 
@@ -5977,7 +5977,7 @@
 
         function saveEntireAmtStateOk() {
             IntelAmtEntireState = { 'webappversion':version,'localtime':Date(),'utctime':new Date().toUTCString(),'isotime':new Date().toISOString() };
-            QH('id_dialogMessage', 'Fetching entire state, please wait...');
+            QH('id_dialogMessage', "Fetching entire state, please wait...");
             setDialogMode(1, "Save Entire Intel&reg; AMT State", 0, null);
 
             // Fetch everything!
@@ -6108,7 +6108,7 @@
         function processMessageLog1(stack, messages) {
             eventmessages = messages;
             var i, y = 0, x = '<table class=log1 cellpadding=0 cellspacing=0 style=width:100%;border-radius:8px><tr><td width=80px><p><td><td><td>';
-            x += '<tr><td class=r1 style=width:90px><b>&nbsp;&nbsp;Event</b><td class=r1 style=width:110px><b>Time</b><td class=r1 style=width:160px><b>' + "Source" + '</b><td class=r1><b>' + "Description" + '</b>';
+            x += '<tr><td class=r1 style=width:90px><b>&nbsp;&nbsp;' + "Event" + '</b><td class=r1 style=width:110px><b>' + "Time" + '</b><td class=r1 style=width:160px><b>' + "Source" + '</b><td class=r1><b>' + "Description" + '</b>';
             for (i in messages) {
                 y++;
                 var icon = 1, m = messages[i];
@@ -6299,7 +6299,7 @@
             } else {
                 var y = 0;
                 x += '<table class=log1 cellpadding=0 cellspacing=0 style=width:100%;border-radius:8px><tr><td width=80px><p><td><td><td>';
-                x += '<tr><td class=r1 style=width:110px>&nbsp;&nbsp;<b>' + "Time" + '</b><td class=r1 style=width:260px><b>' + "Initiator" + '</b><td class=r1><b>Action</b>';
+                x += '<tr><td class=r1 style=width:110px>&nbsp;&nbsp;<b>' + "Time" + '</b><td class=r1 style=width:260px><b>' + "Initiator" + '</b><td class=r1><b>' + "Action" + '</b>';
                 for (i in messages) {
                     var m = messages[i], description = m['AuditApp'], initiator = m['Initiator'];
                     y++;
@@ -6425,7 +6425,7 @@
             var r = ((xxTlsSettings[x]['MutualAuthentication'] == true) ? "Mutual-auth TLS" : "Server-auth TLS") + ((xxTlsSettings[x]['AcceptNonSecureConnections'] == true) ? " and non-TLS" : '');
             if ((xxTlsSettings[x]['MutualAuthentication'] == true) && (xxTlsSettings[x]['TrustedCN'])) {
                 var trustedCn = MakeToArray(xxTlsSettings[x]['TrustedCN']);
-                if (trustedCn.length > 0) { r += ', ' + ((trustedCn.length > 1) ? 'Trusted names' : 'Trusted name') + ': ' + trustedCn.join(', ') + '.'; }
+                if (trustedCn.length > 0) { r += ', ' + ((trustedCn.length > 1) ? "Trusted names" : "Trusted name") + ': ' + trustedCn.join(', ') + '.'; }
             }
             return r;
         }
@@ -6675,7 +6675,7 @@
 
             // ###BEGIN###{CertificateManager}
             var x = '', certCount = getCertificateWithKeyCount();
-            if ((!xxDragDropCertFiles) && (certCount > 0)) { x += '<div style=height:26px;margin-top:4px><select onchange=addCertButtonUpdate() id=certoptype style=float:right;width:230px><option value=0>' + "Issue from certificate manager" + '</option><option value=1>' + "Issue from certificate file" + '</option></select><div style=padding-top:4px>Operation</div></div>'; }
+            if ((!xxDragDropCertFiles) && (certCount > 0)) { x += '<div style=height:26px;margin-top:4px><select onchange=addCertButtonUpdate() id=certoptype style=float:right;width:230px><option value=0>' + "Issue from certificate manager" + '</option><option value=1>' + "Issue from certificate file" + '</option></select><div style=padding-top:4px>' + "Operation" + '</div></div>'; }
             x += '<div id=dxcertfileop1>', input = '<input id=certopen onchange=issueCertButtonUpdate() type=file style=float:right;width:230px accept=".p12">';
             if (xxDragDropCertFiles) { input = '<input style=float:right;width:230px readonly disabled value="' + xxDragDropCertFiles[0].name + '">'; }
             x += '<div style=height:26px;margin-top:4px>' + input + '<div style=padding-top:4px>' + "Certificate file" + '</div></div><div style=height:26px;margin-top:4px><input onkeyup=issueCertButtonUpdate() id=certopenpass type=password autocomplete=off style=float:right;width:230px><div style=padding-top:4px>' + "Certificate password" + '</div></div></div>';
@@ -6692,7 +6692,7 @@
             // ###BEGIN###{!CertificateManager}
             var x = '', input = '<input id=certopen type=file style=float:right;width:230px onchange=issueCertButtonUpdate() accept=".p12">';
             if (xxDragDropCertFiles) { input = '<input style=float:right;width:230px readonly disabled value="' + xxDragDropCertFiles[0].name + '">'; }
-            x += '<div styleheight:26px;margin-top:14px>' + input + '<div style=padding-top:4px>Certificate file</div></div>';
+            x += '<div styleheight:26px;margin-top:14px>' + input + '<div style=padding-top:4px>' + "Certificate file" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px><input onkeyup=issueCertButtonUpdate() id=certopenpass type=password autocomplete=off style=float:right;width:230px><div style=padding-top:4px>' + "Certificate password" + '</div></div>';
             // ###END###{!CertificateManager}
 
@@ -6845,9 +6845,9 @@
             for (var i in xxCertificates) { if (xxCertificates[i].TrustedRootCertficate == false && xxCertificates[i].XPrivateKey) { x += '<option value=' + i + '>' + xxCertificates[i].XSubject['CN'] + '</option>'; } }
             x += '</select><div style=padding-top:4px>' + "Certificate" + '</div></div>';
 
-            x += '<div style=height:26px;margin-top:4px><select id=tlsremote style=float:right;width:260px onchange=showSetTlsSecurityDlgUpdate()><option value=0>Server-auth TLS only</option><option value=1>Server-auth, non-TLS allowed</option>';
-            x += '<option value=2>Mutual-auth TLS only</option><option value=3>Mutual-auth, non-TLS allowed</option>'; // Support for mutual-auth TLS seems to have been removed on AMT8 and after ??
-            x += '</select><div style=padding-top:4px>Security</div></div><div style=height:26px id=d11rcn title="' + "Comma seperated list of certificate common names that will be allowed to connect remotely." + '"><input id=d11_rcn style=float:right;width:260px onkeyup=showSetTlsSecurityDlgUpdate() placeholder="' + "name1, name2" + '"><div style=padding-top:4px>' + "Remote CN\'s" + '</div></div>';
+            x += '<div style=height:26px;margin-top:4px><select id=tlsremote style=float:right;width:260px onchange=showSetTlsSecurityDlgUpdate()><option value=0>' + "Server-auth TLS only" + '</option><option value=1>' + "Server-auth, non-TLS allowed" + '</option>';
+            x += '<option value=2>' + "Mutual-auth TLS only" + '</option><option value=3>' + "Mutual-auth, non-TLS allowed" + '</option>'; // Support for mutual-auth TLS seems to have been removed on AMT8 and after ??
+            x += '</select><div style=padding-top:4px>' + "Security" + '</div></div><div style=height:26px id=d11rcn title="' + "Comma seperated list of certificate common names that will be allowed to connect remotely." + '"><input id=d11_rcn style=float:right;width:260px onkeyup=showSetTlsSecurityDlgUpdate() placeholder="' + "name1, name2" + '"><div style=padding-top:4px>' + "Remote CN\'s" + '</div></div>';
 
             setDialogMode(11, "TLS Settings", 3, showSetTlsSecurityDlgOk, x);
 
@@ -7297,7 +7297,7 @@
                     var desc = xxSystemDefenceFilterEthernetTypes[filter['HdrProtocolID8021']];
                     if (!desc) desc = "All Ethernet Protocol " + filter['HdrProtocolID8021'];
                     desc += ', ' + xxSystemDefenceFilterDesc[filter['FilterProfile']];
-                    if (filter['FilterProfile'] == 2) { desc += " at " + filter['FilterProfileData'] + " packet / sec"; }
+                    if (filter['FilterProfile'] == 2) { desc += " at a rate of " + filter['FilterProfileData'] + " packet / sec"; }
                     if (filter['ActionEventOnMatch'] == true) desc += ", Event on match";
                     x += '<div class=itemBar onclick=showFilterDetails(0,' + i + ')><div style=padding-top:3px><b>' + (filter['FilterDirection'] == 0 ? '&#8592; ' : '&#8594; ') + EscapeHtml(filter['Name']) + '</b>, ' + desc + '</div></div>';
                 }
@@ -7306,7 +7306,7 @@
                     var desc = xxSystemDefenceFilterIPTypes[filter['HdrIPVersion']];
                     if (!desc) desc = "All Ethernet Protocol " + filter['HdrIPVersion'];
                     desc += ', ' + xxSystemDefenceFilterDesc[filter['FilterProfile']];
-                    if (filter['FilterProfile'] == 2) { desc += " at " + filter['FilterProfileData'] + " packet / sec"; }
+                    if (filter['FilterProfile'] == 2) { desc += " at a rate of " + filter['FilterProfileData'] + " packet / sec"; }
                     if (filter['ActionEventOnMatch'] == true) desc += ", Event on match";
                     var filtercount = 0;
                     for (var j in xxSystemDefenceFilters) { if (filter[j]) filtercount++; }
@@ -7528,7 +7528,7 @@
             xxAddDefensePolicyFilters = [];
             var x = '';
             x += '<div style=height:26px;margin-top:4px><input id=policyname title="<policy name>:<policy precedence number>" style=float:right;width:260px maxlength=16 onkeyup=AddDefensePolicyUpdate()><div style=padding-top:4px>' + "Name" + '</div></div>';
-            x += '<div style=height:26px;margin-top:4px><select id=policytx title="' + "Default action to take for outbound traffic" + '" style=float:right;width:133px><option value=0>Allow<option value=1>' + "Drop" + '<option value=2>' + "Allow,Count" +'<option value=3>' + "Drop,Count" + '<option value=4>' + "Allow,Count,Event" + '<option value=5>' + "Drop,Count,Event" + '</select><select id=policyrx style=float:right;width:133px title="' + "Default action to take for inbound traffic" + '"><option value=0>' + "Allow" + '<option value=1>' + "Drop" + '<option value=2>' + "Allow,Count" + '<option value=3>' + "Drop,Count" + '<option value=4>' + "Allow,Count,Event" + '<option value=5>' + "Drop,Count,Event" + '</select><div style=padding-top:4px>' + "Default TX / RX" + '</div></div>';
+            x += '<div style=height:26px;margin-top:4px><select id=policytx title="' + "Default action to take for outbound traffic" + '" style=float:right;width:133px><option value=0>' + "Allow" + '<option value=1>' + "Drop" + '<option value=2>' + "Allow,Count" +'<option value=3>' + "Drop,Count" + '<option value=4>' + "Allow,Count,Event" + '<option value=5>' + "Drop,Count,Event" + '</select><select id=policyrx style=float:right;width:133px title="' + "Default action to take for inbound traffic" + '"><option value=0>' + "Allow" + '<option value=1>' + "Drop" + '<option value=2>' + "Allow,Count" + '<option value=3>' + "Drop,Count" + '<option value=4>' + "Allow,Count,Event" + '<option value=5>' + "Drop,Count,Event" + '</select><div style=padding-top:4px>' + "Default TX / RX" + '</div></div>';
             x += '<div id=policyFilters></div>';
             if (xxSystemDefense['AMT_Hdr8021Filter'].responses.length > 0 || xxSystemDefense['AMT_IPHeadersFilter'].responses.length > 0) {
                 x += '<div style=height:26px;margin-top:4px><div style=float:right><select id=xfilter style=width:186px>';
@@ -7730,8 +7730,8 @@
         function showUefiWifiCoExDlg() {
             if (xxdialogMode) return;
             var s = '';
-            s += '<label><input type=radio name=d12 value=0 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled'] == false)?'checked':'') + '>Disabled</label><br>'; 
-            s += '<label><input type=radio name=d12 value=1 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled'] == true)?'checked':'') + '>Enabled</label><br>'; 
+            s += '<label><input type=radio name=d12 value=0 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled'] == false)?'checked':'') + '>' + "Disabled" + '</label><br>';
+            s += '<label><input type=radio name=d12 value=1 ' + ((xxWireless['AMT_WiFiPortConfigurationService'].response['UEFIWiFiProfileShareEnabled'] == true)?'checked':'') + '>' + "Enabled" + '</label><br>';
             setDialogMode(11, "UEFI Wifi CoEx Profile Sharing", 3, UefiWifiCoExDlg, s);
         }
         
@@ -8834,7 +8834,7 @@
         // Update screen icons
         function UpdateDesktopDisplayInfo() {
             var buttons = '', activeScreens = 0;
-            for (var i = 0; i < 3; i++) { if (desktopScreenInfo['IsActive'][i] == true) { activeScreens++; buttons += '<input type="button" ' + ((i == desktopScreenInfo.KVMRSD['DefaultScreen'])?'style="background-color:DodgerBlue"':'') + ' value="' + (i + 1) + '" title="Switch to screen ' + (i + 1) + '" onkeypress="return false" onkeydown="return false" onclick="desktopSwitchScreen(' + i + ')">&nbsp;'; } }
+            for (var i = 0; i < 3; i++) { if (desktopScreenInfo['IsActive'][i] == true) { activeScreens++; buttons += '<input type="button" ' + ((i == desktopScreenInfo.KVMRSD['DefaultScreen'])?'style="background-color:DodgerBlue"':'') + ' value="' + (i + 1) + '" title="' + "Switch to screen " + (i + 1) + '" onkeypress="return false" onkeydown="return false" onclick="desktopSwitchScreen(' + i + ')">&nbsp;'; } }
             if (activeScreens > 1) { Q('id_DeskScreenSelector').innerHTML = buttons + '&nbsp;'; } else { Q('id_DeskScreenSelector').innerHTML = ''; }
         }
 
@@ -9412,7 +9412,7 @@
         function p24selectallfile() { var nv = (p24getFileSelCount() == 0), checkboxes = document.getElementsByName('fd'); for (var i = 0; i < checkboxes.length; i++) { checkboxes[i].checked = nv; } p24setActions(); }
         function p24createfolder() { setDialogMode(11, "New Folder", 3, p24createfolderEx, '<input type=text id=p24renameinput maxlength=64 onkeyup=p24fileNameCheck(event) style=width:100% />'); focusTextBox('p24renameinput'); p24fileNameCheck(); }
         function p24createfolderEx() { p24files.sendCtrlMsg(JSON.stringify({ action: 'mkdir', reqid: 1, path: p24filetreelocation.join('/') + '/' + Q('p24renameinput').value })); p24folderup(999); }
-        function p24deletefile() { var cc = p24getFileSelCount(); setDialogMode(11, "Delete", 3, p24deletefileEx, (cc > 1) ? ('Delete ' + cc + ' selected items?') : ('Delete selected item?')); }
+        function p24deletefile() { var cc = p24getFileSelCount(); setDialogMode(11, "Delete", 3, p24deletefileEx, (cc > 1) ? format("Delete {0} selected items?", cc) : "Delete selected item?"); }
         function p24deletefileEx() { var delfiles = [], checkboxes = document.getElementsByName('fd'); for (var i = 0; i < checkboxes.length; i++) { if (checkboxes[i].checked) { delfiles.push(p24filetree.dir[checkboxes[i].value].n); } } p24files.sendCtrlMsg(JSON.stringify({ action: 'rm', reqid: 1, path: p24filetreelocation.join('/'), delfiles: delfiles })); p24folderup(999); }
         function p24renamefile() { var renamefile, checkboxes = document.getElementsByName('fd'); for (var i = 0; i < checkboxes.length; i++) { if (checkboxes[i].checked) { renamefile = p24filetree.dir[checkboxes[i].value].n; } } setDialogMode(11, "Rename", 3, p24renamefileEx, '<input type=text id=p24renameinput maxlength=64 onkeyup=p24fileNameCheck(event) style=width:100% value="' + renamefile + '" />', { action: 'rename', path: p24filetreelocation.join('/'), oldname: renamefile }); focusTextBox('p24renameinput'); p24fileNameCheck(); }
         function p24renamefileEx(b, t) { t.newname = Q('p24renameinput').value; p24files.sendCtrlMsg(JSON.stringify(t)); p24folderup(999); }
@@ -9423,9 +9423,9 @@
 
         var p24clipboard = null, p24clipboardFolder = null, p24clipboardCut = 0;
         function p24copyFile(cut) { var checkboxes = document.getElementsByName('fd'); p24clipboard = []; p24clipboardCut = cut, p24clipboardFolder = p24targetpath; for (var i = 0; i < checkboxes.length; i++) { if ((checkboxes[i].checked) && (checkboxes[i].attributes.file.value == "3")) { p24clipboard.push(p24filetree.dir[checkboxes[i].value].n); } } p24updateClipview(); }
-        function p24pasteFile() { var x = ''; if ((p24clipboard != null) && (p24clipboard.length > 0)) { x = 'Confim ' + (p24clipboardCut == 0 ? 'copy' : 'move') + ' of ' + p24clipboard.length + ' entrie' + ((p24clipboard.length > 1) ? 's' : '') + ' to this location?' } setDialogMode(11, "Paste", 3, p24pasteFileEx, x); }
+        function p24pasteFile() { var x = ''; if ((p24clipboard != null) && (p24clipboard.length > 0)) { x = format(p24clipboardCut == 0 ? "Confirm copying {0} item(s) to this location?" : "Confirm moving {0} item(s) to this location?", p24clipboard.length); } setDialogMode(11, "Paste", 3, p24pasteFileEx, x); }
         function p24pasteFileEx() { p24files.sendCtrlMsg(JSON.stringify({ action: (p24clipboardCut == 0 ? 'copy' : 'move'), reqid: 1, scpath: p24clipboardFolder, dspath: p24targetpath, names: p24clipboard })); p24folderup(999); if (p24clipboardCut == 1) { p24clipboard = null, p24clipboardFolder = null, p24clipboardCut = 0; p24updateClipview(); } }
-        function p24updateClipview() { var x = ''; if ((p24clipboard != null) && (p24clipboard.length > 0)) { x = 'Holding ' + p24clipboard.length + ' entrie' + ((p24clipboard.length > 1) ? 's' : '') + ' for ' + (p24clipboardCut == 0 ? 'copy' : 'move') + ', <a onclick=p24clearClip() style=cursor:pointer>Clear</a>.' } QH('p24bottomstatus', x); p24setActions(); }
+        function p24updateClipview() { var x = ''; if ((p24clipboard != null) && (p24clipboard.length > 0)) { var count = p24clipboard.length; var message = (p24clipboardCut == 0) ? (count == 1 ? "{0} item queued for copying." : "{0} items queued for copying.") : (count == 1 ? "{0} item queued for moving." : "{0} items queued for moving."); x = format(message, count) + ' <a onclick=p24clearClip() style=cursor:pointer>' + "Clear" + '</a>'; } QH('p24bottomstatus', x); p24setActions(); }
         function p24clearClip() { p24clipboard = null; p24clipboardFolder = null; p24clipboardCut = 0; p24updateClipview(); }
 
         function p24fileDragDrop(e) {
@@ -10206,7 +10206,7 @@
             var x = addHtmlValue("Access name", proxy['AccessInfo'] + ':' + proxy['ProxyPort']);
             x += addHtmlValue("DNS suffex", proxy['NetworkDnsSuffix']);
             //x += addHtmlValue("Proxy type", ['Administrator', 'Operating system'][proxy['ProxyType']]);
-            x += addHtmlValue("Proxy type", ['Administrator', 'Operating system'][proxy['Type']]);
+            x += addHtmlValue("Proxy type", ["Administrator", "Operating System"][proxy['Type']]);
             //x += addHtmlValue("Last time used", proxy['LastTimeUsed']);
 
             var buttons = 1;
@@ -10784,7 +10784,7 @@
                 powerActionDlgRPE();
             // ###BEGIN###{PowerControl-OneClick}
             } else if ((action == 999) && (amtversion >= 15)) {
-                statusbox("Power Actions", "Checking boot sources...");            
+                statusbox("Power Actions", "Checking boot sources...");
                 amtstack.BatchEnum('', ['CIM_BootSourceSetting'], powerActionDlgCheck00, true);
             // ###END###{PowerControl-OneClick}
             } else {
@@ -10905,7 +10905,7 @@
             try { Q('idx_d24Command').value = (amtsysstate['CIM_ServiceAvailableToElement'].responses[0]['PowerState'] == 2)?10:2; } catch (ex) { }
 
             // Available force boot options
-            var forceBootDeviceOptions = '<option value=0>None</option><option id="ForceDVDBootOption" value=1>Force CD/DVD Boot</option><option id="ForcePXEBootOption" value=2>Force PXE Boot</option><option id="ForceHDBootOption" value=3>Force Hard Disk Boot</option><option id="ForceDiagBootOption" value=4>Force Diagnostic Boot</option>';
+            var forceBootDeviceOptions = '<option value=0>' + "None" + '</option><option id="ForceDVDBootOption" value=1>' + "Force CD/DVD Boot" + '</option><option id="ForcePXEBootOption" value=2>' + "Force PXE Boot" + '</option><option id="ForceHDBootOption" value=3>' + "Force Hard Disk Boot" + '</option><option id="ForceDiagBootOption" value=4>' + "Force Diagnostic Boot" + '</option>';
 
             // Show boot capabilities
             QV('d24dBiosPause', amtPowerBootCapabilities['BIOSPause'] == true);
@@ -10920,14 +10920,14 @@
             QV('ForcePXEBootOption', amtPowerBootCapabilities['ForcePXEBoot'] == true);
             // ###BEGIN###{PowerControl-OneClick}
             if ((AmtOcrPbaLength > 0) && (amtPowerBootCapabilities['ForceUEFIPBABoot'] == true)) {
-                forceBootDeviceOptions += '<option id="ForceUEFIBootOption" value=5>Force OCR UEFI Boot Option</option>';
+                forceBootDeviceOptions += '<option id="ForceUEFIBootOption" value=5>' + "Force OCR UEFI Boot Option" + '</option>';
                 var x = '';
                 for (var i in AmtOcrPba) { x += '<option value=' + i + '>' + AmtOcrPba[i].instance + '</option>'; }
                 QH('idx_d24customBootMediaIndex', x);
             }
             var httpsBootPossible = ((meshCentralServer == null) && (wsstack.comm.xtlsCertificate != null)) || (meshCentralServer!=null && ((currentcomputer.conn & 4) == 4) &&  currentcomputer.tls == 1) || (meshCentralServer!=null && ((currentcomputer.conn & 2) == 2) )
-            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpBootOption" value=6>Force OCR UEFI HTTPS Boot (.iso)</option>'; }
-            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpUrlBootOption" value=7>Force OCR UEFI HTTPS Boot (url)</option>'; }
+            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpBootOption" value=6>' + "Force OCR UEFI HTTPS Boot (.iso)" + '</option>'; }
+            if ((amtPowerBootCapabilities['ForceUEFIHTTPSBoot'] == true) && httpsBootPossible) { forceBootDeviceOptions += '<option id="ForceHttpUrlBootOption" value=7>' + "Force OCR UEFI HTTPS Boot (url)" + '</option>'; }
             // ###END###{PowerControl-OneClick}
             QV('d24dForceProgressEvents', amtPowerBootCapabilities['ForcedProgressEvents'] == true);
             QV('d24dUseIDER', amtPowerBootCapabilities['IDER'] == true);
@@ -11459,10 +11459,10 @@
                             var handle = '\"' + i + ((i != '') ? '/' : '') + j + ((j != '') ? '/' : '') + k + '\"';
                             xx += '<div class=itemBar onclick=showStorageDetails("' + i + '","' + j + '","' + k + '",' + handle + ')><div style=float:right>';
                             // ###BEGIN###{Mode-Firmware}
-                            xx += AddButton2("Open", 'OpenFromStorage(' + handle + ',event)');
+                            xx += AddButton2("Open stored file", 'OpenFromStorage(' + handle + ',event)');
                             // ###END###{Mode-Firmware}
                             // ###BEGIN###{Mode-LMS}
-                            xx += ' ' + AddButton2("Open", 'OpenFromStorage(' + handle + ',event)');
+                            xx += ' ' + AddButton2("Open stored file", 'OpenFromStorage(' + handle + ',event)');
                             // ###END###{Mode-LMS}
                             // ###BEGIN###{FileSaver}
                             xx += ' ' + AddButton2("Download", 'DownloadFromStorage(' + handle + ',\"' + k + '\",event)');
@@ -11567,7 +11567,7 @@
             var x = '';
             x += '<br>' + "Select a small file to upload to storage and enter a vendor, application and filename." + '<br>';
             if (!file) {
-                x += '<br><div style=height:20px><input type=file id=mstoragefile style=float:right;width:240px onchange=SetStorageName()><div>Upload file</div></div>';
+                x += '<br><div style=height:20px><input type=file id=mstoragefile style=float:right;width:240px onchange=SetStorageName()><div>' + "Upload file" + '</div></div>';
             } else {
                 x += '<br><div style=height:20px><input id=mstoragefile style=float:right;width:240px readonly disabled=disabled value="' + filename + '" ><div>' + "Upload file" + '</div></div>';
             }
@@ -11810,7 +11810,7 @@
                 alarmx['Interval'] = '<p:Interval xmlns:p=\"http://schemas.dmtf.org/wbem/wscim/1/common\">' + alarm_interval + '</p:Interval>';
                 alarmx['DeleteOnCompletion'] = alarm_doc;
                 amtstack.Put('IPS_AlarmClockOccurrence', alarmx, function (ws, resuri, response, status) {
-                    if (status != 200) { messagebox("Edit alarm", format('Failed to change alarm. Status: {0}.<br/>Verify the alarm for at a future time.', status)); return; }
+                    if (status != 200) { messagebox("Edit alarm", format("Failed to change alarm. Status: {0}.<br/>Verify the alarm for at a future time.", status)); return; }
                     PullAlarms();
                 }, null, null, { 'InstanceID' : alarmx['InstanceID']});
             }
@@ -12038,7 +12038,7 @@
         // Edit a script block
         function script_feditblock(h) {
             if (xxdialogMode) return;
-            setDialogMode(11, format("Edit {0}", script_BuildingBlocks[h]['name']), 3, script_feditblockEx, 'Edit this block? This operation will reset the block editor and load the block code into the code editor.', h);
+            setDialogMode(11, format("Edit {0}", script_BuildingBlocks[h]['name']), 3, script_feditblockEx, "Edit this block? This operation will reset the block editor and load the block code into the code editor.", h);
         }
 
         // Called when the script block edit dialog is closed.
@@ -12274,7 +12274,7 @@
                 cmenus.push("Delete" + '#script_foneditclickEx(2,'+i+')');
                 x += ' cm=\'' + cmenus.join('|') + '\'';
                 // ###END###{ContextMenus}
-                x += '><input style=float:right type=button value=Edit... onclick=script_foneditclick(' + i + ')><div style=font-size:16px><b>' + script_BlockScript[i].name + '</b>';
+                x += '><input style=float:right type=button value="' + "Edit..." + '" onclick=script_foneditclick(' + i + ')><div style=font-size:16px><b>' + script_BlockScript[i].name + '</b>';
                 if (script_BlockScript[i]['vars']) {
                     var r = 0;
                     x += '<table class="scriptBlockVar us" cellpadding=0 cellspacing=0 style=width:100%;border-radius:5px;margin-top:8px>';
@@ -12874,7 +12874,7 @@
             x += '<div style=height:26px;margin-top:4px><input onkeyup=cert_createNew_Update() id=certo style=float:right;width:230px><div style=padding-top:4px>' + "Organization" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px><input onkeyup=cert_createNew_Update() id=certst style=float:right;width:230px><div style=padding-top:4px>' + "State/Province" + '</div></div>';
             x += '<div style=height:26px;margin-top:4px><input onkeyup=cert_createNew_Update() id=certc style=float:right;width:230px><div style=padding-top:4px>' + "Country" + '</div></div>';
-            x += '<div>Certificate Usages</div><ul style="list-style-type:none;height:100px;overflow:auto;width:100%;border: 1px solid #000;background-color:white;overflow-x:hidden;margin:0;padding:0">';
+            x += '<div>' + "Certificate Usages" + '</div><ul style="list-style-type:none;height:100px;overflow:auto;width:100%;border: 1px solid #000;background-color:white;overflow-x:hidden;margin:0;padding:0">';
             x += '<li><label><input type=checkbox id=d11_cu1>' + "Intel&reg; AMT Console" + '</label></li>';
             x += '<li><label><input type=checkbox id=d11_cu2>' + "Intel&reg; AMT Agent" + '</label></li>';
             x += '<li><label><input type=checkbox id=d11_cu3>' + "Intel&reg; AMT Activation" + '</label></li>';
@@ -13058,7 +13058,7 @@
             x += '<tr><td class=r2 style=padding-left:15px>';
             x += '<div style=float:right;margin-right:12px onclick=usb_addRecordSetupBin()><a><u title=\'' + "Add a new record" + '\'>' + "Add Record" + '</u></a></div>';
             x += '<div><strong>' + format("Intel&reg; AMT Setup.bin file version {0}.{1}", setupbin.majorVersion, + setupbin.minorVersion) + '</strong>.</div>';
-            x += (((setupbin.flags & 1) == 0) ? 'Records will be consumed.' : 'Records will not be consumed.');
+            x += (((setupbin.flags & 1) == 0) ? "Records will be consumed." : "Records will not be consumed.");
             x += '<br>' + format("Records: {0}, Consumed: {1}", setupbin.records.length, setupbin.dataRecordsConsumed)+ '<br>';
             x += '<tr style=height:4px></table>';
 
